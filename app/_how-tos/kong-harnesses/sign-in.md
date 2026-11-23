@@ -1,6 +1,6 @@
 ---
 title: Sign in with kong-harnesses
-description: Sign in to a kong-harnesses profile, check or replace the sign-in, sign out, and diagnose sign-in failures.
+description: Sign in to a kong-harnesses profile, check or replace your sign-in, validate your setup, and sign out.
 
 content_type: how_to
 permalink: /kong-harnesses/sign-in/
@@ -28,7 +28,7 @@ tldr:
   q: How do I sign in to a kong-harnesses profile and manage my sign-in?
   a: |
     Run `kong-harnesses login --profile PROFILE_NAME` in an interactive terminal to sign in and `kong-harnesses status --profile PROFILE_NAME` to check your state.
-    Use `kong-harnesses login --profile PROFILE_NAME --replace` to replace an active sign-in and `kong-harnesses logout --profile PROFILE_NAME` to sign out.
+    Validate with `kong-harnesses doctor --profile PROFILE_NAME`, replace an active sign-in with `--replace`, and sign out with `kong-harnesses logout --profile PROFILE_NAME`.
     For OpenCode and Hermes Agent, follow each agent CLI's own guide instead.
 
 related_resources:
@@ -49,8 +49,8 @@ prereqs:
   inline:
     - title: Installed kong-harnesses and a profile
       content: |
-        Install [kong-harnesses](/kong-harnesses/) and import or create a profile with [`kong-harnesses setup`](/kong-harnesses/setup/) or [`kong-harnesses profile import`](/kong-harnesses/profile/import/).
-        Run `kong-harnesses profile list` to find your profile name, and replace `PROFILE_NAME` in each command with that name.
+        Install [kong-harnesses](/kong-harnesses/) and install a profile with [`kong-harnesses setup`](/kong-harnesses/setup/) or [`kong-harnesses profile import`](/kong-harnesses/profile/import/).
+        Run [`kong-harnesses profile list`](/kong-harnesses/profile/list/) to find your profile name, and replace `PROFILE_NAME` in each command with that name.
     - title: Interactive desktop session
       content: |
         Run `login` and `logout` in an interactive terminal on your desktop so kong-harnesses can read prompts and access your operating system's secret store:
@@ -69,12 +69,53 @@ prereqs:
           - os: Windows
             store: DPAPI
         {% endtable %}
+
+cleanup:
+  inline:
+    - title: Sign out
+      content: |
+        Remove the saved sign-in and any saved gateway MCP server keys for a profile using [`kong-harnesses logout`](/kong-harnesses/logout/):
+
+        ```sh
+        kong-harnesses logout --profile PROFILE_NAME
+        ```
+
+        When the profile has a saved sign-in or key on this computer, `logout` asks you to type `PROFILE_NAME` to confirm.
+        Pass `--auto-approve` to confirm in advance when running without a prompt.
+
+        What `logout` revokes depends on the profile and saved state:
+
+        * **Identity provider profile with a revocation endpoint:** Disables the local sign-in, asks the identity provider to revoke the authorization, and removes the local sign-in after confirmation.
+          If `logout` reports that server sign-out is unconfirmed, revoke the authorization at the identity provider and run `logout` again.
+        * **Identity provider profile without a revocation endpoint, static-key profile, or damaged sign-in:** Removes the sign-in or key from this computer only.
+          Static keys keep working at {{ site.ai_gateway }} until an administrator revokes them.
+        * **Already signed out:** Removes any leftover gateway MCP server keys without prompting and prints `Already signed out`.
+        * **Running agent CLI sessions:** A session that already received an access token can keep using it until that token expires.
+
+        Confirm that `Login` shows `Not signed in` by running [`kong-harnesses status --profile PROFILE_NAME`](/kong-harnesses/status/).
+        For `logout` errors, see [When the login or logout command fails](/kong-harnesses/sign-in/errors/#when-the-login-or-logout-command-fails).
+
+faqs:
+  - q: How do CI jobs sign in and sign out with kong-harnesses?
+    a: |
+      A CI profile reads its key from `KONG_HARNESSES_STATIC_KEY` on every request, so kong-harnesses doesn't save the key and `kong-harnesses login` refuses the profile.
+      Set `KONG_HARNESSES_STATIC_KEY` in the job environment where your agent CLI starts, and unset it to revoke access in that job.
+      `kong-harnesses logout` doesn't unset `KONG_HARNESSES_STATIC_KEY`; if a saved sign-in exists for that profile name and the session can reach the secret store, `logout` removes it after confirmation.
+      On Linux without Secret Service, set `XDG_RUNTIME_DIR` first so `logout` passes its profile lock; `logout` then prints `Nothing signed out; this computer has no password store to check` and leaves any earlier desktop sign-in untouched.
+  - q: How do I diagnose a failed kong-harnesses sign-in?
+    a: |
+      Run `kong-harnesses login --profile PROFILE_NAME --diagnostics` to report the failing component and reason without printing access tokens or sign-in URLs.
+      For every sign-in, token, `login`, and `logout` error message and fix, see [Sign-in errors in kong-harnesses](/kong-harnesses/sign-in/errors/).
+  - q: What do I need to do on macOS after upgrading kong-harnesses?
+    a: |
+      Run `kong-harnesses login --profile PROFILE_NAME` once after each kong-harnesses upgrade on macOS.
+      Each time Keychain asks whether kong-harnesses can use your sign-in or a gateway MCP server key, click **Always Allow**.
 ---
 
 [kong-harnesses](/kong-harnesses/) signs you in to {{ site.ai_gateway }}, stores the sign-in in your computer's secret store, and supplies short-lived access tokens to your agent CLI.
 When an identity provider token is close to expiring, kong-harnesses renews it automatically without opening your browser.
 
-Follow the guide for your agent CLI for client-specific steps, or follow the shared kong-harnesses steps on this page:
+Choose your agent CLI guide for client-specific steps, or follow the shared kong-harnesses workflow:
 
 {% table %}
 columns:
@@ -115,22 +156,13 @@ Sign in to a kong-harnesses profile using [`kong-harnesses login`](/kong-harness
    kong-harnesses login --profile PROFILE_NAME
    ```
 
-   For an identity provider profile, kong-harnesses opens your browser at the identity provider's sign-in page and prints the sign-in URL in the terminal.
-   Open the URL in a browser on the same computer so the callback reaches kong-harnesses.
-   To print the URL without opening a browser automatically, add `--no-browser`.
+   For an identity provider profile, kong-harnesses opens your browser at the identity provider's sign-in page and prints the URL in the terminal.
+   Open the URL in a browser on the same computer so the callback reaches kong-harnesses, or add `--no-browser` to print the URL without opening a browser automatically.
 
    For a static-key profile, `login` prompts for the key from your administrator and hides your input as you type.
 1. Complete the sign-in and save any missing gateway MCP server keys if prompted.
    When the profile already has a usable sign-in, `login` keeps it and prompts only for missing gateway MCP server keys.
-1. Follow the step in the `Next` field and restart any running agent CLI that uses the profile.
-
-{:.info}
-> **CI jobs and plugin-managed CLIs:**
->
-> * A CI profile reads its key from `KONG_HARNESSES_STATIC_KEY` on every request, so kong-harnesses doesn't save the key and `login` refuses the profile.
->   Set `KONG_HARNESSES_STATIC_KEY` in the environment where your agent CLI starts.
-> * OpenCode and Hermes Agent sign in through their own plugins, so `login`, `logout`, `credential`, and `token` refuse `--client opencode` and `--client hermes`.
->   Use [Sign in to OpenCode](/kong-harnesses/sign-in/opencode/) or [Sign in to Hermes Agent](/kong-harnesses/sign-in/hermes/) instead.
+1. Follow the command in the `Next` field and restart any running agent CLI that uses the profile.
 
 ## Check the sign-in
 
@@ -140,7 +172,7 @@ Inspect your local sign-in state without contacting the network using [`kong-har
 kong-harnesses status --profile PROFILE_NAME
 ```
 
-The `Login` field shows the state of the sign-in:
+The `Login` field shows the state of your sign-in:
 
 {% table %}
 columns:
@@ -151,7 +183,7 @@ columns:
 rows:
   - state: "`Ready`"
     meaning: >-
-      This computer has a saved sign-in or key, or `KONG_HARNESSES_STATIC_KEY` contains a key in the expected format.
+      This computer has a saved sign-in or key, or `KONG_HARNESSES_STATIC_KEY` contains a valid key.
       `status` doesn't contact the identity provider or gateway.
   - state: "`Not signed in`"
     meaning: >-
@@ -172,7 +204,7 @@ rows:
   - state: "`Could not be read`"
     meaning: >-
       kong-harnesses couldn't read the saved sign-in from your operating system's secret store.
-      Unlock the secret store or check [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token).
+      Unlock the secret store or see [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token).
   - state: "`Managed by the client`"
     meaning: >-
       The agent CLI manages its sign-in through its own plugin, such as OpenCode or Hermes Agent.
@@ -185,9 +217,7 @@ If `Profile state` starts with `Unreadable`, follow the next step in the output 
 
 ## Sign in again
 
-Replace a working sign-in or static key, or repair a damaged sign-in, depending on your current state.
-
-To replace a sign-in or saved static key that still works, run `login` with `--replace`:
+Replace a working sign-in or static key using `--replace`:
 
 ```sh
 kong-harnesses login --profile PROFILE_NAME --replace
@@ -197,80 +227,20 @@ Type `PROFILE_NAME` when prompted to confirm.
 `login --replace` disables the current sign-in on this computer before starting the new one, and the identity provider can keep the old authorization active.
 If the new sign-in fails, run `kong-harnesses login --profile PROFILE_NAME` to sign in again.
 
-If the profile doesn't have a saved sign-in yet, or if the saved sign-in is damaged or doesn't match the profile, `login --replace` refuses it.
+When the profile doesn't have a saved sign-in yet, or when the saved sign-in is damaged or mismatched, `login --replace` refuses it.
 Run `kong-harnesses login --profile PROFILE_NAME` without `--replace` instead:
 
-* For a damaged or mismatched sign-in, `login` asks you to type `PROFILE_NAME` to confirm, removes the local sign-in, and starts a new one.
-* For an interrupted renewal, `login` starts a new sign-in without asking to confirm and keeps the old sign-in if the new attempt fails.
-* When the secret store is locked, refuses access, or isn't running, `login` stops with the matching error from [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token).
-
-## Sign out
-
-Remove the saved sign-in and any saved gateway MCP server keys for a profile using [`kong-harnesses logout`](/kong-harnesses/logout/):
-
-```sh
-kong-harnesses logout --profile PROFILE_NAME
-```
-
-When the profile has a saved sign-in or key on this computer, `logout` asks you to type `PROFILE_NAME` to confirm.
-Pass `--auto-approve` to confirm in advance when running without a prompt.
-
-What `logout` revokes depends on the profile and saved state:
-
-* **Identity provider profile with a revocation endpoint:** Disables the local sign-in, asks the identity provider to revoke the authorization, and removes the local sign-in after confirmation.
-  If `logout` reports that server sign-out is unconfirmed, revoke the authorization at the identity provider and run `logout` again.
-* **Identity provider profile without a revocation endpoint, static-key profile, or damaged sign-in:** Removes the sign-in or key from this computer only.
-  Static keys keep working at {{ site.ai_gateway }} until an administrator revokes them.
-* **Already signed out:** Removes any leftover gateway MCP server keys without prompting and prints `Already signed out`.
-* **Running agent CLI sessions:** A session that already received an access token can keep using it until that token expires.
-
-For `logout` errors such as incomplete local cleanup, see [When the login or logout command fails](/kong-harnesses/sign-in/errors/#when-the-login-or-logout-command-fails).
-
-For a CI profile, `logout` doesn't unset `KONG_HARNESSES_STATIC_KEY`, so remove that variable from the job environment yourself.
-If a saved sign-in or key for that profile name exists in the secret store and the session can reach it, `logout` removes it after confirmation.
-Otherwise, `logout` behaves according to the operating system:
-
-{% navtabs "ci-job-logout" %}
-{% navtab "macOS and Windows" %}
-`logout` prints `Already signed out` when this computer doesn't have a saved sign-in or key for that profile name.
-{% endnavtab %}
-{% navtab "Linux" %}
-Set `XDG_RUNTIME_DIR` in the job first, or `logout` fails its profile lock.
-When no Secret Service runs in the session, `logout` prints `Nothing signed out; this computer has no password store to check` and leaves any earlier desktop sign-in untouched.
-Run `logout` from a desktop session with a keyring to remove an earlier saved sign-in or key.
-{% endnavtab %}
-{% endnavtabs %}
-
-## Diagnose a failed sign-in
-
-When `login` fails and its error line doesn't explain why, run `login` with `--diagnostics`:
-
-```sh
-kong-harnesses login --profile PROFILE_NAME --diagnostics
-```
-
-`login --diagnostics` reports the failing component and reason, such as an unsupported token lifetime, a missing refresh token, or an unavailable secret store, without printing access tokens or sign-in URLs.
-When the profile doesn't have a usable sign-in, `login --diagnostics` attempts to sign in, which can ask to remove a damaged sign-in and open your browser.
-When the sign-in is already ready, `login --diagnostics` doesn't send a sign-in request, though it still prompts for any missing gateway MCP server keys.
-Don't combine `--diagnostics` with `--no-browser` or `--replace`.
-
-For every sign-in, token, `login`, and `logout` error message and its fix, see [Sign-in errors in kong-harnesses](/kong-harnesses/sign-in/errors/).
+* **Damaged or mismatched sign-in:** `login` asks you to type `PROFILE_NAME` to confirm, removes the local sign-in, and starts a new one.
+* **Interrupted renewal:** `login` starts a new sign-in without asking to confirm and keeps the old sign-in if the new attempt fails.
+* **Locked or unavailable secret store:** `login` stops with the matching error from [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token).
 
 ## Validate
 
-Confirm that your sign-in state matches the action you ran.
+Confirm that your sign-in, gateway connection, and agent CLI configuration pass all checks using [`kong-harnesses doctor`](/kong-harnesses/doctor/):
 
-* **If you signed in:** Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) to verify your sign-in, gateway connection, and agent CLI configuration:
+```sh
+kong-harnesses doctor --profile PROFILE_NAME
+```
 
-  ```sh
-  kong-harnesses doctor --profile PROFILE_NAME
-  ```
-
-  Confirm that the `login` check reports `ok`, and fix any reported findings before starting your agent CLI.
-* **If you signed out:** Run [`kong-harnesses status`](/kong-harnesses/status/) to verify that the local sign-in is gone:
-
-  ```sh
-  kong-harnesses status --profile PROFILE_NAME
-  ```
-
-  Confirm that `Login` shows `Not signed in`.
+Confirm that the `login` check reports `ok`, and resolve any failures before starting your agent CLI.
+If `login` fails, see [Sign-in errors in kong-harnesses](/kong-harnesses/sign-in/errors/).

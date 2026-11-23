@@ -1,6 +1,6 @@
 ---
 title: Sign in to OpenCode with kong-harnesses
-description: Install the {{ site.ai_gateway }} plugin in OpenCode, sign in and sign out through OpenCode, troubleshoot plugin errors, and validate the setup.
+description: Install the {{ site.ai_gateway }} plugin in OpenCode, sign in through OpenCode, verify your setup, and sign out.
 
 content_type: how_to
 permalink: /kong-harnesses/sign-in/opencode/
@@ -29,7 +29,7 @@ tldr:
   a: |
     Activate your HTTPS identity provider profile with `kong-harnesses profile activate PROFILE_NAME --client opencode` and start `opencode` once to install the gateway plugin.
     Then run `opencode auth login PROFILE_NAME` (OpenCode 2) or `opencode auth login --provider PROFILE_NAME` (OpenCode 1) and restart OpenCode.
-    Sign out with `opencode auth logout`, because `kong-harnesses login` and `logout` refuse `--client opencode`.
+    Sign out with `opencode auth logout`.
 
 related_resources:
   - text: Sign in with kong-harnesses
@@ -49,7 +49,7 @@ prereqs:
       content: |
         Install [kong-harnesses](/kong-harnesses/) and OpenCode, and install an `https://` identity provider profile that configures `opencode`.
         OpenCode doesn't support static-key profiles or plain `http://` gateways.
-        Run `kong-harnesses profile list` to find your profile name, and replace `PROFILE_NAME` in each command with that name.
+        Run [`kong-harnesses profile list`](/kong-harnesses/profile/list/) to find your profile name, and replace `PROFILE_NAME` in each command with that name.
     - title: npm read access to the `@kong` scope
       content: |
         OpenCode downloads the private `@kong/opencode-plugin-kong-ai-gateway` package when it starts.
@@ -60,7 +60,7 @@ prereqs:
         ```
     - title: Activated OpenCode profile
       content: |
-        Activate the profile for OpenCode so its configuration names the gateway plugin:
+        Activate the profile for OpenCode with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/) so its configuration names the gateway plugin:
 
         ```sh
         kong-harnesses profile activate PROFILE_NAME --client opencode
@@ -70,13 +70,25 @@ cleanup:
   inline:
     - title: Sign out of OpenCode
       content: |
-        Remove your OpenCode gateway credentials using OpenCode's logout command (`kong-harnesses logout` refuses `--client opencode`):
+        Remove your OpenCode gateway credentials using OpenCode's logout command:
 
         ```sh
         opencode auth logout
         ```
 
         Select the provider named `PROFILE_NAME` when prompted.
+
+faqs:
+  - q: How do I fix `Integration not found`, `Unknown provider`, or `redirect_uri` errors in OpenCode?
+    a: |
+      Run `kong-harnesses doctor --profile PROFILE_NAME --client opencode` and apply the findings in the report:
+
+      * **Profile doesn't configure OpenCode:** Run [`kong-harnesses profile get PROFILE_NAME`](/kong-harnesses/profile/get/) to see which agent CLIs the profile configures.
+        Recreate the profile with [`kong-harnesses profile create`](/kong-harnesses/profile/create/), or import an updated profile from your administrator with [`kong-harnesses profile import`](/kong-harnesses/profile/import/), then run `kong-harnesses profile activate PROFILE_NAME --client opencode`.
+      * **`npm` or `plugin` check fails:** Follow the `fix:` lines in the report to restore registry access or remove a stale cached plugin.
+      * **`redirect_uri` mismatch at sign-in:** Set `"redirectURI"` in the plugin options to the callback URL named by `doctor`, or remove the manual plugin entry and run `kong-harnesses profile activate PROFILE_NAME --client opencode` again.
+
+      Start `opencode` once to install the plugin, exit it, and run the OpenCode sign-in command again.
 ---
 
 OpenCode manages its own authentication through the `@kong/opencode-plugin-kong-ai-gateway` plugin and stores credentials in its own `auth.json`.
@@ -115,29 +127,9 @@ opencode auth login --provider PROFILE_NAME
 
 Complete the sign-in in your browser, then restart OpenCode so it loads the gateway model list.
 
-### Fix plugin sign-in errors
-
-If `opencode auth login` fails with `Integration not found` (OpenCode 2), `Unknown provider` (OpenCode 1), or a `redirect_uri` error, check the OpenCode setup with [`kong-harnesses doctor`](/kong-harnesses/doctor/):
-
-1. Run `doctor` for OpenCode:
-
-   ```sh
-   kong-harnesses doctor --profile PROFILE_NAME --client opencode
-   ```
-
-1. Follow the findings in the report:
-
-   * **Profile doesn't configure OpenCode:** Run [`kong-harnesses profile get PROFILE_NAME`](/kong-harnesses/profile/get/) to see which agent CLIs the profile configures.
-     If you created the profile with [`kong-harnesses profile create`](/kong-harnesses/profile/create/), create it again.
-     Otherwise, ask your administrator for a profile that configures OpenCode and [import it](/kong-harnesses/profile/import/).
-     Then run `kong-harnesses profile activate PROFILE_NAME --client opencode`.
-   * **`npm` or `plugin` check fails:** Follow the `fix:` lines in the report to fix registry access or remove a stale cached plugin.
-   * **`redirect_uri` mismatch at sign-in:** Set `"redirectURI"` in the plugin options to the profile's callback URL named by `doctor`, or remove the manual plugin entry and run `kong-harnesses profile activate PROFILE_NAME --client opencode` again.
-1. Start `opencode` once to install the plugin, exit it, and run the OpenCode sign-in command again.
-
 ## Check your sign-in status
 
-Inspect the local OpenCode setup in kong-harnesses without using the network:
+Inspect the local OpenCode setup without using the network using [`kong-harnesses status`](/kong-harnesses/status/):
 
 ```sh
 kong-harnesses status --profile PROFILE_NAME --client opencode
@@ -149,14 +141,14 @@ Confirm that `Profile` shows `PROFILE_NAME`, `Login` shows `Managed by the clien
 
 Confirm that OpenCode's plugin, gateway connection, and model list work end to end:
 
-1. Run `doctor` for OpenCode:
+1. Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) for OpenCode:
 
    ```sh
    kong-harnesses doctor --profile PROFILE_NAME --client opencode
    ```
 
    Confirm that `npm`, `plugin`, `gateway`, and `client` report `ok`, and resolve any failures.
-1. Start OpenCode and confirm your gateway models appear:
+1. Start OpenCode and confirm your gateway models are listed:
 
    ```sh
    opencode

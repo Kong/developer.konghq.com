@@ -1,6 +1,6 @@
 ---
 title: Sign in to pi with kong-harnesses
-description: Clear any saved kong key in pi, sign in to {{ site.ai_gateway }} with kong-harnesses, check status, replace or revoke credentials, and validate the connection.
+description: Clear any saved kong key in pi, sign in to {{ site.ai_gateway }} using kong-harnesses, verify your sign-in, and start a session.
 
 content_type: how_to
 permalink: /kong-harnesses/sign-in/pi/
@@ -28,7 +28,7 @@ tldr:
   q: How do I sign in to pi with kong-harnesses?
   a: |
     Remove any saved `kong` key in pi with `pi auth logout kong`, then run `kong-harnesses login --profile PROFILE_NAME` before starting pi.
-    Check the sign-in with `kong-harnesses status --profile PROFILE_NAME --client pi`, validate with `kong-harnesses doctor --profile PROFILE_NAME --client pi`, and start `pi`.
+    Verify with `kong-harnesses status --profile PROFILE_NAME --client pi` and `kong-harnesses doctor --profile PROFILE_NAME --client pi`, then start `pi`.
 
 related_resources:
   - text: Sign in with kong-harnesses
@@ -47,11 +47,11 @@ prereqs:
     - title: pi, kong-harnesses, and a profile
       content: |
         Install [kong-harnesses](/kong-harnesses/) and pi, and install a profile that configures `pi`.
-        Run `kong-harnesses profile list` to find your profile name, and replace `PROFILE_NAME` in each command with that name.
+        Run [`kong-harnesses profile list`](/kong-harnesses/profile/list/) to find your profile name, and replace `PROFILE_NAME` in each command with that name.
         If your profile uses a loopback `http://` gateway and your shell sets a proxy, add the gateway host to `NO_PROXY` and `no_proxy` in the shell that starts pi.
     - title: Activated pi profile
       content: |
-        Activate the profile for pi if you haven't already:
+        Activate the profile for pi with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/) if you haven't already:
 
         ```sh
         kong-harnesses profile activate PROFILE_NAME --client pi
@@ -63,10 +63,21 @@ cleanup:
   inline:
     - title: Sign out of pi
       include_content: kong-harnesses/sign-in-cleanup
+
+faqs:
+  - q: How do I replace a working pi sign-in or diagnose a failure?
+    a: |
+      To switch accounts or rotate a saved static key for pi, run `kong-harnesses login --profile PROFILE_NAME --replace` and type `PROFILE_NAME` to confirm.
+      When the saved sign-in is missing or damaged, run `kong-harnesses login --profile PROFILE_NAME` without `--replace` instead (see [Sign in again](/kong-harnesses/sign-in/#sign-in-again)).
+      To diagnose a failed sign-in without printing tokens or URLs, run `kong-harnesses login --profile PROFILE_NAME --diagnostics` and see [Sign-in errors in kong-harnesses](/kong-harnesses/sign-in/errors/).
+  - q: What do I need to do on macOS after upgrading kong-harnesses?
+    a: |
+      Run `kong-harnesses login --profile PROFILE_NAME` once after each kong-harnesses upgrade on macOS.
+      Each time Keychain asks whether kong-harnesses can use your sign-in, click **Always Allow**.
 ---
 
 pi reads its provider configuration from `~/.pi/agent/models.json` and runs [`kong-harnesses token`](/kong-harnesses/token/) on every request to get a short-lived access token for {{ site.ai_gateway }}.
-Because `token` never opens a browser, you must sign in with `kong-harnesses login` before starting pi.
+Because `token` never opens a browser, sign in with `kong-harnesses login` before starting pi.
 
 ## Clear any saved kong key in pi
 
@@ -85,7 +96,7 @@ If pi doesn't have a saved `kong` key, continue to the next step.
 
 ## Check your sign-in status
 
-Inspect the local sign-in and pi setup without using the network:
+Inspect the local sign-in and pi setup without using the network using [`kong-harnesses status`](/kong-harnesses/status/):
 
 ```sh
 kong-harnesses status --profile PROFILE_NAME --client pi
@@ -93,10 +104,6 @@ kong-harnesses status --profile PROFILE_NAME --client pi
 
 Confirm that `Profile` shows `PROFILE_NAME`, `Login` shows `Ready`, and `pi` shows `Configured` (not `Bypassed by a key pi saved for the kong provider`).
 For every `Login` state and what to do when it isn't `Ready`, see [Check the sign-in](/kong-harnesses/sign-in/#check-the-sign-in).
-
-### Replace a sign-in or diagnose a failure
-
-{% include kong-harnesses/sign-in-replace-diagnose.md cli_name="pi" %}
 
 ## Validate
 

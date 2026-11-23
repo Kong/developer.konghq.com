@@ -1,6 +1,6 @@
 ---
 title: Sign in to Codex with kong-harnesses
-description: Sign in to {{ site.ai_gateway }} for Codex with kong-harnesses, check status, replace or revoke credentials, and validate the connection.
+description: Sign in to {{ site.ai_gateway }} for Codex using kong-harnesses, verify your sign-in, and start a session.
 
 content_type: how_to
 permalink: /kong-harnesses/sign-in/codex/
@@ -27,8 +27,8 @@ automated_tests: false
 tldr:
   q: How do I sign in to Codex with kong-harnesses?
   a: |
-    Run `kong-harnesses login --profile PROFILE_NAME` before starting Codex, because `kong-harnesses token` doesn't open a browser.
-    Check the sign-in with `kong-harnesses status --profile PROFILE_NAME --client codex`, validate with `kong-harnesses doctor --profile PROFILE_NAME --client codex`, and start `codex -m MODEL_NAME`.
+    Run `kong-harnesses login --profile PROFILE_NAME` before starting Codex, then verify with `kong-harnesses status --profile PROFILE_NAME --client codex` and `kong-harnesses doctor --profile PROFILE_NAME --client codex`.
+    Start Codex with `codex -m MODEL_NAME` using a model name served by {{ site.ai_gateway }}.
 
 related_resources:
   - text: Sign in with kong-harnesses
@@ -44,17 +44,22 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Codex, kong-harnesses, and an HTTPS profile
+    - title: Codex, kong-harnesses, and an HTTPS Responses profile
       content: |
         Install [kong-harnesses](/kong-harnesses/) and Codex, and install an `https://` profile that configures `codex`.
-        Codex requires an `https://` gateway that serves an OpenAI-format `POST /v1/responses` route.
-        Configure an [AI Model](/ai-gateway/entities/ai-model/) with `capabilities: [agentic]`, `formats: [{ type: openai }]`, and `config.route.paths: ["/v1"]` targeting a Responses-capable provider such as OpenAI or Amazon Bedrock Mantle, without a guardrail policy that forces response buffering.
-        For static-key profiles, use {{ site.ai_gateway }} 2.4 or later so `key-auth` accepts `Authorization: Bearer` tokens.
-        kong-harnesses doesn't configure Codex for a plain `http://` gateway or a gateway without `POST /v1/responses`.
-        Run `kong-harnesses profile list` to find your profile name, and replace `PROFILE_NAME` in each command with that name.
+        Run [`kong-harnesses profile list`](/kong-harnesses/profile/list/) to find your profile name, and replace `PROFILE_NAME` in each command with that name.
+
+        Your {{ site.ai_gateway }} must meet these requirements for Codex:
+
+        * Serve an `https://` gateway with an OpenAI-format `POST /v1/responses` route.
+          Configure an [AI Model](/ai-gateway/entities/ai-model/) with `capabilities: [agentic]`, `formats: [{ type: openai }]`, and `config.route.paths: ["/v1"]` targeting a Responses-capable provider such as OpenAI or Amazon Bedrock Mantle.
+        * Avoid guardrail policies that force response buffering on the Responses model.
+        * For static-key profiles, run {{ site.ai_gateway }} 2.4 or later so `key-auth` accepts `Authorization: Bearer` tokens.
+
+        kong-harnesses skips Codex for a plain `http://` gateway or a gateway without `POST /v1/responses`.
     - title: Activated Codex profile
       content: |
-        Activate the profile for Codex if you haven't already:
+        Activate the profile for Codex with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/) if you haven't already:
 
         ```sh
         kong-harnesses profile activate PROFILE_NAME --client codex
@@ -66,10 +71,21 @@ cleanup:
   inline:
     - title: Sign out of Codex
       include_content: kong-harnesses/sign-in-cleanup
+
+faqs:
+  - q: How do I replace a working Codex sign-in or diagnose a failure?
+    a: |
+      To switch accounts or rotate a saved static key for Codex, run `kong-harnesses login --profile PROFILE_NAME --replace` and type `PROFILE_NAME` to confirm.
+      When the saved sign-in is missing or damaged, run `kong-harnesses login --profile PROFILE_NAME` without `--replace` instead (see [Sign in again](/kong-harnesses/sign-in/#sign-in-again)).
+      To diagnose a failed sign-in without printing tokens or URLs, run `kong-harnesses login --profile PROFILE_NAME --diagnostics` and see [Sign-in errors in kong-harnesses](/kong-harnesses/sign-in/errors/).
+  - q: What do I need to do on macOS after upgrading kong-harnesses?
+    a: |
+      Run `kong-harnesses login --profile PROFILE_NAME` once after each kong-harnesses upgrade on macOS.
+      Each time Keychain asks whether kong-harnesses can use your sign-in, click **Always Allow**.
 ---
 
 Codex reads its provider configuration from `~/.codex/config.toml` and runs [`kong-harnesses token`](/kong-harnesses/token/) to get short-lived access tokens for {{ site.ai_gateway }}.
-Because `token` never opens a browser, you must sign in with `kong-harnesses login` before starting Codex.
+Because `token` never opens a browser, sign in with `kong-harnesses login` before starting Codex.
 
 ## Sign in before starting Codex
 
@@ -77,7 +93,7 @@ Because `token` never opens a browser, you must sign in with `kong-harnesses log
 
 ## Check your sign-in status
 
-Inspect the local sign-in and Codex setup without using the network:
+Inspect the local sign-in and Codex setup without using the network using [`kong-harnesses status`](/kong-harnesses/status/):
 
 ```sh
 kong-harnesses status --profile PROFILE_NAME --client codex
@@ -86,13 +102,9 @@ kong-harnesses status --profile PROFILE_NAME --client codex
 Confirm that `Profile` shows `PROFILE_NAME`, `Login` shows `Ready`, and `Codex` shows `Configured`.
 For every `Login` state and what to do when it isn't `Ready`, see [Check the sign-in](/kong-harnesses/sign-in/#check-the-sign-in).
 
-### Replace a sign-in or diagnose a failure
-
-{% include kong-harnesses/sign-in-replace-diagnose.md cli_name="Codex" %}
-
 ## Validate
 
-Confirm that your sign-in, gateway route, and Codex configuration pass all checks:
+Confirm that your sign-in, gateway connection, and Codex configuration pass all checks:
 
 1. Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) for Codex:
 

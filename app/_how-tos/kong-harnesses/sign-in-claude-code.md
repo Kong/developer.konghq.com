@@ -1,6 +1,6 @@
 ---
 title: Sign in to {{ site.claude_code }} with kong-harnesses
-description: Sign in to {{ site.ai_gateway }} for {{ site.claude_code }} with kong-harnesses, check status, replace or revoke credentials, and validate the session.
+description: Sign in to {{ site.ai_gateway }} for {{ site.claude_code }} using kong-harnesses, verify your sign-in, and start a session.
 
 content_type: how_to
 permalink: /kong-harnesses/sign-in/claude-code/
@@ -50,10 +50,10 @@ prereqs:
       content: |
         Install [kong-harnesses](/kong-harnesses/) and {{ site.claude_code }}, and install a profile that configures `claude-code`.
         If you haven't set up {{ site.claude_code }} yet, follow [Set up {{ site.claude_code }} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/).
-        Run `kong-harnesses profile list` to find your profile name, and replace `PROFILE_NAME` in each command with that name.
+        Run [`kong-harnesses profile list`](/kong-harnesses/profile/list/) to find your profile name, and replace `PROFILE_NAME` in each command with that name.
     - title: Activated {{ site.claude_code }} profile
       content: |
-        Activate {{ site.claude_code }} for the profile if your organization doesn't deploy managed settings:
+        Activate {{ site.claude_code }} for the profile with [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/) if your organization doesn't deploy managed settings:
 
         ```sh
         kong-harnesses profile activate PROFILE_NAME --client claude-code
@@ -74,15 +74,25 @@ cleanup:
         Type `PROFILE_NAME` when prompted to confirm, or pass `--auto-approve` to confirm in advance.
         An already-running {{ site.claude_code }} session can keep using a cached access token until that token expires.
         For what `logout` revokes across identity provider, static-key, and CI profiles, see [Sign out](/kong-harnesses/sign-in/#sign-out).
+
+faqs:
+  - q: How do I replace a working {{ site.claude_code }} sign-in or diagnose a failure?
+    a: |
+      To switch accounts or rotate a saved static key for {{ site.claude_code }}, run `kong-harnesses login --profile PROFILE_NAME --replace` and type `PROFILE_NAME` to confirm.
+      When the saved sign-in is missing or damaged, run `kong-harnesses login --profile PROFILE_NAME` without `--replace` instead (see [Sign in again](/kong-harnesses/sign-in/#sign-in-again)).
+      To diagnose a failed sign-in without printing tokens or URLs, run `kong-harnesses login --profile PROFILE_NAME --diagnostics` and see [Sign-in errors in kong-harnesses](/kong-harnesses/sign-in/errors/).
+  - q: What do I need to do on macOS after upgrading kong-harnesses?
+    a: |
+      Run `kong-harnesses login --profile PROFILE_NAME` once after each kong-harnesses upgrade on macOS.
+      Each time Keychain asks whether kong-harnesses can use your sign-in or a gateway MCP server key, click **Always Allow**.
 ---
 
 {{ site.claude_code }} gets short-lived access tokens from [`kong-harnesses credential`](/kong-harnesses/credential/), and kong-harnesses renews them automatically without reopening your browser.
-For an identity provider profile, {{ site.claude_code }} can start your first browser sign-in automatically when it requests its first token, or you can sign in ahead of time with `kong-harnesses login`.
+You must run `login` first for static-key profiles, Claude subscription profiles, and profiles with key-authenticated gateway MCP servers.
 
 ## Sign in to your profile
 
 Sign in to your profile in an interactive terminal before starting {{ site.claude_code }}.
-You must run `login` first for static-key profiles, Claude subscription profiles, and profiles with key-authenticated gateway MCP servers.
 
 1. Run [`kong-harnesses login`](/kong-harnesses/login/) for your profile:
 
@@ -90,9 +100,8 @@ You must run `login` first for static-key profiles, Claude subscription profiles
    kong-harnesses login --profile PROFILE_NAME
    ```
 
-   For an identity provider profile, kong-harnesses opens your browser at the identity provider's sign-in page and prints the sign-in URL in the terminal.
-   Open that URL in a browser on the same computer so the callback reaches kong-harnesses.
-   To print the URL without opening a browser automatically, add `--no-browser`.
+   For an identity provider profile, kong-harnesses opens your browser at the identity provider's sign-in page and prints the URL in the terminal.
+   Open that URL in a browser on the same computer so the callback reaches kong-harnesses, or add `--no-browser` to print the URL without opening a browser automatically.
 
    For a static-key profile, `login` prompts for the key from your administrator and hides your input as you type or paste it.
 1. If your profile lists gateway MCP servers that take a key, enter each key when `login` prompts for it.
@@ -106,12 +115,9 @@ You must run `login` first for static-key profiles, Claude subscription profiles
 > * **CI job profile:** A CI profile reads its key from `KONG_HARNESSES_STATIC_KEY` on every request, so `login` refuses it.
 >   Set `KONG_HARNESSES_STATIC_KEY` in the environment where {{ site.claude_code }} starts instead.
 
-On macOS, run `kong-harnesses login --profile PROFILE_NAME` once after each upgrade of kong-harnesses.
-Each time Keychain asks whether kong-harnesses can use your sign-in or a gateway MCP server key, click **Always Allow**.
-
 ## Check your sign-in status
 
-Inspect the local sign-in and {{ site.claude_code }} setup without using the network:
+Inspect the local sign-in and {{ site.claude_code }} setup without using the network using [`kong-harnesses status`](/kong-harnesses/status/):
 
 ```sh
 kong-harnesses status --profile PROFILE_NAME --client claude-code
@@ -119,10 +125,6 @@ kong-harnesses status --profile PROFILE_NAME --client claude-code
 
 Confirm that `Profile` shows `PROFILE_NAME`, `Login` shows `Ready`, and `Claude` shows `Configured`.
 For every `Login` state and what to do when it isn't `Ready`, see [Check the sign-in](/kong-harnesses/sign-in/#check-the-sign-in).
-
-### Replace a sign-in or diagnose a failure
-
-{% include kong-harnesses/sign-in-replace-diagnose.md cli_name=site.claude_code %}
 
 ## Validate
 
