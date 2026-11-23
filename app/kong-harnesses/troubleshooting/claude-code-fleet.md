@@ -110,7 +110,7 @@ When a gateway MCP server doesn't connect or doesn't show in `/mcp`, check these
 * **Server with its own OAuth sign-in:** Sign in from `/mcp`.
 * **Server turned off in {{ site.claude_code }}:** `/mcp disable` and `disabledMcpjsonServers` can turn off a gateway MCP server.
   `kong-harnesses doctor` then fails and names the setting that turned the server off.
-  Run `/mcp enable SERVER_NAME` in {{ site.claude_code }}, or remove the entry that `doctor` names from `disabledMcpjsonServers`.
+  Run `/mcp enable` with the server name in {{ site.claude_code }}, or remove the entry that `doctor` names from `disabledMcpjsonServers`.
 * **Gateway-authenticated server failed at startup:** A server can [fail during the first browser sign-in](https://code.claude.com/docs/en/mcp#failed-first-connections).
   After you sign in, reconnect it from `/mcp`.
 * **Missing servers:** To find invalid entries that {{ site.claude_code }} dropped, run `kong-harnesses doctor --profile PROFILE_NAME --client claude-code` and `claude doctor`.
