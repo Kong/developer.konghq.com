@@ -49,7 +49,8 @@ prereqs:
       content: |
         Install [kong-harnesses](/kong-harnesses/install/) on a build computer.
         The build computer requirement depends on the operating system of the build computer.
-        The deployment tool depends on the operating system of the managed computers:
+        The deployment tool depends on the operating system of the managed computers.
+        When the two operating systems differ, read the requirement and the tool from different rows:
 
         {% table %}
         columns:
@@ -101,7 +102,8 @@ cleanup:
   inline:
     - title: Remove the fleet build
       content: |
-        To remove the build, unassign the deployment, run `kong-harnesses fleet remove`, and delete the build files.
+        To remove the build, first have each developer sign out of the machine-wide profile and remove any user-level activation.
+        Then unassign the deployment, run `kong-harnesses fleet remove`, and delete the build files.
         For the steps, see [Remove a {{ site.claude_code }} fleet build](/kong-harnesses/remove-a-claude-code-fleet-build/).
 
 faqs:
@@ -121,9 +123,10 @@ Each developer signs in through the browser on first use, and kong-harnesses ren
 ## Sign in to the profile
 
 If the profile uses the Anthropic API provider, `fleet build` uses your sign-in to read the gateway's model list.
-Other Claude providers, such as Amazon Bedrock, take models from the profile or from `--model`, and don't need a sign-in.
+Other Claude providers, such as Amazon Bedrock, take models from the profile or from `--model`.
+For those providers, skip to [Review the existing policy](#review-the-existing-policy).
 
-Sign in with [`kong-harnesses login`](/kong-harnesses/login/):
+For the Anthropic API provider, sign in with [`kong-harnesses login`](/kong-harnesses/login/):
 
 ```sh
 kong-harnesses login --profile work
@@ -470,7 +473,7 @@ Then finish the checks on every platform:
    The [AI Auth Strategy](/ai-cost-management/attribution/#set-up-subject-attribution) decides the subject:
    * A principal: `principal/UUID`
    * An AI Consumer: `consumer/UUID`
-   * An OpenID Connect claim without a principal: `oidc/SUB`, where `SUB` is the value of the claim, by default `sub`
+   * An OpenID Connect claim without a principal: `oidc/CLAIM_VALUE`, where `CLAIM_VALUE` is the value of the claim that `credential_claim` names, `sub` by default
 1. Confirm that no policy sets `disableAllHooks` to `true`.
    The test prompt doesn't check the hooks.
 1. If the profile has gateway MCP servers, run `/mcp` and confirm that every server connects.

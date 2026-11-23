@@ -140,11 +140,12 @@ Before you build, check each policy source:
   For details, see [Platform availability](https://code.claude.com/docs/en/server-managed-settings#platform-availability).
 * **Values that `fleet build` refuses:** `fleet build` refuses a `--policy` that sets any of these:
   * `forceLoginMethod` or `forceLoginGatewayUrl`, with a value other than `null`
-  * A `policyHelper` or `policyHelpers` value that {{ site.claude_code }} runs on the target platform.
+  * A `policyHelper` or `policyHelpers` value that supplies settings on the target platform, from a helper path or script, or from a `defaultSettings` or `default` payload.
     This includes a `policyHelper` path that {{ site.claude_code }} can't run, because {{ site.claude_code }} then refuses to start.
   * An `allowedProviders` text entry other than `customEndpoint`
   * In `ANTHROPIC_CUSTOM_HEADERS`: `Authorization`, `Proxy-Authorization`, `X-Api-Key`, `Host`, a malformed line, or a header that conflicts with attribution
-  * An `env` value that {{ site.claude_code }} drops: an object with its own `toString` key, also inside a list, or a value whose text holds a NUL byte.
+  * An `env` value that {{ site.claude_code }} can't use: an object with its own `toString` key, also inside a list, or a value whose text holds a NUL byte.
+    An object with its own `toString` key makes {{ site.claude_code }} drop the whole managed `env`.
     Other values convert to text, such as numbers, booleans, `null`, lists, and objects.
   * A version range that fails the [version range checks](#version-range-checks)
 * **Other keys to remove:** Remove `forceLoginOrgUUID`, because it blocks `apiKeyHelper` at startup.
@@ -280,10 +281,11 @@ It [expands the variables](https://code.claude.com/docs/en/managed-mcp#how-polic
 A `serverName` entry matches the name as written, before the variables expand.
 An entry matches when it matches with these known values.
 
-A server is undecided in these cases:
+A server is undecided when its result depends on one of these cases:
 
 * Its result depends on a variable that the `env` of the policy doesn't set, in an entry or in the server.
-* An `allowedMcpServers` `serverUrl` entry names a variable, and the `env` of the policy sets that variable to a value that holds `/`, `?`, `#`, `@`, `:`, or `\`.
+* An `allowedMcpServers` `serverUrl` entry names a variable, and the `env` of the policy sets that variable to a value that can move the URL.
+  Such a value holds `/`, `?`, `#`, `@`, `:`, `\`, `*`, `%`, white space, a control or invisible character, or a character that isn't ASCII, or it is `.` or `..`.
   {{ site.claude_code }} `2.1.219` and later [ignore an allowlist entry](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) whose expansion changes the scheme, host, port, or path of the URL.
   This case applies at every minimum version.
   Write such an entry as a literal URL.
@@ -295,7 +297,7 @@ A server is undecided in these cases:
   Build with `--claude-code-minimum 2.1.219` or later, or write the entry as a literal value.
   If `--policy` sets the minimum, set `requiredMinimumVersion` and `minimumVersion` to `2.1.219` or later instead.
 * The server or an entry names a variable that {{ site.claude_code }} can read as an empty credential, even when the `env` of the policy sets it.
-  A remote server that takes its host from such a variable can then have no host.
+  A remote server that takes its host from such a variable then doesn't have a host to reach.
   Write the value as a literal.
 * The URL of the server or of a `serverUrl` entry has a form that `fleet build` can't compare as {{ site.claude_code }} does, such as a percent escape or a host that isn't ASCII.
   Write the URL in plain ASCII, without percent escapes, backslashes, or spaces.
@@ -312,8 +314,10 @@ When a deny entry is sure to match one of your own `--mcp-config` servers, `flee
 
 ### More MCP rules
 
-* **Provided servers at a gateway address (every mode):** `fleet build` refuses a `managedMcpServers` entry that points to the address of a gateway MCP server, also under another name.
-  {{ site.claude_code }} loads the provided server instead, so the gateway server doesn't load with the credential of the profile.
+* **Provided servers at a gateway address (every mode):** `fleet build` refuses a `managedMcpServers` entry that points, or may point, to the address of a gateway MCP server, also under another name.
+  In the `allowlist` and `any` modes, {{ site.claude_code }} loads the provided server instead of the gateway server at the same URL.
+  The gateway server then doesn't load with the credential of the profile.
+  In the `exclusive` mode, {{ site.claude_code }} loads both, and uses the `managed-mcp.json` entry only when the names match.
   Remove the entry.
 * **Name collisions (`exclusive`):** Rename each `--mcp-config` server that has the same name as a gateway server, or pass `--record` for an earlier build.
 * **MDM allowlist replaces file allowlists (`allowlist`):** The highest administrator source supplies the locked `allowedMcpServers`.
@@ -363,16 +367,19 @@ This rule applies to every mode, also when the profile doesn't have gateway MCP 
   The key must be `serverName`, `serverUrl`, or `serverCommand`.
 * `managedMcpServers` is `null`, isn't an object, or has an entry that {{ site.claude_code }} drops.
 
-{{ site.claude_code }} drops such an entry and enforces the rest, but `fleet build` can't know what the entry was meant to allow or deny.
+{{ site.claude_code }} drops such an entry or value and still applies the other entries.
+`fleet build` can't know what the dropped entry was meant to allow, deny, or provide.
 A `deniedMcpServers` value that isn't a list doesn't block any server.
 If you don't want a list or provided servers, leave the key out of `--policy`.
 
-{{ site.claude_code }} loads a `managedMcpServers` entry only when it has all of these:
+{{ site.claude_code }} [loads a `managedMcpServers` entry](https://code.claude.com/docs/en/managed-mcp#provide-servers-through-managed-settings) only when it passes all of these checks:
 
-* The type `http`, `sse`, or `streamable-http`, and an HTTPS URL
-* No `command`, `args`, `env`, or `headersHelper`, and no `${...}` reference
-* A name of letters, digits, hyphens, and underscores only
-* No control character or invisible format character in a key or value
+* The type is `http`, `sse`, or `streamable-http`.
+* The URL is an `https://` URL with a host.
+* The entry doesn't have a `command`, `args`, `env`, or `headersHelper` key.
+* No value holds a `${...}` reference.
+* The name has only letters, digits, hyphens, and underscores.
+* No key or value holds a control character or an invisible format character.
 
 In the `allowlist` and `any` modes, {{ site.claude_code }} enforces a wholly invalid managed `allowedMcpServers` value, also `null`, as an empty managed allowlist.
 For details, see [Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed).
@@ -563,7 +570,8 @@ rows:
 
 `fleet build` refuses a version range in these cases:
 
-* A flag value isn't a valid version, such as `2.1.300`.
+* A flag value isn't a version of three numbers, such as `2.1.300`.
+  For example, `2.1`, `v2.1.300`, and `2.01.300` aren't valid.
 * `--claude-code-minimum` is earlier than `2.1.163`, the first release that reads version bounds.
   This check applies only to the flag.
 * `--claude-code-minimum` differs from a valid `requiredMinimumVersion` or `minimumVersion` in `--policy`.

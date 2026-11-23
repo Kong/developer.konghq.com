@@ -187,7 +187,7 @@ Skip a path that isn't on the computer.
 
 ## Validate
 
-Confirm the removal on a test computer:
+Confirm the removal on a test computer before you close the rollout:
 
 1. Confirm that none of the file paths listed under `Remove` are on the test computer.
    For the target paths, see [Check the build output](/kong-harnesses/roll-out-claude-code-through-mdm/#check-the-build-output).
