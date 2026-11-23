@@ -145,13 +145,16 @@ RSpec.describe KongHarnessesChangelog do
     # A placeholder at the start of a line is text too.
     ["* run it\n  <name> at the start", '* run it \\<name> at the start'],
     ["* run it\\\n  <name> at the start", "* run it  \n  \\<name> at the start"],
-    # A quote mark, a dash and an entity show as they did, and an entity is text.
+    # A quote mark and an entity show as they did, and an entity is text.
     ["* use it's \"x\"", '* use it’s “x”'],
-    ['* a\\--- b', '* a-– b'],
     ['* &#44;', '* &#44;'],
-    # Kramdown shows `>>` and `<<` next to a space with a no-break space.
-    ['* Append x >> y.', "* Append x\u00a0» y."],
-    ['* Prepend y << x.', "* Prepend y «\u00a0x."],
+    # Dashes, an ellipsis and `<<` or `>>` show as written, so a flag keeps its hyphens.
+    ['* add --auto-approve', '* add \\-\\-auto-approve'],
+    ['* a\\--- b', '* a\\-\\-\\- b'],
+    ['* a---- b', '* a\\-\\-\\-\\- b'],
+    ['* wait...', '* wait\\.\\.\\.'],
+    ['* Append x >> y.', '* Append x \\>\\> y.'],
+    ['* Prepend y << x.', '* Prepend y \\<\\< x.'],
     # A paragraph after a reference definition stays a paragraph of its own.
     ["* a\n  {: .x}\n  [r]: https://example.com/pull/3\n  b", "* a\n\n  b"],
     # The last entry after a loose one reads back as loose.

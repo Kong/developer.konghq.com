@@ -84,7 +84,7 @@ Run the steps in this order:
    Each of them compares the numbers of a version as whole numbers of any size.
    A tag with build metadata, as in `v1.2.3+build.2`, is no final release.
    A pre-release, such as `1.2.3-rc.1`, shows only once a final release of the same `X.Y.Z` is published.
-   The script reads the version of each heading from the source text and writes it as text, so the page shows a version with `--` as its tag writes it, not with a dash.
+   The script reads `--`, `...`, `<<` and `>>` as text, as GitHub shows them, so a flag such as `--model` and a version with `--` keep their hyphens on the page, not a dash.
    For each release that it leaves out, it prints the version and why: the release is not published, it is marked as a pre-release, it has no `vX.Y.Z` tag, it is a pre-release whose `X.Y.Z` release is not published or is not a final release, or it has no entries for users.
    It also prints each published final release that has no section in the changelog.
    It stops with an error at a release heading with no version, such as `Unreleased`, when the changelog has no section with the version of the highest final release, and when no entry for users is left, so a changelog that lost its sections cannot empty the page.
@@ -109,7 +109,7 @@ Run the steps in this order:
    `check-changelog-links.rb` reads only the page, so it counts the entries on the page and says "on the page".
    The checks of the whole page below read the page too, so they name the first place that they refuse on the page in the same way, and a code block by its number in its section.
    The check of the text that a reader sees names the release, or the first block that differs when the page and the source hold other releases.
-   A place names a release by the version that its `CHANGELOG.md` heading writes, also with `--`, which kramdown shows as a dash, and finds it by the version that the heading shows, not by the order of the headings.
+   A place names a release by the version that its `CHANGELOG.md` heading writes, and finds it by the version that the heading shows, not by the order of the headings.
    The checks name a link that release-please does not write so by the line in `CHANGELOG.md` where its entry or block starts, and its release.
    release-please links each `#N` and `@name` of a subject also in code, so such a link in a code span becomes `#N` or `@name` again, as in `` `&#8212;` `` or `` `@local` ``, and the script refuses code that holds any other link.
    Outside code, the writer escapes the `&` of `&#8212;` once the link between its parts goes, so the page still shows `&#8212;`.
@@ -121,7 +121,7 @@ Run the steps in this order:
    A value such as `go@1.21` can go in backticks.
    It parses the changelog with the GFM parser and options that the site uses, changes the tree, and writes it back with kramdown's own Markdown writer, so it never rewrites Markdown text with patterns.
    Two changes keep text as text: a `|` does not make a table and a placeholder such as `<name>` is not HTML, also at the start of a line, and the writer escapes both.
-   The writer also escapes a block marker at the start of any line of a paragraph, a `~` and a run of `-`, `.` or `>`, and it writes an entity as it was written, a backtick as `&#96;` and a quote mark or dash as its character, so no character becomes Markdown.
+   The writer also escapes a block marker at the start of any line of a paragraph, a `~` and a run of `-`, `.` or `>`, and it writes an entity as it was written, a backtick as `&#96;` and a quote mark as its character, so no character becomes Markdown.
    It writes a code block in a language that the site's highlighter does not load, as listed in `app/_plugins/converters/shiki.rb`, as `text`, because Shiki stops the site build on an unknown language.
    A Shiki alias that the file does not name, such as `yml`, is written as `text` too, so the code shows without colors.
    The script refuses the file when it cannot read an entry or the form of that list.

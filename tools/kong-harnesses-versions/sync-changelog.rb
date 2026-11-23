@@ -48,7 +48,7 @@ module KongHarnessesChangelog
   # as a footnote, math, raw HTML or an HTML comment, rather than guess. A strikethrough
   # is an HTML element with its own mark (`strikethrough?`).
   ELEMENTS = %i[root blank header p text ul ol li strong em codespan codeblock a img br hr
-                blockquote smart_quote typographic_sym entity eob].freeze
+                blockquote smart_quote entity eob].freeze
   # The export refuses every control character in what it writes, so this one can stand
   # for a line break in code while the writer writes a paragraph.
   LINE_BREAK = "\u0001"
@@ -75,20 +75,20 @@ module KongHarnessesChangelog
   # versions job read it, so the page and the release data name the same latest
   # release. Change them together.
   STABLE_TAG = /\Av(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\z/
-  # The characters that kramdown's typographic symbols show, with a no-break space in the
-  # two forms with a space.
-  SYMBOLS = { mdash: '—', ndash: '–', hellip: '…', laquo: '«', raquo: '»', laquo_space: "«\u00a0", raquo_space: "\u00a0»" }.freeze
   QUOTES = { lsquo: '‘', rsquo: '’', ldquo: '“', rdquo: '”' }.freeze
 
-  # The site's parser, but a line with a `|` in an entry is text, not a table, and a
-  # placeholder such as `<profile>` is text, not HTML, also at the start of a line. The
-  # writer escapes both, so the site also shows them as text. An HTML comment or a tag
+  # The site's parser, but a line with a `|` in an entry is text, not a table, a
+  # placeholder such as `<profile>` is text, not HTML, also at the start of a line, and
+  # `--`, `...`, `<<` and `>>` are text, not dashes, an ellipsis or quote marks, so a
+  # flag such as `--model` keeps its hyphens as GitHub shows them. The writer escapes
+  # all of them, so the site also shows them as text. An HTML comment or a tag
   # that HTML knows, such as `<del>`, is still read as HTML, so the export refuses it
   # rather than show it, but a `~~` strikethrough stays.
   class Parser < Kramdown::Parser::GFM
     def initialize(source, options)
       super
       @block_parsers.delete(:table)
+      @span_parsers.delete(:typographic_syms)
     end
 
     # A reference link, a link in angle brackets or one with a title gives the same
@@ -186,14 +186,9 @@ module KongHarnessesChangelog
     end
 
     # Kramdown gives a quote mark its direction from the characters next to it, which
-    # the export can change, and reads `-` and `.` runs next to a symbol as a longer
-    # one. The character itself shows the same and stays as it is.
+    # the export can change. The character itself shows the same and stays as it is.
     def convert_smart_quote(el, _opts)
       QUOTES.fetch(el.value)
-    end
-
-    def convert_typographic_sym(el, _opts)
-      SYMBOLS.fetch(el.value)
     end
 
     # release-please writes a `~~` strikethrough of a subject as it is, so the writer
@@ -234,7 +229,7 @@ module KongHarnessesChangelog
   def text_of(element)
     case element.type
     when :text, :codespan then element.value.to_s
-    when :entity, :smart_quote, :typographic_sym then visible_text(element)
+    when :entity, :smart_quote then visible_text(element)
     else element.children.map { |child| text_of(child) }.join
     end
   end
@@ -304,7 +299,7 @@ module KongHarnessesChangelog
 
     paragraph = blocks.first
     pieces = paragraph.children.map do |child|
-      next visible_text(child) if %i[text entity smart_quote typographic_sym].include?(child.type)
+      next visible_text(child) if %i[text entity smart_quote].include?(child.type)
 
       [child, child.attr['href'].to_s] if child.type == :a
     end
@@ -327,12 +322,8 @@ module KongHarnessesChangelog
     item
   end
 
-  # The source text of the typographic symbols that a version can hold.
-  VERSION_SYMBOLS = { ndash: '--', mdash: '---', hellip: '...' }.freeze
-
-  # A release heading shows its version as its tag writes it, not with the dashes that
-  # kramdown makes of `--`. release-please links the version to the compare view
-  # (header1.hbs:1-2), and that link goes.
+  # A release heading shows its version as text, as its tag writes it. release-please
+  # links the version to the compare view (header1.hbs:1-2), and that link goes.
   def with_source_version(heading, version)
     link = heading.children.first
     address = link&.attr.to_h['href'].to_s
@@ -344,7 +335,7 @@ module KongHarnessesChangelog
     # A heading with no link, as release-please writes the first release.
     source = +''
     taken = heading.children.take_while do |child|
-      piece = child.type == :text ? child.value : VERSION_SYMBOLS[child.value] if %i[text typographic_sym].include?(child.type)
+      piece = child.value if child.type == :text
       next false if piece.nil? || source.length >= version.length
 
       source << piece
@@ -546,15 +537,14 @@ module KongHarnessesChangelog
     when :text then piece.value
     # Kramdown has no character for a code point above U+10FFFF, which `hidden` refuses.
     when :entity then piece.value.char&.scrub || "\uFFFD"
-    when :smart_quote then QUOTES.fetch(piece.value)
-    else SYMBOLS.fetch(piece.value)
+    else QUOTES.fetch(piece.value)
     end
   end
 
   # The text of a block outside code, with a space for code and a line break.
   def prose_of(element)
     case element.type
-    when :text, :entity, :smart_quote, :typographic_sym then visible_text(element)
+    when :text, :entity, :smart_quote then visible_text(element)
     when :codespan, :br then ' '
     else element.children.map { |child| prose_of(child) }.join
     end
