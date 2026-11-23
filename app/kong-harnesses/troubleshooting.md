@@ -66,7 +66,8 @@ When you omit `--client`, `doctor` exits with `2` before it prints a report in t
 * You pass `--inference`, and the profile doesn't configure {{ site.claude_code }}.
   The `--inference` flag works only for {{ site.claude_code }}.
 
-When you name an agent CLI that the profile doesn't configure, the `client` check reports the problem instead.
+When you name an agent CLI that the profile doesn't configure, read the `client` check.
+The managed settings of your organization can still set up that agent CLI, or select another profile.
 
 The `doctor` command uses the network to check the gateway.
 Unless the profile uses a static key, `doctor` also checks the identity provider.
@@ -144,7 +145,7 @@ rows:
         The `login` command refuses that profile.
       * On Linux, no Secret Service runs in the session: use a desktop session that runs a keyring, such as GNOME Keyring.
         In a CI job, use a profile that reads its key from `KONG_HARNESSES_STATIC_KEY`.
-      * The report says that `max_access_token_lifetime_seconds` is below 365 seconds: ask your administrator to raise the value to at least 365 seconds, then import the corrected profile.
+      * The report says that `max_access_token_lifetime_seconds` is below 365 seconds: ask your administrator to raise the value to at least 365 seconds, then create or import the profile again.
         Until then, the `login` check fails even while you're signed in, because the next renewal fails.
 
       For more about sign-in, see [Sign in with kong-harnesses](/kong-harnesses/sign-in/).
@@ -199,12 +200,14 @@ rows:
     next: |
       Check the network, VPN, and any proxy, then run `doctor` again.
       For a certificate error, ask your administrator to check the certificate of the gateway and the system trust store.
+      An `http://` gateway must use a loopback host, such as `localhost`.
       Codex, OpenCode, and Hermes require an `https://` gateway.
 
       For an `http://` gateway behind a proxy, do the steps on the `fix:` line.
       The steps can add the gateway host to a variable such as `NO_PROXY` in the shell that starts the agent CLI.
       Add each entry exactly as the `fix:` line names it.
-      For an IPv6 address, the line names each form of the address, such as `[::1]:8000,[::1],::1`, because agent CLIs read the address in different forms.
+      When the line asks your administrator to make a managed `NO_PROXY` value name the gateway host, use the host without the port, such as `localhost`.
+      For an IPv6 address, add each form of the address, with the gateway port in the first form, such as `[::1]:8000,[::1],::1`, because agent CLIs read the address in different forms.
       For {{ site.claude_code }}, the steps then run `profile activate`, which writes the same exclusion to the {{ site.claude_code }} settings.
       When the `fix:` line for {{ site.claude_code }} doesn't name `profile activate`, the cause is in a settings file, and `profile activate` can't fix the cause.
   - check: "`route`"
@@ -232,8 +235,8 @@ rows:
     next: |
       If the `gateway` check fails, fix that problem first, because `catalog` doesn't send a request after that failure.
       When the gateway answers `404`, the gateway doesn't serve a model list, and {{ site.claude_code }} uses its built-in model names for each model that the profile doesn't pin.
-      When the gateway needs a sign-in and the profile doesn't use your Claude subscription, sign in as the `fix:` line says, then run `doctor` again.
-      For a Claude subscription profile, `doctor` can't send that sign-in, so start {{ site.claude_code }} to read the model list with your subscription sign-in.
+      When the gateway needs a credential, do the step on the `fix:` line for your profile, such as signing in or setting `KONG_HARNESSES_STATIC_KEY`, then run `doctor` again.
+      For a Claude subscription profile, only {{ site.claude_code }} can send your subscription sign-in, so start {{ site.claude_code }} to read the model list.
       When the `fix:` line names the gateway operators, ask them to serve the models at `/v1/models`.
       When the gateway doesn't answer, run `doctor` again later.
   - check: "`picker`"
@@ -251,7 +254,8 @@ rows:
       If the finding says that the model list isn't available, fix the `catalog` problem first.
       When the `fix:` line says to pick a model, run `/model` and pick the kind of model that the line names, a gateway model or a profile model.
       When the `fix:` line says to unset a variable, unset the variable in the shell that starts {{ site.claude_code }}, because that variable overrides `/model`.
-      When the `fix:` line says that the profile pins the model, ask your administrator to pin a model that the gateway serves, then do the rest of the `fix:` line.
+      When the `fix:` line says that the profile pins the model, import the profile again and activate the profile, as the line says.
+      If the gateway still doesn't serve the pinned model, ask your administrator to pin a model that the gateway serves.
       When the managed settings of your organization set the model, ask your administrator to change the settings.
   - check: "`anthropic`"
     what: |
