@@ -206,18 +206,20 @@ rows:
       For an `http://` gateway behind a proxy, do the steps on the `fix:` line.
       The steps can add the gateway host to a variable such as `NO_PROXY` in the shell that starts the agent CLI.
       Add each entry exactly as the `fix:` line names it.
-      This rule also applies when the line asks your administrator to change a managed `NO_PROXY` value:
+      When the line asks your administrator to change a managed `NO_PROXY` value, give the administrator the entries in this form:
 
       * For a host name or an IPv4 address, add the host without the port, such as `localhost`.
       * For an IPv6 address, add all three forms of the address, because agent CLIs read the address in different forms.
         For example, for `http://[::1]:8000`, add `[::1]:8000,[::1],::1`.
 
-      For {{ site.claude_code }}, the steps then run `profile activate`, which writes the same exclusion to the {{ site.claude_code }} settings.
+      For {{ site.claude_code }}, when the `fix:` line names `profile activate`, run that command as the last step.
+      The command writes the same exclusion to the {{ site.claude_code }} settings.
       When the `fix:` line for {{ site.claude_code }} doesn't name `profile activate`, the cause is in a settings file, and `profile activate` can't fix the cause.
   - check: "`route`"
     what: |
       The gateway has a route for the requests of the agent CLI.
-      When `doctor` sends your credential, an HTTP `401` or `403` response means that the gateway refuses the credential on that route.
+      When `doctor` sends your credential, an HTTP `401` or `403` response means that the gateway refuses the test request on that route.
+      When the test request doesn't have an input that the agent CLI sends, such as a client certificate or custom headers, `route` gives `warn`, because the agent CLI can get a different response.
       When `doctor` has no credential to send, such as when you aren't signed in or the agent CLI owns its sign-in, a `401` or `403` response gives `ok`.
       That `ok` result confirms only that the route exists, and doesn't confirm that the gateway accepts your credential.
       For a Claude subscription profile, the same response gives `warn`.
@@ -240,16 +242,18 @@ rows:
       If the `gateway` check fails, fix that problem first, because `catalog` doesn't send a request after that failure.
       When the gateway answers `404`, the gateway doesn't serve a model list, and {{ site.claude_code }} uses its built-in model names for each model that the profile doesn't pin.
       When the gateway needs a credential, do the step on the `fix:` line for your profile, such as signing in or setting `KONG_HARNESSES_STATIC_KEY`, then run `doctor` again.
-      For a Claude subscription profile, only {{ site.claude_code }} can send your subscription sign-in, so start {{ site.claude_code }} to read the model list.
+      For a Claude subscription profile, the `fix:` line tells you to start {{ site.claude_code }}, because only {{ site.claude_code }} can send your subscription sign-in to read the model list.
       When the `fix:` line names the gateway operators, ask them to serve the models at `/v1/models`.
       When the gateway doesn't answer, run `doctor` again later.
   - check: "`picker`"
     what: |
       When gateway discovery is off, the `/model` menu of {{ site.claude_code }} offers only models that the gateway serves or that the profile lists.
       When gateway discovery fills the menu, the menu keeps the built-in models and adds each gateway model with an ID that contains `claude` or `anthropic`.
-      The check reports settings that hide the built-in models, missing rows for gateway models that discovery skips, duplicate rows, and rows for models that the gateway doesn't serve.
+      When discovery fills the menu, the check reports settings that hide the built-in models, duplicate rows for models that discovery adds, and missing rows for gateway models that discovery skips.
+      When discovery is off, the check reports a menu that shows the built-in models instead of the selected models, and missing rows.
+      In both cases, the check reports rows for models that the gateway doesn't serve or that the profile doesn't list.
     next: |
-      Do each step on the `fix:` line, such as running `profile activate`, removing the rows that the line names from `modelPicker`, or removing `replaceBuiltInOptions`.
+      Do each step on the `fix:` line, such as running `profile activate`, removing the rows that the finding names from `modelPicker`, or removing `replaceBuiltInOptions`.
       If `picker` says that the model list isn't available, fix the `catalog` problem first.
       When the managed settings of your organization set the menu, ask your administrator to change the settings.
   - check: "`model`"
@@ -295,8 +299,10 @@ rows:
     next: |
       If your own `deniedMcpServers` setting blocks a server, remove the entry that blocks the server.
       A `deniedMcpServers` entry blocks a server even when `allowedMcpServers` lists the server.
-      If your own `allowedMcpServers` setting doesn't list a server, add the server.
-      If the policy of your organization blocks a server, ask your administrator to allow the server.
+      If your own `allowedMcpServers` setting doesn't list a server, add an entry for the server.
+      For a remote server, use a `serverUrl` entry, and for a local server, use a `serverCommand` entry.
+      A `serverName` entry counts only when the list has no entries of that type.
+      If the policy of your organization blocks a server, or the managed settings set `allowManagedMcpServersOnly`, ask your administrator to allow the server.
   - check: "`gateway-mcp`"
     what: |
       No setting keeps {{ site.claude_code }} from loading the gateway MCP servers that the profile lists, and the gateway accepts your sign-in on them.
