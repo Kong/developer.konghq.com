@@ -182,14 +182,14 @@ rows:
       The `provider` check appears only when it finds a problem.
     next: |
       Do the step on the `fix:` line, such as removing a provider, base URL, or plugin entry from the settings file that the report names, then run `doctor` again.
-      When the finding says that OpenCode doesn't read the file where activation wrote the plugin, do these steps:
+      When the `fix:` line says to run `profile cleanup`, do these steps instead:
 
       1. If the `fix:` line names a variable for the cleanup step, open a shell without that variable.
       1. Run `kong-harnesses --client opencode profile cleanup`.
          Keep `--client opencode`, because `profile cleanup` without `--client` cleans up every agent CLI.
       1. Open the shell that starts OpenCode.
          If the `fix:` line names `OPENCODE_CONFIG_DIR` for the activation step, set the variable to a clean absolute folder or unset the variable.
-      1. Run `kong-harnesses --client opencode profile activate PROFILE_NAME`.
+      1. Run `kong-harnesses --client opencode profile activate PROFILE_NAME`, then run `doctor` again.
   - check: "`issuer`"
     what: |
       kong-harnesses can connect directly to the token endpoint of the identity provider.
@@ -216,6 +216,7 @@ rows:
       The steps can add the gateway host to a variable such as `NO_PROXY` in the shell that starts the agent CLI.
       Add each entry exactly as the `fix:` line names it.
       When the line asks your administrator to change a managed `NO_PROXY` value, ask the administrator to change each spelling of `NO_PROXY` that the managed settings set, such as `no_proxy`, or `No_Proxy` on Windows.
+      When the managed settings set no `NO_PROXY`, ask the administrator to add `NO_PROXY`.
       Give the administrator the entries in this form:
 
       * For a host name or an IPv4 address, add the host without the port, such as `localhost`.
@@ -231,7 +232,8 @@ rows:
       The gateway has a route for the requests of the agent CLI.
       When `doctor` sends your credential, an HTTP `401` or `403` response means that the gateway refuses the test request on that route.
       Some test requests don't have an input that the agent CLI can send, such as a client certificate or custom headers.
-      When the gateway refuses your credential on such a request, or has no route for the request, `route` gives `warn` instead of `fail`, because the agent CLI can get a different response with that input.
+      When the gateway refuses your credential on such a request, or has no route for the request, `route` gives `warn` instead of `fail`.
+      The agent CLI can get a different response when its request has that input.
       When `doctor` has no credential to send, such as when you aren't signed in or the agent CLI owns its sign-in, a `401` or `403` response gives `ok`.
       That `ok` result confirms only that the route exists, and doesn't confirm that the gateway accepts your credential.
       For a Claude subscription profile, the same response gives `warn`.
@@ -320,7 +322,8 @@ rows:
 
       {{ site.claude_code }} applies the `allowedMcpServers` lists in all your settings files and in the managed settings, not only the list that you edit.
 
-      If the policy of your organization blocks a server, or the managed settings set `allowManagedMcpServersOnly` to `true`, ask your administrator to allow the server.
+      If the report says that the policy of your organization blocks a server, ask your administrator to allow the server.
+      When the managed settings set `allowManagedMcpServersOnly` to `true`, only the managed allowlist counts, so a change to your own allowlist has no effect.
   - check: "`gateway-mcp`"
     what: |
       No setting keeps {{ site.claude_code }} from loading the gateway MCP servers that the profile lists, and the gateway accepts your sign-in on them.
