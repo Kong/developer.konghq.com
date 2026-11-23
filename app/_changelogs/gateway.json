@@ -29544,5 +29544,19 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.4.3.30": {
+    "kong-ee": [
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-123633.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-123007.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ]
   }
 }

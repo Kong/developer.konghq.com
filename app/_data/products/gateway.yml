@@ -27,7 +27,7 @@ deployment_topologies:
 
 releases:
   - release: "3.4"
-    ee-version: "3.4.3.29"
+    ee-version: "3.4.3.30"
     ce-version: "3.4.2"
     eol: 2026-08-31
     sunset: true
@@ -2282,6 +2282,7 @@ marketplaces:
   - Google Cloud Marketplace
 
 release_dates:
+  '3.4.3.30': 2026-11-23
   '3.10.0.21': 2026/11/19
   '3.13.0.13': 2026/11/19
   '3.14.0.18': 2026/11/19
