@@ -73,7 +73,9 @@ Unless the profile uses a static key, `doctor` also checks the identity provider
 For OpenCode, `doctor` also checks the npm registry.
 To check the sign-in and the agent CLI setup without the network, run [`kong-harnesses status --profile PROFILE_NAME`](/kong-harnesses/status/).
 
-When managed settings keep {{ site.claude_code }} from starting, `doctor` doesn't send network requests for any agent CLI, and the network checks warn.
+When managed settings keep {{ site.claude_code }} from starting and `doctor` checks {{ site.claude_code }}, `doctor` doesn't send network requests for any agent CLI in that run, and exits with `2`.
+In the {{ site.claude_code }} report, the `client` check and each network check fail and name the managed settings file.
+In a report for another agent CLI, each network check warns that `doctor` didn't check it.
 Ask your administrator to correct the managed settings that the report names.
 
 ## Read the report
@@ -120,7 +122,7 @@ rows:
     what: The profile is installed, and kong-harnesses can read the profile.
     next: |
       To list the installed profiles, run `kong-harnesses profile list`.
-      To inspect one profile, run `kong-harnesses profile get PROFILE_NAME`.
+      To inspect a valid profile, run `kong-harnesses profile get PROFILE_NAME`.
       Then do the step for your case:
 
       * A profile that you installed is invalid: run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator.
@@ -154,7 +156,7 @@ rows:
       Do the step on the `fix:` line.
       These cases need more context:
 
-      * The profile doesn't configure the agent CLI: get a profile that does, as the `fix:` line says.
+      * The profile doesn't configure the agent CLI: do the step on the `fix:` line, such as getting a profile that configures the agent CLI, or creating the profile again with `profile create`.
         The `profile activate` command doesn't add an agent CLI to a profile.
       * The managed settings of your organization run another profile: run `doctor` with that profile, as the `fix:` line says.
         No activation of your profile can override managed settings.
@@ -175,7 +177,7 @@ rows:
   - check: "`provider`"
     what: |
       For OpenCode, no settings file replaces, removes, or turns off the provider that the gateway plugin registers, or sends the provider to another URL.
-      OpenCode reads the settings file with the gateway plugin entry that activation wrote.
+      The check also makes sure that OpenCode reads the settings file where activation wrote the gateway plugin entry.
       The `provider` check appears only when it finds a problem.
     next: Do the step on the `fix:` line, such as removing a provider, base URL, or plugin entry from the settings file that the report names, then run `doctor` again.
   - check: "`issuer`"
@@ -201,8 +203,8 @@ rows:
 
       For an `http://` gateway behind a proxy, do the steps on the `fix:` line.
       The steps can add the gateway host to a variable such as `NO_PROXY` in the shell that starts the agent CLI.
-      Add the host without the port, such as `localhost`.
-      For an IPv6 loopback address, add each form of the address, such as `[::1]:8000,[::1],::1`.
+      Add each entry exactly as the `fix:` line names it.
+      For an IPv6 address, the line names each form of the address, such as `[::1]:8000,[::1],::1`, because agent CLIs read the address in different forms.
       For {{ site.claude_code }}, the steps then run `profile activate`, which writes the same exclusion to the {{ site.claude_code }} settings.
       When the `fix:` line for {{ site.claude_code }} doesn't name `profile activate`, the cause is in a settings file, and `profile activate` can't fix the cause.
   - check: "`route`"
@@ -221,7 +223,7 @@ rows:
     next: |
       When the check warns with a `fix:` line, do that step first, such as signing in, unsetting a variable, or making managed settings readable.
       When the `fix:` line says to send a prompt, send one from the agent CLI to test the route.
-      When the gateway doesn't have the route, or doesn't accept the sign-in on the route, ask the gateway operators to add the route or to accept the sign-in of the profile.
+      When the `fix:` line names the gateway operators, ask them to make the change that the line names, such as adding the route or accepting the sign-in of the profile.
       Give the operators the host and route that the report names.
   - check: "`catalog`"
     what: |
@@ -240,8 +242,8 @@ rows:
       When gateway discovery fills the menu, the menu keeps the built-in models and adds each gateway model with an ID that contains `claude` or `anthropic`.
       The check looks for missing menu rows for the supported gateway models that discovery skips.
     next: |
-      If `catalog` can't read the model list, fix that problem first.
-      Then do each step on the `fix:` line, such as running `profile activate` and removing the rows that the line names from `modelPicker`.
+      Do each step on the `fix:` line, such as running `profile activate`, removing the rows that the line names from `modelPicker`, or removing `replaceBuiltInOptions`.
+      If `picker` says that the model list isn't available, fix the `catalog` problem first.
       When the managed settings of your organization set the menu, ask your administrator to change the settings.
   - check: "`model`"
     what: The gateway serves, or the profile lists, the startup model of {{ site.claude_code }} and the model for each role, such as a subagent.
