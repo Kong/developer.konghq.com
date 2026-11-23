@@ -52,6 +52,8 @@ rows:
     use: "Build and share your own dashboards from AI Gateway metrics."
   - page: "[**Explorer**](#explorer)"
     use: "Answer specific questions with custom queries."
+  - page: "[**Alerts**](#alerts)"
+    use: "Get notified about unusual error rates, latency, or traffic."
   - page: "[**Logs**](#logs)"
     use: "Read and search logs."
 {% endtable %}
@@ -232,14 +234,99 @@ features:
 {% endfeature_table %}
 <!-- vale on -->
 
+## Alerts
+
+An alert rule watches one metric of your AI traffic, like error rates or latency from models, routes, or providers.
+When the metric breaks the rule, the rule triggers an alert for that model, route, or provider, for example `Model: gpt-4o`.
+An alert shows **Triggered** while it is active and **Resolved** after it ends.
+
+To open alerts, in the {{site.konnect_short_name}} sidebar, click **Observability**, then click **Alerts**.
+
+### Default detection rules
+
+Every organization starts with the following rules, which are enabled by default:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Rule
+    key: rule
+  - title: Metric
+    key: metric
+  - title: Scope
+    key: scope
+  - title: Severity
+    key: severity
+rows:
+  - rule: "**Error rate spike**"
+    metric: Error rate
+    scope: Model
+    severity: Critical
+  - rule: "**Latency degradation**"
+    metric: p95 request latency
+    scope: Route
+    severity: Warning
+  - rule: "**Time to first token degradation**"
+    metric: Time to first token (TTFT)
+    scope: Provider
+    severity: Warning
+  - rule: "**Time per output token degradation**"
+    metric: Time per output token (TPOT)
+    scope: Provider
+    severity: Warning
+  - rule: "**Traffic flatline**"
+    metric: Request volume
+    scope: Model
+    severity: Critical
+{% endtable %}
+<!-- vale on -->
+
+The default rules don't have notifications set up.
+To get notified, edit a rule and add an email address or a webhook. For more information, see [Alert notifications](#alert-notifications).
+
+### Create an alert
+
+1. In the {{site.konnect_short_name}} sidebar, click **Observability**.
+1. In the Observability sidebar, click **Alerts**.
+1. Click **Create alert**.
+1. In the **Alert name** field, enter `High error rate on gpt-4o`.
+1. From the **Control plane** dropdown menu, select your control plane.
+1. Select **Template**.
+1. From the **Category** dropdown menu, select "Error rate spike".
+1. From the **Threshold** dropdown menu, select "12%".
+1. In the **Notify** section, select the **Email** checkbox.
+1. In the email address field, enter `alerts@example.com`.
+1. Click **Save alert rule**.
+
+You can change the pre-filled values from the template for:
+
+* The metric
+* The dimensions
+* A condition with a severity, a threshold, and a duration
+
+To define your own conditions, select **Custom** instead of **Template**.
+Each custom condition uses a data source (**LLM usage** or **Agentic usage**), a metric, dimensions, optional filters, a threshold, and a duration.
+A custom rule can match all of its conditions or any one of them. To save it, click **Save custom rule**.
+
+You can also create an alert from a query in [Explorer](#explorer).
+In Explorer, click **Create alert**. The **New alert** page opens with **Custom** selected, and the first condition uses the data source, metric, and dimension of your query.
+
+### Alert notifications
+
+A rule can notify by email, by webhook, or by both.
+For a webhook, select a saved webhook or click **New webhook**.
+When you create a webhook, you can select its provider.
+To get details about delivery problems, add a failure-notice email to the webhook. If a delivery fails, Kong sends the reason to that address.
+
 ## Logs
 
-The Logs page shows your {{site.ai_gateway}} data plane and control plane logs, newest first.
+The Logs page shows your {{site.ai_gateway}} control plane logs and the runtime logs of Dedicated Cloud Gateways, newest first.
+Runtime logs from self-managed data planes do not appear on this page.
 
 * Search in **Basic** or **Advanced** mode, and use the time range menu to change the period. The default period is the last 15 minutes.
-* Use the **Filter** panel to narrow the entries by **Log Level**, **Service** (for example, the data plane or the control plane), or **Control Plane**.
+* Use the **Filter** panel to narrow the entries by **Log Level**, **Service** (a Dedicated Cloud Gateway or the control plane), or **Control Plane**.
 * The default columns are **Timestamp**, **Log level**, **Log type**, **Dataplane ID**, **Control plane**, and **Message**.
-* Click an entry to open its details: a summary, its attributes, and the full message.
+* Click an entry to open its details: a summary, its attributes, and the full message. Copy buttons allow you to copy raw logs or each element separately. 
 
 ## Explorer and {{site.ai_cost_management}}
 
