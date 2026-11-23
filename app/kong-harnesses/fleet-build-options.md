@@ -326,9 +326,8 @@ When a deny entry is sure to match one of your own `--mcp-config` servers, `flee
 * **Name collisions (`exclusive`):** Rename each `--mcp-config` server that has the same name as a gateway server.
   If an earlier fleet build wrote that server, pass the record of that build with `--record` instead.
   If the record holds the definition of that server and you changed the server after that build, `fleet build` doesn't take your server out, so the names still collide and `fleet build` refuses the build.
-  To fix it, restore the definition that the earlier build wrote, so that `fleet build` takes that server out.
-  You can also rename or remove your server when the `--mcp-config` file still holds another server that the record names.
-  `fleet build` refuses an `--mcp-config` file that holds none of the servers that the record names.
+  To fix it, put back the definition that the earlier build wrote, so that `fleet build` takes that server out.
+  To keep your changes, add them as your own server under another name.
   If the record lists only server names, `fleet build` leaves out each `--mcp-config` server that has a recorded name, also when you changed that server after that build.
   The new `managed-mcp.json` then holds the current gateway servers of the profile and each `--mcp-config` server that `fleet build` didn't leave out.
 * **Servers at a gateway address (`exclusive`):** `fleet build` refuses an `--mcp-config` server with another name that points, or may point, to the address of a gateway MCP server.
