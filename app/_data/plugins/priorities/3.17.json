@@ -31,7 +31,7 @@
   "basic-auth": 1100,
   "bot-detection": 2500,
   "canary": 20,
-  "circuit-breaker": 899,
+  "kong-circuit-breaker": 899,
   "confluent": 752,
   "confluent-consume": 754,
   "correlation-id": 100001,

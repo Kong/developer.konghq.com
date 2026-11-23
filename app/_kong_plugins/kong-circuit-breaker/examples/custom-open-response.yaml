@@ -1,0 +1,44 @@
+description: 'Enable both circuits and return a custom status code and JSON body to clients while a circuit is open.'
+
+extended_description: |
+  Enable both circuits and return a custom status code and JSON body to clients while a circuit is open.
+
+  This is useful when clients need a specific, machine-readable response that tells them the Service is temporarily unavailable.
+
+  In this example:
+  1. The policy failure circuit opens after 20 failures in a 60 second window, and the latency circuit opens after 10 responses with a time to first byte above 3000 milliseconds.
+  1. While either circuit is open, the plugin rejects requests with a `503` status code and the JSON body set in `response_body`.
+  1. The plugin sends the body as written, with the `Content-Type` header set in `response_content_type`.
+
+  If you leave `response_mode` as `kong_default`, the plugin returns the standard {{site.base_gateway}} error response instead, and ignores `response_body`.
+
+title: 'Return a custom response when the circuit is open'
+
+weight: 700
+
+config:
+  policy_circuit:
+    enabled: true
+    max_failures: 20
+    sampling_window_seconds: 60
+    recovery_period_ms: 30000
+  latency_circuit:
+    enabled: true
+    max_failures: 10
+    max_upstream_ttfb_ms: 3000
+    sampling_window_seconds: 60
+    recovery_period_ms: 30000
+  response_code: 503
+  response_mode: custom
+  response_body: '{"message": "This service is temporarily unavailable. Try again shortly."}'
+  response_content_type: application/json
+
+min_version:
+  gateway: '3.17'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

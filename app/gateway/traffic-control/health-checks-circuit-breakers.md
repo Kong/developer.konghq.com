@@ -29,6 +29,8 @@ related_resources:
   url: /gateway/traffic-control-and-routing/
 - text: Health check probes
   url: /gateway/traffic-control/health-checks-probes/
+- text: Circuit Breaker plugin
+  url: /plugins/kong-circuit-breaker/
 
 description: |
   {{site.base_gateway}} supports two kinds of health checks, which can be used separately or in conjunction: active and passive (also known as circuit breakers).
@@ -199,6 +201,13 @@ To completely disable active health checks for an Upstream, set `healthchecks.ac
 Passive health checks, also known as circuit breakers, are checks performed based on the requests proxied by {{site.base_gateway}} (HTTP/HTTPS/TCP) with no additional traffic generated.
 When a Target becomes unresponsive, the passive health checker detects that and marks the Target unhealthy. 
 The ring balancer starts skipping this Target and doesn't route any more traffic to it.
+
+{:.info}
+> **Note:** Passive health checks, or circuit breakers, apply to the Targets of an Upstream.
+The [Circuit Breaker plugin](/plugins/kong-circuit-breaker/) {% new_in 3.17 %} works on a Service or Route, so it also protects a Service that points at a single backend.
+The plugin can open on slow responses as well as failures, and it re-enables the backend automatically.
+You can use the plugin together with health checks.
+See [Circuit Breaker plugin and Upstream health checks](/plugins/kong-circuit-breaker/#circuit-breaker-plugin-and-upstream-health-checks) for a comparison.
 
 ### Configure passive health checks
 

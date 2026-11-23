@@ -1,0 +1,40 @@
+description: 'Open the circuit and fail fast with a 503 response when an upstream returns repeated 5xx responses, timeouts, or connection failures.'
+
+extended_description: |
+  Open the circuit and fail fast with a `503` response when an upstream returns repeated `5xx` responses, timeouts, or connection failures.
+
+  This is useful for a Service that points at a single backend, where you want {{site.base_gateway}} to stop sending requests to a failing backend and let it recover.
+
+  In this example, the policy failure circuit behaves as follows:
+  1. The circuit counts `5xx` responses from the upstream, `504` timeouts, and `502` connection failures in a 30 second sampling window.
+  1. When the count reaches 10 failures, the circuit opens, and {{site.base_gateway}} rejects requests with a `503` response before they reach the upstream.
+  1. After 30 seconds, the next request becomes a probe.
+     If the failure percentage of the probe sample is below 50 percent, the circuit closes.
+     Otherwise, it reopens.
+
+  The latency circuit is disabled by default, so only the policy failure circuit runs.
+
+title: 'Open the circuit on upstream failures'
+
+weight: 900
+
+config:
+  policy_circuit:
+    enabled: true
+    max_failures: 10
+    sampling_window_seconds: 30
+    recovery_period_ms: 30000
+    failure_types:
+      - http_5xx
+      - backend_timeout
+      - backend_connection_failure
+
+min_version:
+  gateway: '3.17'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
