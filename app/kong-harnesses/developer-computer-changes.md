@@ -82,8 +82,8 @@ In the following cases, `setup` warns that the agent CLI may not reach the gatew
 
 - `setup` can't build a request like the one that the agent CLI sends, for example because the {{ site.claude_code }} managed settings set a credential, a gateway URL or a proxy.
   `setup` then doesn't send a test request.
-- The gateway doesn't have a route for the test request, or refuses the test request.
-  The request also doesn't contain a part that the agent CLI adds itself and that a route can depend on, such as a header from the agent CLI's own settings or a client certificate.
+- The gateway doesn't have a route for the test request or refuses the test request, and the test request doesn't contain a part that the agent CLI adds itself, such as a header from the agent CLI's own settings or a client certificate.
+  A route can depend on that missing part.
 - For a `subscription` profile, the gateway asks for the developer's Claude sign-in before the gateway routes the test request.
 
 A later check can still stop `setup` before `setup` writes the settings of any agent CLI.

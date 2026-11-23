@@ -94,7 +94,7 @@ In the `anthropic` mode, you add a model on the gateway:
 * A model whose ID contains `claude` or `anthropic`, in any letter case, appears in the model picker of the next {{ site.claude_code }} session.
   The gateway must list the model in a successful `GET /v1/models` response.
   Developers don't need to run `setup` again.
-* For a model with another ID, `profile activate` adds a model picker entry from that list.
+* For a model with another ID, `profile activate` adds a model picker entry from the gateway's `GET /v1/models` response.
   Developers run `kong-harnesses profile activate PROFILE_NAME` again after you add the model.
 
 In the `foundry` and `mantle` modes, the model picker shows only the models that the profile names, so you publish a new profile to add a model.
@@ -189,7 +189,7 @@ The CI job doesn't need any other setup.
 {% endnavtab %}
 {% navtab "Linux" %}
 
-{{site.kong_harnesses}} needs `XDG_RUNTIME_DIR` for its profile and settings locks, and each command that takes a lock fails without it.
+{{site.kong_harnesses}} needs `XDG_RUNTIME_DIR` for its profile and settings locks, and each command that takes a lock fails without `XDG_RUNTIME_DIR`.
 A desktop sign-in sets the variable, but most CI containers don't.
 When the variable isn't set, create a private directory once, and give each step of the job that runs a {{site.kong_harnesses}} command the same `XDG_RUNTIME_DIR`.
 In a CI system that runs each step in its own shell, a shell `export` ends with its step, so set the variable in the job environment.

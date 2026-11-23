@@ -169,7 +169,7 @@ Run `brew postinstall ca-certificates` after you add the CA, or set `NODE_EXTRA_
 {% endnavtab %}
 {% navtab "Linux" %}
 
-omp and the Bun release archives of pi also read the CA file `/etc/ssl/cert.pem`, or the file that `SSL_CERT_FILE` names, and the CA directory `/etc/ssl/certs`.
+omp and the Bun release archives of pi read the CA file `/etc/ssl/cert.pem`, or the file that `SSL_CERT_FILE` names, and the CA directory `/etc/ssl/certs`.
 A CA that the CA tool of the distribution adds to these paths works for omp and pi without a variable:
 
 * On Debian and Ubuntu, `update-ca-certificates` adds the CA to the directory `/etc/ssl/certs`.
@@ -264,8 +264,8 @@ rows:
       When OpenCode runs as a background service, the service doesn't read later shell exports, so set the variable for the service with `opencode service set env`.
   - program: omp and pi
     setting: |
-      `NODE_EXTRA_CA_CERTS` set to the CA file, or `NODE_USE_SYSTEM_CA=1`.
-      For the effect of each variable and the `.env` files that omp reads, see [Agent CLIs that need more than the system trust store](#agent-clis-that-need-more-than-the-system-trust-store).
+      `NODE_EXTRA_CA_CERTS` set to the CA file.
+      For the effect of `NODE_EXTRA_CA_CERTS` and the `.env` files that omp reads, see [omp and pi](#omp-and-pi).
   - program: "{{site.kong_harnesses}}"
     setting: |
       `SSL_CERT_FILE` set to a bundle file with the public root CAs of the system and each private CA, exported in the shell that runs {{site.kong_harnesses}} and in the shell that starts {{ site.claude_code }}, Codex, omp or pi, because these agent CLIs run {{site.kong_harnesses}} to get each token.

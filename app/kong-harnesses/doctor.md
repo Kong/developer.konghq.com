@@ -40,7 +40,7 @@ rows:
   - client: omp
     source: |
       The environment.
-      When the environment doesn't set the variable, the first value that isn't empty in the [`.env` files that omp reads](/kong-harnesses/private-certificate-authorities/#agent-clis-that-need-more-than-the-system-trust-store).
+      When the environment doesn't set the variable, the first value that isn't empty in the [`.env` files that omp reads](/kong-harnesses/private-certificate-authorities/#omp-and-pi).
       `doctor` uses the directory where you run `doctor` as the directory where omp starts.
 {% endtable %}
 
