@@ -182,14 +182,15 @@ rows:
       The `provider` check appears only when it finds a problem.
     next: |
       Do the step on the `fix:` line, such as removing a provider, base URL, or plugin entry from the settings file that the report names, then run `doctor` again.
-      When the `fix:` line says to run `profile cleanup`, do these steps instead:
+      When the `fix:` line says to run `profile cleanup`, do these steps for the cleanup and the activation, and do the other steps on the line as the line names them:
 
       1. If the `fix:` line names a variable for the cleanup step, open a shell without that variable.
       1. Run `kong-harnesses --client opencode profile cleanup`.
          Keep `--client opencode`, because `profile cleanup` without `--client` cleans up every agent CLI.
       1. Open the shell that starts OpenCode.
          If the `fix:` line names `OPENCODE_CONFIG_DIR` for the activation step, set the variable to a clean absolute folder or unset the variable.
-      1. Run `kong-harnesses --client opencode profile activate PROFILE_NAME`, then run `doctor` again.
+      1. Run `kong-harnesses --client opencode profile activate PROFILE_NAME`.
+      1. After you do all the steps on the `fix:` line, run `doctor` again.
   - check: "`issuer`"
     what: |
       kong-harnesses can connect directly to the token endpoint of the identity provider.
@@ -320,7 +321,7 @@ rows:
       * For a remote server, add a `serverUrl` entry when any `allowedMcpServers` list that {{ site.claude_code }} applies has a `serverUrl` entry. Otherwise, add a `serverName` entry.
       * For a local server, add a `serverCommand` entry when any `allowedMcpServers` list that {{ site.claude_code }} applies has a `serverCommand` entry. Otherwise, add a `serverName` entry.
 
-      {{ site.claude_code }} applies the `allowedMcpServers` lists in all your settings files and in the managed settings, not only the list that you edit.
+      Unless the managed settings set `allowManagedMcpServersOnly` to `true`, {{ site.claude_code }} applies the `allowedMcpServers` lists in all your settings files and in the managed settings, not only the list that you edit.
 
       If the report says that the policy of your organization blocks a server, ask your administrator to allow the server.
       When the managed settings set `allowManagedMcpServersOnly` to `true`, only the managed allowlist counts, so a change to your own allowlist has no effect.
