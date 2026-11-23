@@ -116,11 +116,12 @@ rows:
                 - type: text
                   text: |
                     {% new_in 13.5 %} Configure authentication, headers, scripts, environments, and docs once on the API Collection, using the tabs on the API Collection screen. Folders and requests can override or add to these settings.
-          - type: button
-            config:
-              align: left
-              text: Learn more about inheritance
-              url: /insomnia/request-authentication/#how-inheritance-works
+
+                    {{ site.insomnia }} applies settings from the API Collection, then from each folder (outermost first), then from the request:
+
+                    * **Authentication:** The closest level that sets authentication wins. To inherit it, set the request's authentication type to **Inherit from parent**. A request's own type, including **None**, overrides inheritance. Requests that inherit OAuth 2.0 share the token stored on the level that owns the configuration.
+                    * **Headers:** {{ site.insomnia }} combines headers from every level. When several levels set the same header, it joins the values with a comma. The exception is single-value headers such as `Authorization`, `Content-Type`, and `Host`, where the closest level wins.
+                    * **Scripts:** Pre-request and after-response scripts run in the same order: API Collection, then folders, then request.
 
   - header:
       type: h2
@@ -277,7 +278,7 @@ rows:
               a: Yes, you can use the [`inso run collection`](/inso-cli/reference/run_collection/) command in Inso CLI to run a collection automatically.
             - q: Can I set authentication headers at the collection level so I do not repeat them on every request?
               a: |
-                {% new_in 13.5 %} Yes. Use the **Auth** and **Headers** tabs on the API Collection screen, and set each request's authentication type to **Inherit from parent**. See [How inheritance works](/insomnia/request-authentication/#how-inheritance-works).
+                {% new_in 13.5 %} Yes. Use the **Auth** and **Headers** tabs on the API Collection screen, and set each request's authentication type to **Inherit from parent**. See [Collection settings](#collection-settings).
 
                 In {{ site.insomnia }} 13.4 and earlier, you can only set authentication and headers on folders and requests.
             - q: Can I hide other projects and API Collections to focus only on one?

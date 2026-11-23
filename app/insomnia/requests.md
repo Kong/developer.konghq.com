@@ -124,7 +124,7 @@ rows:
     steps: In the **Body** tab, select the type of body from the dropdown list.
   - element: Authentication
     steps: >-
-      In the **Auth** tab, select the authentication type from the dropdown list to get the corresponding form. Select **Inherit from parent** to use the authentication of the nearest parent folder or {% new_in 13.5 %} of the API Collection. See [How inheritance works](/insomnia/request-authentication/#how-inheritance-works).
+      In the **Auth** tab, select the authentication type from the dropdown list to get the corresponding form. Select **Inherit from parent** to use the authentication of the nearest parent folder or {% new_in 13.5 %} of the API Collection. See [Collection settings](/insomnia/collections/#collection-settings).
   - element: Headers
     steps: >-
       In the **Headers** tab, click **Add** to create a new header and enter the name and value. You can also add a description. You can use the checkbox next to the header to remove it from the request without deleting it completely.
@@ -200,7 +200,7 @@ Folders can be used to organize requests, but you can also add configuration to 
 
 You can also add documentation about the folder.
 
-{% new_in 13.5 %} The API Collection has the same settings, so you can set them once for every request in it. See [How inheritance works](/insomnia/request-authentication/#how-inheritance-works).
+{% new_in 13.5 %} The API Collection has the same settings, so you can set them once for every request in it. See [Collection settings](/insomnia/collections/#collection-settings).
 
 ## Request timeout (ms)
 
