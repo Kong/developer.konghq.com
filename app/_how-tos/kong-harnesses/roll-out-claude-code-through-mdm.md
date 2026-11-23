@@ -103,8 +103,8 @@ cleanup:
       content: |
         To remove the build, first have each developer sign out of the machine-wide profile and remove any user-level activation.
         Then unassign the deployment and run `kong-harnesses fleet remove`.
-        Follow the instruction under `MDM policy` when it appears.
-        Follow the instructions under `MCP config` when it appears.
+        Follow the instruction under `MDM policy` when that section appears.
+        Follow the instructions under `MCP config` when that section appears.
         Delete each file listed under `Remove`.
         For the steps, see [Remove a {{ site.claude_code }} fleet build](/kong-harnesses/remove-a-claude-code-fleet-build/).
 
@@ -181,7 +181,14 @@ For the quotes that each shell needs, see [Allowlist values and quoting](/kong-h
 Replace `DELIVERY` with `file` or `mdm`.
 
 ```sh
-kong-harnesses fleet build --profile work --platform macos --delivery DELIVERY --executable /usr/local/bin/kong-harnesses --policy 'POLICY_FILE' --mcp-servers MCP_MODE --output-dir fleet-macos-GROUP
+kong-harnesses fleet build \
+  --profile work \
+  --platform macos \
+  --delivery DELIVERY \
+  --executable /usr/local/bin/kong-harnesses \
+  --policy 'POLICY_FILE' \
+  --mcp-servers MCP_MODE \
+  --output-dir fleet-macos-GROUP
 ```
 
 {% endnavtab %}
@@ -190,7 +197,13 @@ kong-harnesses fleet build --profile work --platform macos --delivery DELIVERY -
 Linux supports only `file` delivery, which is the default.
 
 ```sh
-kong-harnesses fleet build --profile work --platform linux --executable /usr/bin/kong-harnesses --policy 'POLICY_FILE' --mcp-servers MCP_MODE --output-dir fleet-linux-GROUP
+kong-harnesses fleet build \
+  --profile work \
+  --platform linux \
+  --executable /usr/bin/kong-harnesses \
+  --policy 'POLICY_FILE' \
+  --mcp-servers MCP_MODE \
+  --output-dir fleet-linux-GROUP
 ```
 
 {% endnavtab %}
@@ -295,7 +308,7 @@ Install in the following order with your MDM tool or configuration management.
    For example, use `ditto` or `rsync -a`.
 1. In that folder, run the `pkgbuild` command that `fleet build` printed.
    Replace these placeholders:
-   * `PACKAGE_IDENTIFIER`: A reverse DNS name for the package, such as `com.yourcompany.kong-harnesses-fleet`.
+   * `PACKAGE_IDENTIFIER`: A reverse DNS name for the package, such as `com.example.kong-harnesses-fleet`.
      Use the same identifier for every build of this group.
    * `PACKAGE_VERSION`: A new version for each build, such as `1.0.0`.
 
@@ -353,7 +366,7 @@ Never delete system folders, such as `/Library`.
    You can also install from the [`apt`, `dnf`, or `apk` repositories](https://code.claude.com/docs/en/setup#install-with-linux-package-managers).
 1. Install [kong-harnesses](/kong-harnesses/install/) system-wide, at the `--executable` path.
 1. If you use a private gateway CA, add it to the system trust store.
-1. Confirm that the `acl` package, which provides `getfacl`, is installed on each managed computer.
+1. Confirm that each managed computer has the `acl` package, which provides `getfacl`.
 1. Copy `root/` to the target computer.
    Inside `root/`, run the `sudo sh -c` command that `fleet build` printed.
 

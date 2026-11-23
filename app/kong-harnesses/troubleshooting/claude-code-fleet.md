@@ -80,7 +80,7 @@ rows:
     fix: |
       An MDM policy on the computer outranks the file build.
       For details, see [Delivery method and existing policy](/kong-harnesses/fleet-build-options/#delivery-method-and-existing-policy).
-      Build again with `--delivery mdm --policy`.
+      Build again with `--delivery mdm`, and pass the current MDM policy with `--policy 'POLICY_FILE'`.
   - label: "`(remote)` or a merged list starting with `remote`"
     fix: |
       Server-managed settings outrank the build.
@@ -125,9 +125,9 @@ When a gateway MCP server doesn't connect or doesn't show in `/mcp`, check these
   It reads them as {{ site.claude_code }} does:
   * It reads each `allowedMcpServers` and `deniedMcpServers` entry on its own, and keeps the valid ones.
   * It ignores keys whose letter case doesn't match.
-  * It checks `deniedMcpServers` also when `managed-mcp.json` exists.
+  * It checks `deniedMcpServers` even when `managed-mcp.json` exists.
   * It treats a `strictPluginOnlyCustomization` value that isn't a boolean, a list, or `null`, such as a string, as `true`.
-  * It treats a `null` `strictPluginOnlyCustomization` as no lock, because `null` removes the key.
+  * It doesn't treat a `null` `strictPluginOnlyCustomization` as a lock, because `null` removes the key.
 
   For the plugin blockers, see [Plugin blockers](/kong-harnesses/fleet-build-options/#plugin-blockers).
 
@@ -135,7 +135,7 @@ When a gateway MCP server doesn't connect or doesn't show in `/mcp`, check these
 
 When the fleet build uses `--host-settings merge` or `--wsl inherit`, check the embedding host apps and WSL separately.
 
-For host apps, the check applies when `--host-settings merge` is used or `parentSettingsBehavior` is `merge`.
+For host apps, run this check when you build with `--host-settings merge` or when a managed source sets `parentSettingsBehavior` to `merge`.
 Start a session from each supported host app, such as the {{ site.claude_code }} extension for VS Code.
 Run `/status`, `/mcp`, and a test prompt.
 Terminal sessions and `kong-harnesses doctor` don't read the settings that a host app passes.
@@ -152,9 +152,8 @@ Check WSL on each Windows test computer:
   * MDM build: `(HKLM)`, or a merged list that starts with `HKLM`
 
   While WSL inherits the Windows settings, it reads a WSL-local policy under `/etc/claude-code` only when [no Windows administrator document is present](https://code.claude.com/docs/en/managed-settings#present-admin-documents).
-  Such a policy can show the same labels as a file build.
+  A WSL-local policy can show the same labels as a Windows file build, or `Enterprise managed settings` without a delivery label.
   So for a file build, also confirm that the Windows build files are at their [target paths](/kong-harnesses/roll-out-claude-code-through-mdm/#check-the-build-output).
-  The `Enterprise managed settings` label without one of these labels can also mean a WSL-local policy instead of the Windows build.
   Send a short test prompt, and confirm that the WSL usage event shows in the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger).
   `doctor` and gateway MCP servers don't run in WSL.
   If you get a TLS error, confirm that the private CA is trusted in WSL, and read the [`claude --debug`](https://code.claude.com/docs/en/network-config#verify-your-configuration) logs in `~/.claude/debug/`.

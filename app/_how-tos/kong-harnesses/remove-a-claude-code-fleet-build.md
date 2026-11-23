@@ -51,9 +51,9 @@ prereqs:
       content: |
         You need:
 
-        * Access to the tool that deployed the build, to unassign the deployment.
-        * For an MDM build, access to the MDM policy, to update or remove it.
-        * Administrator rights on the managed computers, to delete the build files and to validate the removal on a test computer.
+        * Access to the tool that deployed the build, to unassign the deployment
+        * For an MDM build, access to the MDM policy, to update or remove it
+        * Administrator rights on the managed computers, to delete the build files and to validate the removal on a test computer
 
 tldr:
   q: How do I remove a kong-harnesses {{ site.claude_code }} fleet build from managed computers?
@@ -62,8 +62,8 @@ tldr:
     Then [unassign the deployment](#unassign-the-deployment) in the tool that deployed it.
     Run [`kong-harnesses fleet remove`](#generate-the-removal-plan) with the build record in `--record`.
     For an MDM build, add the current `--policy`, and for an `exclusive` build, add `--mcp-config`.
-    Follow the instruction under `MDM policy` when it appears.
-    Follow the instructions under `MCP config` when it appears.
+    Follow the instruction under `MDM policy` when that section appears.
+    Follow the instructions under `MCP config` when that section appears.
     Delete each file listed under `Remove` with the [steps for your platform](#apply-the-removal-output).
 ---
 
@@ -138,8 +138,8 @@ For an `exclusive` MCP build, add `--mcp-config 'MCP_CONFIG_FILE'`.
 
 `fleet remove` prints:
 
-* For an MDM build, the policy keys that it removed or restored, under `Taken out`, and the action to take on the MDM policy.
-* For every build, the updated `managed-mcp.json` file, if it wrote one.
+* For an MDM build, the policy keys that it removed or restored, under `Taken out`, and the action to take on the MDM policy, under `MDM policy`.
+* For every build, the updated `managed-mcp.json` file, under `MCP config`, if it wrote one.
 * For every build, each file path to delete, under `Remove`.
   A path that ends with `if an earlier build installed it` can be missing on some computers.
 
@@ -148,12 +148,13 @@ For an `exclusive` MCP build, add `--mcp-config 'MCP_CONFIG_FILE'`.
 Apply each instruction that `kong-harnesses fleet remove` prints:
 
 1. For an MDM build, review the `Taken out` list.
-   If you set a key after the build to the same value that the build wrote, add the key again.
-   `fleet remove` can't tell such a value from the value of the build, so it reverts or removes it.
+   `fleet remove` reverts or removes each key whose value still matches the value that the build wrote.
+   It can't tell whether you set that same value again after the build.
+   To keep such a key, add it to the policy again.
 1. For an MDM build, update or remove the MDM policy:
    * If `fleet remove` writes a policy under `mdm/`, deploy that policy in place of the existing {{ site.claude_code }} MDM policy.
    * If `fleet remove` prints `Remove the Claude Code policy from your MDM`, remove the {{ site.claude_code }} policy from your MDM tool.
-     Do this also when `fleet remove` doesn't write an `mdm/` folder.
+     Remove the policy even when `fleet remove` doesn't write an `mdm/` folder.
 1. If `fleet remove` writes `managed-mcp.json` under `root/`, check each kept server definition that changed after the build.
    Remove each one that still points to the gateway.
    Then deploy the updated file in place of the existing `managed-mcp.json`.
