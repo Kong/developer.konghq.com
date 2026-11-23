@@ -182,11 +182,14 @@ rows:
       The `provider` check appears only when it finds a problem.
     next: |
       Do the step on the `fix:` line, such as removing a provider, base URL, or plugin entry from the settings file that the report names, then run `doctor` again.
-      When the line says that OpenCode doesn't read the file where activation wrote the plugin, run `kong-harnesses --client opencode profile cleanup`.
-      Keep `--client opencode`, because `profile cleanup` without `--client` cleans up every agent CLI.
-      When the line names a variable for the cleanup step, run the cleanup in a shell without that variable.
-      Then, in the shell that starts OpenCode, run `kong-harnesses --client opencode profile activate PROFILE_NAME`.
-      When the line names `OPENCODE_CONFIG_DIR` for the activation step, set the variable to a clean absolute folder or unset the variable before the activation.
+      When the finding says that OpenCode doesn't read the file where activation wrote the plugin, do these steps:
+
+      1. If the `fix:` line names a variable for the cleanup step, open a shell without that variable.
+      1. Run `kong-harnesses --client opencode profile cleanup`.
+         Keep `--client opencode`, because `profile cleanup` without `--client` cleans up every agent CLI.
+      1. Open the shell that starts OpenCode.
+         If the `fix:` line names `OPENCODE_CONFIG_DIR` for the activation step, set the variable to a clean absolute folder or unset the variable.
+      1. Run `kong-harnesses --client opencode profile activate PROFILE_NAME`.
   - check: "`issuer`"
     what: |
       kong-harnesses can connect directly to the token endpoint of the identity provider.
@@ -212,7 +215,7 @@ rows:
       For an `http://` gateway behind a proxy, do the steps on the `fix:` line.
       The steps can add the gateway host to a variable such as `NO_PROXY` in the shell that starts the agent CLI.
       Add each entry exactly as the `fix:` line names it.
-      When the line asks your administrator to change a managed `NO_PROXY` value, ask the administrator to change each of `NO_PROXY` and `no_proxy` that the managed settings set.
+      When the line asks your administrator to change a managed `NO_PROXY` value, ask the administrator to change each spelling of `NO_PROXY` that the managed settings set, such as `no_proxy`, or `No_Proxy` on Windows.
       Give the administrator the entries in this form:
 
       * For a host name or an IPv4 address, add the host without the port, such as `localhost`.
@@ -228,7 +231,7 @@ rows:
       The gateway has a route for the requests of the agent CLI.
       When `doctor` sends your credential, an HTTP `401` or `403` response means that the gateway refuses the test request on that route.
       Some test requests don't have an input that the agent CLI can send, such as a client certificate or custom headers.
-      When the gateway refuses or doesn't route such a request, `route` gives `warn` instead of `fail`, because the agent CLI can get a different response with that input.
+      When the gateway refuses your credential on such a request, or has no route for the request, `route` gives `warn` instead of `fail`, because the agent CLI can get a different response with that input.
       When `doctor` has no credential to send, such as when you aren't signed in or the agent CLI owns its sign-in, a `401` or `403` response gives `ok`.
       That `ok` result confirms only that the route exists, and doesn't confirm that the gateway accepts your credential.
       For a Claude subscription profile, the same response gives `warn`.
