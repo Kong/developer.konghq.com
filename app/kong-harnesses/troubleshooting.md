@@ -67,7 +67,7 @@ When you omit `--client`, `doctor` exits with `2` before it prints a report in t
   The `--inference` flag works only for {{ site.claude_code }}.
 
 When you name an agent CLI that the profile doesn't configure, read the `client` check.
-The managed settings of your organization can still set up that agent CLI, or select another profile.
+The managed settings of your organization can still set up that agent CLI, or can make it run another profile.
 
 The `doctor` command uses the network to check the gateway.
 Unless the profile uses a static key, `doctor` also checks the identity provider.
@@ -206,8 +206,12 @@ rows:
       For an `http://` gateway behind a proxy, do the steps on the `fix:` line.
       The steps can add the gateway host to a variable such as `NO_PROXY` in the shell that starts the agent CLI.
       Add each entry exactly as the `fix:` line names it.
-      When the line asks your administrator to make a managed `NO_PROXY` value name the gateway host, use the host without the port, such as `localhost`.
-      For an IPv6 address, add each form of the address, with the gateway port in the first form, such as `[::1]:8000,[::1],::1`, because agent CLIs read the address in different forms.
+      This rule also applies when the line asks your administrator to change a managed `NO_PROXY` value:
+
+      * For a host name or an IPv4 address, add the host without the port, such as `localhost`.
+      * For an IPv6 address, add all three forms of the address, because agent CLIs read the address in different forms.
+        For example, for `http://[::1]:8000`, add `[::1]:8000,[::1],::1`.
+
       For {{ site.claude_code }}, the steps then run `profile activate`, which writes the same exclusion to the {{ site.claude_code }} settings.
       When the `fix:` line for {{ site.claude_code }} doesn't name `profile activate`, the cause is in a settings file, and `profile activate` can't fix the cause.
   - check: "`route`"
@@ -243,7 +247,7 @@ rows:
     what: |
       When gateway discovery is off, the `/model` menu of {{ site.claude_code }} offers only models that the gateway serves or that the profile lists.
       When gateway discovery fills the menu, the menu keeps the built-in models and adds each gateway model with an ID that contains `claude` or `anthropic`.
-      The check looks for missing menu rows for the supported gateway models that discovery skips.
+      The check reports settings that hide the built-in models, missing rows for gateway models that discovery skips, duplicate rows, and rows for models that the gateway doesn't serve.
     next: |
       Do each step on the `fix:` line, such as running `profile activate`, removing the rows that the line names from `modelPicker`, or removing `replaceBuiltInOptions`.
       If `picker` says that the model list isn't available, fix the `catalog` problem first.
@@ -254,7 +258,7 @@ rows:
       If the finding says that the model list isn't available, fix the `catalog` problem first.
       When the `fix:` line says to pick a model, run `/model` and pick the kind of model that the line names, a gateway model or a profile model.
       When the `fix:` line says to unset a variable, unset the variable in the shell that starts {{ site.claude_code }}, because that variable overrides `/model`.
-      When the `fix:` line says that the profile pins the model, import the profile again and activate the profile, as the line says.
+      When the `fix:` line says that the profile pins the model, import the profile again from the deployment that issued it, then do the next step on the `fix:` line.
       If the gateway still doesn't serve the pinned model, ask your administrator to pin a model that the gateway serves.
       When the managed settings of your organization set the model, ask your administrator to change the settings.
   - check: "`anthropic`"
