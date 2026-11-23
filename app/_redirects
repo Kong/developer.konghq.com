@@ -561,3 +561,4 @@
 
 # Access Policy Engine
 /ai-gateway/policies/access-policy-engine/ /ai-gateway/access-policy-engine/ 301
+/ai-gateway/policies/access-policy-engine/reference/ /ai-gateway/access-policy-engine/ 301
