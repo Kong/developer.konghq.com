@@ -145,7 +145,7 @@ Before you build, check each policy source:
   * An `allowedProviders` text entry other than `customEndpoint`
   * In `ANTHROPIC_CUSTOM_HEADERS`: `Authorization`, `Proxy-Authorization`, `X-Api-Key`, `Host`, a malformed line, or a header that conflicts with attribution
   * An `env` value that {{ site.claude_code }} can't use: an object with its own `toString` key, also inside a list, or a value whose text holds a NUL byte.
-    An object with its own `toString` key makes {{ site.claude_code }} drop the whole managed `env`.
+    An object with its own `toString` key makes {{ site.claude_code }} drop the whole `env` of the policy.
     Other values convert to text, such as numbers, booleans, `null`, lists, and objects.
   * A version range that fails the [version range checks](#version-range-checks)
 * **Other keys to remove:** Remove `forceLoginOrgUUID`, because it blocks `apiKeyHelper` at startup.
@@ -278,15 +278,15 @@ This rule applies to the `exclusive` mode.
 
 To find the result, `fleet build` checks the deny entries first.
 It [expands the variables](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) in `serverUrl` and `serverCommand` entries and in the server, with the values in the `env` of the policy as the build deploys it.
-A `serverName` entry matches the name as written, before the variables expand.
-An entry matches when it matches with these known values.
+It compares each entry with the server after this expansion.
+A `serverName` entry is an exception: it matches the name as written, before the variables expand.
 
-A server is undecided when its result depends on one of these cases:
+`fleet build` marks a server undecided in these cases:
 
-* Its result depends on a variable that the `env` of the policy doesn't set, in an entry or in the server.
+* The result depends on a variable that the `env` of the policy doesn't set, in an entry or in the server.
 * An `allowedMcpServers` `serverUrl` entry names a variable, and the `env` of the policy sets that variable to a value that can move the URL.
   Such a value holds `/`, `?`, `#`, `@`, `:`, `\`, `*`, `%`, white space, a control or invisible character, or a character that isn't ASCII, or it is `.` or `..`.
-  {{ site.claude_code }} `2.1.219` and later [ignore an allowlist entry](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) whose expansion changes the scheme, host, port, or path of the URL.
+  {{ site.claude_code }} `2.1.219` and later [ignore an allowlist entry](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) whose expansion changes the scheme, host, port, or path scope of the URL.
   This case applies at every minimum version.
   Write such an entry as a literal URL.
 * The server names a variable in `headersHelper`, an allowlist is set, and the allowlist doesn't permit the server.
@@ -317,9 +317,15 @@ When a deny entry is sure to match one of your own `--mcp-config` servers, `flee
 * **Provided servers at a gateway address (every mode):** `fleet build` refuses a `managedMcpServers` entry that points, or may point, to the address of a gateway MCP server, also under another name.
   In the `allowlist` and `any` modes, {{ site.claude_code }} loads the provided server instead of the gateway server at the same URL.
   The gateway server then doesn't load with the credential of the profile.
-  In the `exclusive` mode, {{ site.claude_code }} loads both, and uses the `managed-mcp.json` entry only when the names match.
+  In the `exclusive` mode, {{ site.claude_code }} loads both.
+  When both define the same name, the `managed-mcp.json` entry takes precedence.
   Remove the entry.
-* **Name collisions (`exclusive`):** Rename each `--mcp-config` server that has the same name as a gateway server, or pass `--record` for an earlier build.
+* **Name collisions (`exclusive`):** Rename each `--mcp-config` server that has the same name as a gateway server.
+  If an earlier fleet build wrote that server, pass the record of that build with `--record` instead.
+  If you changed such a server after that build, `fleet build` refuses it, so rename or remove it.
+* **Servers at a gateway address (`exclusive`):** `fleet build` refuses an `--mcp-config` server under another name that points, or may point, to the address of a gateway MCP server.
+  It skips a server that the denylist of the policy always blocks.
+  Remove each such server.
 * **MDM allowlist replaces file allowlists (`allowlist`):** The highest administrator source supplies the locked `allowedMcpServers`.
   So an MDM `allowlist` build replaces the allowlists in managed settings files.
   Move the entries that you need to `--policy`, `--mcp-url`, or `--mcp-command`.
@@ -372,7 +378,7 @@ This rule applies to every mode, also when the profile doesn't have gateway MCP 
 A `deniedMcpServers` value that isn't a list doesn't block any server.
 If you don't want a list or provided servers, leave the key out of `--policy`.
 
-{{ site.claude_code }} [loads a `managedMcpServers` entry](https://code.claude.com/docs/en/managed-mcp#provide-servers-through-managed-settings) only when it passes all of these checks:
+{{ site.claude_code }} [loads a `managedMcpServers` entry](https://code.claude.com/docs/en/managed-mcp#what-an-entry-can-contain) only when it passes all of these checks:
 
 * The type is `http`, `sse`, or `streamable-http`.
 * The URL is an `https://` URL with a host.
@@ -545,7 +551,9 @@ rows:
       So move your other servers out of it, remove `managed-mcp.json`, and start the new build without the old `--record`.
   - earlier: "`--claude-code-minimum` or `--claude-code-maximum`"
     keep: Pass each bound again, or update it.
-    revert: Pass `--claude-code-any-version` alone to clear both bounds, or with one bound to clear the other.
+    revert: |
+      Pass `--claude-code-any-version` alone to remove both recorded bounds, or with one bound to remove the other recorded bound.
+      Bounds in `--policy` still apply.
   - earlier: "`--host-settings merge`"
     keep: Pass `--host-settings merge`.
     revert: |
@@ -570,7 +578,7 @@ rows:
 
 `fleet build` refuses a version range in these cases:
 
-* A flag value isn't a version of three numbers, such as `2.1.300`.
+* A flag value isn't three numbers separated by dots, without leading zeros, such as `2.1.300`.
   For example, `2.1`, `v2.1.300`, and `2.01.300` aren't valid.
 * `--claude-code-minimum` is earlier than `2.1.163`, the first release that reads version bounds.
   This check applies only to the flag.
@@ -578,9 +586,11 @@ rows:
 * `--claude-code-maximum` differs from a valid `requiredMaximumVersion` in `--policy`.
 * You pass `--claude-code-minimum`, and `--policy` sets `requiredMinimumVersion` and `minimumVersion` to different versions.
 * The maximum version is earlier than `2.1.285`, the first release that keeps every session on the gateway.
-  The maximum version is `--claude-code-maximum` or the combined `requiredMaximumVersion`.
+  The maximum version is `--claude-code-maximum` when you pass it.
+  Otherwise, it is `requiredMaximumVersion` in `--policy`.
 * The minimum version is later than the maximum version.
-  The minimum version is `--claude-code-minimum`, or the combined `requiredMinimumVersion` or `minimumVersion`.
+  The minimum version is `--claude-code-minimum` when you pass it.
+  Otherwise, `fleet build` checks `requiredMinimumVersion` and `minimumVersion` in `--policy`, each on its own.
 
 {{ site.claude_code }} ignores a policy bound that isn't a valid version, so `fleet build` ignores it too.
 
@@ -619,7 +629,7 @@ rows:
 
 * **Family:** `fleet build` detects the `opus`, `sonnet`, `haiku`, or `fable` family from `NEW_MODEL_ID`.
   You can also name the family with `--model FAMILY=NEW_MODEL_ID`, for example `--model sonnet=NEW_MODEL_ID`.
-  Pass one `--model` for each family.
+  Pass `--model` once for each family that you want to change.
   `fleet build` refuses two for the same family.
   Each ID has 1 to 128 visible ASCII characters.
 * **Settings and roles:** `fleet build` updates the family slot.

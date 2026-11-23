@@ -48,9 +48,7 @@ prereqs:
     - title: kong-harnesses and a profile
       content: |
         Install [kong-harnesses](/kong-harnesses/install/) on a build computer.
-        The build computer requirement depends on the operating system of the build computer.
-        The deployment tool depends on the operating system of the managed computers.
-        When the two operating systems differ, read the requirement and the tool from different rows:
+        Read the build computer requirement from the row of the build computer, and the deployment tool from the row of the managed computers:
 
         {% table %}
         columns:
@@ -103,7 +101,8 @@ cleanup:
     - title: Remove the fleet build
       content: |
         To remove the build, first have each developer sign out of the machine-wide profile and remove any user-level activation.
-        Then unassign the deployment, run `kong-harnesses fleet remove`, and delete the build files.
+        Then unassign the deployment, and run `kong-harnesses fleet remove`.
+        Apply the policy and `managed-mcp.json` changes that it prints, and delete the files listed under `Remove`.
         For the steps, see [Remove a {{ site.claude_code }} fleet build](/kong-harnesses/remove-a-claude-code-fleet-build/).
 
 faqs:
@@ -459,7 +458,7 @@ Linux supports only file builds.
 
    * File build: `(drop-ins)` or `(file + drop-ins)`
    * MDM build: `(HKLM)`, or a `, merged` list that starts with `HKLM`
-1. Confirm that WSL reads the Windows settings only with `--wsl inherit`.
+1. Confirm that WSL inheritance matches your `--wsl` choice.
    For the checks, see [WSL on Windows](/kong-harnesses/troubleshooting/claude-code-fleet/#wsl-on-windows).
 
 {% endnavtab %}
