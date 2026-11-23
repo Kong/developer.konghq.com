@@ -33,6 +33,10 @@ prereqs:
 next_steps:
   - text: Use the Collection Runner in Insomnia
     url: /how-to/use-the-collection-runner/
+  - text: Inspect the plugins that apply to a synced request
+    url: /insomnia/konnect-integration/#plugins-tab
+  - text: Debug requests with {{ site.konnect_short_name }} Debugger in {{ site.insomnia }}
+    url: /insomnia/konnect-integration/#debugger
 breadcrumbs:
   - /insomnia/
 related_resources:
