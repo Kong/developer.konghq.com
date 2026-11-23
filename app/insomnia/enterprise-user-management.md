@@ -83,7 +83,7 @@ From this tab, you can also remove users from your Enterprise account. These use
 
 The Licenses page lists every user who consumes a license, including users with a pending invite. Pending invites consume a license as soon as they're sent, so that a seat stays open for the invited user. An invite expires after 30 days, and its seat is freed when it expires.
 
-The following columns show each user's status as **Yes** or **No**:
+The following columns show each user's status:
 
 {% table %}
 columns:
@@ -92,21 +92,21 @@ columns:
   - title: Description
     key: description
 rows:
-  - column: "**Pending**"
-    description: The user was invited but hasn't accepted the invite yet.
+  - column: "**Pending Invite**"
+    description: The user was invited but hasn't accepted the invite yet. Shows **Yes** or **No**.
   - column: "**E2EE**"
-    description: The user has set up end-to-end encryption for their account.
+    description: The user has set up end-to-end encryption for their account. Shows **Enabled** or **Disabled**.
   - column: "**SCIM**"
-    description: The user is provisioned through [SCIM](/insomnia/scim/).
+    description: The user is provisioned through [SCIM](/insomnia/scim/). Shows **Yes** or **No**.
 {% endtable %}
 
-To view the organizations and teams that a user belongs to, click the user's name on the Licenses page. A dialog lists each organization and team as a link that opens it in a new tab.
+To view the organizations and teams that a user belongs to, click the user's name on the Licenses page. A dialog lists the user's organizations and teams on separate tabs, with the user's role in each. Each organization and team name is a link that opens it in a new tab. To remove the user from an organization or team, click the delete icon in the **Action** column, then click the check mark to confirm.
 
 ## User reports
 
-To download the user reports, click the download button on the [Licenses](https://app.insomnia.rest/app/enterprise/licenses) page. The download is a single Excel (`.xlsx`) workbook with one sheet per report:
+To download the user reports, click **User Reports** next to the search box on the [Licenses](https://app.insomnia.rest/app/enterprise/licenses) page. The download is a single Excel (`.xlsx`) workbook with one sheet per report:
 
-* **Managed Users**: One row per user who consumes a license, with their last activity and the **Pending**, **E2EE**, and **SCIM** columns from the Licenses page.
+* **Managed Users**: One row per user who consumes a license, with their last activity and the **Pending Invite**, **E2EE**, and **SCIM** columns from the Licenses page.
 * **Unmanaged Users**: Users on your verified domains who aren't associated with your Enterprise account. For more information, see [User types](#user-types).
 * **Users & Organizations**: One row for each combination of user and organization. For example, a user who belongs to three organizations has three rows.
 * **Users & Teams**: One row for each combination of user and team.
