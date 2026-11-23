@@ -62,7 +62,8 @@ tldr:
     Then [unassign the deployment](#unassign-the-deployment) in the tool that deployed it.
     Run [`kong-harnesses fleet remove`](#generate-the-removal-plan) with the build record in `--record`.
     For an MDM build, add the current `--policy`, and for an `exclusive` build, add `--mcp-config`.
-    Follow its output for the MDM policy and `managed-mcp.json`, and delete the files listed under `Remove` with the [steps for your platform](#apply-the-removal-output).
+    Follow the `MDM policy` and `MCP config` instructions if they appear.
+    Delete each file listed under `Remove` with the [steps for your platform](#apply-the-removal-output).
 ---
 
 This guide removes the managed settings, the machine-wide profile, and the `managed-mcp.json` file that you deployed with [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/).

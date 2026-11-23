@@ -319,15 +319,17 @@ When a deny entry is sure to match one of your own `--mcp-config` servers, `flee
   The gateway server then doesn't load with the credential of the profile.
   In the `exclusive` mode, {{ site.claude_code }} loads both.
   When both define the same name, the `managed-mcp.json` entry takes precedence.
-  Remove the entry.
+  `fleet build` doesn't refuse an `http` entry for a gateway server with its own OAuth sign-in when the entry has the same OAuth settings and doesn't set headers.
+  Remove each entry that `fleet build` refuses.
 * **Name collisions (`exclusive`):** Rename each `--mcp-config` server that has the same name as a gateway server.
   If an earlier fleet build wrote that server, pass the record of that build with `--record` instead.
   If the record holds the definition of that server and you changed the server after that build, `fleet build` refuses it, so rename or remove it.
-  If the record lists only server names, `fleet build` takes each recorded server out of the `--mcp-config` file by name, also when you changed that server after that build.
+  If the record lists only server names, `fleet build` leaves each recorded server out of the new `managed-mcp.json` by name, also when you changed that server after that build.
 * **Servers at a gateway address (`exclusive`):** `fleet build` refuses an `--mcp-config` server with another name that points, or may point, to the address of a gateway MCP server.
   It doesn't refuse a server that the denylist of the policy always blocks.
-  It also doesn't refuse a server that signs in as the gateway server does and doesn't set headers.
-  Such a server has the same OAuth settings and no `headersHelper`, or runs the `kong-harnesses mcp-headers` helper for the profile and has no OAuth settings.
+  It also doesn't refuse an `http` server that signs in as the gateway server does and doesn't set headers.
+  For a gateway server with its own OAuth sign-in, such a server has the same OAuth settings and no `headersHelper`.
+  For other gateway servers, such a server runs the `kong-harnesses mcp-headers` helper for the profile and has no OAuth settings.
   Remove each refused server.
 * **MDM allowlist replaces file allowlists (`allowlist`):** The highest administrator source supplies the locked `allowedMcpServers`.
   So an MDM `allowlist` build replaces the allowlists in managed settings files.
@@ -365,7 +367,7 @@ It names each key that {{ site.claude_code }} ignores because its letter case do
 Write `source` in lowercase in `{"source": "skills-dir"}`, because `fleet build`, `doctor`, and {{ site.claude_code }} match keys with exact case.
 
 To fix a plugin blocker, build with `--mcp-servers exclusive`, or change the setting in `--policy` and in every other managed source.
-`fleet build` refuses a `managedMcpServers` entry at a gateway address in every mode, so remove the entry, as described in [More MCP rules](#more-mcp-rules).
+Remove each `managedMcpServers` entry at a gateway address that `fleet build` refuses in every mode, as described in [More MCP rules](#more-mcp-rules).
 
 ### Invalid MCP lists
 
@@ -583,7 +585,7 @@ rows:
 
 ### Version range checks
 
-For an MDM rebuild with `--record`, `fleet build` first reverts the settings of the earlier build in `--policy`.
+When `--record` names an earlier MDM build, `fleet build` first reverts the settings of that build in `--policy`.
 The version checks use the policy that remains.
 
 `fleet build` refuses a version range in these cases:
