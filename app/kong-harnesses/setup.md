@@ -66,7 +66,7 @@ kong-harnesses setup --client claude-code
 Before you start, get the gateway URL from your administrator.
 If the gateway doesn't list its models, also get a model ID, because `setup` asks for the model before the sign-in step.
 
-When your administrator gave you a key, pick **Use a key from the administrator** at the **Sign-in** question.
+When your administrator gave you a key, at the **Sign-in** question, select **Use a key from the administrator**.
 Sometimes the gateway lists its models only to a caller with a key.
 `setup` then asks for the key during profile creation to read the model list, when the terminal can hide what you type.
 The sign-in step then saves that key without asking again, unless the gateway refused it.

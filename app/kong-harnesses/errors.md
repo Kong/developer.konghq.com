@@ -107,7 +107,7 @@ When `doctor` finds a failure, it uses these exit codes:
 
 Within one report, the first failed check in report order sets the exit code of that report.
 `doctor` first lists the findings that don't belong to an agent CLI, such as the install check, then writes one report for each agent CLI.
-It exits with the most severe code of all findings and reports: `2` takes precedence over `1`, and `1` takes precedence over `3`.
+Across those findings and the agent CLI reports, it exits with the most severe code: `2` takes precedence over `1`, and `1` takes precedence over `3`.
 
 ## Profile errors
 
@@ -121,8 +121,10 @@ When one of them can't read a profile file, it lists that profile as unreadable 
 * In text output, the profile shows "Unreadable" and the recovery step.
 * In JSON or YAML output, the profile has the state `unreadable`, without the recovery step.
 * The command exits with `2`.
-  `profile list` exits with `1` instead when it also can't read which profile is the default, and prints "the default profile could not be read, so none is marked".
-  Run `kong-harnesses profile default PROFILE_NAME` to choose the default profile again.
+
+When `profile list` can't read which profile is the default, it still lists the profiles and marks none as the default.
+It prints "the default profile could not be read, so none is marked" and exits with `1`, even when another profile is unreadable.
+Run `kong-harnesses profile default PROFILE_NAME` to choose the default profile again.
 
 `status` also prints one message on standard error, about the first problem with the most severe exit code.
 When that problem is an unreadable profile, the message says "is unreadable" and gives the recovery step.
@@ -332,7 +334,7 @@ When you confirm the deletion of an invalid user profile, `profile delete` delet
 It also removes the saved gateway MCP server key for each server name in `mcp_servers`.
 Its result tells you what is left to clean up:
 
-* A gateway MCP server key: `profile delete` can't remove a key that your password store keeps.
+* A gateway MCP server key: `profile delete` can't remove a key when your password store refuses or fails to delete it.
   It also can't find the keys when the file doesn't have a readable `mcp_servers` object, including when `mcp_servers` is absent or `null`.
   The result names each item to delete from your system password store: `PROFILE_NAME.mcp-key.SERVER_NAME`, or `PROFILE_NAME.mcp-key.*` when it can't read the object.
 * A saved sign-in: `profile delete` doesn't remove a saved sign-in.
@@ -429,7 +431,7 @@ See ["refuses to start on its managed settings"](#refuses-to-start-on-its-manage
 
 ### "no key for the gateway MCP server"
 
-The full message is "no key for the gateway MCP server SERVER is saved on this computer", with the name of the server in place of SERVER.
+The full message is `no key for the gateway MCP server SERVER is saved on this computer`, with the name of the server in place of `SERVER`.
 A gateway MCP server in the profile takes a key, and you didn't save one yet.
 Run `kong-harnesses login --profile PROFILE_NAME`, and enter the key from your administrator when `login` asks for it.
 
@@ -444,7 +446,7 @@ When `profile activate` checks several agent CLIs and stops before it changes a 
 
 ### "settings file sets ANTHROPIC_AUTH_TOKEN or ANTHROPIC_API_KEY"
 
-The message says "your Claude settings file".
+The full message says that your Claude settings file sets `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`.
 {{ site.claude_code }} would send that value in place of your sign-in.
 Delete the variable from the settings file, then try again.
 
@@ -476,7 +478,7 @@ For such a route, run `profile activate` again with `--skip-route-check`.
 
 ### "uses plain http, or redirects to it"
 
-The message names the npm registry of OpenCode.
+The full message names the npm registry of OpenCode and says that it uses plain HTTP or redirects to it.
 When `profile activate` sets up several agent CLIs, the message starts with `OpenCode is not configured:`.
 OpenCode installs the {{site.kong_harnesses}} plugin from that registry, and over plain HTTP the network could read the registry credential and change the package.
 Set the registry in your npm configuration to an `https://` URL, or to a registry on this computer, then run `profile activate` again.
@@ -572,7 +574,7 @@ Run the command in a terminal, or avoid the terminal step:
 * For `profile activate`, pass `--auto-approve` or name one agent CLI with `--client CLIENT_NAME`.
 * For `profile delete` or `logout`, pass `--auto-approve`.
 * For `login`, run it in a terminal.
-  In a CI job or a script, use a profile with [`sign_in`](/kong-harnesses/profile-file/#sign-in-fields) set to `environment_key`, which needs no `login`.
+  In a CI job or a script, use a profile with [`sign_in`](/kong-harnesses/profile-file/#sign-in-fields) set to `environment_key`, which doesn't need `login`.
 
 ## Setup errors
 

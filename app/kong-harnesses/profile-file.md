@@ -785,7 +785,7 @@ rows:
     description: "`false` writes `CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK=1`."
   - field: "`extra_body`"
     description: >-
-      A JSON object with at least one field, that activation writes to `CLAUDE_CODE_EXTRA_BODY`.
+      A JSON object with at least one field that activation writes to `CLAUDE_CODE_EXTRA_BODY`.
       Without spaces between the tokens, it is up to 4096 bytes of printable ASCII.
       Each key appears once in its object, also in a nested object.
   - field: "`artifact`"
@@ -874,7 +874,7 @@ rows:
 
 `attribution` declares HTTP headers that agent CLIs send with each request for gateway spend grouping.
 Its only field, `headers`, maps 1 to 8 header names to values.
-The gateway reads `Ai-Cost-<name>` headers as cost tags.
+The gateway reads `Ai-Cost-NAME` headers as cost tags.
 
 A header name is an HTTP token of up to 64 bytes, and appears once without regard to case.
 A value is 1 to 128 printable ASCII characters.
