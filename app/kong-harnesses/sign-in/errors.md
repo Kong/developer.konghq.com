@@ -22,8 +22,6 @@ breadcrumbs:
 related_resources:
   - text: Sign in with kong-harnesses
     url: /kong-harnesses/sign-in/
-  - text: kong-harnesses errors and exit codes
-    url: /kong-harnesses/errors/
   - text: kong-harnesses login
     url: /kong-harnesses/login/
   - text: kong-harnesses logout
@@ -35,7 +33,6 @@ related_resources:
 When a sign-in, token, or logout command fails, kong-harnesses prints a line that starts with `Error:` and often names the next command to run.
 Replace `PROFILE_NAME` with your installed profile name in each command.
 For sign-in and sign-out steps, see [Sign in with kong-harnesses](/kong-harnesses/sign-in/).
-For exit codes and other command errors, see [kong-harnesses errors and exit codes](/kong-harnesses/errors/).
 
 ## Diagnose a failed sign-in
 
@@ -220,7 +217,7 @@ rows:
 {% endnavtab %}
 {% endnavtabs %}
 
-For errors about which profile a command uses, including lines starting with `selected profile`, see [Profile errors](/kong-harnesses/errors/#profile-errors).
+When a line starts with `selected profile`, run [`kong-harnesses profile list`](/kong-harnesses/profile/list/) to see the installed profiles.
 
 ## When the login or logout command fails
 
