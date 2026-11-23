@@ -105,8 +105,8 @@ When `doctor` finds a failure, it uses these exit codes:
 * `130` when you cancel `doctor` before it finishes the report, for example with Ctrl+C.
 
 Within one report, the first failed check in report order sets the exit code of that report.
-`doctor` writes one report for the install, one for the profile, and one for each agent CLI.
-It exits with the most severe code of all reports: `2` takes precedence over `1`, and `1` takes precedence over `3`.
+`doctor` first lists the findings that belong to no agent CLI, such as the install check, then writes one report for each agent CLI.
+It exits with the most severe code of all findings and reports: `2` takes precedence over `1`, and `1` takes precedence over `3`.
 
 ## Profile errors
 
@@ -455,6 +455,12 @@ Run it to find the setting and the file.
 The setup that `profile activate` writes to that file would then have no effect, so `profile activate` refuses.
 The message names the file, the field, and the type that the field needs.
 Set the field to that type, or remove it, then try again.
+
+### "could not inspect the selected" or "could not use the selected" settings
+
+The message ends with "settings configuration", and names the agent CLI.
+`status`, `profile activate` or `profile cleanup` can't read the settings of that agent CLI.
+Fix the settings file of that client, then run the command again.
 
 ### "settings are inconsistent" or "settings no longer match what this tool installed"
 

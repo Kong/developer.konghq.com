@@ -568,7 +568,12 @@ rows:
 
 Each choice turns one {{ site.claude_code }} feature on with `true` or off with `false`, and `profile activate` writes the settings in the following table.
 From version 14, each choice is optional, and a choice that the profile leaves out writes no setting of its own.
-A setting that several choices share can still get a value from another choice, and so can `enableArtifact` in a `subscription` profile, as [Routes](#routes) describes.
+A setting that several choices share can still get a value from another choice.
+A left-out choice also writes its `false` value when the route doesn't serve the feature:
+
+* `tool_search` on a route without `tool_reference`.
+* `advisor` on a route without `advisor`.
+* `artifact` in a `subscription` profile on a route without `artifact`.
 Versions 12 and 13 require `auto_updates`, `tool_search`, `advisor` and `artifact`, and refuse the other choices.
 For a profile before version 14, {{site.kong_harnesses}} treats each choice from `anthropic_telemetry` to `webfetch_preflight` as `false`.
 
@@ -672,7 +677,8 @@ rows:
       Writes `CLAUDE_CODE_AUTO_MODE_SERVER=0`, so {{ site.claude_code }} sends the auto mode check to the `auto_mode` model through the gateway.
 {% endtable %}
 
-When the profile leaves out `tool_search`, {{ site.claude_code }} keeps its default, which loads every tool at startup behind a gateway.
+When the profile leaves out `tool_search` on a route without `tool_reference`, `profile activate` writes `ENABLE_TOOL_SEARCH=false`.
+On a route with `tool_reference`, it writes nothing, and {{ site.claude_code }} loads MCP tools only when it needs them, also behind a gateway.
 
 #### Choices that can't go together
 
@@ -944,7 +950,16 @@ rows:
 To save a copy of a UTF-16 or UTF-32 file in another encoding:
 
 {% navtabs "convert-profile-encoding" %}
-{% navtab "macOS and Linux" %}
+{% navtab "macOS" %}
+
+Convert the file to UTF-8 with `iconv`, and name the encoding from the message after `-f`, for example `UTF-16LE`, `UTF-16BE` or `UTF-32`:
+
+```sh
+iconv -f UTF-16LE -t UTF-8 PROFILE_FILE > COPY_FILE
+```
+
+{% endnavtab %}
+{% navtab "Linux" %}
 
 Convert the file to UTF-8 with `iconv`, and name the encoding from the message after `-f`, for example `UTF-16LE`, `UTF-16BE` or `UTF-32`:
 

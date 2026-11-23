@@ -28,7 +28,7 @@ If you pass both a profile source and `--profile`, `setup` exits with a usage er
 `setup` skips the sign-in step in two cases:
 
 * The profile uses `sign_in: environment_key`, because each command reads the key from `KONG_HARNESSES_STATIC_KEY`.
-* Every agent CLI that `setup` configures signs in through its own plugin.
+* Every agent CLI that `setup` configures signs in through its own plugin, as OpenCode and Hermes Agent do.
 
 ## Run setup again
 
@@ -51,9 +51,7 @@ The resume command is usually the same `setup` command.
 After `profile create` saves a new profile, the resume command is `setup --profile PROFILE_NAME`, so you don't answer the profile creation questions again.
 It keeps the `--client`, `--no-browser`, `--auto-approve`, `--skip-route-check`, `--log-level`, and `--log-file` flags of your run.
 
-The gateway or this computer can refuse an agent CLI.
-Until you make the fix that the message names, `setup` then leaves that client out, or stops at the same step if it's the only client.
-For each message and its fix, see [Setup errors](/kong-harnesses/errors/#setup-errors).
+When the gateway or this computer refuses an agent CLI, see [Setup errors](/kong-harnesses/errors/#setup-errors) for the message and its fix.
 
 ## Set up without a profile file
 
