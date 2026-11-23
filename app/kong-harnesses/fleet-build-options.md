@@ -146,7 +146,6 @@ Before you build, check each policy source:
   * In `ANTHROPIC_CUSTOM_HEADERS`: `Authorization`, `Proxy-Authorization`, `X-Api-Key`, `Host`, a malformed line, or a header that conflicts with attribution
   * An `env` value that {{ site.claude_code }} can't use: an object with its own `toString` key, also inside a list, or a value whose text holds a NUL byte.
     An object with its own `toString` key makes {{ site.claude_code }} drop every value in the `env` of that policy source.
-    `env` values in other managed sources stay.
     Other values convert to text, such as numbers, booleans, `null`, lists, and objects.
   * A version range that fails the [version range checks](#version-range-checks)
 * **Other keys to remove:** Remove `forceLoginOrgUUID`, because it blocks `apiKeyHelper` at startup.
@@ -324,9 +323,11 @@ When a deny entry is sure to match one of your own `--mcp-config` servers, `flee
 * **Name collisions (`exclusive`):** Rename each `--mcp-config` server that has the same name as a gateway server.
   If an earlier fleet build wrote that server, pass the record of that build with `--record` instead.
   If the record holds the definition of that server and you changed the server after that build, `fleet build` refuses it, so rename or remove it.
-  If the record lists only server names, `fleet build` takes out each recorded server by name.
+  If the record lists only server names, `fleet build` takes each recorded server out of the `--mcp-config` file by name, also when you changed that server after that build.
 * **Servers at a gateway address (`exclusive`):** `fleet build` refuses an `--mcp-config` server with another name that points, or may point, to the address of a gateway MCP server.
-  It doesn't refuse a server that the denylist of the policy always blocks, or a server whose entry is the same as the gateway server entry.
+  It doesn't refuse a server that the denylist of the policy always blocks.
+  It also doesn't refuse a server that signs in as the gateway server does and doesn't set headers.
+  Such a server has the same OAuth settings and no `headersHelper`, or runs the `kong-harnesses mcp-headers` helper for the profile and has no OAuth settings.
   Remove each refused server.
 * **MDM allowlist replaces file allowlists (`allowlist`):** The highest administrator source supplies the locked `allowedMcpServers`.
   So an MDM `allowlist` build replaces the allowlists in managed settings files.
@@ -338,6 +339,7 @@ When a deny entry is sure to match one of your own `--mcp-config` servers, `flee
   When {{ site.claude_code }} can read and parse `managed-mcp.json`, it [exits at startup](https://code.claude.com/docs/en/managed-mcp#servers-passed-with-mcp-config-or-strict-mcp-config) on a workstation in these cases:
   * `--mcp-config` passes servers.
   * You pass `--strict-mcp-config`.
+
   In `allowlist` or `any` mode, `--strict-mcp-config` skips the plugin servers.
 
 ### Plugin blockers
@@ -378,7 +380,8 @@ This rule applies to every mode, also when the profile doesn't have gateway MCP 
 * `managedMcpServers` is `null`, isn't an object, or has an entry that {{ site.claude_code }} drops.
 
 {{ site.claude_code }} drops an invalid entry and still applies the other entries.
-It also drops a `deniedMcpServers` value that isn't a list, so that value doesn't block any server, and a `managedMcpServers` value that isn't an object.
+It drops a `deniedMcpServers` value that isn't a list, so that value doesn't block any server.
+It drops a `managedMcpServers` value that isn't an object.
 `fleet build` can't know what the dropped entry or value was meant to allow, deny, or provide.
 If you don't want a list or provided servers, leave the key out of `--policy`.
 
@@ -524,7 +527,7 @@ rows:
 ## Keep or revert recorded flags
 
 When you rebuild with `--record`, `fleet build` refuses to drop a choice that the earlier build recorded.
-For each recorded choice, pass the flag again to keep it, or revert it:
+Use the table to keep, change, or revert each choice of the earlier build:
 
 {% table %}
 columns:
@@ -579,6 +582,9 @@ rows:
 `--claude-code-maximum` writes `requiredMaximumVersion`.
 
 ### Version range checks
+
+For an MDM rebuild with `--record`, `fleet build` first reverts the settings of the earlier build in `--policy`.
+The version checks use the policy that remains.
 
 `fleet build` refuses a version range in these cases:
 
