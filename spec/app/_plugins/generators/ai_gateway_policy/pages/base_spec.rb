@@ -19,7 +19,8 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Base do
       icon: 'my-policy.png',
       unreleased?: false,
       min_release: nil,
-      api_spec_exists?: false
+      api_spec_exists?: false,
+      explicit_major: nil
     )
   end
 
@@ -34,7 +35,7 @@ RSpec.describe Jekyll::AIGatewayPolicyPages::Pages::Base do
   let(:page) { described_class.new(policy:, file: '/app/_ai_gateway_policies/my-policy/index.md') }
 
   describe '.base_url' do
-    it { expect(described_class.base_url).to eq('/ai-gateway/policies/') }
+    it { expect(described_class.base_url(policy)).to eq('/ai-gateway/policies/') }
   end
 
   describe '#breadcrumbs' do

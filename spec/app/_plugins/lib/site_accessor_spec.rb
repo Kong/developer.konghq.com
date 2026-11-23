@@ -8,7 +8,7 @@ RSpec.describe Jekyll::SiteAccessor do
   let(:build_filter) { Jekyll::BuildFilter.new(env: env) }
   let(:env) { {} }
 
-  before { allow(Jekyll::BuildFilter).to receive(:current).and_return(build_filter) }
+  before { allow(Jekyll::BuildFilter).to receive(:current) { build_filter } }
 
   describe '#site_redirects' do
     context 'when in development with PAGE_PATHS configured' do

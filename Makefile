@@ -10,6 +10,11 @@ ifndef RUBY_MATCH
 	$(error ruby $(RUBY_VERSION_REQUIRED) is required. Found $(RUBY_VERSION). $(newline)Run 'mise activate' or prefix you make command with 'mise x --' see README.md for more information)$(newline)
 endif
 
+seed-redirects:
+	@mkdir -p dist
+	@[ -s dist/_redirects ] || cp app/_redirects dist/_redirects
+	@[ -s dist/_headers ] || cp app/_headers dist/_headers
+
 # Installs yarn packages and gems.
 install:
 	mise install
@@ -26,7 +31,7 @@ validate-frontmatters:
 
 # Using local dependencies, starts a doc site instance. The entry URL is
 # printed at startup and written to tmp/dev-url.
-run: ruby-version-check validate-frontmatters
+run: ruby-version-check validate-frontmatters seed-redirects
 	@PORTS=$$(./exe/dev-ports) || exit 1; \
 	eval "$$PORTS"; \
 	echo "Dev server: $$(cat tmp/dev-url)"; \
@@ -34,7 +39,7 @@ run: ruby-version-check validate-frontmatters
 	  --skip-wait-port --internal-disable-edge-functions \
 	  --port $$NETLIFY_PORT --target-port $$JEKYLL_PORT
 
-run-debug: ruby-version-check
+run-debug: ruby-version-check seed-redirects
 	@PORTS=$$(./exe/dev-ports) || exit 1; \
 	eval "$$PORTS"; \
 	echo "Dev server: $$(cat tmp/dev-url)"; \

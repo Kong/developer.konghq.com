@@ -35,6 +35,11 @@ RSpec.describe Jekyll::Data::Title::Base do
       it { expect(subject).to be_a(Jekyll::Data::Title::Policy) }
     end
 
+    context 'when URL starts with /mesh/v2/policies/ (a versioned policy major)' do
+      let(:page_url) { '/mesh/v2/policies/meshretry/' }
+      it { expect(subject).to be_a(Jekyll::Data::Title::Policy) }
+    end
+
     context 'when content_type is reference' do
       let(:page_url) { '/gateway/reference/cli/' }
       let(:page_data) { { 'content_type' => 'reference' } }

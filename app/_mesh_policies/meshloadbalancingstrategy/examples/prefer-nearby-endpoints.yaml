@@ -1,0 +1,26 @@
+title: 'Give nearby endpoints a larger share of traffic'
+
+description: 'Weight local endpoint groups by labels they share with the caller. The caller Dataplane and destination endpoint metadata must carry the listed keys. These groups share traffic by weight rather than acting as sequential failover targets.'
+
+weight: 800
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshLoadBalancingStrategy
+  name: backend-local-affinity
+  mesh: default
+  spec:
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            kuma.io/display-name: backend
+        default:
+          localityAwareness:
+            localZone:
+              affinityTags:
+                - key: kubernetes.io/hostname
+                  weight: 9000
+                - key: topology.kubernetes.io/zone
+                  weight: 9

@@ -8,7 +8,7 @@ RSpec.describe Jekyll::RenderHowToList do
   let(:template) { '{% how_to_list include.config %}' }
   let(:locals) { { 'include' => { 'config' => { 'tags' => ['nonexistent-tag-xyz-zzz'] } } } }
 
-  before { allow(Jekyll::BuildFilter).to receive(:current).and_return(Jekyll::BuildFilter.new(env: env)) }
+  before { allow(Jekyll::BuildFilter).to receive(:current) { Jekyll::BuildFilter.new(env:) } }
 
   context 'when build filtering is active' do
     before { allow(Jekyll).to receive(:env).and_return('development') }

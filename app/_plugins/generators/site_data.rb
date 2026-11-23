@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
+require_relative '../lib/ordered_generator'
+
 require 'json'
 require 'active_support/inflector'
 
 module Jekyll
-  class SiteDataGenerator < Generator # rubocop:disable Style/Documentation
-    priority :highest
-
+  class SiteDataGenerator < OrderedGenerator # rubocop:disable Style/Documentation
     def generate(site)
       site.data['searchFilters'] = search_filters(site)
       site.data['searchSources'] = site.data.dig('search', 'sources')
