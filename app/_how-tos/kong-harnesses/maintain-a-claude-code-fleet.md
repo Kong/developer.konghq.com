@@ -269,7 +269,7 @@ If a test fails, put the test computer back on the earlier build:
 
 ## Deploy the build to the other computers
 
-After every test passes:
+After every test passes, deploy the new build to the other computers in each policy group:
 
 1. Deploy the same package or files and, for an MDM build, the same MDM policy to the other computers in the group, as described in [Deploy to managed computers](/kong-harnesses/roll-out-claude-code-through-mdm/#deploy-to-managed-computers).
    If you pin a version range, install a release from `OLDEST_VERSION` to `NEWEST_VERSION` on each computer whose release is outside that range, in the same maintenance window as the deploy to that computer.
@@ -281,7 +281,7 @@ After every test passes:
 1. If you move a model, ask developers to run `/status` after they restart.
    If it shows the earlier model, ask them to run `/model FAMILY` with the family of that model, such as `/model sonnet`.
 1. If you move a model, wait until every policy group has the new build.
-   Remove the earlier AI Model from {{ site.ai_gateway }} only when the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger), filtered by **Model**, shows no new requests for the earlier model.
+   Remove the earlier AI Model from {{ site.ai_gateway }} only when the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger), filtered by **Model**, doesn't show any new requests for the earlier model.
 
 ## Validate
 
