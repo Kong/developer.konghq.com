@@ -105,7 +105,7 @@ When `doctor` finds a failure, it uses these exit codes:
 * `130` when you cancel `doctor` before it finishes the report, for example with Ctrl+C.
 
 Within one report, the first failed check in report order sets the exit code of that report.
-`doctor` first lists the findings that belong to no agent CLI, such as the install check, then writes one report for each agent CLI.
+`doctor` first lists the findings that don't belong to an agent CLI, such as the install check, then writes one report for each agent CLI.
 It exits with the most severe code of all findings and reports: `2` takes precedence over `1`, and `1` takes precedence over `3`.
 
 ## Profile errors
@@ -143,7 +143,8 @@ kong-harnesses profile list
 The command needs a profile, and didn't get one.
 The end of the message tells you what to do:
 
-* "and no installed profile is usable" or "and none is installed": When you don't name a profile, `login`, `logout`, `doctor` and `fleet build` use the default profile, or the only installed profile, and they didn't find one.
+* "and no installed profile is usable" or "and none is installed": Without a profile name, `login`, `logout`, `doctor` and `fleet build` use the default profile, or the only installed profile.
+  They didn't find a usable one.
   Run `kong-harnesses profile list` to see the profiles, then install one with [`kong-harnesses profile import`](/kong-harnesses/profile/import/) or [`kong-harnesses profile create`](/kong-harnesses/profile/create/), or name one with `--profile PROFILE_NAME`.
 * "specify one with --profile <name> or KONG_HARNESSES_PROFILE": `token`, `credential`, `statusline`, the MCP header helper that {{ site.claude_code }} runs, and `budget refresh` don't use a default profile.
   Name the profile with `--profile PROFILE_NAME`, or with `KONG_HARNESSES_PROFILE`.
@@ -197,7 +198,8 @@ Set `auto_updates` to `true`, set the named choices to `false`, or ask your admi
 
 ### "one switch that turns /bug, /feedback and /share on or off together"
 
-{{ site.claude_code }} turns `/bug`, `/feedback` and `/share` on or off together, so `profile import` refused a profile that sets only one of `bug_command` and `feedback_command`, or sets them to different values.
+{{ site.claude_code }} turns `/bug`, `/feedback` and `/share` on or off together.
+`profile import` refused the profile, because it sets only one of `bug_command` and `feedback_command`, or sets them to different values.
 Set both to the same value, or leave both out.
 
 ### "need an HTTPS gateway"
@@ -410,6 +412,8 @@ Run `kong-harnesses --client claude-code profile activate PROFILE_NAME` again.
 
 ## Client setup errors
 
+When `profile activate` checks several agent CLIs and stops before it changes a file, the message starts with `profile activate changed nothing:`.
+
 ### "settings file sets ANTHROPIC_AUTH_TOKEN or ANTHROPIC_API_KEY"
 
 The message says "your Claude settings file".
@@ -434,10 +438,25 @@ The full message is `CLIENT_NAME is not configured: it can choose a proxy that w
 A failure while writing the settings can still leave some clients set up.
 Give these clients a profile with an `https://` gateway.
 
+### "is not configured" for a missing or refused gateway route
+
+The message names the agent CLI, says `HOST has no POST PATH route` or `HOST refuses your sign-in on POST PATH`, and ends with `--skip-route-check`.
+Before `profile activate` configures an agent CLI, it checks that the gateway has a route for that client and accepts your sign-in there.
+Ask the operators of the gateway to add the route or give you access, then run `profile activate` again.
+Some gateway routes match on a header that only the agent CLI sends, such as its `User-Agent`.
+For such a route, run `profile activate` again with `--skip-route-check`.
+
+### "is not configured" for a plain-HTTP npm registry
+
+The message says that OpenCode is not configured, because the npm registry `uses plain http, or redirects to it`.
+OpenCode installs the {{site.kong_harnesses}} plugin from that registry, and over plain HTTP the network could read the registry credential and change the package.
+Set the registry in your npm configuration to an `https://` URL, or to a registry on this computer, then run `profile activate` again.
+
 ### "managed settings could send"
 
 The message starts with "your organization's managed settings could send".
-The profile uses an `http://` gateway, and the managed settings of {{ site.claude_code }} could send its requests through a proxy, because they take precedence over the `NO_PROXY` value that `profile activate` writes.
+The profile uses an `http://` gateway, and the managed settings of {{ site.claude_code }} could send its requests through a proxy.
+Managed settings take precedence over the `NO_PROXY` value that `profile activate` writes.
 The message names the cause, such as a `NO_PROXY` value that leaves out the gateway host, or a managed settings source that {{site.kong_harnesses}} can't read.
 Use an `https://` gateway, or ask your administrator to make the change that the message names.
 
@@ -452,7 +471,7 @@ Run it to find the setting and the file.
 ### "applies none of" a settings file
 
 {{ site.claude_code }} ignores a whole settings file when one field in it has the wrong type.
-The setup that `profile activate` writes to that file would then have no effect, so `profile activate` refuses.
+The setup that `profile activate` writes to that file then wouldn't take effect, so `profile activate` refuses.
 The message names the file, the field, and the type that the field needs.
 Set the field to that type, or remove it, then try again.
 
@@ -472,6 +491,17 @@ Then run `kong-harnesses profile cleanup --client CLIENT_NAME`, or remove the le
 
 {{site.kong_harnesses}} found two records of what it wrote for the client, one in the settings folder and one next to the settings file, and it can't tell which one is newer.
 Remove the leftover values and both records manually, then run the `profile activate` command that the message names.
+
+### "resolve the same ownership document"
+
+pi and `omp` both read `PI_CODING_AGENT_DIR`, so when that variable is set, a profile that sets up both points them at the same folder.
+`profile activate` refuses before it changes a file.
+Unset `PI_CODING_AGENT_DIR`, or configure one of the two clients by hand.
+
+### "a client configuration directory environment variable is invalid"
+
+One of the environment variables that the message lists holds a folder path that {{site.kong_harnesses}} can't use.
+Fix or unset that variable, then run the command again.
 
 ### "settings cleanup is incomplete"
 
@@ -566,7 +596,7 @@ Pass the record of that build with `--record RECORD_FILE`.
 
 ## Errors that ask you to retry
 
-These messages say only that an operation failed, or ask you to retry later.
+Some messages say only that an operation failed, or ask you to retry later.
 Check the part of the computer that the message names, then run the command again:
 
 {% table %}

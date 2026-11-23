@@ -567,17 +567,18 @@ rows:
 #### Claude Code choices
 
 Each choice turns one {{ site.claude_code }} feature on with `true` or off with `false`, and `profile activate` writes the settings in the following table.
-From version 14, each choice is optional, and a choice that the profile leaves out writes no setting of its own.
+From version 14, each choice is optional, and a choice that the profile leaves out doesn't write a setting of its own.
 A setting that several choices share can still get a value from another choice.
 A left-out choice also writes its `false` value when the route doesn't serve the feature:
 
 * `tool_search` on a route without `tool_reference`.
 * `advisor` on a route without `advisor`.
 * `artifact` in a `subscription` profile on a route without `artifact`.
+
 Versions 12 and 13 require `auto_updates`, `tool_search`, `advisor` and `artifact`, and refuse the other choices.
 For a profile before version 14, {{site.kong_harnesses}} treats each choice from `anthropic_telemetry` to `webfetch_preflight` as `false`.
 
-When a new profile leaves out a choice or sets `auto_updates: true`, activation stops controlling the setting of that choice.
+When a new profile leaves out a choice or sets `auto_updates: true`, activation stops controlling the setting of that choice, unless another choice sets it.
 `profile activate` then restores the value that the setting had before activation wrote it, unless the setting changed after that.
 When the setting changed, `profile activate` keeps the current value, so an earlier setting or a later edit can still turn the feature off.
 
@@ -712,6 +713,8 @@ rows:
     versions: "18 and later"
   - pair: "`advisor: true` with `experimental_betas: false`"
     versions: "18 and later"
+  - pair: "`auto_mode_gateway_check: false` with `experimental_betas: false`"
+    versions: "18 and later"
   - pair: "`advisor: true` on `anthropic-messages` with `feature_flags: false` or `anthropic_telemetry: false`"
     versions: "18 and later"
   - pair: "`bug_command` and `feedback_command` set to different values"
@@ -757,7 +760,9 @@ columns:
     key: description
 rows:
   - field: "`experimental_betas`"
-    description: "`false` writes `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1` and `ENABLE_TOOL_SEARCH=false`."
+    description: >-
+      `false` writes `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1`.
+      Tool search needs the beta features, so when activation writes `ENABLE_TOOL_SEARCH`, it writes `false`.
   - field: "`betas`"
     description: >-
       A list of beta names that activation writes to `ANTHROPIC_BETAS`.
@@ -900,7 +905,7 @@ rows:
       Some identity providers don't let {{ site.claude_code }} register a client.
       For such a server, register a client for {{ site.claude_code }} yourself, and set these fields to that client.
       The client ID is up to 256 visible ASCII characters.
-      The port is from 0 to 65535, and `0` is the same as no port: `profile activate` then writes no callback port.
+      The port is from 0 to 65535, and `0` is the same as leaving out the port: `profile activate` then doesn't write a callback port.
   - field: "`key_header`"
     description: >-
       Only for `key`, and refused for other servers.
