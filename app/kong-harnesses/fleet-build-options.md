@@ -50,7 +50,7 @@ For the rollout steps, see [Roll out {{ site.claude_code }} through MDM](/kong-h
 
 ## Delivery method and existing policy
 
-The delivery method decides where the build puts the managed settings.
+The delivery method sets where the build puts the managed settings.
 Choose it from the policy sources that your computers already have.
 
 ### How managed sources rank
@@ -112,13 +112,13 @@ rows:
     usage: |
       Use when no MDM policy sets a policy value as written.
       The build writes `managed-settings.d/kong-harnesses.json`.
-      Pass the current `managed-settings.json` with `--policy POLICY_FILE`.
+      Pass the current `managed-settings.json` with `--policy 'POLICY_FILE'`.
       If there isn't a `managed-settings.json` file, pass `--no-policy`, even when `managed-settings.d/` has files.
   - flag: "`--delivery mdm`"
     platforms: macOS, Windows
     usage: |
       Use when an MDM policy sets a policy value as written, or when you deliver the settings through MDM.
-      Pass the current MDM policy with `--policy POLICY_FILE`.
+      Pass the current MDM policy with `--policy 'POLICY_FILE'`.
       Pass `--no-policy` only when there isn't an MDM policy.
 {% endtable %}
 
@@ -137,9 +137,12 @@ Before you build, check each policy source:
     This includes a `policyHelper` path that {{ site.claude_code }} can't run, because {{ site.claude_code }} then refuses to start.
   * An `allowedProviders` text entry other than `customEndpoint`
   * In `ANTHROPIC_CUSTOM_HEADERS`: `Authorization`, `Proxy-Authorization`, `X-Api-Key`, `Host`, a malformed line, or a header that conflicts with attribution
-  * An `env` value that {{ site.claude_code }} can't use: an object with its own `toString` key, including one inside a list, or a value whose text holds a NUL byte.
-    An object with its own `toString` key makes {{ site.claude_code }} drop every value in the `env` of that policy source.
-    Other values convert to text, such as numbers, booleans, `null`, lists, and objects.
+  * An `env` value that {{ site.claude_code }} can't use, in one of these forms:
+    * An object with its own `toString` key, including one inside a list.
+      Such an object makes {{ site.claude_code }} drop every value in the `env` of that policy source.
+    * A value whose text holds a NUL byte.
+
+    {{ site.claude_code }} converts other values to text, such as numbers, booleans, `null`, lists, and objects.
   * A version range that fails the [version range checks](#version-range-checks)
 * **Other keys to remove:** Remove `forceLoginOrgUUID`, because it blocks `apiKeyHelper` at startup.
   Also remove `enforceAnthropicSignIn`.
@@ -278,7 +281,7 @@ A `serverName` entry is an exception: it matches the name as written, before the
 
 * The result depends on a variable that the `env` of the policy doesn't set, in an entry or in the server.
 * An `allowedMcpServers` `serverUrl` entry names a variable, and the `env` of the policy sets that variable to a value that can change the scheme, host, port, or path scope of the URL.
-  Such a value holds `/`, `?`, `#`, `@`, `:`, `\`, `*`, `%`, white space, a control or invisible character, or a character that isn't ASCII, or it is `.` or `..`.
+  Such a value holds `/`, `?`, `#`, `@`, `:`, `\`, `*`, `%`, whitespace, a control or invisible character, or a character that isn't ASCII, or it is `.` or `..`.
   {{ site.claude_code }} `2.1.219` and later [ignore an allowlist entry](https://code.claude.com/docs/en/managed-mcp#how-policy-entries-expand) whose expansion changes the scheme, host, port, or path scope of the URL.
   This case applies at every minimum version.
   Write such an entry as a literal URL.
@@ -308,14 +311,19 @@ When a deny entry is sure to match one of your own `--mcp-config` servers, `flee
 ### More MCP rules
 
 * **Provided servers at a gateway address (every mode):** `fleet build` refuses a `managedMcpServers` entry that points, or may point, to the address of a gateway MCP server, even under another name.
-  In the `allowlist` and `any` modes, {{ site.claude_code }} loads the provided server instead of the gateway server at the same URL.
-  The gateway server then doesn't load with the credential of the profile.
-  In the `exclusive` mode, {{ site.claude_code }} loads both.
-  When both define the same name, the `managed-mcp.json` entry takes precedence.
-  This rule doesn't refuse one kind of entry: an `http` entry for a gateway server with its own OAuth sign-in.
-  That entry must have the same OAuth settings, must not set headers, and must have only fields that `fleet build` can check.
-  The entry must still pass the checks in [Invalid MCP lists](#invalid-mcp-lists), so it can't set `command`, `args`, `env`, or `headersHelper`.
   Remove each entry that `fleet build` refuses.
+  Such an entry causes a conflict in every mode:
+  * In the `allowlist` and `any` modes, {{ site.claude_code }} loads the provided server instead of the gateway server at the same URL.
+    The gateway server then doesn't load with the credential of the profile.
+  * In the `exclusive` mode, {{ site.claude_code }} loads both.
+    When both define the same name, the `managed-mcp.json` entry takes precedence.
+
+  This rule doesn't refuse an `http` entry for a gateway server with its own OAuth sign-in when the entry meets all of these conditions:
+
+  * It has the same OAuth settings.
+  * It doesn't set headers.
+  * It has only fields that `fleet build` can check.
+  * It passes the checks in [Invalid MCP lists](#invalid-mcp-lists), so it can't set `command`, `args`, `env`, or `headersHelper`.
 * **Name collisions (`exclusive`):** Rename each `--mcp-config` server that has the same name as a gateway server.
   If an earlier fleet build wrote that server, pass the record of that build with `--record` instead.
   What `fleet build` does depends on the record:
@@ -324,15 +332,16 @@ When a deny entry is sure to match one of your own `--mcp-config` servers, `flee
     To fix it, put back the definition that the earlier build wrote.
     To keep your changes, add them as your own server under another name.
     If that server points to a gateway address, it must also pass the rule for servers at a gateway address in this list.
-  * **Record with server names only:** `fleet build` leaves out each `--mcp-config` server that has a recorded name, even when you changed that server after that build.
+  * **Record with server names only:** `fleet build` takes out each `--mcp-config` server that has a recorded name, even when you changed that server after that build.
 
   The new `managed-mcp.json` holds the current gateway servers of the profile and each `--mcp-config` server that `fleet build` didn't take out.
 * **Servers at a gateway address (`exclusive`):** `fleet build` refuses an `--mcp-config` server with another name that points, or may point, to the address of a gateway MCP server.
-  It doesn't refuse a server that the denylist of the policy always blocks.
-  It also doesn't refuse an `http` server that signs in as the gateway server does, doesn't set headers, and has only fields that `fleet build` can check, such as `type`, `url`, `oauth`, and `headersHelper`.
-  For a gateway server with its own OAuth sign-in, such a server has the same OAuth settings and doesn't set `headersHelper`.
-  For other gateway servers, such a server runs the `kong-harnesses mcp-headers` helper for the profile and doesn't set OAuth settings.
   Remove each refused server.
+  `fleet build` doesn't refuse a server at that address in these cases:
+  * The denylist of the policy always blocks the server.
+  * The server is an `http` server that doesn't set headers, has only fields that `fleet build` can check, such as `type`, `url`, `oauth`, and `headersHelper`, and signs in as the gateway server does:
+    * For a gateway server with its own OAuth sign-in, the server has the same OAuth settings and doesn't set `headersHelper`.
+    * For other gateway servers, the server runs the `kong-harnesses mcp-headers` helper for the profile and doesn't set OAuth settings.
 * **MDM allowlist replaces file allowlists (`allowlist`):** The highest administrator source supplies the locked `allowedMcpServers`.
   So an MDM `allowlist` build replaces the allowlists in managed settings files.
   Move the entries that you need to `--policy`, `--mcp-url`, or `--mcp-command`.
@@ -370,9 +379,12 @@ This rule applies to the `allowlist` and `any` modes.
 When the profile has gateway MCP servers and `--mcp-servers` isn't `exclusive`, `fleet build` refuses a `--policy` that sets a `strictPluginOnlyCustomization` or marketplace blocker in this list.
 If `--policy` sets both allowlist keys, `fleet build` refuses the policy when either key is a blocker in this list.
 This includes `allowedMarketplaces`, which {{ site.claude_code }} ignores when the same file sets both keys.
-The error names the first blocker that `fleet build` finds.
-For a `strictPluginOnlyCustomization` lock, it also names each entry that doesn't name a surface.
-For a marketplace allowlist, it also names each `source` key that {{ site.claude_code }} ignores because its letter case doesn't match.
+The error names:
+
+* The first blocker that `fleet build` finds
+* For a `strictPluginOnlyCustomization` lock, each entry that doesn't name a surface
+* For a marketplace allowlist, each `source` key that {{ site.claude_code }} ignores because its letter case doesn't match
+
 Write `source` in lowercase in `{"source": "skills-dir"}`, because `fleet build`, `doctor`, and {{ site.claude_code }} match keys with exact case.
 
 To fix a `strictPluginOnlyCustomization` or marketplace blocker, build with `--mcp-servers exclusive`, or change the setting in `--policy` and in every other managed source.
@@ -459,7 +471,7 @@ rows:
 
 ### Host settings
 
-`--host-settings` decides whether embedding host apps, such as IDE extensions and Agent SDK apps, can add settings.
+`--host-settings` controls whether embedding host apps, such as IDE extensions and Agent SDK apps, can add settings.
 
 * `--host-settings ignore` is the default.
   It doesn't write `parentSettingsBehavior`, and keeps any value that the policy sets.

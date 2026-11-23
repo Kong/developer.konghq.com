@@ -485,6 +485,7 @@ kustomizations
 kustomize
 keystores
 kv
+KWallet
 Lakera
 langchain
 lapis

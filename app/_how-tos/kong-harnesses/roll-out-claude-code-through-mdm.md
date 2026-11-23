@@ -153,7 +153,7 @@ Before you build, make these choices:
   Clear conflicts from other policy sources, drop-ins, custom headers, and remote settings.
 * [MCP server modes and exceptions](/kong-harnesses/fleet-build-options/#mcp-server-modes-and-exceptions): Choose an `--mcp-servers` mode, and prepare `managed-mcp.json` or the allowlist entries.
   Check `deniedMcpServers` and the plugin blockers.
-* [Host apps, WSL, and executable path](/kong-harnesses/fleet-build-options/#host-apps-wsl-and-executable-path): Choose `--host-settings` and `--executable`.
+* [Host apps, WSL, and executable path](/kong-harnesses/fleet-build-options/#host-apps-wsl-and-executable-path): Choose `--host-settings`, `--wsl` on Windows, and `--executable`.
 * [Version bounds](/kong-harnesses/fleet-build-options/#version-bounds): Choose the version bounds.
 * [Model overrides](/kong-harnesses/fleet-build-options/#model-overrides): Choose any `--model` overrides.
 
@@ -485,7 +485,7 @@ Then finish the checks on every platform:
 1. Send `Say hello` and confirm that {{ site.claude_code }} replies.
 1. Find the event under your control plane in the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger).
    Set the **User** filter to the subject of the test user.
-   The [AI Auth Strategy](/ai-cost-management/attribution/#set-up-subject-attribution) decides the subject:
+   The [AI Auth Strategy](/ai-cost-management/attribution/#set-up-subject-attribution) sets the subject:
    * A principal: `principal/UUID`
    * An AI Consumer: `consumer/UUID`
    * An OpenID Connect claim without a principal: `oidc/CLAIM_VALUE`, where `CLAIM_VALUE` is the value of the claim that `credential_claim` names, `sub` by default
