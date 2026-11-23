@@ -126,7 +126,7 @@ Using the [KongAir](https://github.com/Kong/KongAir/tree/main?tab=readme-ov-file
 > You can either create teams manually, or through your [SCIM](#7-enable-scim) provider. Manually created teams can be synchronized with SCIM teams.
 
 To create teams manually:
-1. In your {{ site.insomnia }} account dropdown menu, click **Enterprise Controls**.
+1. Go to [{{ site.insomnia }} Admin](https://app.insomnia.rest/app/home).
 1. In the sidebar, click [**Teams**](https://app.insomnia.rest/app/enterprise/team).
 1. Click **Create Team**. 
 1. In the **Team name** field, enter a team name.
@@ -162,7 +162,7 @@ Once the users accept the invitation, they will have access to the content in th
 
 ### Invite a user to a team
 
-1. In your {{ site.insomnia }} account dropdown menu, click **Enterprise Controls**.
+1. Go to [{{ site.insomnia }} Admin](https://app.insomnia.rest/app/home).
 1. In the sidebar, click [**Teams**](https://app.insomnia.rest/app/enterprise/team).
 1. Click the team you want to invite users to.
 1. In the **Invite new members** field, enter the users' email addresses.
@@ -175,7 +175,7 @@ Once the users accept the invitation, they will have access to the organizations
 
 Adding a domain allows you to automatically manage users with email addresses in that domain. It's also a prerequisite for SSO and SCIM.
 
-1. In your {{ site.insomnia }} account dropdown menu, click **Enterprise Controls**.
+1. Go to [{{ site.insomnia }} Admin](https://app.insomnia.rest/app/home).
 1. In the sidebar, click [**Domains**](https://app.insomnia.rest/app/enterprise/domains/list).
 1. Click **New Domain**.
 1. From the **Verify using** settings, select how you want to verify your domain:
@@ -211,9 +211,10 @@ See our how-to guides to learn how to configure SCIM for {{ site.insomnia }} wit
 
 This allows you to completely control where your proprietary code and data are, and what servers they touch.
 
-1. In your {{ site.insomnia }} account dropdown menu, click **Enterprise Controls**.
-1. In the sidebar, click **Governance**.
-1. In the **Project Storage** section, click the **Edit** icon for your personal workspaces and organizations.
+1. Go to [{{ site.insomnia }} Admin](https://app.insomnia.rest/app/home).
+1. In the sidebar, click [**Policies**](https://app.insomnia.rest/app/enterprise/policies).
+1. Click the [**Project Storage**](https://app.insomnia.rest/app/enterprise/policies/storage) tab.
+1. Click the edit icon for your personal workspaces and organizations.
 1. Select the storage options you want to allow.
 1. Click **Save**.
 
