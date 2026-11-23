@@ -60,19 +60,21 @@ Choose it from the policy sources that your computers already have.
 1. MDM policy, at the [MDM policy location](#mdm-policy-location)
 1. Managed settings files, `managed-settings.json` and `managed-settings.d/`
 
-By default, {{ site.claude_code }} reads most keys, including `apiKeyHelper`, from the highest administrator source that sets a policy key.
-A source sets a policy key when it sets a key to a value other than `null` or an empty object.
-`false`, `0`, and `""` count as set, except in these cases:
+By default, {{ site.claude_code }} reads most keys, including `apiKeyHelper`, from the highest administrator source that sets a policy value.
+A policy key is any key other than `managedSourcesBehavior` and `wslInheritsWindowsSettings`.
+A source sets a policy value when it sets a policy key to a value other than `null` or an empty object.
+`false`, `0`, and `""` count as policy values.
+These don't count as policy values:
 
-* `false` or `"false"` doesn't count for `disableAutoMode`, `disableDeepLinkRegistration`, `permissions.disableBypassPermissionsMode`, or `permissions.disableAutoMode`.
-* An `env` that isn't an object doesn't count.
-* A `null` under `permissions` doesn't count.
-* A source that sets only `managedSourcesBehavior` or `wslInheritsWindowsSettings` doesn't count.
+* `false` or `"false"` for `disableAutoMode`, `disableDeepLinkRegistration`, `permissions.disableBypassPermissionsMode`, or `permissions.disableAutoMode`
+* An `env` that isn't an object
+* A `null` under `permissions`
 
-A source with policy values as written outranks a source whose policy values are only substitutes that {{ site.claude_code }} uses for invalid values.
-If no source sets a policy key to a value other than an empty object, {{ site.claude_code }} uses the highest source that sets a policy key to an empty object, such as `"env": {}`.
+{{ site.claude_code }} uses a substitute for some invalid values.
+A source that holds only such substitutes ranks below a source that has at least one policy value as written.
+If no source sets a policy value, {{ site.claude_code }} uses the highest source that sets a policy key to an empty object, such as `"env": {}`.
 
-A `null` still counts as set for the list keys that {{ site.claude_code }} reads as an empty list:
+A `null` still counts as a policy value for the list keys that {{ site.claude_code }} reads as an empty list:
 
 * `allowedMcpServers`
 * `availableModels`
@@ -82,13 +84,13 @@ A `null` still counts as set for the list keys that {{ site.claude_code }} reads
 * `allowedProviders`
 * `forceLoginOrgUUID`
 
-A `null` `gatewayInternalNetworks` also counts as set.
-{{ site.claude_code }} reads it as a network that matches no address.
+A `null` `gatewayInternalNetworks` also counts as a policy value.
+{{ site.claude_code }} reads it as a network that doesn't match any address.
 When the highest managed source on a computer holds it, `/login` refuses every new [cloud gateway](https://code.claude.com/docs/en/claude-apps-gateway) sign-in on that computer.
 For details, see [Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed).
 `fleet build` refuses a `--policy` that sets `gatewayInternalNetworks` to `null`.
 
-A `null` `crossSessionInbound` or `remoteControl` also counts as set, because {{ site.claude_code }} reads it as a value.
+A `null` `crossSessionInbound` or `remoteControl` also counts as a policy value, because {{ site.claude_code }} reads it as a value.
 
 Some keys apply from every administrator source, including `env` and the MCP locks.
 For the list, see [Keys read from every admin source](https://code.claude.com/docs/en/managed-settings#keys-read-from-every-admin-source).
@@ -107,16 +109,16 @@ rows:
   - flag: "`--delivery file` (default)"
     platforms: macOS, Linux, Windows
     usage: |
-      Use when no MDM policy sets a policy key.
+      Use when no MDM policy sets a policy value.
       The build writes `managed-settings.d/kong-harnesses.json`.
       Pass the current `managed-settings.json` with `--policy POLICY_FILE`.
-      If there's no `managed-settings.json`, pass `--no-policy`, even when `managed-settings.d/` has files.
+      If there isn't a `managed-settings.json` file, pass `--no-policy`, even when `managed-settings.d/` has files.
   - flag: "`--delivery mdm`"
     platforms: macOS, Windows
     usage: |
-      Use when an MDM policy sets a policy key, or when you deliver the settings through MDM.
+      Use when an MDM policy sets a policy value, or when you deliver the settings through MDM.
       Pass the current MDM policy with `--policy POLICY_FILE`.
-      Pass `--no-policy` only when there's no MDM policy.
+      Pass `--no-policy` only when there isn't an MDM policy.
 {% endtable %}
 
 ### Check the existing policy
@@ -154,9 +156,9 @@ Before you build, check each policy source:
 * **Merged sources:** For `managedSourcesBehavior: "merge"` in an MDM build, include the key in `--policy`.
   Confirm that `managed-settings.json` and `managed-settings.d/` don't add conflicting keys or unwanted list entries, such as `permissions.allow` rules or hooks.
   For details, see [Compose every managed source](https://code.claude.com/docs/en/managed-settings#compose-every-managed-source).
-* **MDM policy and a file build:** An MDM policy that sets a policy key outranks a file build.
+* **MDM policy and a file build:** An MDM policy that sets a policy value outranks a file build.
   {{ site.claude_code }} then uses the `apiKeyHelper` of the MDM policy, or no helper when the MDM policy has none.
-  An MDM policy that holds only empty objects yields to a file build only when the file sets a policy key.
+  An MDM policy that holds only empty objects yields to a file build only when the file sets a policy value.
   The `apiKeyHelper` that `fleet build` writes is such a value.
 
 ### MDM policy location
@@ -200,7 +202,7 @@ rows:
       Needs at least one gateway MCP server.
     flags: |
       Pass the current `managed-mcp.json` with `--mcp-config 'MCP_CONFIG_FILE'`.
-      Leave the flag out only when there's no `managed-mcp.json`.
+      Leave the flag out only when there isn't a `managed-mcp.json` file.
       You can't use `--mcp-url`, `--mcp-command`, or `--wsl inherit`.
   - mode: "`allowlist`"
     behavior: |
@@ -322,14 +324,14 @@ This rule applies to the `allowlist` and `any` modes.
   For details, see [Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed).
 
 When the profile has gateway MCP servers and `--mcp-servers` isn't `exclusive`, `fleet build` refuses a `--policy` that sets a plugin blocker.
-It names each key that {{ site.claude_code }} ignores in that case, and each `strictPluginOnlyCustomization` entry that names no surface.
+It names each key that {{ site.claude_code }} ignores in that case, and each `strictPluginOnlyCustomization` entry that doesn't name a surface.
 Write `source` in lowercase in `{"source": "skills-dir"}`, because `fleet build`, `doctor`, and {{ site.claude_code }} match keys with exact case.
 
 To fix a plugin blocker, build with `--mcp-servers exclusive`, or change the setting in `--policy` and in every other managed source.
 
 ### Invalid MCP lists
 
-This rule applies to every mode, also when the profile has no gateway MCP servers.
+This rule applies to every mode, also when the profile doesn't have gateway MCP servers.
 
 `fleet build` refuses a `--policy` in these cases:
 
@@ -536,12 +538,12 @@ rows:
 * `--claude-code-minimum` differs from a valid `requiredMinimumVersion` or `minimumVersion` in `--policy`.
 * `--claude-code-maximum` differs from a valid `requiredMaximumVersion` in `--policy`.
 * You pass `--claude-code-minimum`, and `--policy` sets `requiredMinimumVersion` and `minimumVersion` to different versions.
-
-{{ site.claude_code }} ignores a policy bound that isn't a valid version, so `fleet build` ignores it too.
 * The maximum version is earlier than `2.1.285`, the first release that keeps every session on the gateway.
   The maximum version is `--claude-code-maximum` or the combined `requiredMaximumVersion`.
 * The minimum version is later than the maximum version.
   The minimum version is `--claude-code-minimum`, or the combined `requiredMinimumVersion` or `minimumVersion`.
+
+{{ site.claude_code }} ignores a policy bound that isn't a valid version, so `fleet build` ignores it too.
 
 ### How version bounds behave
 

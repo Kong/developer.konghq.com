@@ -147,7 +147,9 @@ Before you build, make these choices:
   Clear conflicts from other policy sources, drop-ins, custom headers, and remote settings.
 * [MCP server modes and exceptions](/kong-harnesses/fleet-build-options/#mcp-server-modes-and-exceptions): Choose an `--mcp-servers` mode, and prepare `managed-mcp.json` or the allowlist entries.
   Check `deniedMcpServers` and the plugin blockers.
-* [Host apps, WSL, and executable path](/kong-harnesses/fleet-build-options/#host-apps-wsl-and-executable-path): Choose `--host-settings`, `--executable`, the version bounds, and any `--model` overrides.
+* [Host apps, WSL, and executable path](/kong-harnesses/fleet-build-options/#host-apps-wsl-and-executable-path): Choose `--host-settings` and `--executable`.
+* [Version bounds](/kong-harnesses/fleet-build-options/#version-bounds): Choose the version bounds.
+* [Model overrides](/kong-harnesses/fleet-build-options/#model-overrides): Choose any `--model` overrides.
 
 ## Build the managed settings
 
@@ -157,7 +159,7 @@ With `--platform`, you can build for every operating system from one computer.
 Replace these placeholders in the command for your platform:
 
 * `POLICY_FILE`: The file that holds the current policy.
-  If there's no policy, replace `--policy 'POLICY_FILE'` with `--no-policy`.
+  If there isn't a policy, replace `--policy 'POLICY_FILE'` with `--no-policy`.
 * `MCP_MODE`: `exclusive`, `allowlist`, or `any`.
   Also add the flags that the mode needs, from [MCP server modes and exceptions](/kong-harnesses/fleet-build-options/#mcp-server-modes-and-exceptions).
 * `GROUP`: A name for the group, without spaces, because the command doesn't quote `--output-dir`.
@@ -313,7 +315,7 @@ Install in the following order with your MDM tool or configuration management.
 
 1. Deploy the package through MDM.
    In Microsoft Intune, add it as a [macOS app (PKG)](https://learn.microsoft.com/en-us/intune/app-management/deployment/add-unmanaged-pkg-macos), not as a line-of-business app.
-   Intune may not detect a line-of-business app that has no `.app` bundle in `/Applications`.
+   Intune may not detect a line-of-business app that doesn't have an `.app` bundle in `/Applications`.
 
    `root` must own the machine-wide profile and its parent folders.
    The group and other users must not have write permission.
@@ -399,7 +401,7 @@ Never delete system folders, such as `C:\Program Files`.
 
 ## Validate
 
-Sign in to each test computer as a standard developer who has no saved kong-harnesses sign-in.
+Sign in to each test computer as a standard developer who doesn't have a saved kong-harnesses sign-in.
 Do these checks before you send a prompt:
 
 1. If you built with `--mcp-servers allowlist` or `any` and the profile has gateway MCP servers, run [`kong-harnesses profile activate`](/kong-harnesses/profile/activate/):

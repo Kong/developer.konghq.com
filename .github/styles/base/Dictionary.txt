@@ -411,8 +411,8 @@ Istio
 Istio's
 istioctl
 item_title
-jaq
 Jamf
+jaq
 Javascript
 jetstack
 Jira
