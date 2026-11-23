@@ -53,7 +53,7 @@ rows:
   - page: "[**Explorer**](#explorer)"
     use: "Answer specific questions with custom queries."
   - page: "[**Alerts**](#alerts)"
-    use: "Get notified about unusual error rate, latency, or traffic."
+    use: "Get notified about unusual error rates, latency, or traffic."
   - page: "[**Logs**](#logs)"
     use: "Read and search logs."
 {% endtable %}
@@ -236,16 +236,15 @@ features:
 
 ## Alerts
 
-An alert rule watches one metric of your AI traffic, such as error rate or latency, for a scope such as a model, route, or provider.
-When the metric breaks the rule, the rule triggers an alert for that scope, for example `Model: gpt-4o`.
+An alert rule watches one metric of your AI traffic, like error rates or latency from models, routes, or providers.
+When the metric breaks the rule, the rule triggers an alert for that model, route, or provider, for example `Model: gpt-4o`.
 An alert shows **Triggered** while it is active and **Resolved** after it ends.
 
 To open alerts, in the {{site.konnect_short_name}} sidebar, click **Observability**, then click **Alerts**.
-The **Activity** tab shows triggered and resolved alerts. The **Detection rules** tab shows the rules.
 
 ### Default detection rules
 
-Every organization starts with the following rules. They are enabled by default:
+Every organization starts with the following rules, which are enabled by default:
 
 <!-- vale off -->
 {% table %}
@@ -282,7 +281,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-The default rules start with no notifications set up.
+The default rules don't have notifications set up.
 To get notified, edit a rule and add an email address or a webhook. For more information, see [Alert notifications](#alert-notifications).
 
 ### Create an alert
@@ -299,7 +298,11 @@ To get notified, edit a rule and add an email address or a webhook. For more inf
 1. In the email address field, enter `alerts@example.com`.
 1. Click **Save alert rule**.
 
-The template fills in the metric, the dimensions, and a condition with a severity, a threshold, and a duration. You can change each of them.
+You can change the pre-filled values from the template for:
+
+* The metric
+* The dimensions
+* A condition with a severity, a threshold, and a duration
 
 To define your own conditions, select **Custom** instead of **Template**.
 Each custom condition uses a data source (**LLM usage** or **Agentic usage**), a metric, dimensions, optional filters, a threshold, and a duration.
@@ -313,7 +316,7 @@ In Explorer, click **Create alert**. The **New alert** page opens with **Custom*
 A rule can notify by email, by webhook, or by both.
 For a webhook, select a saved webhook or click **New webhook**.
 When you create a webhook, you can select its provider.
-To learn about delivery problems, add a failure notice email to the webhook. If a delivery fails, Kong sends the reason to that address.
+To get details about delivery problems, add a failure-notice email to the webhook. If a delivery fails, Kong sends the reason to that address.
 
 ## Logs
 
