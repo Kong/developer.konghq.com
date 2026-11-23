@@ -204,8 +204,9 @@ Set `auto_updates` to `true`, set the named choices to `false`, or ask your admi
 ### "one switch that turns /bug, /feedback and /share on or off together"
 
 {{ site.claude_code }} turns `/bug`, `/feedback`, and `/share` on or off together.
-`profile import` refused the profile, because it sets only one of `bug_command` and `feedback_command`, or sets them to different values.
+`profile import` refused a profile at version 18 or later, because it sets only one of `bug_command` and `feedback_command`.
 Set both to the same value, or leave both out.
+A profile that sets them to different values gets ["profile import rejected; check the profile document"](#profile-import-rejected-check-the-profile-document) instead.
 
 ### "need an HTTPS gateway"
 
