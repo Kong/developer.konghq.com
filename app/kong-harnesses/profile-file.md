@@ -625,45 +625,45 @@ rows:
     on: "Writes `CLAUDE_CODE_GATEWAY_HINT_HEADERS=1`."
   - choice: "`anthropic_telemetry`"
     off: "Writes `DISABLE_TELEMETRY=1`."
-    on: "Leaves `DISABLE_TELEMETRY` blank."
+    on: "Writes `DISABLE_TELEMETRY` blank."
   - choice: "`feature_flags`"
     off: >-
       Writes `DISABLE_GROWTHBOOK=1`.
       From version 18, it also writes `CLAUDE_CODE_DISABLE_FEATURE_FLAGS=1`.
     on: >-
-      Leaves `DISABLE_GROWTHBOOK` blank.
-      From version 18, it also leaves `CLAUDE_CODE_DISABLE_FEATURE_FLAGS` blank.
+      Writes `DISABLE_GROWTHBOOK` blank.
+      From version 18, it also writes `CLAUDE_CODE_DISABLE_FEATURE_FLAGS` blank.
   - choice: "`error_reports`"
     off: "Writes `DISABLE_ERROR_REPORTING=1`."
-    on: "Leaves `DISABLE_ERROR_REPORTING` blank."
+    on: "Writes `DISABLE_ERROR_REPORTING` blank."
   - choice: "`official_marketplace_autoinstall`"
     off: "Writes `CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL=1`."
-    on: "Leaves this setting blank."
+    on: "Writes this setting blank."
   - choice: "`connectors`"
     off: "Writes `ENABLE_CLAUDEAI_MCP_SERVERS=false`."
     on: "Writes `ENABLE_CLAUDEAI_MCP_SERVERS=true`."
   - choice: "`fast_mode`"
     off: "Writes `CLAUDE_CODE_DISABLE_FAST_MODE=1`."
     on: >-
-      Leaves `CLAUDE_CODE_DISABLE_FAST_MODE` blank, and writes `CLAUDE_CODE_SKIP_FAST_MODE_NETWORK_ERRORS=1`.
+      Writes `CLAUDE_CODE_DISABLE_FAST_MODE` blank, and writes `CLAUDE_CODE_SKIP_FAST_MODE_NETWORK_ERRORS=1`.
   - choice: "`bug_command`"
     off: "Writes `DISABLE_BUG_COMMAND=1`."
     on: >-
-      Leaves `DISABLE_BUG_COMMAND` blank.
+      Writes `DISABLE_BUG_COMMAND` blank.
       `/bug` uploads the conversation to Anthropic.
   - choice: "`feedback_command`"
     off: "Writes `DISABLE_FEEDBACK_COMMAND=1`."
     on: >-
-      Leaves `DISABLE_FEEDBACK_COMMAND` blank.
+      Writes `DISABLE_FEEDBACK_COMMAND` blank.
       `/feedback` uploads the conversation to Anthropic.
   - choice: "`feedback_survey`"
     off: "Writes `CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1`."
     on: >-
-      Leaves `CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY` blank.
+      Writes `CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY` blank.
       The survey sends session ratings to Anthropic.
   - choice: "`cost_warnings`"
     off: "Writes `DISABLE_COST_WARNINGS=1`."
-    on: "Leaves `DISABLE_COST_WARNINGS` blank."
+    on: "Writes `DISABLE_COST_WARNINGS` blank."
   - choice: "`webfetch_preflight`"
     off: "Writes `skipWebFetchPreflight: true`."
     on: "Writes `skipWebFetchPreflight: false`."

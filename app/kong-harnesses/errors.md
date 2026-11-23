@@ -264,10 +264,10 @@ Wait for that command to finish, then run `profile import` or `profile create` a
 
 ### "the existing sign-in or a client's settings could not be inspected"
 
-Before `profile import` replaces a profile, it checks the saved sign-in and the settings of each agent CLI.
+Before `profile import` or `profile create` replaces a profile, it checks the saved sign-in and the settings of each agent CLI.
 One of these checks didn't finish.
 Unlock the system password store if it is locked, and check that your account can read the settings file of each agent CLI.
-Then run the import again.
+Then run the command again.
 
 ### "this session has no per-user runtime directory (XDG_RUNTIME_DIR)"
 
@@ -289,7 +289,7 @@ Then create or import the profile, and activate it again.
 ### "your organization's managed settings run"
 
 Your organization delivers the profile to {{ site.claude_code }} through managed settings, so your account can't change its security identity or remove its credential helper with `profile cleanup`.
-When `profile import` prints "your organization's managed settings run this profile in Claude Code", ask your administrator to deliver the new profile with `kong-harnesses fleet build`.
+When `profile import` or `profile create` prints "your organization's managed settings run this profile in Claude Code", ask your administrator to deliver the new profile with `kong-harnesses fleet build`.
 When `profile delete` prints "your organization's managed settings run the selected profile", ask your administrator to remove the fleet build from your computer.
 `kong-harnesses fleet remove` tells the administrator what to remove from the managed computers.
 After the removal, delete the profile.
@@ -314,8 +314,8 @@ It also removes the saved gateway MCP server key for each server name in `mcp_se
 Its result tells you what is left to clean up:
 
 * A gateway MCP server key: `profile delete` can't remove a key that your password store keeps.
-  It also can't find the keys when the file doesn't have a readable `mcp_servers` list, also when the list is absent or `null`.
-  The result names each item to delete from your system password store: `PROFILE_NAME.mcp-key.SERVER_NAME`, or `PROFILE_NAME.mcp-key.*` when it can't read the list.
+  It also can't find the keys when the file doesn't have a readable `mcp_servers` object, including when `mcp_servers` is absent or `null`.
+  The result names each item to delete from your system password store: `PROFILE_NAME.mcp-key.SERVER_NAME`, or `PROFILE_NAME.mcp-key.*` when it can't read the object.
 * A saved sign-in: `profile delete` doesn't remove a saved sign-in.
   When it finds one or can't rule one out, it warns before it asks you to confirm, and again in its result.
   When the result says that the login may remain, import a valid copy of the profile, then run `kong-harnesses logout --profile PROFILE_NAME`.
@@ -446,9 +446,10 @@ Ask the operators of the gateway to add the route or give you access, then run `
 Some gateway routes match on a header that only the agent CLI sends, such as its `User-Agent`.
 For such a route, run `profile activate` again with `--skip-route-check`.
 
-### "is not configured" for a plain-HTTP npm registry
+### "uses plain http, or redirects to it"
 
-The message says that OpenCode is not configured, because the npm registry `uses plain http, or redirects to it`.
+The message names the npm registry of OpenCode.
+When `profile activate` sets up several agent CLIs, the message starts with `OpenCode is not configured:`.
 OpenCode installs the {{site.kong_harnesses}} plugin from that registry, and over plain HTTP the network could read the registry credential and change the package.
 Set the registry in your npm configuration to an `https://` URL, or to a registry on this computer, then run `profile activate` again.
 
@@ -496,7 +497,7 @@ Remove the leftover values and both records manually, then run the `profile acti
 
 pi and `omp` both read `PI_CODING_AGENT_DIR`, so when that variable is set, a profile that sets up both points them at the same folder.
 `profile activate` refuses before it changes a file.
-Unset `PI_CODING_AGENT_DIR`, or configure one of the two clients by hand.
+Unset `PI_CODING_AGENT_DIR`, or configure one of the two clients manually.
 
 ### "a client configuration directory environment variable is invalid"
 
