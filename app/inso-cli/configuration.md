@@ -53,15 +53,13 @@ Any options specified in this file will apply to all scripts and manual commands
 
 ## Encryption key
 
-{% new_in 13.5 %} {{ site.insomnia }} encrypts sensitive fields, such as passwords, tokens, cookie values, and client certificate secrets, in its [local database](/insomnia/data-security/#local-database-encryption). Inso CLI needs the {{ site.insomnia }} local encryption key to read these values.
+{% new_in 13.5 %} {{ site.insomnia }} encrypts sensitive fields, such as passwords, tokens, cookie values, and client certificate secrets, in its [local database](/insomnia/data-security/#local-database-encryption). Inso CLI needs the {{ site.insomnia }} local encryption key to read these values when both of these conditions are met:
 
-### When Inso CLI needs the key
-
-Inso CLI needs the key only when both of the following are true:
 * Inso CLI reads the {{ site.insomnia }} app's local database files. These are the `.db` files in the {{ site.insomnia }} data folder, which Inso CLI uses by default when you don't set `--workingDir`.
 * The command uses encrypted values. In practice, this means `inso run collection` or `inso run test` on requests that use authentication, cookies, or client certificates.
 
 Most CI/CD pipelines use a Git Sync repository or an exported file, so they don't need the key.
+The following table summarizes the cases where Inso needs the encryption key or not:
 
 {% table %}
 columns:
@@ -86,7 +84,7 @@ In {{ site.insomnia }}, go to **Preferences** > **General** > **Security** > **L
 
 ### Pass the key to Inso CLI
 
-Pass the key with the `INSOMNIA_ENCRYPTION_KEY` environment variable or the `--encryption-key` option. We recommend the environment variable, because command line arguments stay in your shell history.
+Pass the key with the `INSOMNIA_ENCRYPTION_KEY` environment variable or the `--encryption-key` option:
 
 ```bash
 export INSOMNIA_ENCRYPTION_KEY="<copied-key>"
@@ -107,9 +105,6 @@ inso run collection wrk_123 --encryption-key "<copied-key>"
 
 Replace `<copied-key>` with your key and `wrk_123` with your collection ID or name.
 
-Inso CLI checks the key only when it reads the {{ site.insomnia }} local database files, so you can set the environment variable for every command without affecting commands that read an exported file or a Git Sync repository.
-
-Inso CLI doesn't read the key from a configuration file such as `.insorc`. When you use `--printOptions`, Inso CLI masks the key as `***`.
 
 ### Missing or wrong keys
 

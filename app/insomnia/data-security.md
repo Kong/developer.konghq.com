@@ -53,15 +53,15 @@ faqs:
 
 {{ site.insomnia }} implements end-to-end encryption (E2EE), which means that all encryption keys are generated locally, all encryption is performed before sending any data over the network, and all decryption is performed after receiving data from the network. At no point in the sync process can the {{ site.insomnia }} servers read or access sensitive application project data.
 
-Each user sets their own encryption passphrase, which is never shared or stored. Project data is encrypted with a randomly generated symmetric key, which is then encrypted separately for each user using their public encryption key. Only someone with the matching private key can decrypt the symmetric key. {{ site.insomnia }} stores encrypted workspace data and the encrypted symmetric key for each authorized user — nothing is ever stored in plain text.
+Each user sets their own encryption passphrase, which is never shared or stored. Project data is encrypted with a randomly generated symmetric key, which is then encrypted separately for each user using their public encryption key. Only someone with the matching private key can decrypt the symmetric key. {{ site.insomnia }} stores encrypted workspace data and the encrypted symmetric key for each authorized user. Nothing is ever stored in plain text.
 
 {{ site.insomnia }} data is stored in a pooled model for multi-tenancy. Each row is separated by a tenant identifier within the database. To retrieve data, the {{ site.insomnia }} Admin API request must have the tenant identifier (organization ID) in the request path and an authenticated user who is a member of the target tenant (organization).
 
 ## Local database encryption
 
-{% new_in 13.5 %} {{ site.insomnia }} encrypts sensitive fields in the local database that it keeps on your machine. Encryption applies to every project, including Scratch Pad and local projects, and doesn't require you to log in or do anything. Values are encrypted with AES-256-GCM.
+{% new_in 13.5 %} {{ site.insomnia }} encrypts sensitive fields in the local database that it keeps on your machine. Encryption applies to every project, including Scratch Pad and local projects, and doesn't require any action from your part.
 
-The following fields are encrypted:
+{{ site.insomnia }} encrypts the following fields:
 
 * Authentication credentials on requests, folders, and collections, such as passwords, tokens, client secrets, private keys, and API key values. This also applies to gRPC, WebSocket, Socket.IO, and MCP requests.
 * Cookie values in the cookie jar.
@@ -104,13 +104,6 @@ If {{ site.insomnia }} can't use its key at startup, for example because the app
 
 If only some values can't be decrypted, {{ site.insomnia }} shows a **Some encrypted data could not be decrypted** dialog that lists the affected fields. Click **Reset affected fields** to clear these values so you can enter them again, or click **Continue without decryption** to keep them as they are.
 
-### Downgrade to an earlier version
-
-After you open your data with {{ site.insomnia }} 13.5 or later, you can still open it with an earlier version. {{ site.insomnia }} versions 13.5 and later share the same data folder and key, so you can move between them freely.
-
-In {{ site.insomnia }} 13.4 and earlier, every project, collection, and request still opens, and you can still create, edit, and send requests. However, encrypted values appear as text that starts with `enc:insomnia:v1:`, and the earlier version sends that text in place of the real value. Requests that depend on an encrypted value, such as a request with a token on its **Auth** tab, fail.
-
-To use these requests in the earlier version, enter the values again. When you return to {{ site.insomnia }} 13.5 or later, it decrypts the values that are still encrypted and encrypts the values you entered in the earlier version.
 
 ## Sign up and authentication
 
