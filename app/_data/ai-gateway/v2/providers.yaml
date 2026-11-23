@@ -762,10 +762,11 @@ providers:
         model_example: ''
         min_version: ''
       agentic:
-        supported: false
-        streaming: false
-        model_example: ''
-        min_version: ''
+        supported: true
+        streaming: true
+        upstream_path: 'Uses the `interactions` API. {{site.ai_gateway}} translates OpenAI Responses requests to Interactions requests.'
+        model_example: 'gemini-3-flash-preview'
+        min_version: '2.4'
       audio_speech:
         supported: false
         streaming: false
@@ -862,10 +863,11 @@ providers:
         model_example: 'veo-3.1-generate-001'
         min_version: '2.0'
       agentic:
-        supported: false
-        streaming: false
-        model_example: ''
-        min_version: ''
+        supported: true
+        streaming: true
+        upstream_path: 'Uses the `interactions` API. {{site.ai_gateway}} translates OpenAI Responses requests to Interactions requests.'
+        model_example: 'gemini-3-flash-preview'
+        min_version: '2.4'
       audio_speech:
         supported: false
         streaming: false

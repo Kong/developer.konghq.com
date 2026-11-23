@@ -58,6 +58,8 @@ faqs:
 
 {% include md/ai-gateway/v2/native-routes.md providers=site.data.ai-gateway.v2.providers provider_name="Gemini" compare_provider_name="Gemini Enterprise" variant_label="Gemini Standard" compare_variant_label="Gemini Enterprise" %}
 
+<!-- TODO(AG-1931, issue 8109): add the Gemini endpoint coverage matrix (OpenAI-compatible route_type values and Anthropic llm_format, each marked supported, gap, or out of scope) once engineering publishes it on AG-1931. Update the capability tables in app/_data/ai-gateway/v2/providers.yaml if the matrix changes them. -->
+
 ## Configure Gemini
 
 To use Gemini with {{site.ai_gateway}}, configure a new [AI Model Provider](/ai-gateway/entities/ai-model-provider/). You can then access supported [AI Models](/ai-gateway/entities/ai-model/) from Gemini.
@@ -234,10 +236,19 @@ To receive the real `thoughtSignature`, use the native Gemini format, which retu
 
 ## Gemini Interactions API
 
-{{site.ai_gateway}} forwards requests for the [Gemini Interactions API](https://ai.google.dev/gemini-api/docs/interactions) to Gemini without translating the request or response body.
-{{site.ai_gateway}} authenticates to Gemini with the credentials in the AI Model Provider.
+The [Gemini Interactions API](https://ai.google.dev/gemini-api/docs/interactions) is Google's recommended API for Gemini. It supports server-side conversation state and background runs.
+{{site.ai_gateway}} supports it in two ways, depending on which API your clients send:
 
-To use the Interactions API, create an AI Model with the `passthrough` format and a Gemini target:
+* **Native Interactions requests**: {{site.ai_gateway}} [forwards them unchanged](#forward-native-interactions-requests).
+* **OpenAI Responses API requests**: {{site.ai_gateway}} [translates them to Interactions requests](#use-gemini-from-openai-responses-api-clients) and translates the replies back.
+
+In both cases, {{site.ai_gateway}} authenticates to Gemini with the credentials in the [AI Model Provider](/ai-gateway/entities/ai-model-provider/).
+
+### Forward native Interactions requests
+
+Passthrough forwards native Interactions requests to Gemini without translating the request or response body.
+Use it when your clients, such as the [Google GenAI SDK](https://ai.google.dev/gemini-api/docs/libraries), already send Interactions requests.
+Create an [AI Model](/ai-gateway/entities/ai-model/) with the `passthrough` format and a Gemini target:
 
 {% entity_example %}
 type: model
@@ -261,7 +272,7 @@ data:
   policies: []
 {% endentity_example %}
 
-Then send requests to the Interactions path through the AI Model's route. For Gemini Standard, the path is `/v1beta/interactions`:
+Then send requests to the Interactions path through the AI Model's route. The following request uses Gemini Standard:
 
 ```sh
 curl -X POST http://localhost:8000/gemini/v1beta/interactions \
@@ -272,9 +283,107 @@ curl -X POST http://localhost:8000/gemini/v1beta/interactions \
   }'
 ```
 
-The same route also forwards streaming requests (`"stream": true`, relayed as server-sent events), background runs (`"background": true`), `GET /gemini/v1beta/interactions/{id}`, `POST /gemini/v1beta/interactions/{id}/cancel`, and `DELETE /gemini/v1beta/interactions/{id}`.
+The same route also forwards the following requests:
 
-For Gemini Enterprise, the target must set `config.gcp_environment`, and the path is `/v1beta1/projects/{project_id}/locations/{location}/interactions`. Gemini Enterprise supports the Interactions API only in the `global`, `us`, and `eu` regions.
+{% table %}
+columns:
+  - title: Task
+    key: task
+  - title: Request
+    key: request
+rows:
+  - task: Stream a response
+    request: "Set `\"stream\": true`. {{site.ai_gateway}} relays the response as server-sent events."
+  - task: Run in the background
+    request: "Set `\"background\": true`."
+  - task: Read an interaction
+    request: "`GET /gemini/v1beta/interactions/{id}`"
+  - task: Cancel an interaction
+    request: "`POST /gemini/v1beta/interactions/{id}/cancel`"
+  - task: Delete an interaction
+    request: "`DELETE /gemini/v1beta/interactions/{id}`"
+{% endtable %}
 
-{{site.ai_gateway}} supports the Interactions API only in the native Gemini format.
-It doesn't translate OpenAI Responses requests to Interactions, or Interactions requests to the OpenAI or Anthropic formats.
+The Interactions path and target settings depend on the Gemini variant:
+
+{% table %}
+columns:
+  - title: Variant
+    key: variant
+  - title: Target setting
+    key: setting
+  - title: Interactions path
+    key: path
+  - title: Supported regions
+    key: regions
+rows:
+  - variant: Gemini Standard
+    setting: None
+    path: "`/v1beta/interactions`"
+    regions: Not applicable
+  - variant: Gemini Enterprise
+    setting: "`config.gcp_environment`"
+    path: "`/v1beta1/projects/{project_id}/locations/{location}/interactions`"
+    regions: "`global`, `us`, and `eu`"
+{% endtable %}
+
+### Use Gemini from OpenAI Responses API clients
+
+{{site.ai_gateway}} translates [OpenAI Responses API](https://platform.openai.com/docs/api-reference/responses) requests to the Gemini Interactions API and translates the replies back.
+Translation works with both Gemini Standard and Gemini Enterprise targets.
+Use it when your clients, such as OpenAI SDK agents or the OpenAI Codex CLI, already send Responses requests.
+Clients that send native Interactions requests use [passthrough](#forward-native-interactions-requests) instead.
+
+Create an [AI Model](/ai-gateway/entities/ai-model/) with the `openai` format and the `agentic` capability.
+The following AI Model accepts Responses requests on `/v1/responses` and sends them to a Gemini target:
+
+{% entity_example %}
+type: model
+data:
+  name: my-gemini-responses
+  display_name: my-gemini-responses
+  type: model
+  capabilities:
+    - agentic
+  formats:
+    - type: openai
+  config:
+    route:
+      paths:
+        - /v1
+  targets:
+    - name: gemini-3-flash-preview
+      provider: my-gemini-account
+      config:
+        type: gemini
+  policies: []
+{% endentity_example %}
+
+The following table shows how to do common tasks with Responses requests:
+
+{% table %}
+columns:
+  - title: Task
+    key: task
+  - title: How it works
+    key: how
+rows:
+  - task: Continue a conversation
+    how: "Send `previous_response_id` with the ID of an earlier response. Gemini keeps the conversation state."
+  - task: Stream the reply
+    how: "Set `\"stream\": true`. {{site.ai_gateway}} returns standard Responses events."
+  - task: Run a long task in the background
+    how: "Set `\"background\": true`, then read or delete the response with `GET` or `DELETE` on `/v1/responses/{id}`."
+  - task: Cancel a running task
+    how: "Send `POST /v1/responses/{id}/cancel`. A cancelled stream ends with a `response.completed` event, because the Responses API doesn't have a `response.cancelled` event. Read `status: cancelled` on the response to tell a cancellation from a success."
+  - task: Call your own functions
+    how: "Send `function` tools in `tools`. Gemini returns its function calls as `function_call` items."
+{% endtable %}
+
+#### Limitations of Responses translation
+
+* Google stores interactions for 55 days on paid tiers and 1 day on the free tier. {{site.ai_gateway}} doesn't keep conversation history.
+* {{site.ai_gateway}} returns a `400` error that names the field when a request includes a field without an Interactions equivalent. It drops `user`, `safety_identifier`, `prompt_cache_key`, and `prompt_cache_retention` instead.
+* {{site.ai_gateway}} returns output that the Responses format can't represent, such as an image in a Deep Research report, in the `x_kong_gemini_content` field of the output item instead of failing the request.
+* {{site.ai_gateway}} accepts `text.verbosity`, but it doesn't change Gemini's output.
+* {{site.ai_gateway}} doesn't translate native Interactions requests to the OpenAI or Anthropic formats.
