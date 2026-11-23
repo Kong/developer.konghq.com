@@ -335,7 +335,23 @@ rows:
     admin: true
     manager: "Yes, for their teams' budgets"
     individual: false
-  - capability: "Use the price catalog, attribution, and exports"
+  - capability: "View the price catalog and overrides"
+    admin: true
+    manager: true
+    individual: true
+  - capability: "Add, edit, and delete price overrides"
+    admin: true
+    manager: false
+    individual: false
+  - capability: "View attribution integrations and the tag catalog"
+    admin: true
+    manager: true
+    individual: true
+  - capability: "Set up attribution on gateways, including cost tags"
+    admin: true
+    manager: false
+    individual: false
+  - capability: "Use exports"
     admin: true
     manager: false
     individual: false

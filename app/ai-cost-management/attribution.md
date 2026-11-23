@@ -405,6 +405,9 @@ The **Attribution** page has two more tabs:
 * **Gateways** installs, edits, updates, and removes the attribution plugin on each {{site.ai_gateway}}.
   Installing or editing the plugin on a gateway also sets that gateway's **Tags on every request** and **Groups from tokens**.
 
+Team Managers and Individual Users can open **Attribution** to read each integration's header instructions and the **Tag catalog**.
+They can't turn on integrations or change cost tags, and the **Gateways** tab isn't available to them.
+
 {% endnavtab %}
 {% navtab "Konnect API" %}
 

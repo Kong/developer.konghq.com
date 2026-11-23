@@ -117,7 +117,8 @@ You can configure dynamic pricing using the following settings, which are set in
 
 The price catalog lists the model prices that {{site.ai_gateway}} uses to calculate the cost of each request. 
 To open it, in the {{site.konnect_short_name}} sidebar, switch to the AI view and click **Cost Management** > **Price Catalog**.
-Only organization admins see the **Price Catalog**.
+Org Admins, Team Managers, and Individual Users all see the **Price Catalog**, overrides included.
+Only Org Admins can add, edit, or delete overrides.
 
 The price catalog shows effective rates, which include your overrides.
 All prices in the price catalog are in USD per million tokens.
