@@ -47,7 +47,9 @@ prereqs:
     - title: Codex, kong-harnesses, and an HTTPS profile
       content: |
         Install [kong-harnesses](/kong-harnesses/) and Codex, and install an `https://` profile that configures `codex`.
-        Codex requires an `https://` gateway because kong-harnesses doesn't configure Codex for a plain `http://` gateway.
+        Codex requires an `https://` gateway that serves an OpenAI-format `POST /v1/responses` route.
+        Configure an [AI Model](/ai-gateway/entities/ai-model/) with `capabilities: [agentic]`, `formats: [{ type: openai }]`, and `config.route.paths: ["/v1"]` targeting a Responses-capable provider such as OpenAI, Azure OpenAI, xAI, or Amazon Bedrock Mantle.
+        kong-harnesses doesn't configure Codex for a plain `http://` gateway or a gateway without `POST /v1/responses`.
         Run `kong-harnesses profile list` to find your profile name, and replace `PROFILE_NAME` in each command with that name.
     - title: Activated Codex profile
       content: |

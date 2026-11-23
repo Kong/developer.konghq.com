@@ -89,7 +89,7 @@ rows:
     method: Uses `kong-harnesses login`, or opens your browser on first request for identity provider profiles.
     guide: "[Sign in to {{ site.claude_code }}](/kong-harnesses/sign-in/claude-code/)"
   - cli: Codex
-    method: Requires `kong-harnesses login` before first use and an `https://` gateway.
+    method: Requires `kong-harnesses login` before first use and an `https://` gateway serving `POST /v1/responses`.
     guide: "[Sign in to Codex](/kong-harnesses/sign-in/codex/)"
   - cli: OpenCode
     method: Uses the OpenCode plugin (`opencode auth login`); `kong-harnesses login` refuses `--client opencode`.
