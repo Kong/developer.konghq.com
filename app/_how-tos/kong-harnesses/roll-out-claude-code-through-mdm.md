@@ -48,7 +48,7 @@ prereqs:
     - title: kong-harnesses and a profile
       content: |
         Install [kong-harnesses](/kong-harnesses/install/) on a build computer.
-        Read the build computer requirement from the row of the build computer, and the deployment tool from the row of the managed computers:
+        Read the build computer requirement from the row for the operating system of the build computer, and the deployment tool from the row for the operating system of the managed computers:
 
         {% table %}
         columns:
@@ -101,8 +101,8 @@ cleanup:
     - title: Remove the fleet build
       content: |
         To remove the build, first have each developer sign out of the machine-wide profile and remove any user-level activation.
-        Then unassign the deployment, and run `kong-harnesses fleet remove`.
-        Apply the policy and `managed-mcp.json` changes that it prints, and delete the files listed under `Remove`.
+        Then unassign the deployment and run `kong-harnesses fleet remove`.
+        Apply or remove the policy and the `managed-mcp.json` that it prints, and delete the files listed under `Remove`.
         For the steps, see [Remove a {{ site.claude_code }} fleet build](/kong-harnesses/remove-a-claude-code-fleet-build/).
 
 faqs:

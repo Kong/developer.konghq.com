@@ -60,7 +60,7 @@ tldr:
   a: |
     Have each developer sign out of the machine-wide profile and clean up any user-level activation.
     Then [unassign the deployment](#unassign-the-deployment) in the tool that deployed it.
-    Run `kong-harnesses fleet remove --record`.
+    Run [`kong-harnesses fleet remove`](#generate-the-removal-plan) with the build record in `--record`.
     For an MDM build, add the current `--policy`, and for an `exclusive` build, add `--mcp-config`.
     Apply or remove the policy and `managed-mcp.json` that it prints, and delete the build files with the [steps for your platform](#apply-the-removal-output).
 ---
