@@ -124,7 +124,7 @@ rows:
     steps: In the **Body** tab, select the type of body from the dropdown list.
   - element: Authentication
     steps: >-
-      In the **Auth** tab, select the authentication type from the dropdown list to get the corresponding form. If the request is in a folder, you can select **Inherit from parent** to use the folder's authentication.
+      In the **Auth** tab, select the authentication type from the dropdown list to get the corresponding form. Select **Inherit from parent** to use the authentication of the nearest parent folder. {% new_in 13.5 %} If no parent folder sets authentication, the request uses the authentication of the API Collection. For details, see [Collection and folder settings](#collection-and-folder-settings).
   - element: Headers
     steps: >-
       In the **Headers** tab, click **Add** to create a new header and enter the name and value. You can also add a description. You can use the checkbox next to the header to remove it from the request without deleting it completely.
@@ -199,6 +199,47 @@ Folders can be used to organize requests, but you can also add configuration to 
 * Environment variables
 
 You can also add documentation about the folder.
+
+## Collection and folder settings
+
+{% new_in 13.5 %} You can also configure authentication, headers, and scripts on the API Collection itself, so that every request in the API Collection uses them. Open the API Collection screen, where the **Spec** tab is, and use the following tabs:
+
+{% table %}
+columns:
+  - title: Tab
+    key: tab
+  - title: Description
+    key: description
+rows:
+  - tab: "**Auth**"
+    description: Authentication that requests use when their authentication type is **Inherit from parent** and no parent folder sets authentication.
+  - tab: "**Headers**"
+    description: Headers that Insomnia sends with every request in the API Collection.
+  - tab: "**Scripts**"
+    description: "**Pre-request** and **After-response** scripts that run for every request in the API Collection."
+  - tab: "**Environment**"
+    description: The base environment and sub-environments of the API Collection. This is the same editor as the [environment](/insomnia/environments/) management dialog.
+  - tab: "**Docs**"
+    description: A Markdown description of the API Collection.
+{% endtable %}
+
+### How inheritance works
+
+When you send a request, Insomnia combines the settings of the API Collection, every parent folder from the outermost to the innermost, and the request.
+
+**Authentication:** The closest level that sets authentication wins.
+1. If the request has an authentication type other than **Inherit from parent**, Insomnia uses it. This includes **None**, which sends the request without authentication.
+1. Otherwise, Insomnia uses the authentication of the nearest parent folder that sets one.
+1. Otherwise, Insomnia uses the authentication of the API Collection.
+1. If no level sets authentication, Insomnia sends the request without authentication.
+
+Authentication that's turned off at a level is skipped. If a request inherits OAuth 2.0 authentication, Insomnia stores and reuses the token on the level that owns the authentication configuration. For example, all requests that inherit OAuth 2.0 from the API Collection share one token.
+
+**Headers:** Insomnia combines the enabled headers from every level, starting with the API Collection. When several levels set the same header name:
+* For most headers, Insomnia joins the values in one header, separated by a comma.
+* For single-value headers, such as `Authorization`, `Content-Type`, `Content-Length`, `Host`, and `Proxy-Authorization`, the closest level wins.
+
+**Scripts:** Insomnia runs the API Collection script first, then the folder scripts from the outermost to the innermost folder, then the request script. Pre-request and after-response scripts follow the same order. Levels without a script are skipped.
 
 ## Request timeout (ms)
 

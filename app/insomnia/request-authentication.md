@@ -47,6 +47,19 @@ Navigate to a request in a collection, click the **Auth** tab below your request
 
 ![Image of all the available request auth types in Insomnia](/assets/images/insomnia/request-auth.png)
 
+## How do I share authentication across requests?
+
+Set authentication once on a folder or on the API Collection, then set the authentication type of each request to **Inherit from parent**:
+
+* **Folder:** In the sidebar, select the folder, click the **Auth** tab, and select an authentication type.
+* **API Collection:** {% new_in 13.5 %} On the API Collection screen, click the **Auth** tab and select an authentication type.
+
+A request that inherits authentication uses the nearest parent folder that sets authentication. If no parent folder sets one, the request uses the authentication of the API Collection. A request with any other authentication type, including **None**, uses its own setting.
+
+If the inherited authentication is OAuth 2.0, all requests that inherit it share the token stored on the folder or API Collection that owns the configuration.
+
+For the full inheritance rules, including headers and scripts, see [Collection and folder settings](/insomnia/requests/#collection-and-folder-settings).
+
 ## Which authentication types are supported?
 
 The following authentication types are supported for request authentication in Insomnia:
