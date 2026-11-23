@@ -7,6 +7,7 @@ on:
       - 'tools/automated-tests/docker/**'
       - 'app/_data/tools/kongctl.yml'
       - 'app/_data/tools/deck.yml'
+      - '.github/workflows/build-automated-tests-image.yaml'
 
 concurrency:
   cancel-in-progress: true
