@@ -34,7 +34,7 @@ related_resources:
 This page lists the changes for users in each {{site.kong_harnesses}} release, newest first.
 A release with only build or documentation changes isn't listed.
 
-If you must do something when you upgrade, the release lists the step under **⚠ BREAKING CHANGES**.
+If you must do something when you upgrade, the release lists the step under **Breaking changes**.
 Do the step after you install the new release and before you use it.
 
 A release that had a release candidate, such as `0.18.0-rc.1`, lists only the changes since that candidate.
@@ -44,12 +44,12 @@ A release can also change the client settings that `setup`, `profile activate` a
 Your current settings don't change until you activate the profile again.
 To apply the new settings:
 
-* Run `kong-harnesses status`.
+* Run `kong-harnesses status --profile PROFILE_NAME`.
   If a client shows `Set up by an earlier release or profile`, run the `profile activate` command that the `Next` line names.
-* For a profile that you imported with `relay import`, run `kong-harnesses relay status`, then run the `relay activate` command that it names.
+* For a profile that you imported with `relay import`, run `kong-harnesses relay status --profile PROFILE_NAME`, then run the `relay activate` command that the `Next` line names.
 
 If your organization's managed settings set up {{site.claude_code}}, `status` doesn't name a command.
-In this case, the release lists a step for your administrator under **⚠ BREAKING CHANGES**.
+In this case, the release lists a step for your administrator under **Breaking changes**.
 The administrator makes a new fleet build and delivers it, as described in [Keep a {{site.claude_code}} fleet on tested versions](/kong-harnesses/maintain-a-claude-code-fleet/).
 
 {{ site.data.kong-harnesses.changelog.markdown }}
