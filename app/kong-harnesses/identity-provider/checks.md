@@ -31,6 +31,7 @@ related_resources:
     url: /kong-harnesses/identity-provider/providers/
 ---
 
+Use these checks to find why {{site.kong_harnesses}} refuses a value or a response of your identity provider at profile creation, at sign-in or at renewal.
 {{site.kong_harnesses}} refuses an identity provider value or response that doesn't meet these checks.
 [`kong-harnesses profile create`](/kong-harnesses/profile/create/) checks the profile values and the discovery document, and [`kong-harnesses profile import`](/kong-harnesses/profile/import/) checks the profile values.
 [`kong-harnesses login`](/kong-harnesses/login/) and [`kong-harnesses setup`](/kong-harnesses/setup/) check the discovery document again, and also the callback, the signing keys, the token response and the ID token.
@@ -42,11 +43,8 @@ It also refuses a response with more than 16,384 bytes of headers, or a body tha
 
 ## Profile values
 
-For `--client-id`, `--audience`, `--scope` and `discovery_url`, see [Sign-in fields](/kong-harnesses/profile-file/#sign-in-fields).
-For `--name`, `display_name`, `description` and `--gateway-origin`, see [Top-level fields](/kong-harnesses/profile-file/#top-level-fields).
+For the rules of the identity provider values in a profile, such as `--client-id`, `--audience`, `--scope` and `discovery_url`, see [Sign-in fields](/kong-harnesses/profile-file/#sign-in-fields).
 For `--redirect-uri`, see [Callback](/kong-harnesses/identity-provider/#callback).
-A `--gateway-origin` value also follows the rules in [URLs](#urls), without a path or query.
-For a loopback `http` origin, the URL must not name port `80`, in the same way that an `https` URL must not name port `443`.
 
 ## URLs
 
@@ -57,7 +55,7 @@ The issuer, `discovery_url`, `authorization_endpoint`, `token_endpoint`, `jwks_u
   Each label of a DNS name has 1 to 63 letters, digits or `-`, and doesn't start or end with `-`.
   The name has at most 253 characters, and doesn't end with `.`.
   A host of only digits and dots must be an IPv4 address in that form, so `192.0.02.1` and `3221225985` fail.
-* No port, or a port from 1 to 65535 without a zero at the start, other than `443`.
+* No port, or a port from 1 to 65535 other than `443`, without a zero at the start.
 * No user information, fragment, or `.` or `..` path segment.
 * Percent encoding with uppercase hexadecimal digits only, and without an encoded letter, digit, `-`, `.`, `_`, `~`, `\` or control character.
 * The same text after a URL parser reads the URL and writes it again.
@@ -67,8 +65,9 @@ The query of `authorization_endpoint` can't have a parameter that {{site.kong_ha
 
 ## Callback
 
-While the developer signs in, {{site.kong_harnesses}} keeps waiting when a request comes to another path or without the `state` of this sign-in.
-A request to the callback path with that `state` ends the wait, and it must meet these checks:
+During a sign-in, {{site.kong_harnesses}} accepts one request on the callback: a request to the callback path with the `state` of that sign-in.
+It ignores other requests and keeps waiting.
+The accepted request must meet these checks:
 
 * It is a `GET` request without a body, with a `Host` header that has the exact host and port of the callback in the profile, such as `localhost:9876`.
 * Its path is the callback path, without percent encoding.
@@ -84,8 +83,7 @@ A request to the callback path with that `state` ends the wait, and it must meet
 
 ## HTTP responses
 
-{{site.kong_harnesses}} reads the discovery document from `discovery_url`.
-It reads the discovery document and the signing keys with one `GET` request each.
+{{site.kong_harnesses}} reads the discovery document from `discovery_url` and the signing keys from `jwks_uri`, with one `GET` request each.
 It doesn't follow redirects, and it uses TLS 1.2 or later for all requests to the identity provider.
 The TLS certificate of the identity provider must chain to the system trust store of each developer computer, because the gateway CA bundle of a profile doesn't apply to the identity provider.
 If the identity provider uses a certificate from a private CA, add the CA to that trust store.
@@ -129,9 +127,9 @@ Each of these URLs, and `revocation_endpoint` when the document lists it, must m
 
 At each sign-in, {{site.kong_harnesses}} reads the discovery document again and runs these checks again.
 `authorization_endpoint`, `token_endpoint` and `jwks_uri` must also be the same as the values that `profile create` saved in the profile, and so must `revocation_endpoint` when the profile has one.
-When one of them changes, sign-in fails until you create the profile again.
+When one of them changes, sign-in fails until you create the profile again and give the new profile to developers.
 
-{{site.kong_harnesses}} accepts a discovery document that leaves out any of these three fields, but a missing field doesn't prove the capability.
+{{site.kong_harnesses}} accepts a discovery document that leaves out `code_challenge_methods_supported`, `grant_types_supported` or `token_endpoint_auth_methods_supported`, but a missing field doesn't prove the capability.
 For example, without `code_challenge_methods_supported`, check that the token endpoint refuses a code exchange without a valid `S256` code verifier.
 
 ## Signing keys
@@ -154,7 +152,7 @@ Then {{site.kong_harnesses}} reads the other members of the key in this order, a
 5. When an `RSA` key doesn't have a modulus of 2,048 to 8,192 bits and a public exponent that is an odd number from 3 to 2,147,483,647, the sign-in fails.
    When an `EC` key doesn't have a `crv` string of `P-256`, `P-384` or `P-521`, with `x` and `y` values that are a point on that curve, the sign-in fails.
 
-Two usable keys can't have the same `kid`.
+Two usable keys can't have the same nonempty `kid`.
 
 ## Token responses
 
@@ -165,7 +163,7 @@ In both responses:
 * `access_token` has 1 to 16,384 characters, from letters, digits, `-`, `.`, `_`, `~`, `+` and `/`, with optional `=` characters at the end.
 * `refresh_token` has 1 to 16,384 visible ASCII characters.
 * `token_type` is `Bearer`, in any case.
-* `expires_in` is a JSON number with digits only, not a string.
+* `expires_in` is a JSON number with digits only.
 * `scope`, when present, is a nonempty string with single spaces between scopes, without a space at the start or the end.
   Each scope in it has 1 to 128 visible ASCII characters, without `"` or `\`, occurs only once, and must match a different allowed scope.
 
@@ -181,14 +179,14 @@ A response with `scope` sets the accepted list to its matched scopes, and a resp
 
 When `scope` is present, it must keep every scope that the profile requests other than `openid`, `profile`, `email`, `address`, `phone`, `offline_access`, `groups` or `device_sso`.
 
-Omit the `error` member from a successful sign-in response.
+A successful sign-in response can't have an `error` member.
 At renewal, {{site.kong_harnesses}} ignores an `id_token`.
 
 ## ID token
 
 The ID token from the sign-in must meet these rules:
 
-* It has at most 32,768 visible ASCII characters, in three parts.
+* It has at most 32,768 visible ASCII characters, in three parts separated by `.`.
 * Its `alg` header is one of the supported algorithms, and the discovery document lists it.
 * It doesn't have a `crit` header.
   A `typ` header, when the token has one, is `JWT`, and a `kid` header, when the token has one, has 1 to 256 visible ASCII characters.
