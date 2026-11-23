@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect Control Planes Configuration for Event Gateways
-  version: 1.3.17
+  version: 1.3.18
   description: |
     The API for configuring Event Gateways in Konnect.
   x-extensions-note: |
@@ -19,12 +19,13 @@ info:
     policy feature. The runtime version can be configured at the Event Gateway entity level. It must be a string
     containing a semantic version in the `MAJOR.MINOR` format, e.g., `"1.1"`. info.[x-latest-public-runtime-version]
     indicates the latest public runtime version of Event Gateway. When
-    `x-min-runtime-version > x-latest-public-runtime-version`, the property or schema will only appear in dev schemas.
+    `x-min-runtime-version > x-latest-public-runtime-version`, the property or schema will only appear in internal and
+    dev schemas.
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@32f4f1e31eddae7cae3632bda76f89b15dac7361
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/32f4f1e31eddae7cae3632bda76f89b15dac7361'
+  x-oas-source: kong/platform-api@9abb04daa3e64c8faa408700160f3f087f3d3c95
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9abb04daa3e64c8faa408700160f3f087f3d3c95'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
