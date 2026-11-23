@@ -259,6 +259,37 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+#### AI Cost Management
+
+The following table describes the predefined roles for [{{site.ai_cost_management}}](/ai-cost-management/):
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Admin`"
+    description: Access to all read and write permissions related to {{site.ai_cost_management}}.
+    permissions: |
+      * Read AI usage, and report AI usage.
+      * Create, read, edit, and delete budgets, notification channels, and export schedules.
+      * Read budget balances.
+      * Create, read, and delete exports.
+      * Read and edit the tag capture configuration.
+      * Install, update, and remove the attribution plugin on {{site.ai_gateway}}s, and read plugin installations.
+      * Read and edit the price catalog.
+  - role: "`Viewer`"
+    description: Access to read-only permissions for {{site.ai_cost_management}}.
+    permissions: |
+      * Read AI usage, budgets and their balances, notification channels, exports and their schedules, the tag capture configuration, attribution plugin installations, and the price catalog.
+{% endtable %}
+<!--vale on-->
+
 #### AI Gateways
 
 The following table describes the predefined roles for [{{site.ai_gateway}}](/ai-gateway/):
