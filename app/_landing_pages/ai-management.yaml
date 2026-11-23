@@ -91,7 +91,7 @@ rows:
 
   - header:
       type: h3
-      text: "Then build on your gateway"
+      text: "Build on your gateway"
     column_count: 4
     columns:
       - blocks:
@@ -122,7 +122,7 @@ rows:
               icon: /assets/icons/money.svg
               cta:
                 text: Get started with {{site.ai_cost_management}}
-                url: /ai-cost-management/
+                url: /ai-cost-management/getting-started/
                 align: end
       - blocks:
           - type: card
@@ -196,7 +196,7 @@ rows:
                       feature: |
                         [Metering and billing](/metering-and-billing/)
                     - outcome: |
-                        Enforce per-tier spend caps driven by identity claims instead of managing group membership by hand
+                        Enforce per-tier spend caps driven by identity claims instead of managing group membership manually
                       feature: |
                         [Set up a {{site.identity}} auth server for tiered AI budgets](/ai-gateway/set-up-kong-identity-for-tiered-ai-budgets/) and [Enforce tiered AI budgets with {{site.identity}}](/ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/)
 
