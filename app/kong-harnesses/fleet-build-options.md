@@ -319,15 +319,16 @@ When a deny entry is sure to match one of your own `--mcp-config` servers, `flee
   The gateway server then doesn't load with the credential of the profile.
   In the `exclusive` mode, {{ site.claude_code }} loads both.
   When both define the same name, the `managed-mcp.json` entry takes precedence.
-  `fleet build` doesn't refuse an `http` entry for a gateway server with its own OAuth sign-in when the entry has the same OAuth settings and doesn't set headers.
+  `fleet build` accepts an `http` entry for a gateway server with its own OAuth sign-in when the entry has the same OAuth settings, doesn't set `headersHelper` or headers, and has only fields that `fleet build` can check.
   Remove each entry that `fleet build` refuses.
 * **Name collisions (`exclusive`):** Rename each `--mcp-config` server that has the same name as a gateway server.
   If an earlier fleet build wrote that server, pass the record of that build with `--record` instead.
   If the record holds the definition of that server and you changed the server after that build, `fleet build` refuses it, so rename or remove it.
-  If the record lists only server names, `fleet build` leaves each recorded server out of the new `managed-mcp.json` by name, also when you changed that server after that build.
+  If the record lists only server names, `fleet build` takes each recorded server out of the `--mcp-config` file by name, also when you changed that server after that build.
+  The new `managed-mcp.json` then holds the current definition of each gateway server of the profile.
 * **Servers at a gateway address (`exclusive`):** `fleet build` refuses an `--mcp-config` server with another name that points, or may point, to the address of a gateway MCP server.
   It doesn't refuse a server that the denylist of the policy always blocks.
-  It also doesn't refuse an `http` server that signs in as the gateway server does and doesn't set headers.
+  It also doesn't refuse an `http` server that signs in as the gateway server does, doesn't set headers, and has only fields that `fleet build` can check, such as `type`, `url`, `oauth`, and `headersHelper`.
   For a gateway server with its own OAuth sign-in, such a server has the same OAuth settings and no `headersHelper`.
   For other gateway servers, such a server runs the `kong-harnesses mcp-headers` helper for the profile and has no OAuth settings.
   Remove each refused server.
@@ -362,12 +363,12 @@ This rule applies to the `allowlist` and `any` modes.
   A wholly invalid `blockedMarketplaces` is dropped with a warning.
   For details, see [Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed).
 
-When the profile has gateway MCP servers and `--mcp-servers` isn't `exclusive`, `fleet build` refuses a `--policy` that sets a plugin blocker.
+When the profile has gateway MCP servers and `--mcp-servers` isn't `exclusive`, `fleet build` refuses a `--policy` that sets a `strictPluginOnlyCustomization` or marketplace blocker in this list.
+For `managedMcpServers` entries, `fleet build` uses the address rules in [More MCP rules](#more-mcp-rules) in every mode.
 It names each key that {{ site.claude_code }} ignores because its letter case doesn't match, and each `strictPluginOnlyCustomization` entry that doesn't name a surface.
 Write `source` in lowercase in `{"source": "skills-dir"}`, because `fleet build`, `doctor`, and {{ site.claude_code }} match keys with exact case.
 
-To fix a plugin blocker, build with `--mcp-servers exclusive`, or change the setting in `--policy` and in every other managed source.
-Remove each `managedMcpServers` entry at a gateway address that `fleet build` refuses in every mode, as described in [More MCP rules](#more-mcp-rules).
+To fix a `strictPluginOnlyCustomization` or marketplace blocker, build with `--mcp-servers exclusive`, or change the setting in `--policy` and in every other managed source.
 
 ### Invalid MCP lists
 
@@ -585,7 +586,8 @@ rows:
 
 ### Version range checks
 
-When `--record` names an earlier MDM build, `fleet build` first reverts the settings of that build in `--policy`.
+When you rebuild with `--delivery mdm` and `--record` names an earlier MDM build, `fleet build` first takes the settings of that build out of the policy that it reads from `--policy`.
+It keeps values that you changed after that build.
 The version checks use the policy that remains.
 
 `fleet build` refuses a version range in these cases:

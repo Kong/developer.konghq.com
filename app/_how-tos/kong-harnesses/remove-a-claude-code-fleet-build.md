@@ -62,7 +62,8 @@ tldr:
     Then [unassign the deployment](#unassign-the-deployment) in the tool that deployed it.
     Run [`kong-harnesses fleet remove`](#generate-the-removal-plan) with the build record in `--record`.
     For an MDM build, add the current `--policy`, and for an `exclusive` build, add `--mcp-config`.
-    Follow the `MDM policy` and `MCP config` instructions if they appear.
+    Follow the instruction under `MDM policy` when it appears.
+    Follow the instruction under `MCP config` when it appears.
     Delete each file listed under `Remove` with the [steps for your platform](#apply-the-removal-output).
 ---
 
