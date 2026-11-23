@@ -31,12 +31,14 @@ related_resources:
     url: /kong-harnesses/profile-file/
 ---
 
-When a command fails, {{site.kong_harnesses}} prints a line that starts with `Error:` to standard error, and says what to do next.
+When a {{site.kong_harnesses}} command fails, it usually prints a line that starts with `Error:` to standard error, and says what to do next.
+Find the quoted part of that message on this page to see the cause and the fix.
 For a wrong flag or argument, most commands also print `Run 'kong-harnesses COMMAND --help' for usage`.
 
-`kong-harnesses doctor` works in another way.
-It prints its findings, and the `--report` output, to standard output.
-To act on the findings, see [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/).
+Some commands report a problem in their own output instead.
+`profile list` and `status` list a profile that they can't read as unreadable, as [Unreadable profiles](#unreadable-profiles) describes.
+`kong-harnesses doctor` prints its findings, and the `--report` output, to standard output.
+To act on the findings of `doctor`, see [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/).
 
 {:.info}
 > The text of a message can change between releases.
@@ -59,7 +61,9 @@ rows:
     meaning: "The command succeeded."
     action: "Nothing."
   - value: "1"
-    meaning: "An operational failure, such as a network error, a locked password store, a profile that another command uses, or an endpoint failure that `doctor` reports (including non-temporary failures such as a missing route or a refused sign-in)."
+    meaning: >-
+      An operational failure, such as a network error, a locked password store, or a profile that another command uses.
+      `doctor` also uses it for an endpoint failure, including one that doesn't go away on a retry, such as a missing route or a refused sign-in.
     action: "Follow the message, then run the command again."
   - value: "2"
     meaning: "A wrong flag or argument, or a problem in the profile, the client settings or this computer."
@@ -71,8 +75,9 @@ rows:
       The command needs a sign-in, a new sign-in, or a key that isn't saved yet.
       When a renewal of the sign-in didn't finish, the next command resumes it.
     action: >-
-      Run `kong-harnesses login --profile PROFILE_NAME`, or set the key that the message names.
-      If the message says that the next call resumes the renewal, run the command again first.
+      Follow the command in the message.
+      Usually, run `kong-harnesses login --profile PROFILE_NAME`, or set the key that the message names.
+      If the message says that the next call resumes the renewal, or tells you to run `logout` again, run the command again first.
   - value: "4"
     meaning: >-
       A partial result.
@@ -86,31 +91,42 @@ rows:
     action: "Run the command again when you are ready."
 {% endtable %}
 
-`kong-harnesses doctor` exits with `0` when it doesn't find a failure, even when it reports warnings.
-For an interrupted sign-in renewal that resumes on the next credential call (`refresh-pending`), `doctor` reports `ok` on the `login` check instead of failing with `3`, so `doctor` exits with `0` when no other check fails.
-When `doctor` doesn't exit with `0`, it uses these exit codes:
+### Exit codes of doctor
 
-* `1` for the network, the identity provider, the gateway or its MCP routes (including non-temporary failures such as a missing route or a refused sign-in), the OpenCode plugin download, the `--inference` request, or a check that couldn't complete
+`kong-harnesses doctor` exits with `0` when it doesn't find a failure, even when it reports warnings.
+An interrupted sign-in renewal (`refresh-pending`) resumes on the next credential call, so `doctor` reports `ok` on the `login` check for it.
+When `doctor` finds a failure, it uses these exit codes:
+
+* `1` for the network, the identity provider, the gateway or its MCP routes, the OpenCode plugin download, the `--inference` request, or a check that couldn't complete.
+  This includes a failure that doesn't go away on a retry, such as a missing route or a refused sign-in.
 * `2` for the profile (including a `login` finding when `max_access_token_lifetime_seconds` is too low), the agent CLI or its settings, the shell that starts the agent CLI, or the {{site.kong_harnesses}} install on Windows
 * `3` for the sign-in, or a missing key for a gateway MCP server
 * `130` when you cancel `doctor` before it finishes the report, for example with Ctrl+C
 
-Within one report, the first failed check in report order sets that report's exit code.
-Across the install, the profile, and every agent CLI report, `doctor` exits with the most severe code: `2` takes precedence over `1`, and `1` takes precedence over `3`.
+Within one report, the first failed check in report order sets the exit code of that report.
+`doctor` writes one report for the install, one for the profile, and one for each agent CLI.
+It exits with the most severe code of all reports: `2` takes precedence over `1`, and `1` takes precedence over `3`.
 
 ## Profile errors
 
 Most messages about choosing a profile start with the command name, such as `login`, `logout`, `doctor` or `profile activate`.
-When an installed profile file can't be read, `profile list` and `status` without `--profile` or `KONG_HARNESSES_PROFILE` exit with `2`.
-`profile list` exits with `1` instead when it also can't read which profile is the default.
-In text output, they print "Unreadable" followed by the recovery step.
-With `--output json` or `--output yaml`, the state of the profile is `unreadable`, with no recovery step.
-In every output format, `status` also prints one message on standard error, for the first problem with the most severe exit code.
-When that problem is an unreadable profile, the message says "is unreadable" with the recovery step.
-An earlier problem that also exits with `2`, such as an agent CLI failure, takes that message instead.
-With `--output json` or `--output yaml`, each unreadable profile that the message doesn't name has no recovery step.
-To see the recovery step for each unreadable profile, run `kong-harnesses status` in text output, without `--profile` or `KONG_HARNESSES_PROFILE`.
-Commands that select one profile and `doctor` print the message for the cause instead.
+
+### Unreadable profiles
+
+`profile list` lists each installed profile, and so does `status` when you don't select a profile with `--profile` or `KONG_HARNESSES_PROFILE`.
+When one of them can't read a profile file, it lists that profile as unreadable and continues:
+
+* In text output, the profile shows "Unreadable" and the recovery step.
+* In JSON or YAML output, the profile has the state `unreadable`, without the recovery step.
+* The command exits with `2`.
+  `profile list` exits with `1` instead when it also can't read which profile is the default.
+
+`status` also prints one message on standard error, about the first problem with the most severe exit code.
+When that problem is an unreadable profile, the message says "is unreadable" and gives the recovery step.
+The message can also be about another problem, such as an agent CLI failure.
+To see the recovery step for every unreadable profile, run `kong-harnesses status` in text output, without `--profile` or `KONG_HARNESSES_PROFILE`.
+
+A command that selects one profile, and `doctor`, prints the message for the cause instead, as the following entries describe.
 
 ### "selected profile does not exist"
 
@@ -157,6 +173,31 @@ Common causes:
 
 Check the file against the [profile file reference](/kong-harnesses/profile-file/).
 
+### "does not offer the advisor" or "turns the advisor"
+
+`profile import` or `profile create` refused `advisor: true`, because {{ site.claude_code }} can't turn on the advisor tool with this profile.
+The message names the cause:
+
+* "does not offer the advisor in the provider mode of this profile's route": The route uses `foundry-messages` or `bedrock-mantle-messages`.
+  Set `advisor` to `false`.
+* "turns the advisor off when experimental betas are off": Set `experimental_betas` to `true`, or set `advisor` to `false`.
+* "turns the advisor on through a feature flag from Anthropic": On `anthropic-messages`, set `feature_flags` and `anthropic_telemetry` to `true`, or set `advisor` to `false`.
+
+For `profile create`, run the command again with the flag that the message names.
+For the rules, see [Choices that can't go together](/kong-harnesses/profile-file/#choices-that-can-t-go-together).
+
+### "before schema 18" and "also turns off"
+
+The full message starts with `before schema 18, auto_updates false also turns off`.
+`profile import` refused a profile before version 18 that sets `auto_updates: false` together with a choice that `auto_updates: false` turns off.
+The message names the choices.
+Set `auto_updates` to `true`, set the named choices to `false`, or ask your administrator for a version 18 profile.
+
+### "one switch that turns /bug, /feedback and /share on or off together"
+
+{{ site.claude_code }} turns `/bug`, `/feedback` and `/share` on or off together, so `profile import` refused a profile that sets only one of `bug_command` and `feedback_command`, or sets them to different values.
+Set both to the same value, or leave both out.
+
 ### "need an HTTPS gateway"
 
 The full message is `a Claude subscription and a gateway MCP server with its own OAuth sign-in need an HTTPS gateway; give the profile an https:// gateway_origin` (or `--gateway-origin` in `profile create`).
@@ -186,6 +227,15 @@ Check the values against the [profile file reference](/kong-harnesses/profile-fi
 For example, the issuer in the document differs from the issuer that you gave, or an endpoint doesn't use `https://`.
 Check the issuer URL, and the settings of the identity provider.
 
+### "the identity provider's discovery does not list none"
+
+The full message says that the discovery document doesn't list `none` in `token_endpoint_auth_methods_supported`.
+{{site.kong_harnesses}} signs in as a public client, without a client secret.
+The discovery document of your identity provider doesn't say that its token endpoint accepts a public client.
+Some identity providers, such as Keycloak, accept a public client but don't list it.
+First, check on a test deployment that sign-in and renewal work without a client secret.
+Then run `profile create` again with `--public-client-evidence deployment`, or set [`public_client_evidence`](/kong-harnesses/profile-file/#sign-in-fields) to `deployment` in the profile file.
+
 ### "profile import failed; retry after checking source access"
 
 {{site.kong_harnesses}} couldn't read the profile from the file or URL that you gave, or couldn't save it.
@@ -199,8 +249,16 @@ Wait for that command to finish, then run `profile import` or `profile create` a
 
 ### "the existing sign-in or a client's settings could not be inspected"
 
-`profile import` checks the saved sign-in and the settings of each agent CLI before it replaces a profile, and one of them didn't answer, for example a locked password store.
-Unlock the password store if it is locked, then run the import again.
+Before `profile import` replaces a profile, it checks the saved sign-in and the settings of each agent CLI.
+One of these checks didn't finish.
+Unlock the system password store if it is locked, and check that your account can read the settings file of each agent CLI.
+Then run the import again.
+
+### "this session has no per-user runtime directory (XDG_RUNTIME_DIR)"
+
+On Linux, {{site.kong_harnesses}} keeps its locks in the per-user runtime directory, and this session doesn't have one.
+A desktop sign-in or an SSH login creates this directory on most Linux hosts.
+In another session, such as a container or a CI job, set `XDG_RUNTIME_DIR` to a new directory that only your account can open.
 
 ### "no Secret Service runs in this session, so kong-harnesses cannot reach a saved sign-in"
 
@@ -225,7 +283,8 @@ An administrator installed this profile for every user of the computer, so `prof
 `profile delete` refuses any machine-wide profile before asking you to confirm or removing saved keys.
 For a valid machine-wide profile, `profile import`, `profile create` and `setup` tell you to sign in to it with `kong-harnesses login`.
 Sign in to it, or ask your administrator to change or remove it.
-For an invalid or untrusted machine-wide profile, they print the message in ["the selected profile installed for every user is invalid"](#the-selected-profile-installed-for-every-user-is-invalid-or-the-profile-installed-for-every-user-can-be-changed-by-an-account-that-is-not-an-administrator) instead.
+When the message also says that the profile "is invalid", or that "an account that is not an administrator can change it", {{site.kong_harnesses}} can't use the profile.
+Ask your administrator to reinstall it.
 
 ### "selected profile is invalid" or "the installed profile of this name is invalid, so import cannot replace it"
 
@@ -234,7 +293,9 @@ The installed copy of a user profile fails validation or can't be read, and `pro
 Run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator's file or URL with `kong-harnesses profile import`.
 
 When you confirm the deletion of an invalid user profile, `profile delete` removes the saved gateway MCP server key for each server name in `mcp_servers` and deletes the profile file.
-If your password store keeps a key, or the file has no readable `mcp_servers` list (also when the list is absent or `null`), its result names each item to delete from your system password store: `PROFILE_NAME.mcp-key.SERVER_NAME`, or `PROFILE_NAME.mcp-key.*` when it can't read the list.
+Sometimes `profile delete` can't remove a key, for example when your password store keeps it.
+It also can't find the keys when the file doesn't have a readable `mcp_servers` list, also when the list is absent or `null`.
+In both cases, its result names each item to delete from your system password store: `PROFILE_NAME.mcp-key.SERVER_NAME`, or `PROFILE_NAME.mcp-key.*` when it can't read the list.
 `profile delete` can't check which agent CLIs use an invalid profile, and it doesn't remove a saved sign-in.
 When `profile delete` finds a saved sign-in or can't rule one out, it warns before asking you to confirm and again in its result.
 When its result says that the login may remain, import a valid copy of the profile, then run `kong-harnesses logout --profile PROFILE_NAME`.
@@ -278,7 +339,8 @@ Run `kong-harnesses profile list` to check whether the profile is installed, the
 
 ### "selected profile configures no agent client that this kong-harnesses sets up"
 
-`status`, `doctor` and `login --diagnostics` without `--client` work on each agent CLI that the profile has a block for, and the profile doesn't have a block for one that this release sets up.
+Without `--client`, `status`, `doctor` and `login --diagnostics` work on each agent CLI that the profile has a block for.
+The profile doesn't have a block for any agent CLI that this release sets up.
 Ask your administrator for a profile with a block for your agent CLI in [`clients`](/kong-harnesses/profile-file/#clients).
 To check one agent CLI now, name it with `--client CLIENT_NAME`.
 
@@ -286,7 +348,7 @@ To check one agent CLI now, name it with `--client CLIENT_NAME`.
 
 `profile delete` checks for a saved sign-in and inspects each agent CLI's settings before it removes a profile:
 
-* "selected profile still has a saved sign-in" or "the saved sign-in could not be inspected, so the profile was not deleted": Either the profile is still signed in, or `profile delete` couldn't check whether it is signed in (for example, because the password store is locked) and doesn't delete a profile that could still have a sign-in.
+* "selected profile still has a saved sign-in" or "the saved sign-in could not be inspected, so the profile was not deleted": The profile is still signed in, or `profile delete` couldn't check, for example because the password store is locked.
   Run `kong-harnesses logout --profile PROFILE_NAME`, then delete the profile.
 * "cannot tell whether the profile still has a saved sign-in and did not delete it": The message starts with "no Secret Service runs in this session".
   On Linux, a session without a keyring can't see a sign-in that a desktop session saved, so `profile delete` refuses.
@@ -301,8 +363,16 @@ To check one agent CLI now, name it with `--client CLIENT_NAME`.
 
 `login` and `logout` print their own errors, and [When the login or logout command fails](/kong-harnesses/sign-in/errors/#when-the-login-or-logout-command-fails) lists them with their fixes.
 When `logout` exits with 4, see [Sign out](/kong-harnesses/sign-in/#sign-out).
-[When kong-harnesses can't give an access token](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token) lists the errors that `credential` and `token` print, such as an expired sign-in, a locked system password store or a proxy in front of an `http://` gateway, with their fixes.
-This section lists the errors that {{ site.claude_code }} gets for a gateway MCP server.
+[When kong-harnesses can't give an access token](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token) lists the errors that `credential` and `token` print, with their fixes.
+Examples are an expired sign-in, a locked system password store, or a proxy in front of an `http://` gateway.
+This section lists the `login` result that leaves a client check open, and the errors that {{ site.claude_code }} gets for a gateway MCP server.
+
+### "the sign-in is saved, but the client setup check did not finish"
+
+`login`, or the sign-in step of `setup`, saved the sign-in, then stopped before it finished checking the settings of each agent CLI.
+The command exits with `1`, or with `130` if you canceled it.
+The sign-in works, so you don't need to sign in again.
+Run the `status` command that the message names to finish the check.
 
 ### "no key for the gateway MCP server"
 
@@ -348,6 +418,20 @@ The profile uses an `http://` gateway, and the managed settings of {{ site.claud
 The message names the cause, such as a `NO_PROXY` value that leaves out the gateway host, or a managed settings source that {{site.kong_harnesses}} can't read.
 Use an `https://` gateway, or ask your administrator to make the change that the message names.
 
+### "refuses to start on its managed settings"
+
+The managed settings of {{ site.claude_code }} on this computer have a value that stops {{ site.claude_code }} from starting.
+The command exits with `2`, and this message comes before any other error.
+Run the `doctor` command that the message names to find the setting.
+Then ask your administrator to fix that setting in the managed settings file that `doctor` names.
+
+### "applies none of" a settings file
+
+{{ site.claude_code }} ignores a whole settings file when one field in it has the wrong type.
+The setup that `profile activate` writes to that file would then have no effect, so `profile activate` refuses.
+The message names the file, the field, and the type that the field needs.
+Set the field to that type, or remove it, then try again.
+
 ### "settings are inconsistent" or "settings no longer match what this tool installed"
 
 Someone changed the settings that {{site.kong_harnesses}} wrote for an agent CLI.
@@ -371,7 +455,7 @@ Run the command again with `--client CLIENT_NAME` for each client to see each re
 
 ### "selected profile does not configure"
 
-The message names an agent CLI that you gave with `--client`, in `profile activate` or `setup`, and the installed profile has no block for it.
+The message names an agent CLI that you gave with `--client`, in `profile activate` or `setup`, and the installed profile doesn't have a block for it.
 The end of the message tells you what to do:
 
 * "ask your administrator for a profile that sets it up, then import it": No command adds the client to the profile.
@@ -404,20 +488,20 @@ Run it in a terminal.
 `setup` without a profile file, HTTPS URL, or `--profile` asks the questions of `profile create`, and it runs without a terminal, for example in a script.
 Give `setup` a profile file, an HTTPS URL, or `--profile PROFILE_NAME`, or run it in a terminal.
 
-### "setup stopped at step"
+### "setup stopped at step" or "setup configured the other clients at step"
 
 The message names the step that failed and the reason, and the lines before it can give more detail.
-Fix the cause, using the entry for that message on this page, then run the command that the message names to resume past the finished steps.
-For a source or `--profile` run, or if `profile create` failed before saving the profile, that command is the same `setup` command.
-After `profile create` saves the profile, the message names `setup --profile PROFILE_NAME` with any `--client`, `--no-browser`, `--auto-approve`, or `--skip-route-check` flags from your run, so `setup` uses the saved profile and starts at sign-in.
-On every rerun, `setup` leaves a usable sign-in as it is.
-It leaves the settings of a configured client the same only when they still match what the profile asks for, so a profile with other model aliases updates them.
-With a profile file or HTTPS URL, `setup` skips the import only when the source matches the installed profile.
-Running `setup` without a source or `--profile` starts profile creation from the first question.
+Fix the cause, using the entry for that message on this page.
+Then run the command that the message names, which resumes after the finished steps.
+For which command that is, and what it keeps, see [Resume after a step fails](/kong-harnesses/setup/#resume-after-a-step-fails).
 
-When the message says that `setup` leaves a client out, or that a client "cannot be configured", the gateway or this computer refuses that agent CLI, and the preceding line names the fix.
-Until you make that fix, `setup` leaves the client out each time, or stops at the same step when it is the only client.
-To set up the other agent CLIs that the gateway serves, run `setup` without `--client`.
+When the gateway or this computer refuses an agent CLI, the line before the message names the fix:
+
+* "setup configured the other clients at step": `setup` configured each other agent CLI, left out the refused one, and exits with `4`.
+* "cannot be configured": The refused agent CLI is the only one, so `setup` stopped.
+  To set up the other agent CLIs that the gateway serves, run `setup` without `--client`.
+
+Until you make that fix, `setup` leaves the refused agent CLI out each time, or stops at the same step.
 
 ## Fleet build errors
 
@@ -435,6 +519,12 @@ Build from a profile with an `https://` `gateway_origin`.
 
 The managed settings that `fleet build` writes sign every {{ site.claude_code }} session in with the credential helper, and a `subscription` profile uses each developer's own Claude sign-in.
 Build from a profile that doesn't use `sign_in: subscription`.
+
+### "already holds the settings of an earlier fleet build"
+
+The policy file that you gave with `--policy` already has the settings of an earlier `fleet build`.
+Pass the record of that build with `--record RECORD_FILE`.
+`fleet build` then removes the earlier settings from the policy before it adds the new ones.
 
 ## Errors that ask you to retry
 
