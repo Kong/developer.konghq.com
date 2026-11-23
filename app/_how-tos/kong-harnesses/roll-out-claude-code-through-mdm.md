@@ -48,7 +48,8 @@ prereqs:
     - title: kong-harnesses and a profile
       content: |
         Install [kong-harnesses](/kong-harnesses/install/) on a build computer.
-        Each operating system has its own build computer requirement and needs a tool that deploys to its managed computers:
+        The build computer requirement depends on the operating system of the build computer.
+        The deployment tool depends on the operating system of the managed computers:
 
         {% table %}
         columns:
@@ -288,7 +289,11 @@ Install in the following order with your MDM tool or configuration management.
 1. Copy the `--output-dir` folder to a Mac, and keep the file permissions.
    For example, use `ditto` or `rsync -a`.
 1. In that folder, run the `pkgbuild` command that `fleet build` printed.
-   Replace `PACKAGE_IDENTIFIER` and `PACKAGE_VERSION`.
+   Replace these placeholders:
+   * `PACKAGE_IDENTIFIER`: A reverse DNS name for the package, such as `com.yourcompany.kong-harnesses-fleet`.
+     Use the same identifier for every build of this group.
+   * `PACKAGE_VERSION`: A new version for each build, such as `1.0.0`.
+
    The command sets `root` ownership, 755 and 644 modes, and the `scripts/preinstall` script, and builds `kong-harnesses-fleet.pkg`:
 
    ```sh
@@ -305,7 +310,8 @@ Install in the following order with your MDM tool or configuration management.
    ```
 
 1. If your MDM requires a signed distribution package, sign the package with the installer certificate in your keychain.
-   For example, [Apple MDM](https://support.apple.com/guide/deployment/distribute-packages-to-mac-computers-dep873c25ac4/web) and Jamf Pro [PreStage enrollment](https://learn.jamf.com/r/en-US/jamf-pro-documentation-current/Computer_PreStage_Enrollment_Payload_Reference) require one:
+   For example, [Apple MDM](https://support.apple.com/guide/deployment/distribute-packages-to-mac-computers-dep873c25ac4/web) and Jamf Pro [PreStage enrollment](https://learn.jamf.com/r/en-US/jamf-pro-documentation-current/Computer_PreStage_Enrollment_Payload_Reference) require one.
+   Replace `INSTALLER_IDENTITY` with the name of your Developer ID Installer certificate, such as `Developer ID Installer: Your Company (TEAM_ID)`:
 
    ```sh
    productbuild --sign 'INSTALLER_IDENTITY' \
@@ -460,8 +466,11 @@ Then finish the checks on every platform:
 
 1. Send `Say hello` and confirm that {{ site.claude_code }} replies.
 1. Find the event under your control plane in the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger).
-   Filter by **User** `oidc/SUB`, where `SUB` is the `sub` claim of the test user.
-   If you use [subject attribution](/ai-cost-management/attribution/#set-up-subject-attribution), you can find the event by its attribution instead.
+   Set the **User** filter to the subject of the test user.
+   The [AI Auth Strategy](/ai-cost-management/attribution/#set-up-subject-attribution) decides the subject:
+   * A principal: `principal/UUID`
+   * An AI Consumer: `consumer/UUID`
+   * An OpenID Connect claim without a principal: `oidc/SUB`, where `SUB` is the value of the claim, by default `sub`
 1. Confirm that no policy sets `disableAllHooks` to `true`.
    The test prompt doesn't check the hooks.
 1. If the profile has gateway MCP servers, run `/mcp` and confirm that every server connects.

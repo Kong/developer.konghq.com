@@ -151,7 +151,9 @@ Check WSL on each Windows test computer:
   * File build: `(drop-ins)` or `(file + drop-ins)`
   * MDM build: `(HKLM)`, or a merged list that starts with `HKLM`
 
-  The `Enterprise managed settings` label without one of these can mean a WSL-local `/etc/claude-code` policy instead of the Windows build.
+  A WSL-local policy under `/etc/claude-code` can show the same labels as a file build.
+  So first confirm that the WSL distribution doesn't have its own managed settings under `/etc/claude-code`.
+  The `Enterprise managed settings` label without one of these labels can also mean a WSL-local policy instead of the Windows build.
   Send a short test prompt, and confirm that the WSL usage event shows in the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger).
   `doctor` and gateway MCP servers don't run in WSL.
   If you get a TLS error, confirm that the private CA is trusted in WSL, and read the [`claude --debug`](https://code.claude.com/docs/en/network-config#verify-your-configuration) logs in `~/.claude/debug/`.

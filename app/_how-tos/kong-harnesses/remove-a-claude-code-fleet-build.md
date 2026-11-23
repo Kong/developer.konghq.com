@@ -139,6 +139,7 @@ For an `exclusive` MCP build, add `--mcp-config 'MCP_CONFIG_FILE'`.
 * For an MDM build, the policy keys that it removed or restored, under `Taken out`, and the action to take on the MDM policy.
 * For every build, the updated `managed-mcp.json` file, if it wrote one.
 * For every build, each file path to delete, under `Remove`.
+  A path that ends with `if an earlier build installed it` can be missing on some computers.
 
 ## Apply the removal output
 
@@ -161,6 +162,7 @@ Then remove the build files from each managed computer:
 {% navtab "macOS" %}
 
 1. Delete every file path listed under `Remove` as an administrator.
+   Skip a path that isn't on the computer.
 1. Forget the package receipt, so that your MDM tool can install a later package with the same identifier and version.
    Replace `PACKAGE_IDENTIFIER` with the identifier of the package that you deployed:
 
@@ -172,11 +174,13 @@ Then remove the build files from each managed computer:
 {% navtab "Linux" %}
 
 Delete every file path listed under `Remove` as an administrator.
+Skip a path that isn't on the computer.
 
 {% endnavtab %}
 {% navtab "Windows" %}
 
 Delete every file path listed under `Remove` as an administrator.
+Skip a path that isn't on the computer.
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -202,4 +206,5 @@ Confirm the removal on a test computer:
    kong-harnesses doctor --profile PROFILE_NAME --client claude-code
    ```
 
-   Confirm `doctor` no longer reports the removed fleet build ID.
+   If the profile still exists, confirm that `doctor` doesn't report the removed fleet build ID.
+   If `doctor` reports that the profile doesn't exist, rely on the file path and `/status` checks.
