@@ -319,14 +319,16 @@ When a deny entry is sure to match one of your own `--mcp-config` servers, `flee
   The gateway server then doesn't load with the credential of the profile.
   In the `exclusive` mode, {{ site.claude_code }} loads both.
   When both define the same name, the `managed-mcp.json` entry takes precedence.
-  This rule doesn't refuse an `http` entry for a gateway server with its own OAuth sign-in when the entry has the same OAuth settings, doesn't set headers, and has only fields that `fleet build` can check.
+  This rule doesn't refuse one kind of entry: an `http` entry for a gateway server with its own OAuth sign-in.
+  That entry must have the same OAuth settings, must not set headers, and must have only fields that `fleet build` can check.
   The entry must still pass the checks in [Invalid MCP lists](#invalid-mcp-lists), so it can't set `command`, `args`, `env`, or `headersHelper`.
   Remove each entry that `fleet build` refuses.
 * **Name collisions (`exclusive`):** Rename each `--mcp-config` server that has the same name as a gateway server.
   If an earlier fleet build wrote that server, pass the record of that build with `--record` instead.
-  If the record holds the definition of that server and you changed the server after that build, `fleet build` refuses it, so rename or remove it.
-  If the record lists only server names, `fleet build` skips each `--mcp-config` server with a recorded name, also when you changed that server after that build.
-  The new `managed-mcp.json` then holds the current gateway servers of the profile and the other `--mcp-config` servers.
+  If the record holds the definition of that server and you changed the server after that build, `fleet build` keeps your server, so the name collision stays.
+  Rename or remove that server.
+  If the record lists only server names, `fleet build` leaves out each `--mcp-config` server that has a recorded name, also when you changed that server after that build.
+  The new `managed-mcp.json` then holds the current gateway servers of the profile and each `--mcp-config` server that `fleet build` didn't leave out.
 * **Servers at a gateway address (`exclusive`):** `fleet build` refuses an `--mcp-config` server with another name that points, or may point, to the address of a gateway MCP server.
   It doesn't refuse a server that the denylist of the policy always blocks.
   It also doesn't refuse an `http` server that signs in as the gateway server does, doesn't set headers, and has only fields that `fleet build` can check, such as `type`, `url`, `oauth`, and `headersHelper`.
@@ -358,21 +360,24 @@ This rule applies to the `allowlist` and `any` modes.
   Any other value that isn't a boolean, a list, or `null`, such as a string, also counts as `true`.
   These values don't lock anything: `false`, `[]`, `null`, and list entries that don't name a surface.
   A `null` removes the key.
-* `strictKnownMarketplaces`, or its alias `allowedMarketplaces`, is set without `{"source": "skills-dir"}`.
+* The marketplace allowlist is set without `{"source": "skills-dir"}`.
+  The allowlist key is `strictKnownMarketplaces`, or its alias `allowedMarketplaces`.
+  If one file sets both, {{ site.claude_code }} uses `strictKnownMarketplaces` and [ignores the alias](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases).
 * `blockedMarketplaces` lists `{"source": "skills-dir"}`.
-* `strictKnownMarketplaces` or `allowedMarketplaces` has a wholly invalid value, which fails closed.
+* The marketplace allowlist has a wholly invalid value, which fails closed.
   A wholly invalid `blockedMarketplaces` is dropped with a warning.
   For details, see [Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed).
 
 When the profile has gateway MCP servers and `--mcp-servers` isn't `exclusive`, `fleet build` refuses a `--policy` that sets a `strictPluginOnlyCustomization` or marketplace blocker in this list.
+If `--policy` sets both allowlist keys, `fleet build` checks both.
 The error names the first blocker that `fleet build` finds.
 For a `strictPluginOnlyCustomization` lock, it also names each entry that doesn't name a surface.
-For a marketplace allowlist, it also names each key that {{ site.claude_code }} ignores because its letter case doesn't match.
+For a marketplace allowlist, it also names each `source` key that {{ site.claude_code }} ignores because its letter case doesn't match.
 Write `source` in lowercase in `{"source": "skills-dir"}`, because `fleet build`, `doctor`, and {{ site.claude_code }} match keys with exact case.
 
 To fix a `strictPluginOnlyCustomization` or marketplace blocker, build with `--mcp-servers exclusive`, or change the setting in `--policy` and in every other managed source.
 
-For `managedMcpServers` entries, `fleet build` uses the address rules in [More MCP rules](#more-mcp-rules) in every mode.
+For the `managedMcpServers` item in this list, `fleet build` uses the address rules in [More MCP rules](#more-mcp-rules) instead, in every mode.
 
 ### Invalid MCP lists
 
