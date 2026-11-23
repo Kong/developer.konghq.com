@@ -323,15 +323,15 @@ To get details about delivery problems, add a failure-notice email to the webhoo
 
 ## Sessions
 
-A session is one AI conversation: the requests that have the same session ID.
-If a client does not send a session ID, Kong generates one, and the session contains only that request.
+A session is a single AI conversation, made up of all requests that share the same session ID.
+If a client doesn't send a session ID, {{site.ai_gateway}} generates one, and the session contains only that request.
 
-{{site.konnect_short_name}} adds up the cost, tokens, and duration of the requests in a session.
-Each request in a session keeps the spans of its LLM calls, tool calls, and guardrails, with their input and output.
+{{site.konnect_short_name}} totals the cost, tokens, and duration across all requests in a session.
+Each request in a session keeps the spans for its LLM calls, tool calls, and guardrails, including their inputs and outputs.
 
 When an [alert](#alerts) triggers, you can open the sessions that it affected during the alert's time window.
 
-{{site.ai_gateway}} sends session data to {{site.konnect_short_name}} without extra configuration.
+{{site.ai_gateway}} sends session data to {{site.konnect_short_name}} automatically, without extra configuration.
 
 ## Logs
 
