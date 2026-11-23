@@ -43,22 +43,31 @@ prereqs:
   inline:
     - title: kong-harnesses and the build record
       content: |
-        Install [kong-harnesses](/kong-harnesses/install/) on your administration computer and have the deployed build's record file (`kong-harnesses-fleet-BUILD_ID.json`) ready.
-        For an MDM build, export the MDM policy file that managed computers receive now.
-        For an `exclusive` MCP build, copy the `managed-mcp.json` file that managed computers have now.
+        Install [kong-harnesses](/kong-harnesses/install/) on your administration computer.
+        Have the build record of the deployed build ready: `kong-harnesses-fleet-BUILD_ID.json`.
+        For an MDM build, export the MDM policy that the managed computers get now.
+        For an `exclusive` MCP build, copy the `managed-mcp.json` file that the managed computers have now.
     - title: Deployment tool and administrator access
       content: |
-        You need access to the tool that deployed the build to unassign it, access to the MDM policy for an MDM build to update or remove it, and administrator rights on managed computers to delete build files and validate removal on a test computer.
+        You need:
+
+        * Access to the tool that deployed the build, to unassign the deployment.
+        * For an MDM build, access to the MDM policy, to update or remove it.
+        * Administrator rights on the managed computers, to delete the build files and to validate the removal on a test computer.
 
 tldr:
   q: How do I remove a kong-harnesses {{ site.claude_code }} fleet build from managed computers?
   a: |
-    Have each developer sign out of the machine-wide profile and clean up any user-level activation, then [unassign the deployment](#unassign-the-deployment) in the tool that deployed it.
-    Run `kong-harnesses fleet remove --record` (with the current `--policy` for MDM builds and `--mcp-config` for `exclusive` builds), apply or remove the printed policy and `managed-mcp.json`, and remove the build files with the [steps for your platform](#apply-the-removal-output).
+    Have each developer sign out of the machine-wide profile and clean up any user-level activation.
+    Then [unassign the deployment](#unassign-the-deployment) in the tool that deployed it.
+    Run `kong-harnesses fleet remove --record`.
+    For an MDM build, add the current `--policy`, and for an `exclusive` build, add `--mcp-config`.
+    Apply or remove the policy and `managed-mcp.json` that it prints, and delete the build files with the [steps for your platform](#apply-the-removal-output).
 ---
 
-Removing a kong-harnesses fleet build reverses the managed settings, machine-wide profile, and `managed-mcp.json` deployed by [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/).
-Follow these steps in order so your deployment tool doesn't reinstall files and developers don't lose access to sign-out and cleanup commands.
+This guide removes the managed settings, the machine-wide profile, and the `managed-mcp.json` file that you deployed with [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/).
+Do the steps in order.
+Then your deployment tool doesn't install the files again, and developers can still run the sign-out and cleanup commands.
 
 ## Have developers sign out and clean up
 
@@ -66,11 +75,12 @@ Before you unassign the deployment, have every developer on a managed computer d
 
 1. Sign out of the machine-wide profile, as described in [Sign out of each profile](/kong-harnesses/remove-kong-harnesses/#sign-out-of-each-profile).
    After you remove the build, `logout` can't read the profile to revoke the sign-in.
-1. If they activated the profile for {{ site.claude_code }} in their user settings, run `kong-harnesses profile cleanup --client claude-code`, as described in [Clean up agent CLI settings](/kong-harnesses/remove-kong-harnesses/#clean-up-agent-cli-settings).
+1. If the developer activated the profile for {{ site.claude_code }} in their user settings, run `kong-harnesses profile cleanup --client claude-code`.
+   For details, see [Clean up agent CLI settings](/kong-harnesses/remove-kong-harnesses/#clean-up-agent-cli-settings).
 
 ## Unassign the deployment
 
-Unassign the fleet build deployment so that it doesn't reinstall build files after you delete them:
+Unassign the fleet build deployment, so that it doesn't install the build files again after you delete them:
 
 {% navtabs "fleet-build" %}
 {% navtab "macOS" %}
@@ -93,34 +103,58 @@ Unassign the fleet build package or deployment script in your MDM tool.
 
 ## Generate the removal plan
 
-Run `kong-harnesses fleet remove` on your administration computer, replacing `BUILD_RECORD`, `POLICY_FILE`, `MCP_CONFIG_FILE`, and `BUILD_ID`.
-Pass a new or empty folder with `--output-dir` whenever policy keys or your own MCP servers remain.
+Run `kong-harnesses fleet remove` on your administration computer.
+Replace these placeholders:
 
-To remove a file build, run `fleet remove` with `--record` (for an `exclusive` MCP build, add `--mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-removed-BUILD_ID` using the `managed-mcp.json` that computers have now):
+* `BUILD_RECORD`: The path to the build record.
+* `POLICY_FILE`: The MDM policy that the computers get now.
+  `fleet remove` reads it so that it keeps the changes that you made after the build.
+* `MCP_CONFIG_FILE`: The `managed-mcp.json` file that the computers have now.
+* `BUILD_ID`: The build ID, used in the name of the output folder.
+
+When policy keys or your own MCP servers remain, pass `--output-dir` with a new or empty folder.
+
+{% navtabs "fleet-remove" %}
+{% navtab "File build" %}
 
 ```sh
 kong-harnesses fleet remove --record 'BUILD_RECORD'
 ```
 
-To remove an MDM build, pass both `--record` and the MDM policy file that computers receive now with `--policy` so later changes aren't lost (add `--mcp-config 'MCP_CONFIG_FILE'` for an `exclusive` MCP build):
+For an `exclusive` MCP build, add `--mcp-config 'MCP_CONFIG_FILE' --output-dir fleet-removed-BUILD_ID`.
+
+{% endnavtab %}
+{% navtab "MDM build" %}
 
 ```sh
 kong-harnesses fleet remove --record 'BUILD_RECORD' --policy 'POLICY_FILE' --output-dir fleet-removed-BUILD_ID
 ```
 
-For an MDM build, `fleet remove` prints the removed or restored policy keys under `Taken out` and the MDM policy action.
-For every build, it prints any updated `managed-mcp.json` file it wrote and every file path to delete under `Remove`.
+For an `exclusive` MCP build, add `--mcp-config 'MCP_CONFIG_FILE'`.
+
+{% endnavtab %}
+{% endnavtabs %}
+
+`fleet remove` prints:
+
+* For an MDM build, the policy keys that it removed or restored, under `Taken out`, and the action to take on the MDM policy.
+* For every build, the updated `managed-mcp.json` file, if it wrote one.
+* For every build, each file path to delete, under `Remove`.
 
 ## Apply the removal output
 
 Apply each instruction that `kong-harnesses fleet remove` prints:
 
-1. For an MDM build, review the `Taken out` list and re-add any key that you set yourself after the build to the same value the build wrote.
-   `fleet remove` reverts or removes values matching what the build wrote because it can't distinguish them from administrator edits made after the build.
+1. For an MDM build, review the `Taken out` list.
+   If you set a key after the build to the same value that the build wrote, add the key again.
+   `fleet remove` can't tell such a value from the value of the build, so it reverts or removes it.
 1. For an MDM build, update or remove the MDM policy:
    * If `fleet remove` writes a policy under `mdm/`, deploy that policy in place of the existing {{ site.claude_code }} MDM policy.
-   * If `fleet remove` prints `Remove the Claude Code policy from your MDM`, remove the {{ site.claude_code }} policy from your MDM tool even when `fleet remove` doesn't write an `mdm/` folder.
-1. If `fleet remove` writes `managed-mcp.json` under `root/`, inspect any kept server definitions that changed after the build, remove any that still point to the gateway, and deploy the updated file in place of the existing `managed-mcp.json`.
+   * If `fleet remove` prints `Remove the Claude Code policy from your MDM`, remove the {{ site.claude_code }} policy from your MDM tool.
+     Do this also when `fleet remove` doesn't write an `mdm/` folder.
+1. If `fleet remove` writes `managed-mcp.json` under `root/`, check each kept server definition that changed after the build.
+   Remove each one that still points to the gateway.
+   Then deploy the updated file in place of the existing `managed-mcp.json`.
 
 Then remove the build files from each managed computer:
 
@@ -149,16 +183,20 @@ Delete every file path listed under `Remove` as an administrator.
 
 ## Validate
 
-Confirm the removal on a test computer before closing out the rollout:
+Confirm the removal on a test computer:
 
-1. Verify that none of the exact file paths listed under `Remove` remain on the test computer (see [Check the build output](/kong-harnesses/roll-out-claude-code-through-mdm/#check-the-build-output) for target paths).
-1. Start {{ site.claude_code }} and run `/status` to check `Setting sources` only for a source that this removal deleted, using the labels for your platform in [Validate](/kong-harnesses/roll-out-claude-code-through-mdm/#validate):
-   * **File build:** When no other `managed-settings.d/` drop-ins remain, confirm the file build labels no longer appear.
-   * **MDM build:** When you removed the {{ site.claude_code }} policy from your MDM tool, confirm the MDM build labels no longer appear.
+1. Confirm that none of the file paths listed under `Remove` are on the test computer.
+   For the target paths, see [Check the build output](/kong-harnesses/roll-out-claude-code-through-mdm/#check-the-build-output).
+1. Start {{ site.claude_code }} and run `/status`.
+   In `Setting sources`, check only the sources that this removal deleted.
+   For the labels of your platform, see [Validate](/kong-harnesses/roll-out-claude-code-through-mdm/#validate).
+   * **File build:** If no other `managed-settings.d/` drop-ins remain, confirm that the file build labels are gone.
+   * **MDM build:** If you removed the {{ site.claude_code }} policy from your MDM tool, confirm that the MDM build labels are gone.
 
-   Unrelated source labels, remaining drop-ins, and a kept MDM policy stay in `/status`.
-   Confirm removal by the exact deleted file paths and the build ID check in the next step.
-1. If kong-harnesses is still installed on the test computer, run [`kong-harnesses doctor`](/kong-harnesses/doctor/), replacing `PROFILE_NAME` with your profile name:
+   Unrelated source labels, remaining drop-ins, and a kept MDM policy still show in `/status`.
+   So confirm the removal with the deleted file paths and with the build ID check in the next step.
+1. If kong-harnesses is still installed on the test computer, run [`kong-harnesses doctor`](/kong-harnesses/doctor/).
+   Replace `PROFILE_NAME` with your profile name:
 
    ```sh
    kong-harnesses doctor --profile PROFILE_NAME --client claude-code
