@@ -1,0 +1,28 @@
+description: "Allow requests using a CEL expression that reads a claim from the validated access token, instead of a static allow list."
+
+extended_description: |
+  Allow requests using a CEL expression that reads a claim from the validated access token, instead of a static allow list.
+  The [OpenID Connect plugin](/plugins/openid-connect/) runs before the ACL plugin by default, so the claims are available to `allow_when`.
+  
+  For a complete tutorial, see [Authorize and rate limit requests by IdP claims](/how-to/authorize-and-rate-limit-by-idp-claims/).
+
+title: 'Allow by token claims'
+
+weight: 600
+
+requirements:
+  - "[OpenID Connect plugin](/plugins/openid-connect/) configured to validate tokens from your identity provider"
+
+config:
+  allow_when:
+    - "has(access_token.claims.tier) && access_token.claims.tier == \"gold\""
+
+min_version:
+  gateway: '3.17'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

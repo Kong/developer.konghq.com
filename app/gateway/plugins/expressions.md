@@ -289,6 +289,25 @@ rows:
     description: "UUIDs of Consumer Groups matched for this request. `null` if no Consumer Groups are matched."
     example: |
       `consumer_group.ids != null && "a1b2c3d4-..." in consumer_group.ids`
+  - field: |
+      `access_token.claims`  {% new_in 3.17 %}
+    type: "`Map`"
+    description: |
+      The claims of the access token that the [OpenID Connect plugin](/plugins/openid-connect/) validated.
+      An empty map if no token was validated.
+      Inner keys must be checked with `has()` before access.
+      See [Null handling](#null-handling) and [CEL-based authorization using token claims](/plugins/openid-connect/#cel-based-authorization-using-token-claims).
+    example: |
+      `has(access_token.claims.tier) && access_token.claims.tier == "gold"`
+  - field: |
+      `access_token.token` {% new_in 3.17 %}
+    type: "`string`"
+    description: |
+      The raw access token that the OpenID Connect plugin validated.
+      `null` if no token was validated.
+      Don't write this value to a log, a header, or any other place outside {{site.base_gateway}}, because it's the caller's credential.
+    example: |
+      `access_token.token != null`
   - field: "`kong.ctx.shared`"
     type: "`Map`"
     description: |
@@ -319,7 +338,8 @@ rows:
 <!--vale on-->
 
 {:.info}
-> `consumer.*` and `consumer_group.*` fields are only populated after an authentication plugin (such as Key Auth or Basic Auth) has run. On a plugin condition, this means the condition must be on a plugin with a **lower priority** than the authentication plugin.
+> `consumer.*`, `consumer_group.*`, and `access_token.*` fields are only populated after an [authentication plugin](/plugins/?category=authentication) (for example, Key Auth, Basic Auth, or OpenID Connect) has run.
+On a plugin condition, this means the condition must be on a plugin with a **lower priority** than the authentication plugin.
 
 #### Plugin state fields
 
@@ -371,6 +391,7 @@ The following fields return `null` when a value isn't set:
 * `http.headers_list.*`
 * `http.queries_list.*`
 * `net.tls.sni`
+* `access_token.token`
 * All context fields (`consumer.*`, `route.*`, `service.*`, `principal.*`, `consumer_group.*`, `plugins.*`)
 
 You can compare these directly using `null`:
@@ -380,12 +401,13 @@ consumer.id != null
 route.tags != null && "internal" in route.tags
 ```
 
-The `kong.ctx.shared` and `principal.metadata` fields are maps whose inner keys are not pre-populated by {{site.base_gateway}}.
+The `kong.ctx.shared`, `principal.metadata`, and `access_token.claims` fields are maps whose inner keys are not pre-populated by {{site.base_gateway}}.
 Accessing a missing key in these maps causes a runtime error.
 Before accessing a key, use `has()` to check for its existence:
 
 ```sh
 has(kong.ctx.shared.my_flag) && kong.ctx.shared.my_flag == "enabled"
+has(access_token.claims.tier) && access_token.claims.tier == "gold"
 ```
 
 How that runtime error is handled once it occurs (for example, whether it can be caught with `default()`) depends on which CEL-driven mechanism the expression belongs to. See [Plugin conditions](/gateway/plugins/conditions/) and [Dynamic plugin config with CEL](/gateway/plugins/expressible-fields/) for each mechanism's own error handling.
@@ -466,7 +488,7 @@ rows:
     description: "Ordered list of string values."
     example: '`["foo", "bar"]`'
   - type: "`map<string, _type>`"
-    description: "Map with string keys and values of any type. Used for `kong.ctx.shared` and `principal.metadata`."
+    description: "Map with string keys and values of any type. Used for `kong.ctx.shared`, `principal.metadata`, and `access_token.claims`."
     example: "See `kong.ctx.shared` field."
   - type: "`null`"
     description: "Null value, returned when an optional field has no value."

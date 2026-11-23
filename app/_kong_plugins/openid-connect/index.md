@@ -46,6 +46,10 @@ related_resources:
     url: /gateway/authentication/
   - text: OpenID Connect tutorials
     url: /how-to/?query=openid-connect
+  - text: Conditional expressions for plugins
+    url: /gateway/plugins/conditions/
+  - text: CEL expressions for plugins
+    url: /gateway/plugins/expressions/
 
 examples_groups:
   - slug: identity
@@ -310,6 +314,7 @@ The OpenID Connect plugin has several options for performing coarse-grained auth
 2. [ACL plugin authorization](#acl-plugin-authorization)
 3. [Consumer authorization](#consumer-authorization)
 4. [Consumer Group authorization](#consumer-group-authorization) {% new_in 3.12 %}
+5. [CEL-based authorization using token claims](#cel-based-authorization-using-token-claims) {% new_in 3.17 %}
 
 #### Claims-based authorization
 
@@ -437,6 +442,48 @@ This means that we restrict the access to only those that do have a matching Con
 Set up Consumer Group auth:
 * [Plugin configuration example](/plugins/openid-connect/examples/consumer-group-auth/)
 * [Consumer Group auth tutorial with Keycloak](/how-to/configure-oidc-with-consumer-groups/)
+
+#### CEL-based authorization using token claims {% new_in 3.17 %}
+
+After the OIDC plugin has validated a caller's token, a [CEL expression](/gateway/plugins/expressions/) can read that token's claims through `access_token.claims`.
+
+This is useful when your IdP already records what each caller is entitled to, such as their tier, team, or roles.
+The expression reads those claims directly, so you don't have to map each caller to a Consumer, Consumer Group, or Principal.
+
+You can access the claims in any of the following places:
+
+* A plugin's [`condition`](/gateway/plugins/conditions/) field, to run or skip that plugin per request.
+* The [ACL plugin](/plugins/acl/)'s `allow_when` or `deny_when` fields, to allow or deny the request itself.
+* A plugin's [`expressions`](/gateway/plugins/expressible-fields/) object, to compute a config field per request, such as a rate limit or its counter key.
+
+For example, the following condition runs a plugin only for callers whose token has a `tier` claim set to `free`:
+
+```yaml
+condition: 'has(access_token.claims.tier) && access_token.claims.tier == "free"'
+```
+
+Keep the following in mind when you read claims:
+
+* The OpenID Connect plugin must run before the plugin that reads the claims, because it exposes them only after it validates the token.
+  By default, it runs before the ACL and Rate Limiting plugins.
+* Nested claims keep their structure.
+  For example, read the `realm_access.roles` claim as `access_token.claims.realm_access.roles`.
+* `has()` only checks the last element of a path, so check each level that might be absent.
+  For example, use `has(access_token.claims.realm_access) && "editor" in access_token.claims.realm_access.roles`.
+* A claim name that contains a hyphen needs the index form, for example `access_token.claims["other-claim"]`.
+* If you set [`config.verify_signature`](/plugins/openid-connect/reference/#schema--config-verify-signature) to `false`, {{site.base_gateway}} still exposes the claims but doesn't verify that the token is genuine.
+
+The `access_token.token` field contains the raw bearer token.
+
+{:.warning}
+> Don't write `access_token.token` to a log, a header, or any other place outside {{site.base_gateway}}, because it contains the caller's credential.
+
+For more information about the available fields, see [CEL expressions for plugins](/gateway/plugins/expressions/#available-fields).
+
+Set up CEL-based authorization:
+* [ACL plugin configuration example](/plugins/acl/examples/allow-when-token-claims/)
+* [Rate Limiting Advanced plugin configuration example](/plugins/rate-limiting-advanced/examples/rate-limit-by-token-claims/)
+* [How-to: Authorize and rate limit requests by IdP claims](/how-to/authorize-and-rate-limit-by-idp-claims/)
 
 ### Client authentication
 

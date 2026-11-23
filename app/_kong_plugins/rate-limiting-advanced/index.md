@@ -267,7 +267,7 @@ expressions:
 > A per-request expression-driven window size would never be picked up by that registration.
 
 See also:
-* For an example plugin configuration, see [Rate limit by Principal metadata](/plugins/rate-limiting-advanced/examples/rate-limit-by-principal-metadata/).
+* For example plugin configurations, see [Rate limit by Principal metadata](/plugins/rate-limiting-advanced/examples/rate-limit-by-principal-metadata/) and [Rate limit by token claims](/plugins/rate-limiting-advanced/examples/rate-limit-by-token-claims/).
 * For a full walkthrough, see the how-to guide [Configure dynamic plugin config with CEL](/gateway/configure-dynamic-plugin-config-with-cel/).
 * For general information on expressible config fields, including limitations, see [Dynamic plugin config with CEL](/gateway/plugins/expressible-fields/).
 
