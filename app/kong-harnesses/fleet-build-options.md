@@ -325,8 +325,10 @@ When a deny entry is sure to match one of your own `--mcp-config` servers, `flee
   Remove each entry that `fleet build` refuses.
 * **Name collisions (`exclusive`):** Rename each `--mcp-config` server that has the same name as a gateway server.
   If an earlier fleet build wrote that server, pass the record of that build with `--record` instead.
-  If the record holds the definition of that server and you changed the server after that build, `fleet build` keeps your server, so the name collision stays.
-  Rename or remove that server.
+  If the record holds the definition of that server and you changed the server after that build, `fleet build` doesn't take your server out, so the names still collide and `fleet build` refuses the build.
+  To fix it, restore the definition that the earlier build wrote, so that `fleet build` takes that server out.
+  You can also rename or remove your server when the `--mcp-config` file still holds another server that the record names.
+  `fleet build` refuses an `--mcp-config` file that holds none of the servers that the record names.
   If the record lists only server names, `fleet build` leaves out each `--mcp-config` server that has a recorded name, also when you changed that server after that build.
   The new `managed-mcp.json` then holds the current gateway servers of the profile and each `--mcp-config` server that `fleet build` didn't leave out.
 * **Servers at a gateway address (`exclusive`):** `fleet build` refuses an `--mcp-config` server with another name that points, or may point, to the address of a gateway MCP server.
@@ -365,11 +367,13 @@ This rule applies to the `allowlist` and `any` modes.
   If one file sets both, {{ site.claude_code }} uses `strictKnownMarketplaces` and [ignores the alias](https://code.claude.com/docs/en/settings-reference#marketplace-key-aliases).
 * `blockedMarketplaces` lists `{"source": "skills-dir"}`.
 * The marketplace allowlist has a wholly invalid value, which fails closed.
+  {{ site.claude_code }} then uses an empty allowlist, which blocks every marketplace.
   A wholly invalid `blockedMarketplaces` is dropped with a warning.
   For details, see [Keys that fail closed](https://code.claude.com/docs/en/managed-settings#keys-that-fail-closed).
 
 When the profile has gateway MCP servers and `--mcp-servers` isn't `exclusive`, `fleet build` refuses a `--policy` that sets a `strictPluginOnlyCustomization` or marketplace blocker in this list.
-If `--policy` sets both allowlist keys, `fleet build` checks both.
+If `--policy` sets both allowlist keys, `fleet build` checks each of them, also the alias that {{ site.claude_code }} ignores.
+It refuses the policy when either key is a blocker in this list.
 The error names the first blocker that `fleet build` finds.
 For a `strictPluginOnlyCustomization` lock, it also names each entry that doesn't name a surface.
 For a marketplace allowlist, it also names each `source` key that {{ site.claude_code }} ignores because its letter case doesn't match.
