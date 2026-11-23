@@ -210,7 +210,7 @@ rows:
       The name that commands take with `--profile`.
       1 to 63 bytes of lowercase letters, digits, and hyphens.
       It starts with a letter, and ends with a letter or a digit.
-      `default`, `con`, `prn`, `aux`, `nul`, `com1` to `com9` and `lpt1` to `lpt9` are reserved.
+      `default`, `con`, `prn`, `aux`, `nul`, `com1` to `com9`, and `lpt1` to `lpt9` are reserved.
   - field: "`display_name`"
     description: "A name for people to read, 1 to 80 printable ASCII characters."
   - field: "`description`"
@@ -260,7 +260,8 @@ rows:
 
 Versions 2 to 11 keep the {{ site.claude_code }} settings at the top level: `models`, `telemetry`, `request_shape`, `auto_updates`, `model_metadata`, and `pricing`.
 From version 12, these fields go in `clients.claude-code`, and the top level refuses them.
-A profile before version 12 doesn't have client blocks, so `profile activate` can set up every agent CLI except Hermes Agent, subject to the refusals in [Clients](#clients).
+A profile before version 12 doesn't have client blocks.
+`profile activate` can set up every agent CLI except Hermes Agent for it, subject to the refusals in [Clients](#clients).
 
 ### Plain HTTP gateways
 
@@ -268,7 +269,7 @@ Requests to an `http://` gateway aren't encrypted, so a proxy could read the cre
 {{site.kong_harnesses}} keeps these requests off proxies:
 
 * Codex, OpenCode, and Hermes Agent need an `https://` gateway, even for a gateway on this computer.
-  They pick their proxy in ways that {{site.kong_harnesses}} can't check, so `profile activate` doesn't set them up for an `http://` gateway.
+  They choose their proxy in ways that {{site.kong_harnesses}} can't check, so `profile activate` doesn't set them up for an `http://` gateway.
 * {{ site.claude_code }}, `omp`, and pi work with an `http://` gateway.
   `profile activate` sets them up when the profile configures them, they are installed or named with `--client`, and the checks in this list pass.
   `profile activate` doesn't change any client settings when a pre-write check fails.
@@ -284,7 +285,7 @@ See [Client setup errors](/kong-harnesses/errors/#client-setup-errors) and [Flee
 
 ## Sign-in fields
 
-`sign_in` picks how developers get a credential for the gateway.
+`sign_in` sets how developers get a credential for the gateway.
 Use the identity provider sign-in when you can, because each developer then gets short-lived tokens, and you don't hand out keys:
 
 {% table %}
@@ -316,7 +317,7 @@ rows:
     when: "Developers use their own Claude Pro or Max subscription for model requests."
     description: >-
       {{ site.claude_code }} sends each developer's own Claude subscription sign-in to the gateway for model requests.
-      It also sends the token from your identity provider in a separate header, so the gateway knows which developer sent each request.
+      It also sends the token from your identity provider in a separate header, so the gateway can identify the developer who sent each request.
       The identity provider fields are required, and `gateway_origin` uses `https://`.
 {% endtable %}
 
@@ -373,7 +374,8 @@ rows:
   - field: "`public_client_evidence`"
     description: >-
       Version 6 and later.
-      Set to `deployment` when the discovery document doesn't list the `none` token endpoint authentication method, and your deployment shows in another way that the client is public.
+      Set to `deployment` when the discovery document doesn't list the `none` token endpoint authentication method.
+      Use it only when your deployment confirms in another way that the client is public.
       Like the other identity provider fields, a `static_key` or `environment_key` profile refuses it.
   - field: "`scopes`"
     description: >-
@@ -402,7 +404,7 @@ An `environment_key` profile doesn't save a sign-in, so developers don't need to
 `profile create` and `profile import` refuse the change while an agent CLI uses the profile.
 Run `profile cleanup` for that client, or activate another profile there.
 Then create or import the profile, and activate it again.
-A profile that moves from version 11 or earlier to version 12 or later also gets a new security identity, even when these fields keep their values.
+Upgrading a profile from version 11 or earlier to version 12 or later also changes its security identity, even when these fields don't change.
 A change to the other fields, such as `routes` or `clients`, keeps the sign-in.
 
 ## Routes
@@ -833,7 +835,7 @@ columns:
 rows:
   - field: "`multiplier`"
     description: >-
-      A number greater than 0 and up to 10 that each price is multiplied by, both the prices here and the prices from the gateway model list.
+      A number greater than 0 and up to 10 that multiplies every price, both here and in the gateway model list.
       The default is 1.
   - field: "`models`"
     description: >-
@@ -900,7 +902,9 @@ rows:
       Each segment uses letters, digits, and `-._~`, isn't empty, and isn't `.` or `..`.
       Each server has its own path.
   - field: "`sign_in`"
-    description: "Not set to send the model sign-in, `oauth` for a server that runs its own OAuth sign-in, or `key` for a server that takes a key from you."
+    description: >-
+      Leave it unset to send the model sign-in.
+      Set it to `oauth` for a server that runs its own OAuth sign-in, or to `key` for a server that takes a key from you.
   - field: "`oauth_client_id`, `oauth_callback_port`"
     description: >-
       For `oauth`, and refused for other servers.
@@ -912,7 +916,7 @@ rows:
   - field: "`key_header`"
     description: >-
       Only for `key`, and refused for other servers.
-      The header that carries the key, an HTTP token of up to 64 bytes.
+      The header that sends the key, an HTTP token of up to 64 bytes.
       The default is `apikey`.
       `Authorization`, `Cookie`, `Host`, `Content-Length`, `Transfer-Encoding`, and `Connection` are refused.
 {% endtable %}

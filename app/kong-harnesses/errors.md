@@ -100,7 +100,8 @@ When `doctor` finds a failure, it uses these exit codes:
 
 * `1` for the network, the identity provider, the gateway or its MCP routes, the OpenCode plugin download, the `--inference` request, or a check that couldn't complete.
   This includes a failure that doesn't go away on a retry, such as a missing route or a refused sign-in.
-* `2` for the profile (including a `login` finding when `max_access_token_lifetime_seconds` is too low), the agent CLI or its settings, the shell that starts the agent CLI, or the {{site.kong_harnesses}} install on Windows.
+* `2` for the profile, the agent CLI or its settings, the shell that starts the agent CLI, or the {{site.kong_harnesses}} install on Windows.
+  This includes a `login` finding when `max_access_token_lifetime_seconds` is too low.
 * `3` for the sign-in, or a missing key for a gateway MCP server.
 * `130` when you cancel `doctor` before it finishes the report, for example with Ctrl+C.
 
@@ -120,7 +121,8 @@ When one of them can't read a profile file, it lists that profile as unreadable 
 * In text output, the profile shows "Unreadable" and the recovery step.
 * In JSON or YAML output, the profile has the state `unreadable`, without the recovery step.
 * The command exits with `2`.
-  `profile list` exits with `1` instead when it also can't read which profile is the default.
+  `profile list` exits with `1` instead when it also can't read which profile is the default, and prints "the default profile could not be read, so none is marked".
+  Run `kong-harnesses profile default PROFILE_NAME` to choose the default profile again.
 
 `status` also prints one message on standard error, about the first problem with the most severe exit code.
 When that problem is an unreadable profile, the message says "is unreadable" and gives the recovery step.
@@ -158,7 +160,7 @@ The command got more than one profile, for example `--profile` twice, or a profi
 A command that takes `--profile PROFILE_NAME`, such as `login`, also prints this error when you pass the profile name as an argument, as in `kong-harnesses login PROFILE_NAME`.
 Give one profile, in the form that the command takes.
 
-### "profile name is invalid", "profile name after --profile is invalid" or "KONG_HARNESSES_PROFILE holds an invalid profile name"
+### "profile name is invalid", "profile name after --profile is invalid", or "KONG_HARNESSES_PROFILE holds an invalid profile name"
 
 The profile name after the command, after `--profile`, or in `KONG_HARNESSES_PROFILE` doesn't follow the [rules for `name`](/kong-harnesses/profile-file/#top-level-fields).
 Check the spelling, set `KONG_HARNESSES_PROFILE` to the name of an installed profile, or pass `--profile PROFILE_NAME`.
@@ -169,7 +171,7 @@ The flag takes precedence over the variable.
 The profile file isn't valid for this release.
 Common causes:
 
-* The file isn't valid JSON, or it has a field that this release doesn't know.
+* The file isn't valid JSON, or it has a field that this release doesn't support.
 * The file, or the answer from the HTTPS URL, is larger than 65,536 bytes.
 * A field has a value that the schema version doesn't allow, or two choices conflict.
 
@@ -234,7 +236,7 @@ The end of the message gives the reason and the fix, for example:
 
 * "only Claude Code signs in to a Claude subscription": A `subscription` profile sets up only {{ site.claude_code }}.
   Use `--client claude-code`, or use a different `--sign-in`.
-* "needs an identity provider": OpenCode and Hermes Agent don't work with a static key.
+* "needs an identity provider": OpenCode and Hermes Agent don't work with `--sign-in static-key` or `--sign-in environment-key`.
   Create the profile with an identity provider.
 * "pass --audience-parameter audience and no other --scope": Hermes Agent sends the audience in the `audience` parameter and requests only the scopes `openid`, `profile`, `email`, and `offline_access`.
   Add `--audience-parameter audience`, and remove the other `--scope` values.
@@ -303,7 +305,8 @@ Then create or import the profile, and activate it again.
 
 ### "your organization's managed settings run"
 
-Your organization delivers the profile to {{ site.claude_code }} through managed settings, so your account can't change its security identity or remove its credential helper with `profile cleanup`.
+Your organization delivers the profile to {{ site.claude_code }} through managed settings.
+Your account can't change its security identity or remove its credential helper with `profile cleanup`.
 When `profile import` or `profile create` prints "your organization's managed settings run this profile in Claude Code", ask your administrator to deliver the new profile with `kong-harnesses fleet build`.
 When `profile delete` prints "your organization's managed settings run the selected profile", ask your administrator to remove the fleet build from your computer.
 `kong-harnesses fleet remove` tells the administrator what to remove from the managed computers.
@@ -321,7 +324,8 @@ Ask your administrator to reinstall it.
 ### "selected profile is invalid" or "the installed profile of this name is invalid, so import cannot replace it"
 
 The installed copy of a user profile fails validation or can't be read, and `profile import` doesn't replace an installed profile that it can't read.
-`profile list` and `status` report it as unreadable with the same `profile delete` and import step in text output, and `doctor` reports "the stored profile is invalid".
+`profile list` and `status` report it as unreadable with the same `profile delete` and import step in text output.
+`doctor` reports "the stored profile is invalid".
 Run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator's file or URL with `kong-harnesses profile import`.
 
 When you confirm the deletion of an invalid user profile, `profile delete` deletes the profile file.
@@ -372,7 +376,8 @@ In text output, the end of the message tells you what to do:
 
 The MCP header helper that {{ site.claude_code }} runs prints this message when it can't read the profile.
 The profile isn't installed, can't be read, or needs a newer release.
-`token`, `credential`, and `doctor` print this message only when they can't tell which of those causes applies, and `login --diagnostics` prints it on its `Reason` line.
+`token`, `credential`, and `doctor` print this message only when they can't tell which of those causes applies.
+In the same case, `login --diagnostics` prints it on its `Reason` line.
 Otherwise, they print a more specific profile error.
 Run `kong-harnesses profile list` to check whether the profile is installed, then import it or follow the step that `profile list` prints for it.
 
@@ -388,7 +393,7 @@ To check one agent CLI now, name it with `--client CLIENT_NAME`.
 `doctor --inference` sends a test request with {{ site.claude_code }}, and the selected profile doesn't set up {{ site.claude_code }}.
 Run `doctor` without `--inference`, or select a profile with a `claude-code` block.
 
-### "saved sign-in", "still activated" or "profile delete could not inspect"
+### "saved sign-in", "still activated", or "profile delete could not inspect"
 
 `profile delete` checks for a saved sign-in and inspects each agent CLI's settings before it removes a profile:
 
@@ -419,11 +424,12 @@ The sign-in works, so you don't need to sign in again.
 After `login`, run the `status` command that the message names to finish the check.
 After `setup`, run the resume command that `setup` prints, because `status` only checks the settings and doesn't configure the agent CLIs.
 
-When {{ site.claude_code }} refuses to start on its managed settings, that message comes first and the command exits with `2`, as ["refuses to start on its managed settings"](#refuses-to-start-on-its-managed-settings) describes.
+When {{ site.claude_code }} refuses to start on its managed settings, that message comes first and the command exits with `2`.
+See ["refuses to start on its managed settings"](#refuses-to-start-on-its-managed-settings).
 
 ### "no key for the gateway MCP server"
 
-The message ends with "is saved on this computer".
+The full message is "no key for the gateway MCP server SERVER is saved on this computer", with the name of the server in place of SERVER.
 A gateway MCP server in the profile takes a key, and you didn't save one yet.
 Run `kong-harnesses login --profile PROFILE_NAME`, and enter the key from your administrator when `login` asks for it.
 
@@ -500,7 +506,7 @@ Set the field to that type, or remove it, then try again.
 
 ### "could not inspect the selected" or "could not use the selected" settings
 
-The message ends with "settings configuration", and names the agent CLI.
+The message says "could not inspect the selected" or "could not use the selected", names the agent CLI, and ends with "settings configuration".
 `status`, `profile activate`, or `profile cleanup` can't read the settings of that agent CLI.
 Fix the settings file of that client, then run the command again.
 
@@ -560,11 +566,13 @@ When {{site.kong_harnesses}} runs from a temporary folder, the agent CLI would l
 
 ### "needs an interactive controlling terminal" or "requires an interactive controlling terminal"
 
-The command asks you a question or asks you to type the profile name, and it runs without a terminal, for example in a script.
-Run the command in a terminal, or avoid the prompt:
+The command needs a terminal, and it runs without one, for example in a script.
+Run the command in a terminal, or avoid the terminal step:
 
 * For `profile activate`, pass `--auto-approve` or name one agent CLI with `--client CLIENT_NAME`.
 * For `profile delete` or `logout`, pass `--auto-approve`.
+* For `login`, run it in a terminal.
+  In a CI job or a script, use a profile with [`sign_in`](/kong-harnesses/profile-file/#sign-in-fields) set to `environment_key`, which needs no `login`.
 
 ## Setup errors
 
