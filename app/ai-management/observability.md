@@ -54,6 +54,8 @@ rows:
     use: "Answer specific questions with custom queries."
   - page: "[**Alerts**](#alerts)"
     use: "Get notified about unusual error rates, latency, or traffic."
+  - page: "[**Sessions**](#sessions)"
+    use: "Follow a conversation across its requests."
   - page: "[**Logs**](#logs)"
     use: "Read and search logs."
 {% endtable %}
@@ -317,6 +319,21 @@ A rule can notify by email, by webhook, or by both.
 For a webhook, select a saved webhook or click **New webhook**.
 When you create a webhook, you can select its provider.
 To get details about delivery problems, add a failure-notice email to the webhook. If a delivery fails, Kong sends the reason to that address.
+
+## Sessions
+
+A session groups the requests that form one AI conversation, such as the turns of a chat or the steps of an agent run.
+Requests with the same session ID belong to the same session.
+If a client does not send a session ID, Kong generates one, and that session contains only that request.
+
+Use sessions to find out why a conversation failed, cost more than expected, or ran slowly.
+A session adds up the cost, tokens, and duration of all its requests.
+For each request, the session keeps the spans of its LLM calls, tool calls, and guardrails, with their input and output.
+
+When an [alert](#alerts) triggers, you can open the sessions that it affected during the alert's time window.
+
+Sessions does not need any configuration. {{site.ai_gateway}} sends session data to {{site.konnect_short_name}} automatically.
+If you use edge regions, you must also set an environment variable.
 
 ## Logs
 
