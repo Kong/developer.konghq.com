@@ -66,7 +66,7 @@ Keycloak needs the following settings for the {{site.kong_harnesses}} client:
 * Scopes: Link the scopes that the profile requests, and unlink or change the default client scopes that it doesn't request, as [Keycloak client scopes](#keycloak-client-scopes) describes.
 * Refresh token rotation: When **Use refresh tokens** is on, Keycloak sends a new refresh token in each renewal response, unless a client policy with the `suppress-refresh-token-rotation` executor applies to the client, as [OIDC auth flows](https://www.keycloak.org/docs/latest/server_admin/index.html#con-oidc-auth-flows_server_administration_guide) describes.
   {{site.kong_harnesses}} works with and without a new refresh token in the renewal response, so **Revoke Refresh Token** can stay off.
-  If you turn on **Revoke Refresh Token** in the **Tokens** tab of the realm settings, keep **Refresh Token Max Reuse** at 0, so that a copied refresh token can't be used again, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes.
+  If you turn on **Revoke Refresh Token** in the **Tokens** tab of the realm settings, keep **Refresh Token Max Reuse** at 0, so that Keycloak accepts each refresh token only once, as [Session and token timeouts](https://www.keycloak.org/docs/latest/server_admin/index.html#_timeouts) describes.
 * Audience: Set `--audience-parameter none`, so that the sign-in request doesn't send `resource` and the Audience mapper is the only source of the gateway audience.
   In the dedicated client scope of the client, add an Audience mapper, set its **Included Custom Audience** to the `--audience` value, and keep **Add to access token** on.
   Keep **Add to ID token** off, because the [ID token](/kong-harnesses/identity-provider/checks/#id-token) check accepts only the client ID in `aud`, as [Hardcoded audience](https://www.keycloak.org/docs/latest/server_admin/index.html#_audience_hardcoded) describes.
@@ -140,9 +140,8 @@ Microsoft Entra ID needs the following settings for the {{site.kong_harnesses}} 
   }
   ```
 
-  The older [Azure AD Graph format](https://learn.microsoft.com/en-us/entra/identity-platform/reference-app-manifest) of the manifest names this attribute `replyUrlsWithType`.
-
 * Audience: Set `--audience` to the Application ID URI of the gateway API, and set `--audience-parameter none`.
+  The gateway API must expose a delegated scope, as [Add a scope](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-configure-app-expose-web-apis#add-a-scope) describes.
   Add the delegated permission of the gateway API to the client, as [Configure app permissions for a web API](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-configure-app-access-web-apis#add-permissions-to-access-your-web-api) describes:
 
   1. In the sidebar of the client app registration, click **API permissions**.
@@ -170,15 +169,19 @@ PingFederate needs the following settings for the {{site.kong_harnesses}} client
   Include the port when it isn't 443, such as `https://PINGFEDERATE_HOST:9031`.
 * Client: Create an OAuth client with **Client Authentication** set to **None**, and select only the **Authorization Code** and **Refresh Token** grant types.
   Select **Require Proof Key for Code Exchange (PKCE)** in the client, as [Configuring OAuth clients](https://docs.pingidentity.com/pingfederate/12.3/administrators_reference_guide/pf_configuring_oauth_clients.html) describes.
-  Select **Disallow the Plain PKCE Code Challenge Method** in the [authorization server settings](https://docs.pingidentity.com/pingfederate/12.3/administrators_reference_guide/help_authorizationserversettingstasklet_oauthauthorizationserversettingsstate.html).
+  {{site.kong_harnesses}} always sends `S256`.
+  To refuse the `plain` method for every client of the server, select **Disallow the Plain PKCE Code Challenge Method** in the [authorization server settings](https://docs.pingidentity.com/pingfederate/12.3/administrators_reference_guide/help_authorizationserversettingstasklet_oauthauthorizationserversettingsstate.html).
   The discovery document can leave out `none` in `token_endpoint_auth_methods_supported`, as in the example of the [OpenID Provider configuration](https://docs.pingidentity.com/pingfederate/12.3/developers_reference_guide/pf_openid_provider_config_endpoint.html).
   If it does, add `none` to the discovery template, or test the client with `--public-client-evidence deployment`, as [Discovery document](/kong-harnesses/identity-provider/#discovery-document) describes.
 * ID token: Configure an OpenID Connect policy in **Applications** > **OAuth** > **OpenID Connect Policy Management**, as the prerequisites of [Create an OAuth or OpenID Connect application in PingFederate](https://docs.pingidentity.com/solution-guides/customer_use_cases/htg_oidc_app_setup_pf.html) list.
   In the **Policy** list of the client, select that policy, or keep the default policy if it applies.
+* Scopes: Define each scope that the profile requests, such as `openid`, `profile` and `email`, as a common scope or as an exclusive scope of the client, as [Scopes and scope management](https://docs.pingidentity.com/pingfederate/12.3/administrators_reference_guide/pf_scopes_and_scope_management.html) describes.
+  PingFederate refuses a scope that the client can't use with an `invalid_scope` error.
 * Audience: Keep `--audience-parameter resource`, and create a JWT access token management instance for the gateway, as [Configuring an access token management instance](https://docs.pingidentity.com/pingfederate/12.3/administrators_reference_guide/pf_configuring_access_token_management_instance.html) describes.
   Sign its access tokens with an asymmetric key, and select **Publish Keys to the PingFederate JWKS Endpoint**, so that the gateway can find the key.
   Set its **Type Header Value** to `at+jwt`, and set its **Issuer Claim Value** to the `issuer` of the discovery document, because the instance leaves `iss` out of the access token when this value is empty.
   Add the `--audience` value to its **Resource URIs**, and set its **Audience Claim Value** to the `--audience` value.
   Select the instance as the **Default Access Token Manager** of the client, as [Configuring OAuth clients](https://docs.pingidentity.com/pingfederate/12.3/administrators_reference_guide/pf_configuring_oauth_clients.html) describes, because the code exchange and the renewal request don't send `resource`.
+  Also select the instance as the **Access Token Manager** of the OpenID Connect policy of the client, as [Configuring OpenID Connect policies](https://docs.pingidentity.com/pingfederate/12.3/administrators_reference_guide/help_policymanagementtasklet_policymanagementstate.html) describes.
 * Access token lifetime: The JWT access token management instance sets the lifetime in whole minutes, and it issues access tokens for 120 minutes by default, as [Configuring an access token management instance](https://docs.pingidentity.com/pingfederate/12.3/administrators_reference_guide/pf_configuring_access_token_management_instance.html) describes.
   Set its **Token Lifetime** from 7 to 60 minutes, or keep 120 minutes and set `--max-token-lifetime-seconds 7200`.

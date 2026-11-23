@@ -88,8 +88,8 @@ The TLS certificate of the identity provider must chain to the system trust stor
 If the identity provider uses a certificate from a private CA, add the CA to that trust store.
 
 A response with a status other than `2xx` fails the request.
-At renewal, when the token endpoint answers with a `4xx` status other than `429` and a complete JSON body of at most 65,536 bytes with an `error` member of `invalid_grant`, {{site.kong_harnesses}} also tries to remove the saved sign-in.
-For other error responses, the renewal fails and the saved sign-in stays.
+At renewal, when the token endpoint answers with a `4xx` status other than `429` and a complete JSON body of at most 65,536 bytes with an `error` member of `invalid_grant`, {{site.kong_harnesses}} also tries to remove the saved refresh token, and the developer must sign in again.
+For other error responses, the renewal fails and {{site.kong_harnesses}} keeps the refresh token for the next renewal.
 
 A `2xx` response from the discovery document, the signing keys and the token endpoint must have:
 
