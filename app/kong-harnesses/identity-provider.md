@@ -179,7 +179,7 @@ For the checks on the `scope` value and the other fields of a token response, se
 
 {{site.kong_harnesses}} saves each new refresh token, so the identity provider can rotate refresh tokens or keep the same one.
 When the identity provider refuses a refresh token with `invalid_grant`, for example because it expired or because you revoked it, the developer must run [`kong-harnesses login`](/kong-harnesses/login/) again.
-For the responses that remove the saved sign-in, see [HTTP responses](/kong-harnesses/identity-provider/checks/#http-responses).
+For the responses that remove the saved refresh token, see [HTTP responses](/kong-harnesses/identity-provider/checks/#http-responses).
 
 To revoke the refresh token when a developer signs out, see [`kong-harnesses logout`](/kong-harnesses/logout/).
 
