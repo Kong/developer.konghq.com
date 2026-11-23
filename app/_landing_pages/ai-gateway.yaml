@@ -45,6 +45,14 @@ rows:
               alt_text: Overview of AI gateway
               expandable: true
 
+  - columns:
+      - blocks:
+          - type: text
+            config: |
+              {:.info}
+              > {{site.ai_gateway}} is the runtime inside [AI Management](/ai-management/).
+              > To set up access, track costs, and monitor AI traffic across your organization, [get started with AI Management](/ai-management/#get-started-with-ai-management).
+
   - header:
       type: h2
       text: "Get started with {{ site.ai_gateway }}"
@@ -201,6 +209,7 @@ rows:
   - header:
       type: h2
       text: "Use cases for {{site.ai_gateway}}"
+      description: "For governance and cost use cases, such as team access and usage billing, see [use cases for AI Management](/ai-management/#ai-management-use-cases)."
     columns:
       - blocks:
           - type: use_case_table
@@ -221,36 +230,6 @@ rows:
                     *(...using these solutions...)*
                   key: feature
               rows:
-                - usecase: |
-                    **Give every team governed access to AI**, without each team managing its own vendor relationship
-                  outcomes:
-                    - outcome: |
-                        Centralize LLM provider credentials in one place and rotate them without touching every team's configuration
-                      feature: |
-                        [AI Model Provider](/ai-gateway/entities/ai-model-provider/)
-                    - outcome: |
-                        Scope model access and token budgets by team or department instead of managing permissions per person
-                      feature: |
-                        [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/)
-                    - outcome: |
-                        Standardize prompts and default instructions across every team instead of each team writing their own
-                      feature: |
-                        [AI Prompt Template](/ai-gateway/policies/ai-prompt-template/)
-                - usecase: |
-                    **Package and bill AI access like a product**, for customers paying for usage
-                  outcomes:
-                    - outcome: |
-                        Create pricing tiers (like Free, Pro, and Enterprise) with different token quotas and cost budgets
-                      feature: |
-                        [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/)
-                    - outcome: |
-                        Track token usage and automate invoicing based on prompt and response volume
-                      feature: |
-                        [Metering and billing](/metering-and-billing/)
-                    - outcome: |
-                        Enforce per-tier spend caps driven by identity claims instead of managing group membership by hand
-                      feature: |
-                        [Set up a {{site.identity}} auth server for tiered AI budgets](/ai-gateway/set-up-kong-identity-for-tiered-ai-budgets/) and [Enforce tiered AI budgets with {{site.identity}}](/ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/)
                 - usecase: |
                     **Cut LLM spend at scale** on high-volume or repetitive traffic
                   outcomes:
