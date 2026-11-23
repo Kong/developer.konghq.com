@@ -88,13 +88,13 @@ In the following cases, `setup` warns that the agent CLI may not reach the gatew
 
 A later check can still stop `setup` before `setup` writes the settings of any agent CLI.
 
-`setup` names the fix for each agent CLI that fails one of the following checks:
+In the following cases, a check fails, and `setup` names the fix for the agent CLI:
 
-- An agent CLI whose gateway route is missing or whose sign-in the gateway refuses
-- Codex, OpenCode or Hermes Agent when the profile uses a plain `http://` gateway
-- OpenCode when its npm plugin registry uses plain `http://` on another computer
+- The gateway route of the agent CLI is missing, or the gateway refuses the sign-in.
+- The profile uses a plain `http://` gateway, and the agent CLI is Codex, OpenCode or Hermes Agent.
+- The agent CLI is OpenCode, and its npm plugin registry uses plain `http://` on another computer.
 
-When the command doesn't name `--client`, `setup` leaves out each agent CLI that fails one of these checks and sets up the remaining agent CLIs, or stops when none remain.
+When the command doesn't name `--client`, `setup` leaves out each agent CLI that fails a check and sets up the remaining agent CLIs, or stops when none remain.
 When the command names `--client`, `setup` stops.
 Before `setup` writes any settings, `setup` checks that each remaining agent CLI can use the profile.
 When one of them can't, `setup` stops and doesn't write the settings of any agent CLI.

@@ -42,6 +42,8 @@ rows:
       The environment.
       When the environment doesn't set the variable, the first value that isn't empty in the [`.env` files that omp reads](/kong-harnesses/private-certificate-authorities/#omp-and-pi).
       `doctor` uses the directory where you run `doctor` as the directory where omp starts.
+  - client: pi
+    source: The environment.
 {% endtable %}
 
 ## Command usage

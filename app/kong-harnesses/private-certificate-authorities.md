@@ -148,9 +148,8 @@ For the Node.js limits, see the [{{ site.claude_code }} CA certificate store](ht
 
 ### Hermes Agent
 
-Sign in to Hermes Agent with `hermes auth add kong-ai-gateway`.
-The sign-in script of the Hermes Agent {{site.ai_gateway}} plugin doesn't use the Python `truststore` library.
-The script reads only the default certificate paths of OpenSSL, and doesn't read every CA in the system trust store.
+Sign in to Hermes Agent with `hermes auth add kong-ai-gateway` instead of the sign-in script of the Hermes Agent {{site.ai_gateway}} plugin.
+That sign-in script doesn't use the Python `truststore` library, so the script reads only the default certificate paths of OpenSSL and doesn't read every CA in the system trust store.
 
 ### omp and pi
 
