@@ -50,8 +50,8 @@ To apply the new settings:
 1. If a client shows `Set up by an earlier release or profile`, do the step that its `Next` line names.
 1. Run the same status command again, and repeat the previous step until no client shows `Set up by an earlier release or profile`.
 
-If your organization's managed settings set up {{site.claude_code}}, `status` doesn't name a command.
+If your organization's managed settings set up {{site.claude_code}}, `status` doesn't show `Set up by an earlier release or profile`.
 In this case, the release lists a step for your administrator under **Breaking changes**.
-The administrator makes a new fleet build and delivers it, as described in [Keep a {{site.claude_code}} fleet on tested versions](/kong-harnesses/maintain-a-claude-code-fleet/).
+The administrator makes a new fleet build and delivers it, as described in [Keep a {{site.claude_code}} fleet on tested versions and move it to a new model](/kong-harnesses/maintain-a-claude-code-fleet/).
 
 {{ site.data.kong-harnesses.changelog.markdown }}
