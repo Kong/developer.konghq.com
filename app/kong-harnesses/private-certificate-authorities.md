@@ -55,32 +55,53 @@ You can also deploy the certificate with an MDM certificate payload.
 {% endnavtab %}
 {% navtab "Linux" %}
 
-On Debian and Ubuntu:
+On Debian and Ubuntu, copy the certificate to the CA directory:
 
 ```sh
 sudo cp CA_CERTIFICATE_FILE /usr/local/share/ca-certificates/gateway-ca.crt
+```
+
+Then update the system trust store:
+
+```sh
 sudo update-ca-certificates
 ```
 
-On Fedora and RHEL:
+On Fedora and RHEL, copy the certificate to the CA directory:
 
 ```sh
 sudo cp CA_CERTIFICATE_FILE /etc/pki/ca-trust/source/anchors/
+```
+
+Then update the system trust store:
+
+```sh
 sudo update-ca-trust
 ```
 
-On Alpine, run these commands as root:
+On Alpine, run the following commands as root.
+Install the CA tools:
 
 ```sh
 apk add ca-certificates
+```
+
+Copy the certificate to the CA directory:
+
+```sh
 cp CA_CERTIFICATE_FILE /usr/local/share/ca-certificates/gateway-ca.crt
+```
+
+Update the system trust store:
+
+```sh
 update-ca-certificates
 ```
 
 {% endnavtab %}
 {% navtab "Windows" %}
 
-Run this command in PowerShell as an administrator:
+Run the following command in PowerShell as an administrator:
 
 ```powershell
 certutil -addstore -f Root CA_CERTIFICATE_FILE
@@ -96,7 +117,7 @@ Install the CA in each distribution with the commands of the **Linux** tab.
 
 ## {{ site.claude_code }} installs
 
-These installs of {{ site.claude_code }} install the same native binary:
+The following installs of {{ site.claude_code }} install the same native binary:
 
 {% table %}
 columns:
@@ -116,14 +137,14 @@ rows:
 That binary trusts the system trust store by default, so each of these installs needs only the CA in the system trust store.
 When `CLAUDE_CODE_CERT_STORE` is set without `system`, add `system` to it.
 An older npm install that runs {{ site.claude_code }} on Node.js reads the system trust store only on Node.js 22.15 or later, so update it to the native binary or set `NODE_EXTRA_CA_CERTS` for it.
-For these limits, see the [{{ site.claude_code }} CA certificate store](https://code.claude.com/docs/en/network-config#ca-certificate-store).
+For the Node.js limits, see the [{{ site.claude_code }} CA certificate store](https://code.claude.com/docs/en/network-config#ca-certificate-store).
 
 ## Agent CLIs that need more than the system trust store
 
 Sign in to Hermes Agent with `hermes auth add kong-ai-gateway`.
 The sign-in script of its {{site.ai_gateway}} plugin doesn't use `truststore`, so it reads only the default certificate paths of OpenSSL and not every CA in the system trust store.
 
-omp, and pi on Node.js or from its Bun release archives, read these variables in the environment where they start:
+omp, and pi on Node.js or from its Bun release archives, read the following variables in the environment where they start:
 
 {% table %}
 columns:
@@ -144,7 +165,7 @@ rows:
       omp also trusts the system trust store only when `NODE_EXTRA_CA_CERTS` isn't set.
 {% endtable %}
 
-When the environment doesn't set `NODE_EXTRA_CA_CERTS`, omp also reads it from these `.env` files, and the first value that isn't empty wins:
+When the environment doesn't set `NODE_EXTRA_CA_CERTS`, omp reads the variable from the following `.env` files, in order, and uses the first value that isn't empty:
 
 1. `.env` and the other dotenv files that Bun loads from the directory where omp starts, such as `.env.local`
 1. `~/.omp/agent/.env`
@@ -178,7 +199,7 @@ A CA that the CA tool of the distribution adds to these paths works for them wit
 
 When `NODE_EXTRA_CA_CERTS` is set, omp stops reading these paths, and pi keeps reading them.
 
-A `nodejs` package of Debian, Ubuntu, Fedora or Alpine that meets the pi minimum reads the CA paths of the distribution, so a CA that these steps add works for pi on that Node.js without a variable.
+A `nodejs` package of Debian, Ubuntu, Fedora or Alpine that meets the pi minimum reads the CA paths of the distribution, so a CA that the CA tool of the distribution adds works for pi on that Node.js without a variable.
 Debian 12 and 13 and Ubuntu 24.04 ship Node.js 18 or 20, which pi can't run on.
 
 pi on a Node.js build from nodejs.org or nvm trusts only its own CA list by default, and so do omp and pi on a distribution that keeps its CAs in other paths, so set one of the variables for them.
@@ -268,7 +289,7 @@ Invoke-WebRequest -UseBasicParsing https://SERVER_HOST | Out-Null
 
 An error for the HTTP status is fine, because Windows checks the certificate chain before the request gets the status.
 A TLS error is expected for a server with a certificate from your private CA, because Windows gets only public root CAs this way.
-The bundle gets the root of your private CA from the CA certificate file in the next step.
+The bundle gets the root of your private CA from the CA certificate file when you create the bundle.
 
 Create the bundle in PowerShell from the root CAs of the Windows certificate store and your CA:
 
@@ -279,10 +300,16 @@ $roots = Get-ChildItem Cert:\LocalMachine\Root | ForEach-Object {
 @($roots) + (Get-Content -Raw CA_CERTIFICATE_FILE) | Set-Content -Encoding ascii CA_BUNDLE_FILE
 ```
 
-Set both variables, with the full path of the bundle, in the PowerShell session that runs {{site.kong_harnesses}} and in the session that starts {{ site.claude_code }}, Codex, omp or pi:
+Set both of the following variables in the PowerShell session that runs {{site.kong_harnesses}} and in the session that starts {{ site.claude_code }}, Codex, omp or pi.
+Set `SSL_CERT_FILE` to the full path of the bundle:
 
 ```powershell
 $env:SSL_CERT_FILE = (Resolve-Path CA_BUNDLE_FILE).Path
+```
+
+Set `GODEBUG`:
+
+```powershell
 $env:GODEBUG = "x509sslcertoverrideplatform=1"
 ```
 
@@ -293,7 +320,7 @@ kong-harnesses profile import PROFILE_URL
 ```
 
 When the import, or the CA bundle check of the `SSL_CERT_FILE` file, reports an unknown certificate authority for a server, check that the bundle holds the root CA of that server.
-For a server with a certificate from your private CA, this is the root CA that your administrator gave you.
+For a server with a certificate from your private CA, that root CA is the one that your administrator gave you.
 If the bundle doesn't hold it, add that root CA certificate to the bundle, or create the bundle again, and then run the command again.
 If the bundle holds it, ask your administrator to check the certificate chain that the server sends.
 When a Windows policy [stops the automatic update of root CAs](https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/configure-trusted-roots-disallowed-certificates#registry-settings-modified), ask your administrator for a public root CA that the bundle is missing.
@@ -312,7 +339,7 @@ kong-harnesses doctor --profile PROFILE_NAME
 
 The CA bundle check of the `SSL_CERT_FILE` file must show OK for each server that it lists, also for a server whose web request gave a TLS error.
 When the check reports a missing or unreadable file, check the path in the variable that the result names.
-When that check fails for a server, use the fixes after the import step.
+When that check fails for a server, use the same fixes as for an unknown certificate authority, an expired certificate or a host name mismatch in the import.
 
 {% endnavtab %}
 {% endnavtabs %}

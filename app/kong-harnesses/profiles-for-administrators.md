@@ -110,21 +110,41 @@ For an example with Okta, see [Set up {{ site.claude_code }} with kong-harnesses
 {% navtab "Anthropic API" %}
 
 ```sh
-kong-harnesses profile create --name PROFILE_NAME --issuer ISSUER_URL --client-id CLIENT_ID --audience AUDIENCE --gateway-origin GATEWAY_ORIGIN --model MODEL_NAME
+kong-harnesses profile create \
+  --name PROFILE_NAME \
+  --issuer ISSUER_URL \
+  --client-id CLIENT_ID \
+  --audience AUDIENCE \
+  --gateway-origin GATEWAY_ORIGIN \
+  --model MODEL_NAME
 ```
 
 {% endnavtab %}
 {% navtab "Microsoft Foundry" %}
 
 ```sh
-kong-harnesses profile create --name PROFILE_NAME --provider foundry --issuer ISSUER_URL --client-id CLIENT_ID --audience AUDIENCE --gateway-origin GATEWAY_ORIGIN --model FOUNDRY_DEPLOYMENT_NAME
+kong-harnesses profile create \
+  --name PROFILE_NAME \
+  --provider foundry \
+  --issuer ISSUER_URL \
+  --client-id CLIENT_ID \
+  --audience AUDIENCE \
+  --gateway-origin GATEWAY_ORIGIN \
+  --model FOUNDRY_DEPLOYMENT_NAME
 ```
 
 {% endnavtab %}
 {% navtab "Amazon Bedrock Mantle" %}
 
 ```sh
-kong-harnesses profile create --name PROFILE_NAME --provider mantle --issuer ISSUER_URL --client-id CLIENT_ID --audience AUDIENCE --gateway-origin GATEWAY_ORIGIN --model BEDROCK_MODEL_ID
+kong-harnesses profile create \
+  --name PROFILE_NAME \
+  --provider mantle \
+  --issuer ISSUER_URL \
+  --client-id CLIENT_ID \
+  --audience AUDIENCE \
+  --gateway-origin GATEWAY_ORIGIN \
+  --model BEDROCK_MODEL_ID
 ```
 
 {% endnavtab %}
@@ -160,7 +180,7 @@ rows:
 Use the value that your identity provider reads.
 
 `profile create` reads your identity provider's OIDC discovery endpoints for the default and `subscription` sign-ins, then saves and installs the profile on your computer.
-It tests each agent CLI's gateway route without a sign-in, warns when a route doesn't match, and keeps the agent CLI in the profile.
+`profile create` also tests each agent CLI's gateway route without a sign-in, warns when a route doesn't match, and keeps the agent CLI in the profile.
 Send a signed-in prompt from the affected agent CLI to check each warned route.
 If [`setup`](/kong-harnesses/developer-computer-changes/#setup) refuses a route that matches only on a header that the agent CLI sends, developers run `setup` with `--skip-route-check`.
 For more options, such as gateway MCP servers and {{ site.claude_code }} telemetry to Anthropic, see the [`profile create` reference](/kong-harnesses/profile/create/).
@@ -216,7 +236,7 @@ The CI job needs no other setup.
 A desktop sign-in sets the variable, but most CI containers don't.
 When the variable isn't set, create a private directory once, and give each step of the job that runs a {{site.kong_harnesses}} command the same `XDG_RUNTIME_DIR`.
 In a CI system that runs each step in its own shell, a shell `export` ends with its step, so set the variable in the job environment.
-For example, in GitHub Actions, add this step before the first step that runs {{site.kong_harnesses}}:
+For example, in GitHub Actions, add the following step before the first step that runs {{site.kong_harnesses}}:
 
 ```yaml
 - run: echo "XDG_RUNTIME_DIR=$(mktemp -d)" >> "$GITHUB_ENV"
@@ -246,7 +266,7 @@ Give the file to developers, or host it at an HTTPS URL.
 > Host the profile where only administrators can change it.
 > The profile names the gateway and the identity provider that get each developer's sign-in, so anyone who can change the file can send those sign-ins somewhere else.
 
-{{site.kong_harnesses}} downloads a profile only when the URL and the server meet these rules:
+{{site.kong_harnesses}} downloads a profile only when the URL and the server meet the following rules:
 
 {% table %}
 columns:
