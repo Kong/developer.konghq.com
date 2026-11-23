@@ -34,10 +34,14 @@ A profile is a JSON document that tells {{site.kong_harnesses}} where {{site.ai_
 A profile doesn't contain secrets, so an administrator can share one file with every developer.
 Create one with [`kong-harnesses profile create`](/kong-harnesses/profile/create/) or install one from a file or HTTPS URL with [`kong-harnesses profile import`](/kong-harnesses/profile/import/).
 
-A profile file can be up to 65,536 bytes as saved, so a UTF-16 file holds about half as much text.
-For accepted encodings and how to convert refused files, see [Profile file encoding](#profile-file-encoding).
-{{site.kong_harnesses}} refuses unknown fields, fields disallowed by the schema version, and duplicate keys.
-To inspect an installed profile document (stored under `.profile` in JSON output), run `profile get` with [jq](https://jqlang.org/):
+Start a new profile with `profile create`, and edit the file only to set a field that `profile create` doesn't ask about.
+This page lists each field, its limits, and what `profile activate` writes for it.
+
+A profile file can be up to 65,536 bytes as saved.
+{{site.kong_harnesses}} refuses unknown fields, fields that the schema version doesn't allow, and duplicate keys.
+For the encodings that {{site.kong_harnesses}} reads, see [Profile file encoding](#profile-file-encoding).
+
+To see an installed profile, run `profile get` with [jq](https://jqlang.org/), which prints the profile document from the `.profile` field of the JSON output:
 
 ```sh
 kong-harnesses profile get PROFILE_NAME -o json | jq '.profile'
@@ -47,7 +51,7 @@ The following profile signs developers in with an identity provider and sets up 
 
 ```json
 {
-  "schema_version": 17,
+  "schema_version": 18,
   "name": "work",
   "display_name": "Work AI Gateway",
   "issuer": "https://login.example.com/oauth2/default",
@@ -97,33 +101,65 @@ The following profile signs developers in with an identity provider and sets up 
 
 ## Profile file encoding
 
-`profile import` reads UTF-8 (with or without a byte-order mark) and UTF-16LE or UTF-16BE with a byte-order mark, and stores it as UTF-8 without a byte-order mark.
-Windows PowerShell 5.1 `>` redirection writes UTF-16LE with a byte-order mark, so `profile import` reads it directly.
+`profile import` reads a profile file in these encodings:
 
-When `profile import` refuses an encoding, the error names what it found and the fix:
+* UTF-8, with or without a byte-order mark.
+* UTF-16LE or UTF-16BE, with a byte-order mark.
+  The `>` redirection of Windows PowerShell 5.1 writes UTF-16LE with a byte-order mark, so `profile import` reads that file.
+
+A UTF-16 file holds about half as much text as a UTF-8 file in the limit of 65,536 bytes.
+`profile import` stores the profile as UTF-8.
+
+When `profile import` refuses a file, the message names the encoding that it found:
 
 {% table %}
 columns:
-  - title: Encoding reported
+  - title: Encoding in the message
     key: encoding
   - title: Fix
     key: fix
 rows:
   - encoding: "`UTF-16LE without a byte-order mark` or `UTF-16BE without a byte-order mark`"
-    fix: "Save a copy with a byte-order mark, for example in PowerShell with `Get-Content -Raw -Encoding Unicode PROFILE_FILE | Set-Content -Encoding Unicode COPY_FILE` (use `-Encoding BigEndianUnicode` after `Get-Content` for UTF-16BE), then import the copy."
+    fix: "Save a copy with a byte-order mark or as UTF-8, then import the copy."
   - encoding: "`UTF-32`"
-    fix: "Save a copy as UTF-16, for example in PowerShell with `Get-Content -Raw PROFILE_FILE | Set-Content -Encoding Unicode COPY_FILE`, then import the copy."
+    fix: "Save a copy as UTF-16 or UTF-8, then import the copy."
   - encoding: "`UTF-16 with a broken character`"
     fix: "Get the profile file again, because the file is cut short or damaged."
-  - encoding: "`a text encoding that is not UTF-8`, or `UTF-8 with a byte-order mark` (when a file has two byte-order marks)"
+  - encoding: "`a text encoding that is not UTF-8`, or `UTF-8 with a byte-order mark` when a file has two byte-order marks"
     fix: "Save a copy as UTF-8 with an editor, then import the copy."
 {% endtable %}
+
+To save a copy of a UTF-16 or UTF-32 file in another encoding:
+
+{% navtabs "convert-profile-encoding" %}
+{% navtab "Windows" %}
+
+For UTF-16LE without a byte-order mark, run this in PowerShell:
+
+```powershell
+Get-Content -Raw -Encoding Unicode PROFILE_FILE | Set-Content -Encoding Unicode COPY_FILE
+```
+
+For UTF-16BE without a byte-order mark, use `-Encoding BigEndianUnicode` after `Get-Content`.
+For UTF-32, leave out `-Encoding Unicode` after `Get-Content`.
+
+{% endnavtab %}
+{% navtab "macOS and Linux" %}
+
+Convert the file to UTF-8 with `iconv`, and name the encoding from the message after `-f`, for example `UTF-16LE`, `UTF-16BE` or `UTF-32`:
+
+```sh
+iconv -f UTF-16LE -t UTF-8 PROFILE_FILE > COPY_FILE
+```
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Schema versions
 
 `schema_version` controls which fields a profile can use.
 Each release reads versions up to its latest and refuses newer ones.
-From 0.6.0, `profile create` writes its latest version (earlier releases wrote the lowest needed version), so older releases can't import it.
+`profile create` writes the latest schema version, so older releases can't import its profiles.
 
 To share one profile across releases, set the lowest version with every needed field that the oldest release reads:
 
@@ -204,6 +240,7 @@ Some values need a newer release than their schema version:
 * The `foundry-messages` and `bedrock-mantle-messages` route protocols need 0.8.0 or later.
 * `sign_in` set to `static_key`, and `mcp_servers`, need 0.14.0 or later.
 * `sign_in` set to `subscription` needs 0.17.0 or later.
+* An `http://` value in `gateway_origin` needs 0.17.1 or later.
 
 ## Top-level fields
 
@@ -235,9 +272,9 @@ rows:
   - field: "`gateway_origin`"
     description: >-
       Required.
-      The origin of {{site.ai_gateway}}, up to 2,048 bytes, without a path or the default port.
-      It uses `https://`.
-      From 0.17.1, a gateway on this computer can use `http://`, on `localhost` or on a loopback address such as `127.0.0.1` or `[::1]`, but not an IPv4-mapped IPv6 address.
+      The origin of {{site.ai_gateway}}, up to 2,048 bytes of visible ASCII.
+      It uses `https://` and a lowercase host, without a path, a query, a fragment, user information, or the default port.
+      A gateway on this computer can use `http://`, on `localhost` or on a loopback address such as `127.0.0.1` or `[::1]`, but not on an IPv4-mapped IPv6 address.
       `fleet build` refuses an `http://` gateway.
       A `subscription` profile, and a profile with an `oauth` MCP server, need `https://`.
       For which agent CLIs work with an `http://` gateway and the proxy rules, see [Plain HTTP gateways](#plain-http-gateways).
@@ -245,8 +282,7 @@ rows:
     description: >-
       Version 12 and later.
       PEM certificate authorities for the gateway certificate, up to 32 KB.
-      Releases before 0.14.0 wrote it for {{ site.claude_code }}, and 0.14.0 used it only for {{site.kong_harnesses}} itself.
-      From 0.15.0, releases still read it, but neither {{site.kong_harnesses}} nor the agent CLIs use it, and `profile get` and `profile activate` say so.
+      {{site.kong_harnesses}} reads this field so that older profiles still import, but neither {{site.kong_harnesses}} nor the agent CLIs use it, and `profile get` and `profile activate` say so.
       Add the certificate authority to the system trust store of each computer instead, as [Private certificate authorities](/kong-harnesses/private-certificate-authorities/) describes.
   - field: "`sign_in`"
     description: >-
@@ -276,19 +312,21 @@ rows:
 
 Versions 2 to 11 keep the {{ site.claude_code }} settings at the top level: `models`, `telemetry`, `request_shape`, `auto_updates`, `model_metadata` and `pricing`.
 From version 12, these fields go in `clients.claude-code`, and the top level refuses them.
-A profile before version 12 doesn't have client blocks, so `profile activate` sets up every agent CLI except Hermes Agent.
+A profile before version 12 doesn't have client blocks, so `profile activate` can set up every agent CLI except Hermes Agent, subject to the refusals in [Clients](#clients).
 
 ### Plain HTTP gateways
 
 Requests to an `http://` gateway aren't encrypted, so a proxy could read the credential.
 {{site.kong_harnesses}} keeps these requests off proxies:
 
-* Codex, OpenCode, and Hermes Agent need an `https://` gateway, even for a gateway on this computer, because they pick their proxy in ways that {{site.kong_harnesses}} can't check, so `profile activate` doesn't set them up for an `http://` gateway.
-  {{ site.claude_code }}, `omp`, and pi work with an `http://` gateway when the profile configures them, they are installed (or named with `--client`), and the applicable checks pass.
+* Codex, OpenCode, and Hermes Agent need an `https://` gateway, even for a gateway on this computer.
+  They pick their proxy in ways that {{site.kong_harnesses}} can't check, so `profile activate` doesn't set them up for an `http://` gateway.
+* {{ site.claude_code }}, `omp`, and pi work with an `http://` gateway.
+  `profile activate` sets them up when the profile configures them, they are installed or named with `--client`, and the checks in this list pass.
   `profile activate` doesn't change any client settings when a pre-write check fails.
 * When a proxy variable in the command environment applies to the gateway host, `profile activate` doesn't set up any client, and `credential` and `token` don't return a credential.
   Exclude the gateway host with `NO_PROXY` as the `gateway` check in [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/#next-step-for-each-check) describes.
-  From 0.18.0, `profile activate` also writes `NO_PROXY` and `no_proxy` in {{ site.claude_code }} user settings.
+  `profile activate` also writes `NO_PROXY` and `no_proxy` in {{ site.claude_code }} user settings.
   A proxy variable or `NO_PROXY` in project settings takes precedence over these values, and `profile activate` refuses when managed settings could send the requests through a proxy.
 * `fleet build` refuses `http://` profiles because it can't check proxy settings on managed computers.
 
@@ -296,36 +334,45 @@ See [Client setup errors](/kong-harnesses/errors/#client-setup-errors) and [Flee
 
 ## Sign-in fields
 
-`sign_in` picks how developers get a credential for the gateway:
+`sign_in` picks how developers get a credential for the gateway.
+Use the identity provider sign-in when you can, because each developer then gets short-lived tokens, and you don't hand out keys:
 
 {% table %}
 columns:
   - title: Value
     key: value
+  - title: Use it when
+    key: when
   - title: Description
     key: description
 rows:
   - value: "Not set"
+    when: "Developers have accounts in your OpenID Connect identity provider."
     description: >-
-      Developers sign in with your OpenID Connect identity provider through `kong-harnesses login`.
+      Developers sign in with your identity provider through `kong-harnesses login`.
       The identity provider fields are required.
   - value: "`static_key`"
+    when: "The gateway checks keys that you give to each developer."
     description: >-
       Each developer saves a key from you with `kong-harnesses login`.
       The profile can't have identity provider fields.
   - value: "`environment_key`"
+    when: "A CI job or another process without a person runs the agent CLI."
     description: >-
       Version 17 and later.
-      Each command reads the key from `KONG_HARNESSES_STATIC_KEY`, for example in a CI job.
+      Each command reads the key from `KONG_HARNESSES_STATIC_KEY`.
       The profile can't have identity provider fields.
   - value: "`subscription`"
+    when: "Developers use their own Claude Pro or Max subscription for model requests."
     description: >-
-      {{ site.claude_code }} sends each developer's own Claude subscription sign-in to the gateway.
+      {{ site.claude_code }} sends each developer's own Claude subscription sign-in to the gateway for model requests.
+      It also sends the token from your identity provider in a separate header, so the gateway knows which developer sent each request.
       The identity provider fields are required, and `gateway_origin` uses `https://`.
 {% endtable %}
 
 The identity provider fields apply when `sign_in` isn't set or is `subscription`.
-Each URL other than `redirect_uri` uses `https://`, is up to 2,048 bytes, and is in canonical form: without user information, a fragment, a `.` or `..` path segment, or the default port 443.
+Each URL other than `redirect_uri` uses `https://` and is up to 2,048 bytes.
+It's in canonical form: a lowercase host, without user information, a fragment, a `.` or `..` path segment, or the default port 443.
 `issuer` can't have a query, and the endpoint URLs can.
 
 {% table %}
@@ -366,7 +413,9 @@ rows:
   - field: "`audience`"
     description: >-
       Required.
-      The audience that the gateway accepts in a token, as an absolute URI of 1 to 2,048 bytes of visible ASCII, without user information or a fragment.
+      The resource identifier of the gateway, as an absolute URI of 1 to 2,048 bytes of visible ASCII, without user information or a fragment.
+      The sign-in request sends it unless `audience_parameter` is `none`.
+      The `aud` claim of the token can differ, for example with Microsoft Entra ID.
   - field: "`audience_parameter`"
     description: >-
       Version 5 and later.
@@ -386,7 +435,7 @@ rows:
     description: >-
       The longest access token lifetime that {{site.kong_harnesses}} accepts, from 365 to 86400.
       The default is 3600.
-      Releases up to 0.17.1 also accepted 360.
+      Releases up to 0.18.0 also accepted 360.
       A profile that they installed with 360 still reads, but sign-in refuses it, so give developers a profile with 365 or more.
 {% endtable %}
 
@@ -397,7 +446,9 @@ A profile's security identity consists of `issuer`, `discovery_url`, `authorizat
 A saved sign-in belongs to one security identity.
 When `profile create` or `profile import` replaces a profile and changes one of these fields, each developer signs in again, as [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile) describes for each kind of profile.
 An `environment_key` profile doesn't save a sign-in, so developers don't need to sign in again.
-`profile create` and `profile import` refuse the change while an agent CLI uses the profile: run `profile cleanup` for that client, or activate another profile there, then create or import the profile and activate it again.
+`profile create` and `profile import` refuse the change while an agent CLI uses the profile.
+Run `profile cleanup` for that client, or activate another profile there.
+Then create or import the profile, and activate it again.
 A profile that moves from version 11 or earlier to version 12 or later also gets a new security identity, even when these fields keep their values.
 A change to the other fields, such as `routes` or `clients`, keeps the sign-in.
 
@@ -429,8 +480,9 @@ rows:
   - field: "`artifact`"
     description: >-
       Required for the three Anthropic API protocols, and refused for the others.
-      Activation ignores it.
-      It stays so that older profiles still import.
+      `true` when the route serves the {{ site.claude_code }} artifact tool.
+      The `artifact: true` choice of the `claude-code` block needs `artifact: true` here.
+      From version 14, when a `subscription` profile leaves out the `artifact` choice and the route has `artifact: false`, `profile activate` writes `enableArtifact: false`.
 {% endtable %}
 
 ## Clients
@@ -471,7 +523,7 @@ Some blocks have more rules:
 
 * The `hermes` block also needs `model`, the gateway model that Hermes Agent starts with, 1 to 128 bytes.
   A profile with a `hermes` block signs in with an identity provider, so it can't use `static_key`, `environment_key` or `subscription`.
-  It also sets `audience_parameter` to `audience`, and requests exactly the scopes `openid`, `profile`, `email` and `offline_access`.
+  The profile must also set `audience_parameter` to `audience`, and request exactly the scopes `openid`, `profile`, `email` and `offline_access`.
 * A profile with an `opencode` block can't use `static_key` or `environment_key`.
 * A `subscription` profile has only a `claude-code` block, on an `anthropic-messages` route.
 * A profile named `constructor` or `prototype` can't set up OpenCode.
@@ -564,30 +616,14 @@ rows:
 
 #### Claude Code choices
 
-Each choice is `true` or `false`.
-From version 14, each choice is optional.
-A choice that the profile leaves out sets nothing, but it can restore the earlier value of a setting that activation controlled.
+Each choice turns one {{ site.claude_code }} feature on with `true` or off with `false`, and `profile activate` writes the settings in the following table.
+From version 14, each choice is optional, and a choice that the profile leaves out writes nothing.
 Versions 12 and 13 require `auto_updates`, `tool_search`, `advisor` and `artifact`, and refuse the other choices.
 For a profile before version 14, {{site.kong_harnesses}} treats each choice from `anthropic_telemetry` to `webfetch_preflight` as `false`.
-When a later profile omits a choice or sets `auto_updates: true`, `profile activate` restores each setting it stops controlling to its earlier value, unless the setting changed after activation wrote it.
-If the setting changed, `profile activate` keeps the current value.
-So an earlier setting or a later edit, from you or another tool, can still turn the feature off.
 
-`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, which `auto_updates: false` writes, also turns off {{ site.claude_code }} telemetry, feature flags, error reports, `/bug`, `/feedback`, the feedback survey, subscription artifacts, and the advisor tool on `anthropic-messages`, where it depends on a feature flag.
-`DISABLE_TELEMETRY` also turns off feature flags, error reports and the feedback survey.
-`DISABLE_BUG_COMMAND` is the earlier name of `DISABLE_FEEDBACK_COMMAND`, and either turns off `/bug`, `/feedback`, `/share`, and feedback that Claude drafts.
-So `profile create` and `profile import` refuse a profile that turns on a feature and also turns off a setting that it needs:
-
-* Up to version 17, `auto_updates: false` can't go with `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command`, or `feedback_survey`, with `artifact: true` in a `subscription` profile, or with an eligible `advisor: true` on `anthropic-messages` (where `experimental_betas`, `feature_flags`, and `anthropic_telemetry` aren't `false`).
-  Releases up to 0.17.1 accepted `artifact: true` in a `subscription` profile, and `advisor: true`, with `auto_updates: false`, so installed pre-18 profiles with either pair still read.
-  In those profiles, `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` keeps those features off, and `profile activate` and `profile get` report them and ask for a version 18 profile.
-* `feature_flags: true` can't go with `anthropic_telemetry: false`.
-* From version 18, `error_reports: true` and `feedback_survey: true` can't go with `anthropic_telemetry: false`.
-* From version 18, `advisor: true` is refused on provider modes without advisor support (`foundry-messages` and `bedrock-mantle-messages`), with `experimental_betas: false`, or on `anthropic-messages` with `feature_flags: false` or `anthropic_telemetry: false`.
-* `bug_command: true` and `feedback_command: true` each can't go with `false` for the other one.
-  From version 18, `profile create` and `profile import` also refuse setting only one of `bug_command` and `feedback_command`.
-
-Apart from `bug_command` and `feedback_command` in version 18, an omitted choice never causes a conflict.
+When a new profile leaves out a choice or sets `auto_updates: true`, activation stops controlling the setting of that choice.
+`profile activate` then restores the value that the setting had before activation wrote it, unless the setting changed after that.
+When the setting changed, `profile activate` keeps the current value, so an earlier setting or a later edit can still turn the feature off.
 
 {% table %}
 columns:
@@ -648,8 +684,7 @@ rows:
   - choice: "`fast_mode`"
     off: "Writes `CLAUDE_CODE_DISABLE_FAST_MODE=1`."
     on: >-
-      Leaves `CLAUDE_CODE_DISABLE_FAST_MODE` blank.
-      From release 0.18.0, it also writes `CLAUDE_CODE_SKIP_FAST_MODE_NETWORK_ERRORS=1`, for each schema version.
+      Leaves `CLAUDE_CODE_DISABLE_FAST_MODE` blank, and writes `CLAUDE_CODE_SKIP_FAST_MODE_NETWORK_ERRORS=1`.
   - choice: "`bug_command`"
     off: "Writes `DISABLE_BUG_COMMAND=1`."
     on: >-
@@ -682,14 +717,68 @@ rows:
       Writes `CLAUDE_CODE_AUTO_MODE_SERVER=0`, so {{ site.claude_code }} sends the auto mode check to the `auto_mode` model through the gateway.
 {% endtable %}
 
-From version 18, `profile activate` writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank, regardless of `auto_updates`, whenever the profile sets `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command`, or `feedback_survey`, sets `artifact: true` in a `subscription` profile, or sets an eligible `advisor: true` on `anthropic-messages` (with `experimental_betas`, `feature_flags`, and `anthropic_telemetry` not `false`).
-A shell export then can't turn those features off.
-In the Claude Desktop app or a self-hosted environment runner, the launch environment [takes precedence](https://code.claude.com/docs/en/settings-reference#how-env-values-interact-with-your-shell) over settings, so a `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` value set there stays on even when activation writes the switch blank.
-While activation writes the switch blank, `auto_updates: false` turns off only automatic updates of {{ site.claude_code }}, its plugins, and its marketplaces, unless `FORCE_AUTOUPDATE_PLUGINS=1` is set to restore plugin auto-updates.
-Other nonessential background traffic resumes where each feature's own conditions apply.
-Choices set to `false` keep their own traffic off, and {{ site.claude_code }} still skips the [fast mode availability check](https://code.claude.com/docs/en/fast-mode#fast-mode-is-currently-unavailable) when `ANTHROPIC_BASE_URL` points to the gateway and `ANTHROPIC_API_KEY` is a gateway-issued key not in the format of an Anthropic API key.
+When the profile leaves out `tool_search`, {{ site.claude_code }} keeps its default, which loads every tool at startup behind a gateway.
 
-When the profile omits `tool_search`, {{ site.claude_code }} keeps its default, which loads every tool at startup behind a gateway.
+##### Choices that can't go together
+
+Some {{ site.claude_code }} settings turn off more than one feature:
+
+* `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, which `auto_updates: false` writes, turns off telemetry, feature flags, error reports, `/bug`, `/feedback`, the feedback survey, subscription artifacts, and the advisor tool on `anthropic-messages`.
+* `DISABLE_TELEMETRY`, which `anthropic_telemetry: false` writes, also turns off feature flags, error reports and the feedback survey.
+* `DISABLE_BUG_COMMAND` and `DISABLE_FEEDBACK_COMMAND` are two names for one switch.
+  Either one turns off `/bug`, `/feedback`, `/share`, and feedback that Claude drafts.
+
+So `profile create` and `profile import` refuse a profile that turns on a feature and also turns off a setting that the feature needs:
+
+{% table %}
+columns:
+  - title: Refused combination
+    key: pair
+  - title: Schema versions
+    key: versions
+rows:
+  - pair: "`auto_updates: false` with `true` for `anthropic_telemetry`, `feature_flags`, `error_reports`, `bug_command`, `feedback_command`, or `feedback_survey`"
+    versions: "Up to 17"
+  - pair: "`auto_updates: false` with `artifact: true` in a `subscription` profile"
+    versions: "Up to 17"
+  - pair: "`auto_updates: false` with `advisor: true` on `anthropic-messages`, when none of `experimental_betas`, `feature_flags` and `anthropic_telemetry` is `false`"
+    versions: "Up to 17"
+  - pair: "`feature_flags: true` with `anthropic_telemetry: false`"
+    versions: "All"
+  - pair: "`error_reports: true` or `feedback_survey: true` with `anthropic_telemetry: false`"
+    versions: "18 and later"
+  - pair: "`advisor: true` on `foundry-messages` or `bedrock-mantle-messages`, which don't offer the advisor tool"
+    versions: "18 and later"
+  - pair: "`advisor: true` with `experimental_betas: false`"
+    versions: "18 and later"
+  - pair: "`advisor: true` on `anthropic-messages` with `feature_flags: false` or `anthropic_telemetry: false`"
+    versions: "18 and later"
+  - pair: "`bug_command` and `feedback_command` set to different values"
+    versions: "All"
+  - pair: "Only one of `bug_command` and `feedback_command` set"
+    versions: "18 and later"
+{% endtable %}
+
+Apart from `bug_command` and `feedback_command` in version 18, a choice that the profile leaves out never causes a conflict.
+
+Releases up to 0.18.0 accepted some of these combinations.
+A profile that they installed still reads, and `profile activate` and `profile get` report which features {{ site.claude_code }} keeps off.
+For a profile before version 18 with `auto_updates: false`, they ask for a version 18 profile.
+
+##### Nonessential traffic
+
+From version 18, `profile activate` writes `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` blank when the profile turns on a feature that this switch turns off.
+These are the features of the first three rows in [Choices that can't go together](#choices-that-can-t-go-together).
+This applies for every value of `auto_updates`.
+
+While the switch is blank:
+
+* A shell export of `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` can't turn those features off.
+  In the Claude Desktop app or a self-hosted environment runner, the launch environment [takes precedence](https://code.claude.com/docs/en/settings-reference#how-env-values-interact-with-your-shell) over settings, so a value set there still turns them off.
+* `auto_updates: false` turns off only automatic updates of {{ site.claude_code }}, its plugins, and its marketplaces.
+  To keep plugin updates on, set `FORCE_AUTOUPDATE_PLUGINS=1`.
+* Other nonessential traffic resumes where the conditions of each feature apply, and each choice set to `false` keeps its own traffic off.
+* {{ site.claude_code }} still skips the [fast mode availability check](https://code.claude.com/docs/en/fast-mode#fast-mode-is-currently-unavailable) when `ANTHROPIC_BASE_URL` points to the gateway and `ANTHROPIC_API_KEY` is a key from the gateway in a format other than an Anthropic API key.
 
 #### Request shape
 
@@ -736,7 +825,7 @@ rows:
 
 `model_metadata` maps a gateway model ID to how the {{ site.claude_code }} `/model` picker describes it.
 It has 1 to 64 entries.
-Each model ID is 1 to 128 bytes, and each entry sets at least one field.
+Each model ID is 1 to 128 bytes of visible ASCII, and each entry sets at least one field.
 A value here takes precedence over the value from the gateway model list.
 
 {% table %}
@@ -749,7 +838,7 @@ rows:
   - field: "`behaves_as`"
     description: >-
       The Claude model ID that the gateway model acts like.
-      It starts with `claude-`.
+      It starts with `claude-`, and is 1 to 128 bytes of visible ASCII.
   - field: "`max_input_tokens`"
     description: "The largest input that the model accepts, from 8192 to 10000000 tokens."
   - field: "`max_tokens`"
@@ -778,7 +867,7 @@ rows:
     description: >-
       Maps a gateway model ID to its `input`, `output`, `cache_read` and `cache_write` prices, in USD for each million tokens.
       Each model sets all four prices, from 0 to 10000.
-      Model IDs are unique without regard to case, and can't end with `[1m]`.
+      Each model ID is 1 to 128 bytes of visible ASCII, is unique without regard to case, and can't end with `[1m]`.
       A price here takes precedence over the price from the gateway model list.
 {% endtable %}
 
@@ -836,7 +925,7 @@ rows:
       Required.
       The path of the server on the gateway origin, 2 to 256 characters.
       It starts with `/` and doesn't end with `/`.
-      Each segment uses letters, digits and `-._~`, and isn't `.` or `..`.
+      Each segment uses letters, digits and `-._~`, isn't empty, and isn't `.` or `..`.
       Each server has its own path.
   - field: "`sign_in`"
     description: "Not set to send the model sign-in, `oauth` for a server that runs its own OAuth sign-in, or `key` for a server that takes a key from you."
@@ -849,7 +938,7 @@ rows:
       The port is from 0 to 65535, and `0` is the same as no port: `profile activate` then writes no callback port.
   - field: "`key_header`"
     description: >-
-      For `key`.
+      Only for `key`, and refused for other servers.
       The header that carries the key, an HTTP token of up to 64 bytes.
       The default is `apikey`.
       `Authorization`, `Cookie`, `Host`, `Content-Length`, `Transfer-Encoding` and `Connection` are refused.
