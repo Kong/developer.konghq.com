@@ -61,8 +61,8 @@ rows:
       - type: card
         config:
           title: Changelog
-          description: See what changed in recent releases, and the steps an upgrade needs.
+          description: See what changed in each release and the steps an upgrade needs.
           cta:
-            text: kong-harnesses changelog
+            text: Read the changelog
             url: /kong-harnesses/changelog/
             align: end
