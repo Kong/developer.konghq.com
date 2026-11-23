@@ -40,17 +40,33 @@ To update, install the new release the same way you [installed kong-harnesses](/
 
 ## Report a problem
 
+{% capture support_report_command %}
+{% navtabs "support-report" %}
+{% navtab "macOS and Linux" %}
+
+```sh
+kong-harnesses doctor --profile PROFILE_NAME --report > report.json
+```
+
+{% endnavtab %}
+{% navtab "Windows" %}
+
+```powershell
+kong-harnesses doctor --profile PROFILE_NAME --report | Set-Content -Path report.json -Encoding utf8
+```
+
+{% endnavtab %}
+{% endnavtabs %}
+{% endcapture %}
+
 1. Update kong-harnesses to the latest release and check whether the problem still occurs.
 2. Run [`kong-harnesses doctor`](/kong-harnesses/doctor/) and apply the fixes it shows.
 3. If the problem still occurs, generate a support report.
    Run the command from the directory where you start your agent CLI so `doctor` checks the same project settings files that your agent CLI reads:
 
-   ```sh
-   kong-harnesses doctor --profile PROFILE_NAME --report > report.json
-   ```
+{{ support_report_command | indent: 3 }}
 
    Replace `PROFILE_NAME` with your profile name, or omit `--profile PROFILE_NAME` to check your default profile.
-   In Windows PowerShell 5.1, `>` writes UTF-16 output, so pipe to `Set-Content -Path report.json -Encoding utf8` instead to write UTF-8.
 
    To also test the {{ site.claude_code }} route with one small model request, add `--inference`.
    The `--inference` flag works only when the selected profile configures {{ site.claude_code }}.
