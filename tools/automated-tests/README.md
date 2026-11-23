@@ -131,7 +131,7 @@ they never read `app/_how-tos`. Add a fixture page there to cover a new case.
 ### Running the tests
 
 1. First, it groups the tests by **deployment model** (from the parent directory name, e.g. `on-prem`, `konnect`) and **product** (from the instruction file's base name, e.g. `gateway.yaml`, `operator.yaml`).
-1. Runs a docker image with all the necessary tools, which can be found in `tools/automated-test/docker/Dockerfile` (temporary until we host them somewhere).
+1. Pulls the docker image with all the necessary tools, published by `.github/workflows/build-automated-tests-image.yaml` as `ghcr.io/kong/automated-tests:latest`. The image is public and multi-arch (`linux/amd64` and `linux/arm64`), so a run pulls it without logging in. The Dockerfile it builds lives in `tools/automated-tests/docker/Dockerfile`.
 1. Sets up the environment by running in the container the commands defined in `tools/automated-tests/config/runtimes.yaml` under the corresponding `<deployment-model>.<product>` key. It also sets the `ENV` variables defined there in the container. For products that have versions, it will set the corresponding env variables defined under `versions` of the entry matching `GATEWAY_VERSION`.
  E.g. for on-prem gateway, when running the tests with `GATEWAY_VERSION='3.9'` it will set the env variables defined in `on-prem.gateway.versions` for the entry `version: '3.9'`.
 1. Tests can be scoped to a specific product by setting the `PRODUCTS` env variable, e.g. `PRODUCTS=gateway`.
