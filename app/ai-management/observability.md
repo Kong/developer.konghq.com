@@ -326,7 +326,7 @@ Runtime logs from self-managed data planes do not appear on this page.
 * Search in **Basic** or **Advanced** mode, and use the time range menu to change the period. The default period is the last 15 minutes.
 * Use the **Filter** panel to narrow the entries by **Log Level**, **Service** (a Dedicated Cloud Gateway or the control plane), or **Control Plane**.
 * The default columns are **Timestamp**, **Log level**, **Log type**, **Dataplane ID**, **Control plane**, and **Message**.
-* Click an entry to open its details: a summary, its attributes, and the full message.
+* Click an entry to open its details: a summary, its attributes, and the full message. Copy buttons allow you to copy raw logs or each element separately. 
 
 ## Explorer and {{site.ai_cost_management}}
 
