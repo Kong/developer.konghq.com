@@ -54,6 +54,7 @@ kong-harnesses doctor --profile PROFILE_NAME --client CLIENT_NAME
 ```
 
 Replace `PROFILE_NAME` with the name of your installed profile.
+To check the only installed profile or the default profile, omit `--profile PROFILE_NAME`.
 The commands on this page use the same placeholder.
 Replace `CLIENT_NAME` with the agent CLI to check, such as `claude-code`.
 To check every supported agent CLI that the profile configures, omit `--client`.
@@ -74,9 +75,14 @@ Unless the profile uses a static key, `doctor` also checks the identity provider
 For OpenCode, `doctor` also checks the npm registry.
 To check the sign-in and the agent CLI setup without the network, run [`kong-harnesses status --profile PROFILE_NAME`](/kong-harnesses/status/).
 
+The `route`, `catalog`, `gateway-mcp`, and `inference` checks send their own requests.
+For an `https://` gateway, these requests go through the proxy when one applies.
+For {{ site.claude_code }}, the requests use the proxy rules of {{ site.claude_code }}.
+For other agent CLIs, the requests use the standard proxy rules of Go.
+
 When managed settings keep {{ site.claude_code }} from starting and `doctor` checks {{ site.claude_code }}, `doctor` doesn't send network requests for any agent CLI in that run, and exits with `2`.
 In the {{ site.claude_code }} report, the `client` check and each network check fail and name the managed settings file.
-In a report for another agent CLI, each network check warns that `doctor` didn't check it.
+In a report for another agent CLI, each network check warns that `doctor` skipped the check.
 Ask your administrator to correct the managed settings that the report names.
 
 ## Read the report
@@ -100,7 +106,7 @@ For what each exit code means, see [Exit codes](/kong-harnesses/errors/#exit-cod
 
 A report includes only the checks that apply to the profile and the agent CLI.
 When a finding has a `fix:` line, do the steps that the line names, in the order that the line gives.
-When the line gives a choice, such as two steps joined by "or", do the step that fits your case.
+When the line gives a choice, such as two steps joined by "or," do the step that fits your case.
 Run each command as the `fix:` line shows it.
 Keep the `--client` flag in a command that has one, so that a command such as `profile cleanup` changes only that agent CLI.
 The following table explains what each check looks at and gives the next step when the `fix:` line isn't enough.
@@ -122,12 +128,13 @@ rows:
   - check: "`profile`"
     what: The profile is installed, and kong-harnesses can read the profile.
     next: |
+      Do the step on the `fix:` line.
       To list the installed profiles, run `kong-harnesses profile list`.
       To inspect a valid profile, run `kong-harnesses profile get PROFILE_NAME`.
-      Then do the step for your case:
+      These cases need more context:
 
       * A profile that you installed is invalid: run `kong-harnesses profile delete PROFILE_NAME`, then import the profile again from your administrator.
-      * A profile that an administrator installed for every user is invalid: ask your administrator to reinstall the profile.
+      * A profile that an administrator installed for every user is invalid, or an account that isn't an administrator can change the profile: ask your administrator to reinstall the profile.
         The `profile delete` command refuses that profile.
       * The profile needs a newer kong-harnesses: update kong-harnesses and run `doctor` again.
       * On Linux, the session doesn't have a per-user runtime directory, such as in a container or CI job: set `XDG_RUNTIME_DIR` to a new directory that only your user can open.
@@ -143,7 +150,7 @@ rows:
         OpenCode and Hermes can own the sign-in.
       * A CI profile reads its key from the environment: set `KONG_HARNESSES_STATIC_KEY` to the key from your administrator.
         The `login` command refuses that profile.
-      * On Linux, no Secret Service runs in the session: use a desktop session that runs a keyring, such as GNOME Keyring.
+      * On Linux, the session doesn't run a Secret Service: use a desktop session that runs a keyring, such as GNOME Keyring.
         In a CI job, use a profile that reads its key from `KONG_HARNESSES_STATIC_KEY`.
       * The report says that `max_access_token_lifetime_seconds` is below 365 seconds: ask your administrator to raise the value to at least 365 seconds, then create or import the profile again.
         Until then, the `login` check fails even while you're signed in, because the next renewal fails.
@@ -177,12 +184,14 @@ rows:
       Then do the step on the `fix:` line of `plugin`, such as removing an old cached plugin and starting OpenCode once.
   - check: "`provider`"
     what: |
-      For OpenCode, no settings file replaces, removes, or turns off the provider that the gateway plugin registers, or sends the provider to another URL.
+      For OpenCode, the settings files don't replace, remove, or turn off the provider that the gateway plugin registers, and don't send the provider to another URL.
       The check also makes sure that OpenCode reads the settings file where activation wrote the gateway plugin entry.
       The `provider` check appears only when it finds a problem.
     next: |
       Do the step on the `fix:` line, such as removing a provider, base URL, or plugin entry from the settings file that the report names, then run `doctor` again.
-      When the `fix:` line says to run `profile cleanup`, do these steps for the cleanup and the activation, and do the other steps on the line as the line names them:
+      When the `fix:` line says to run `profile cleanup`, use the following steps for the cleanup and the activation.
+      Do the other steps on the `fix:` line as the line names them.
+
 
       1. If the `fix:` line names a variable for the cleanup step, open a shell without that variable.
       1. Run `kong-harnesses --client opencode profile cleanup`.
@@ -205,7 +214,7 @@ rows:
       kong-harnesses can connect directly to the gateway.
       For an `https://` gateway, when a proxy applies, the `gateway` check skips the connection test and warns.
       For an `http://` gateway, the `gateway` check fails when a proxy would get the requests, or when `doctor` can't tell which proxy settings {{ site.claude_code }} applies.
-      When you pass `--inference` and `doctor` sends the model request, the {{ site.claude_code }} report has no `gateway` line, except when an `http://` gateway fails for a proxy reason.
+      When you pass `--inference` and `doctor` sends the model request, the {{ site.claude_code }} report doesn't include a `gateway` line, except when an `http://` gateway fails for a proxy reason.
       When `gateway` fails, `catalog` and `gateway-mcp` don't send their requests, but `route` still runs.
     next: |
       Check the network, VPN, and any proxy, then run `doctor` again.
@@ -216,14 +225,14 @@ rows:
       For an `http://` gateway behind a proxy, do the steps on the `fix:` line.
       The steps can add the gateway host to a variable such as `NO_PROXY` in the shell that starts the agent CLI.
       Add each entry exactly as the `fix:` line names it.
-      When the line asks your administrator to change a managed `NO_PROXY` value, ask the administrator to change each spelling of `NO_PROXY` that the managed settings set, such as `no_proxy`, or `No_Proxy` on Windows.
-      When the managed settings set no `NO_PROXY`, ask the administrator to add `NO_PROXY`.
-      Give the administrator the entries in this form:
+      When the line asks your administrator to change a managed `NO_PROXY` value, ask the administrator to update each spelling that the managed settings set, such as `no_proxy`, or `No_Proxy` on Windows.
+      When the managed settings don't set `NO_PROXY`, ask the administrator to add `NO_PROXY`.
+      Give the administrator the entries in the following form:
 
       * For a host name or an IPv4 address, add the host without the port, such as `localhost`.
       * For an IPv6 address, add all three forms of the address, because agent CLIs read the address in different forms.
         For example, for `http://[::1]:8000`, add `[::1]:8000,[::1],::1`.
-        When the URL has no port, use port `80`.
+        When the URL doesn't include a port, use port `80`.
 
       For {{ site.claude_code }}, when the `fix:` line names `profile activate`, run that command as the last step.
       The command writes the same exclusion to the {{ site.claude_code }} settings.
@@ -231,19 +240,14 @@ rows:
   - check: "`route`"
     what: |
       The gateway has a route for the requests of the agent CLI.
-      When `doctor` sends your credential, an HTTP `401` or `403` response means that the gateway refuses the test request on that route.
-      Some test requests don't have an input that the agent CLI can send, such as a client certificate or custom headers.
-      When the gateway refuses your credential on such a request, or has no route for the request, `route` gives `warn` instead of `fail`.
-      The agent CLI can get a different response when its request has that input.
-      When `doctor` has no credential to send, such as when you aren't signed in or the agent CLI owns its sign-in, a `401` or `403` response gives `ok`.
-      That `ok` result confirms only that the route exists, and doesn't confirm that the gateway accepts your credential.
-      For a Claude subscription profile, the same response gives `warn`.
-      That `warn` result doesn't confirm that the route exists, because `doctor` can't send your subscription sign-in.
+      The result of an HTTP `401` or `403` response depends on what `doctor` can send:
 
-      The `route`, `catalog`, `gateway-mcp`, and `inference` checks send their own requests.
-      For an `https://` gateway, these requests go through the proxy when one applies.
-      For {{ site.claude_code }}, the requests use the proxy rules of {{ site.claude_code }}.
-      For other agent CLIs, the requests use the standard proxy rules of Go.
+      * `doctor` sends your credential: the gateway refuses the test request on that route.
+      * The test request doesn't have an input that the agent CLI can send, such as a client certificate or custom headers: a refused credential or a missing route gives `warn` instead of `fail`, because the agent CLI can get a different response with that input.
+      * `doctor` doesn't have a credential to send, such as when you aren't signed in or the agent CLI owns its sign-in: a `401` or `403` response gives `ok`.
+        That `ok` result confirms only that the route exists, and doesn't confirm that the gateway accepts your credential.
+      * The profile is a Claude subscription profile: a `401` or `403` response gives `warn`.
+        That `warn` result doesn't confirm that the route exists, because `doctor` can't send your subscription sign-in.
     next: |
       When the check warns with a `fix:` line, do that step first, such as signing in, unsetting a variable, or making managed settings readable.
       When the `fix:` line says to send a prompt, send one from the agent CLI to test the route.
@@ -254,34 +258,40 @@ rows:
       The gateway answers `GET /v1/models` with the list of models that the gateway serves.
       When the provider mode of the profile takes model IDs from the profile, `catalog` reports `ok` without a request, and `picker` and `model` use the models of the profile.
     next: |
-      If the `gateway` check fails, fix that problem first, because `catalog` doesn't send a request after that failure.
-      When the gateway answers `404`, the gateway doesn't serve a model list, and {{ site.claude_code }} uses its built-in model names for each model that the profile doesn't pin.
-      When the gateway needs a credential, do the step on the `fix:` line for your profile, such as signing in or setting `KONG_HARNESSES_STATIC_KEY`, then run `doctor` again.
-      For a Claude subscription profile, the `fix:` line tells you to start {{ site.claude_code }} instead.
-      Only {{ site.claude_code }} can send your subscription sign-in to read the model list.
-      When the `fix:` line names the gateway operators, ask them to serve the models at `/v1/models`.
-      When the gateway doesn't answer, run `doctor` again later.
+      Do the step on the `fix:` line.
+      These cases need more context:
+
+      * The `gateway` check fails: fix that problem first, because `catalog` doesn't send a request after that failure.
+      * The gateway answers `404`: the gateway doesn't serve a model list, and {{ site.claude_code }} uses its built-in model names for each model that the profile doesn't pin.
+      * The gateway needs a credential: do the step on the `fix:` line for your profile, such as signing in or setting `KONG_HARNESSES_STATIC_KEY`, then run `doctor` again.
+        For a Claude subscription profile, the `fix:` line tells you to start {{ site.claude_code }} instead, because only {{ site.claude_code }} can send your subscription sign-in to read the model list.
+      * The `fix:` line names the gateway operators: ask them to serve the models at `/v1/models`.
+      * The gateway doesn't answer: run `doctor` again later.
   - check: "`picker`"
     what: |
-      When gateway discovery is off, the `/model` menu of {{ site.claude_code }} offers only models that the gateway serves or that the profile lists.
-      When gateway discovery fills the menu, the menu keeps the built-in models and adds each gateway model with an ID that contains `claude` or `anthropic`.
-      When discovery fills the menu, the check reports settings that hide the built-in models, duplicate rows for models that discovery adds, and missing rows for gateway models that discovery skips.
-      When discovery is off, the check reports a menu that shows the built-in models, alone or beside the selected rows, and missing rows.
-      In both cases, the check reports rows for models that the gateway doesn't serve.
-      When discovery is off and the profile gives the model IDs, the check reports rows for models that the profile doesn't list instead.
+      The `/model` menu of {{ site.claude_code }} matches the gateway discovery mode:
+
+      * Gateway discovery is off: the menu offers only models that the gateway serves or that the profile lists.
+        The check reports a menu that shows the built-in models, alone or beside the selected rows, missing rows, and rows for models that the gateway doesn't serve.
+        When the profile gives the model IDs, the check reports rows for models that the profile doesn't list instead.
+      * Gateway discovery fills the menu: the menu keeps the built-in models and adds each gateway model with an ID that contains `claude` or `anthropic`.
+        The check reports settings that hide the built-in models, duplicate rows for models that discovery adds, missing rows for gateway models that discovery skips, and rows for models that the gateway doesn't serve.
     next: |
       Do each step on the `fix:` line, such as running `profile activate`, removing the rows that the finding names from `modelPicker`, or removing `replaceBuiltInOptions`.
       If `picker` says that the model list isn't available, fix the `catalog` problem first.
       When the managed settings of your organization set the menu, ask your administrator to change the settings.
   - check: "`model`"
-    what: The gateway serves, or the profile lists, the startup model of {{ site.claude_code }} and the model for each role, such as a subagent.
+    what: The gateway or the profile includes the startup model of {{ site.claude_code }} and the model for each role, such as a subagent.
     next: |
-      If the finding says that the model list isn't available, fix the `catalog` problem first.
-      When the `fix:` line says to pick a model, run `/model` and pick the kind of model that the line names, a gateway model or a profile model.
-      When the `fix:` line says to unset a variable, unset the variable in the shell that starts {{ site.claude_code }}, because that variable overrides `/model`.
-      When the `fix:` line says that the profile pins the model, import the profile again from the deployment that issued it, then do the next step on the `fix:` line.
-      If the gateway still doesn't serve the pinned model, ask your administrator to pin a model that the gateway serves.
-      When the managed settings of your organization set the model, ask your administrator to change the settings.
+      Do the step on the `fix:` line.
+      These cases need more context:
+
+      * The finding says that the model list isn't available: fix the `catalog` problem first.
+      * The `fix:` line says to pick a model: run `/model` and pick the gateway model or the profile model that the line names.
+      * The `fix:` line says to unset a variable: unset the variable in the shell that starts {{ site.claude_code }}, because that variable overrides `/model`.
+      * The `fix:` line says that the profile pins the model: import the profile again from the deployment that issued it, then do the next step on the `fix:` line.
+        If the gateway still doesn't serve the pinned model, ask your administrator to pin a model that the gateway serves.
+      * The managed settings of your organization set the model: ask your administrator to change the settings.
   - check: "`anthropic`"
     what: |
       The settings that keep {{ site.claude_code }} on the gateway still match what kong-harnesses wrote.
@@ -294,11 +304,11 @@ rows:
       No variable or project setting overrides the gateway setup of {{ site.claude_code }}.
       The `overrides` check looks for these values:
 
-      * Non-empty credential variables, such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, in the shell that starts {{ site.claude_code }}.
-      * Switches to another provider, such as `CLAUDE_CODE_USE_BEDROCK`, in that shell or in the `env` block of the settings file.
-      * Provider-mode credentials in the `env` block.
-      * A {{ site.claude_code }} project settings file in the current folder that sends {{ site.claude_code }} away from the gateway.
-      * `CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST`.
+      * Non-empty credential variables, such as `ANTHROPIC_AUTH_TOKEN` or `ANTHROPIC_API_KEY`, in the shell that starts {{ site.claude_code }}
+      * Switches to another provider, such as `CLAUDE_CODE_USE_BEDROCK`, in that shell or in the `env` block of the settings file
+      * Provider-mode credentials in the `env` block
+      * A {{ site.claude_code }} project settings file in the current folder that kong-harnesses can't read, or that overrides the gateway, the credential, or the traffic settings of the profile
+      * `CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST`
 
       The check skips a shell variable that the `env` block also sets, because the value in the settings file takes precedence.
       `profile activate` sets `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_API_KEY` to empty values in the `env` block, so a shell credential matters only when those values are gone.
@@ -324,7 +334,7 @@ rows:
       Unless the managed settings set `allowManagedMcpServersOnly` to `true`, {{ site.claude_code }} applies the `allowedMcpServers` lists in all your settings files and in the managed settings, not only the list that you edit.
 
       If the report says that the policy of your organization blocks a server, ask your administrator to allow the server.
-      When the managed settings set `allowManagedMcpServersOnly` to `true`, only the managed allowlist counts, so a change to your own allowlist has no effect.
+      When the managed settings set `allowManagedMcpServersOnly` to `true`, only the managed allowlist counts, so a change to your own allowlist doesn't change the result.
   - check: "`gateway-mcp`"
     what: |
       No setting keeps {{ site.claude_code }} from loading the gateway MCP servers that the profile lists, and the gateway accepts your sign-in on them.
@@ -339,11 +349,11 @@ rows:
       When you pass `--inference`, `doctor` sends one small model request through the {{ site.claude_code }} route and checks for a complete answer.
       The request can cost money.
       The `inference` check works only for {{ site.claude_code }}.
-      The `doctor` command doesn't send the request when it can't build the request, such as when no usable sign-in or gateway model exists.
+      The `doctor` command doesn't send the request when it can't build the request, such as when a usable sign-in or gateway model doesn't exist.
       For a Claude subscription profile, `doctor` doesn't send the request, because `doctor` can't read your subscription sign-in.
     next: |
-      When the `fix:` line says to send a prompt, send one from {{ site.claude_code }} to test the route.
-      When `doctor` doesn't send the request for another reason, do the step on the `fix:` line, then run `doctor` again.
-      When the finding has no `fix:` line, read the finding for the reason.
-      When the request fails, read the result for the cause, such as a refused sign-in, a missing route or model, or a rate limit.
+      * The `fix:` line says to send a prompt: send one from {{ site.claude_code }} to test the route.
+      * `doctor` doesn't send the request for another reason: do the step on the `fix:` line, then run `doctor` again.
+      * The finding doesn't include a `fix:` line: read the finding for the reason.
+      * The request fails: read the result for the cause, such as a refused sign-in, a missing route or model, or a rate limit.
 {% endtable %}
