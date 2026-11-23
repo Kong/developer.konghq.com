@@ -83,14 +83,10 @@ You must run `login` first for static-key profiles, Claude subscription profiles
 
 ## Sign in to your profile
 
-{% include kong-harnesses/sign-in-login-steps.md cli_name=site.claude_code mcp_keys="true" %}
+{% include kong-harnesses/sign-in-login-steps.md cli_name=site.claude_code ci_note="true" %}
 
 {:.info}
-> **Claude subscriptions and CI jobs:**
->
-> * **Claude subscription profile:** After `kong-harnesses login --profile PROFILE_NAME` signs you in for your gateway identity, start `claude` and run `/login` inside {{ site.claude_code }} to sign in to your Claude subscription.
-> * **CI job profile:** A CI profile reads its key from `KONG_HARNESSES_STATIC_KEY` on every request, so `login` refuses it.
->   Set `KONG_HARNESSES_STATIC_KEY` in the environment where {{ site.claude_code }} starts instead.
+> **Claude subscription profiles:** After `kong-harnesses login --profile PROFILE_NAME` signs you in for your gateway identity, start `claude` and run `/login` inside {{ site.claude_code }} to sign in to your Claude subscription.
 
 ## Check your sign-in status
 

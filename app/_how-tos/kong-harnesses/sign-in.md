@@ -147,11 +147,11 @@ rows:
 
 ## Sign in to a profile
 
-{% include kong-harnesses/sign-in-login-steps.md cli_name="your agent CLI" mcp_keys="true" %}
+{% include kong-harnesses/sign-in-login-steps.md cli_name="your agent CLI" %}
 
 ## Check the sign-in
 
-Inspect your local sign-in state without contacting the network using [`kong-harnesses status`](/kong-harnesses/status/):
+Check your local sign-in state with [`kong-harnesses status`](/kong-harnesses/status/), which doesn't contact the network:
 
 ```sh
 kong-harnesses status --profile PROFILE_NAME

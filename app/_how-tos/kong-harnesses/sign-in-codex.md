@@ -113,7 +113,8 @@ Confirm that your sign-in, gateway connection, and Codex configuration pass all 
    ```
 
    Confirm that `login`, `client`, and `gateway` report `ok`, and resolve any failures.
-1. Start Codex with a model name that {{ site.ai_gateway }} serves, replacing `MODEL_NAME` with that model name, and send a prompt to confirm you receive a reply:
+1. Start Codex with a model that {{ site.ai_gateway }} serves and send a prompt to confirm you receive a reply.
+   Replace `MODEL_NAME` with that model name:
 
    ```sh
    codex -m MODEL_NAME
