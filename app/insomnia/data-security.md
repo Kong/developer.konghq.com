@@ -42,7 +42,12 @@ faqs:
       Partly. In {{ site.insomnia }} 13.5 and later, sensitive fields such as passwords, tokens, cookie values, and client certificate secrets are encrypted in the local database for all projects, including Scratch Pad. {{ site.insomnia }} creates the key on first launch and protects it with your operating system's credential store. Other project data, such as request URLs and bodies, is still stored on disk without encryption, and E2EE only applies to project data that is transmitted over the network. For more information, see [Local database encryption](#local-database-encryption).
   - q: Can I still use {{ site.insomnia }} 13.4 or earlier after opening my data in 13.5?
     a: |
-      Yes. You can open every project, collection, and request in an earlier version. However, values that 13.5 encrypted appear as text that starts with `enc:insomnia:v1:`, and requests that use them fail. To use these requests in the earlier version, enter the values again. Cloud Sync, Git Sync, and exported files aren't affected. For more information, see [Downgrade to an earlier version](#downgrade-to-an-earlier-version).
+      Yes. You can open every project, collection, and request in an earlier version. However, values that 13.5 encrypted appear as text that starts with `enc:insomnia:v1:`, and requests that use them fail. To use these requests in the earlier version, enter the values again. Cloud Sync, Git Sync, and exported files aren't affected.
+  - q: What happens if {{ site.insomnia }} can't decrypt my local data?
+    a: |
+      If the key isn't available at startup, for example after you move the application data to another machine or reset your operating system's credential store, {{ site.insomnia }} shows **The local encryption key is not available**. For that session, encrypted values don't work and new values are saved without encryption. Nothing is deleted, and {{ site.insomnia }} tries again on the next launch. If the key is gone for good, click **Reset local encryption key** to start over with a new key.
+
+      If only some values can't be decrypted, the **Some encrypted data could not be decrypted** dialog lists them. Click **Reset affected fields** to clear them and enter them again, or click **Continue without decryption** to keep them as they are.
   - q: Is AI data in {{ site.insomnia }} encrypted?
     a: No. Data sent to AI features is not end-to-end encrypted, and therefore is not covered by this document. Organization administrators can disable specific AI features for all users. Individual users can disable available features in **Preferences > AI Features**. When a feature is disabled at the organization level, its option appears greyed with a tooltip explaining that it has been turned off by an administrator.
   - q: What is a resource group in {{ site.insomnia }} and how are they securely shared?
@@ -97,13 +102,6 @@ Both forms of the key work with Inso CLI. The key also records the name of the m
 {:.warning}
 > * **Never share the key.** Anyone with the key can decrypt the tokens and other values stored in your local database. Don't commit it to a repository or paste it into shared logs.
 > * **Never use the key on another machine.** Using the wrong key can make values unreadable for the {{ site.insomnia }} app on that machine.
-
-### Decryption issues
-
-If {{ site.insomnia }} can't use its key at startup, for example because the application data was moved from another machine or the operating system's credential store was reset, it shows a **The local encryption key is not available** dialog. For that session, values that are already encrypted don't work, and new values are stored without encryption. {{ site.insomnia }} doesn't delete anything, and tries again the next time it starts. If the key will never be available again, click **Reset local encryption key** to give up the encrypted values and start over with a new key.
-
-If only some values can't be decrypted, {{ site.insomnia }} shows a **Some encrypted data could not be decrypted** dialog that lists the affected fields. Click **Reset affected fields** to clear these values so you can enter them again, or click **Continue without decryption** to keep them as they are.
-
 
 ## Sign up and authentication
 
