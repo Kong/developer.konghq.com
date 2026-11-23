@@ -240,7 +240,7 @@ When `claude --version` shows a different release than the one you installed, th
 
    In Command Prompt, run:
 
-   ```cmd
+   ```text
    "%USERPROFILE%\.local\bin\claude.exe" --version
    ```
 
@@ -255,7 +255,7 @@ When `claude --version` shows a different release than the one you installed, th
 
    In Command Prompt, run:
 
-   ```cmd
+   ```text
    where.exe claude
    ```
 
