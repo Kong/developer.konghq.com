@@ -1,0 +1,89 @@
+description: |
+  Continue the flow past a failed call node, then use jq and branch nodes to call a second API only when the first one fails.
+
+extended_description: |
+  Continue the flow past a failed `call` node, then use `jq` and `branch` nodes to call a second API only when the first one fails.
+
+  With `continue_on_error` set to `true`, a `call` node completes on any HTTP status code, and sets its `error` output only for a transport or decode failure.
+  The flow decides what counts as a failure, so this example uses a `jq` node to treat a call error or any non-2xx status code as a failure.
+
+  This example contains the following nodes:
+  1. The node `PRIMARY` calls the primary API. It retries up to 2 times on a transport failure or a `5xx` response,
+     waiting 1 second before each retry. Because `continue_on_error` is `true`, the node completes even if every attempt fails.
+  1. The node `PRIMARY_FAILED` outputs `true` if `PRIMARY` has an `error`, or if its status code isn't a `2xx`.
+  1. The node `ON_PRIMARY_FAILURE` branches on the output of `PRIMARY_FAILED`:
+     * If the primary call failed, it runs `FALLBACK` and `EXIT_FALLBACK`.
+     * Otherwise, it runs `EXIT_PRIMARY`.
+  1. The node `FALLBACK` calls the fallback API.
+  1. The node `EXIT_PRIMARY` returns the primary API's response body to the client.
+  1. The node `EXIT_FALLBACK` returns the fallback API's response body to the client.
+
+  If `FALLBACK` also fails, its `continue_on_error` is `false` by default, so the node fails and Datakit returns a `500` response.
+
+  {:.info}
+  > **Note:** When using the `branch` node, the `then` and `else` parameters must list all nodes for both branches.
+    If a node isn't listed in the branch, the node will run depending on its location in the flow configuration.
+
+title: Call a fallback API when the primary call fails
+weight: 800
+
+variables:
+  primary_url:
+    value: $PRIMARY_URL
+    description: The URL of the primary API that the `PRIMARY` node will call.
+  fallback_url:
+    value: $FALLBACK_URL
+    description: The URL of the fallback API that the `FALLBACK` node will call if the primary call fails.
+
+config:
+  nodes:
+    - name: PRIMARY
+      type: call
+      url: ${primary_url}
+      method: GET
+      continue_on_error: true
+      retry:
+        count: 2
+        interval: 1
+        status_codes:
+          - "5xx"
+    - name: PRIMARY_FAILED
+      type: jq
+      inputs:
+        status: PRIMARY.status
+        error: PRIMARY.error
+      jq: '.error != null or (.status // 0) < 200 or (.status // 0) > 299'
+    - name: ON_PRIMARY_FAILURE
+      type: branch
+      input: PRIMARY_FAILED
+      then:
+        - FALLBACK
+        - EXIT_FALLBACK
+      else:
+        - EXIT_PRIMARY
+    - name: FALLBACK
+      type: call
+      url: ${fallback_url}
+      method: GET
+    - name: EXIT_PRIMARY
+      type: exit
+      inputs:
+        body: PRIMARY.body
+      status: 200
+    - name: EXIT_FALLBACK
+      type: exit
+      inputs:
+        body: FALLBACK.body
+      status: 200
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.17'
+
+group: error-handling
