@@ -53,12 +53,12 @@ Any options specified in this file will apply to all scripts and manual commands
 
 ## Encryption key
 
-{% new_in 13.5 %} Insomnia encrypts sensitive fields, such as passwords, tokens, cookie values, and client certificate secrets, in its [local database](/insomnia/data-security/#local-database-encryption). Inso CLI needs the Insomnia local encryption key to read these values.
+{% new_in 13.5 %} {{ site.insomnia }} encrypts sensitive fields, such as passwords, tokens, cookie values, and client certificate secrets, in its [local database](/insomnia/data-security/#local-database-encryption). Inso CLI needs the {{ site.insomnia }} local encryption key to read these values.
 
 ### When Inso CLI needs the key
 
 Inso CLI needs the key only when both of the following are true:
-* Inso CLI reads the Insomnia app's local database files. These are the `.db` files in the Insomnia data folder, which Inso CLI uses by default when you don't set `--workingDir`.
+* Inso CLI reads the {{ site.insomnia }} app's local database files. These are the `.db` files in the {{ site.insomnia }} data folder, which Inso CLI uses by default when you don't set `--workingDir`.
 * The command uses encrypted values. In practice, this means `inso run collection` or `inso run test` on requests that use authentication, cookies, or client certificates.
 
 Most CI/CD pipelines use a Git Sync repository or an exported file, so they don't need the key.
@@ -76,13 +76,13 @@ rows:
     needed: No. Git Sync files don't contain encrypted values.
   - source: "`inso lint spec` or `inso export spec`"
     needed: No. These commands only read API specs.
-  - source: "`inso run collection` or `inso run test` on the Insomnia local database files"
+  - source: "`inso run collection` or `inso run test` on the {{ site.insomnia }} local database files"
     needed: Yes, if the requests use encrypted values.
 {% endtable %}
 
 ### Get the key
 
-In Insomnia, go to **Preferences** > **General** > **Security** > **Local Encryption Key**, then click **Copy Key** or **Export Key**. Inso CLI accepts both forms: the text from **Copy Key**, or the contents of the JSON file from **Export Key**. For the full steps, see [Local encryption key](/insomnia/data-security/#local-encryption-key).
+In {{ site.insomnia }}, go to **Preferences** > **General** > **Security** > **Local Encryption Key**, then click **Copy Key** or **Export Key**. Inso CLI accepts both forms: the text from **Copy Key**, or the contents of the JSON file from **Export Key**. For the full steps, see [Local encryption key](/insomnia/data-security/#local-encryption-key).
 
 ### Pass the key to Inso CLI
 
@@ -107,7 +107,7 @@ inso run collection wrk_123 --encryption-key "<copied-key>"
 
 Replace `<copied-key>` with your key and `wrk_123` with your collection ID or name.
 
-Inso CLI checks the key only when it reads the Insomnia local database files, so you can set the environment variable for every command without affecting commands that read an exported file or a Git Sync repository.
+Inso CLI checks the key only when it reads the {{ site.insomnia }} local database files, so you can set the environment variable for every command without affecting commands that read an exported file or a Git Sync repository.
 
 Inso CLI doesn't read the key from a configuration file such as `.insorc`. When you use `--printOptions`, Inso CLI masks the key as `***`.
 
@@ -134,9 +134,9 @@ rows:
 
 ### Best practices
 
-* **Use the key only on the machine it came from.** When Inso CLI has a key, it encrypts any values in the database files that aren't encrypted yet. If the key belongs to another machine, the Insomnia app on this machine can't read those values anymore.
+* **Use the key only on the machine it came from.** When Inso CLI has a key, it encrypts any values in the database files that aren't encrypted yet. If the key belongs to another machine, the {{ site.insomnia }} app on this machine can't read those values anymore.
 * **Treat the key like a password.** Anyone with the key can decrypt the values stored in the local database. Don't commit it to a repository or paste it into shared logs.
-* **Close Insomnia before you run Inso CLI on its database files.** Inso CLI rewrites the database files it reads, so a change that you save in Insomnia at the same time can be lost.
+* **Close {{ site.insomnia }} before you run Inso CLI on its database files.** Inso CLI rewrites the database files it reads, so a change that you save in {{ site.insomnia }} at the same time can be lost.
 
 ## Request timeout
 
