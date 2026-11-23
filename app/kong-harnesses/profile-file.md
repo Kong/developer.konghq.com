@@ -383,8 +383,8 @@ rows:
     description: >-
       The longest access token lifetime that {{site.kong_harnesses}} accepts, from 365 to 86400.
       The default is 3600.
-      Releases up to 0.18.0 also accepted 360.
-      A profile that they installed with 360 still reads, but sign-in refuses it, so give developers a profile with 365 or more.
+      Releases up to 0.18.0 accepted values down to 360.
+      A profile that they installed with 360 to 364 still reads, but sign-in refuses it, so give developers a profile with 365 or more.
       The identity provider must issue access tokens that last at least 365 seconds, because each token that {{site.kong_harnesses}} gives to an agent CLI has at least 360 seconds left.
 {% endtable %}
 
@@ -609,7 +609,7 @@ rows:
   - choice: "`advisor`"
     off: "Writes `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`."
     on: >-
-      Leaves the advisor tool on when nothing in the profile keeps it off.
+      Removes `CLAUDE_CODE_DISABLE_ADVISOR_TOOL` when nothing in the profile keeps the advisor off.
       The route needs `advisor: true`.
       For an older stored profile whose provider mode, `experimental_betas: false`, or blocked feature flags keep the advisor off, `profile activate` writes `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`.
   - choice: "`artifact`"

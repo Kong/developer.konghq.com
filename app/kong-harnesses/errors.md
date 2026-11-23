@@ -83,7 +83,7 @@ rows:
       A partial result.
       For example, `logout` removed the local sign-in but couldn't confirm the sign-out at the identity provider.
       Another example is `profile activate` that set up some agent CLIs, and failed for or left out another one.
-      `profile activate --dry-run` can exit with 4 without a change to any file, when it leaves out a client.
+      `profile activate --dry-run` can exit with `4` without a change to any file, when it leaves out a client.
     action: "Follow the message, then run the command again."
   - value: "130"
     meaning: >-
@@ -355,7 +355,7 @@ In text output, the end of the message tells you what to do:
 ### "selected profile is missing, invalid, or unsupported"
 
 The MCP header helper that {{ site.claude_code }} runs prints this message when it can't read the profile, because the profile isn't installed, can't be read, or needs a newer release.
-`login`, `token`, `credential` and `doctor` print this message only when they can't tell which of those causes applies.
+`login --diagnostics`, `token`, `credential` and `doctor` print this message only when they can't tell which of those causes applies.
 Otherwise, they print a more specific profile error.
 Run `kong-harnesses profile list` to check whether the profile is installed, then import it or follow the step that `profile list` prints for it.
 
@@ -384,7 +384,7 @@ To check one agent CLI now, name it with `--client CLIENT_NAME`.
 ## Sign-in errors
 
 `login` and `logout` print their own errors, and [When the login or logout command fails](/kong-harnesses/sign-in/errors/#when-the-login-or-logout-command-fails) lists them with their fixes.
-When `logout` exits with 4, see [Sign out](/kong-harnesses/sign-in/#sign-out).
+When `logout` exits with `4`, see [Sign out](/kong-harnesses/sign-in/#sign-out).
 [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token) lists the errors that `credential` and `token` print, with their fixes.
 Examples are an expired sign-in, a locked system password store, or a proxy in front of an `http://` gateway.
 This section lists the `login` result that leaves a client check open, and the errors that {{ site.claude_code }} gets for a gateway MCP server.
@@ -490,7 +490,8 @@ Then run `kong-harnesses profile cleanup --client CLIENT_NAME`, or remove the le
 
 ### "settings have two ownership documents"
 
-{{site.kong_harnesses}} found two records of what it wrote for the client, one in the settings folder and one next to the settings file, and it can't tell which one is newer.
+{{site.kong_harnesses}} found two records of what it wrote for the client: one in the settings folder and one next to the settings file.
+It can't tell which record is newer.
 Remove the leftover values and both records manually, then run the `profile activate` command that the message names.
 
 ### "resolve the same ownership document"
@@ -506,7 +507,7 @@ Fix or unset that variable, then run the command again.
 
 ### "settings cleanup is incomplete"
 
-`profile cleanup` removed only part of what it wrote, and exits with 4.
+`profile cleanup` removed only part of what it wrote, and exits with `4`.
 Check the settings of that client, then run `profile cleanup` again.
 
 ### "did not finish for" a list of clients
