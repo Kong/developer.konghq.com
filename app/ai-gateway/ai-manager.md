@@ -39,14 +39,14 @@ related_resources:
 ---
 
 Kong AI Manager is a local, file-based UI for building and editing {{site.ai_gateway}} 2.x configuration for on-prem deployments.
-On-prem {{site.ai_gateway}} Enterprise users manage AI Models, AI MCP Servers, and AI Agents by writing decK or {{site.operator_product_name}} YAML manually.
+On-prem {{site.ai_gateway}} Enterprise users manage AI Models, AI MCP Servers, and AI Agents by writing [decK](/deck/) or [{{site.operator_product_name}}](/operator/) YAML manually.
 Kong AI Manager lets you build and edit that configuration in forms instead, and it writes the result back to files in the same format.
 
 Kong AI Manager runs on your machine, in your browser.
 It doesn't connect to a cluster, to {{site.konnect_short_name}}, or to the internet.
 
 {:.warning}
-> Kong AI Manager **doesn't apply configuration changes**. It only reads and writes files. After you export your configuration, apply it yourself with [`deck ai sync`](/deck/ai/sync/) or `kubectl apply`.
+> Kong AI Manager **does not apply configuration changes**. It only reads and writes files. After you export your configuration, apply it yourself with [`deck ai sync`](/deck/ai/sync/) or `kubectl apply`.
 
 ## Prerequisites
 
@@ -65,7 +65,7 @@ It doesn't connect to a cluster, to {{site.konnect_short_name}}, or to the inter
 
 ## Run Kong AI Manager
 
-From the terminal, run:
+Start Kong AI Manager with `npx`:
 
 ```sh
 npx @kong/ai-manager
@@ -131,82 +131,42 @@ A decK project doesn't show pages for resources that the decK format can't carry
 
 ## Import configuration
 
-Every page reads all files in the project together, so a resource in one file can reference a resource in another file.
+Kong AI Manager reads all files in a project together, so a resource in one file can reference a resource in another file.
 
-To import your own configuration:
+Import files from the **Files** panel on the **Overview** page.
+You can import individual `.yaml`, `.yml`, or `.json` files, or import a folder, which imports every YAML and JSON file in it and keeps each file's path.
+When the project is empty, Kong AI Manager asks you to choose the project format, for example **decK configuration**.
 
-1. In the sidebar, click **Overview**.
-1. In the **Files** panel, click **Import**.
-1. Choose how to import:
-   * Click **Import files** to select `.yaml`, `.yml`, or `.json` files.
-   * Click **Import folder** to import every YAML and JSON file in a folder. Folder import keeps each file's path.
-1. If the project is empty, choose the project format, for example **decK configuration**, and click **Continue**.
-
-To explore the UI before importing your own files, click **Import** in the **Files** panel, then click **Load example**. This adds a demo configuration for a fictional airline.
+To explore the UI before importing your own files, choose **Import** in the **Files** panel, then **Load example**.
+It adds a demo configuration for a fictional airline.
 
 If you import a file in the other format into a project that already has files, Kong AI Manager skips the file and shows a warning.
 
 ## Create and edit resources
 
-Each resource opens as a form. Reference fields list the matching resources from the whole project, and the **File** field sets which file in the project holds the resource.
+Kong AI Manager opens each resource as a form.
+Reference fields list the matching resources from the whole project, and the **File** field sets which file in the project holds the resource.
 
 Use the following pages to manage the main {{site.ai_gateway}} resources:
 
 * **Models**: [AI Models](/ai-gateway/entities/ai-model/), including their target providers, routes, access control, and policies.
-* **MCP servers**: [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/).
-* **Agents**: [AI Agents](/ai-gateway/entities/ai-agent/).
-
-### Create an AI Model
-
-1. In the sidebar, click **Models**.
-1. Click **New**, then click **Model**.
-1. Complete the form, and in the **File** field, select the file that holds the AI Model.
-1. Click **Create**.
-
-### Create an AI MCP Server
-
-1. In the sidebar, click **MCP servers**.
-1. Click **New**, then click **MCP server**.
-1. In the **Name** field, enter a name for the AI MCP Server.
-1. In the **Connection** section, select **Passthrough**, **Interface**, or **From API**.
-1. In the **File** field, select the file that holds the AI MCP Server.
-1. Complete the **Configuration** section.
-1. Click **Create**.
-
-### Create an AI Agent
-
-1. In the sidebar, click **Agents**.
-1. Click **New agent**.
-1. In the **Name** field, enter a name for the AI Agent.
-1. In the **Type** field, select the agent type, for example **A2A (Agent-to-Agent)**.
-1. In the **File** field, select the file that holds the AI Agent.
-1. Complete the **Configuration** section.
-1. Click **Create**.
-
-### Edit a resource
-
-1. In the sidebar, click the resource type, for example **Models**.
-1. Click the resource name in the list.
-1. Change the fields.
-1. Click **Save**.
+* **MCP servers**: [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/). Each server connects in one of three modes: **Passthrough**, **Interface**, or **From API**.
+* **Agents**: [AI Agents](/ai-gateway/entities/ai-agent/). Each agent has a type, for example **A2A (Agent-to-Agent)**.
 
 How a save works depends on the project type:
 
 * **Folder project**: saving writes the change to the file on disk immediately. Edits you make to the files outside the UI also appear in the UI.
 * **Scratch project** (no folder access): saving changes the project in memory only. Reloading or closing the tab loses the project, so export it first.
 
+Use a folder project for configuration that you keep in files, such as a repository, because saves go straight to disk.
+Use a scratch project to try the UI or make a one-off edit, because nothing is written until you export.
+
 ## Export configuration
 
-The export uses the same format as the project, so decK input produces decK output and {{site.operator_product_name}} input produces {{site.operator_product_name}} manifests.
+Kong AI Manager exports in the same format as the project, so decK input produces decK output and {{site.operator_product_name}} input produces {{site.operator_product_name}} manifests.
 
-To export configuration:
-
-1. In the sidebar, click **Overview**.
-1. To export one file:
-   1. In the **Files** panel, click the file.
-   1. Click **Actions**.
-   1. Click **Export**.
-1. To export the whole project, in the **Files** panel, click **Export all**.
+Export from the **Files** panel on the **Overview** page.
+You can export one file, or choose **Export all** to export the whole project.
 
 Before the download, the export shows the exact file content and a sample command to apply it:
 
@@ -216,11 +176,11 @@ Before the download, the export shows the exact file content and a sample comman
 For decK projects, Kong AI Manager validates each entity against the {{site.ai_gateway}} API request schema and shows mismatches as warnings. Warnings never block an export.
 
 {:.danger}
-> Exported files can contain secret values in plain text. Don't commit an exported file that contains secrets to version control. Use [AI Vault](/ai-gateway/entities/ai-vault/) references where possible.
+> Exported files can contain secret values in plain text. **Do not** commit an exported file that contains secrets to version control. Use [AI Vault](/ai-gateway/entities/ai-vault/) references where possible.
 
 ## Apply the exported configuration
 
-Kong AI Manager doesn't connect to your gateway, so apply the exported file yourself:
+Apply the exported file with the command for your project format:
 
 * **decK**: run [`deck ai sync`](/deck/ai/sync/) against your on-prem {{site.ai_gateway}} deployment.
 * **{{site.operator_product_name}}**: run `kubectl apply` against the cluster that runs {{site.operator_product_name}}.
