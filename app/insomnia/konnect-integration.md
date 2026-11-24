@@ -163,7 +163,7 @@ To open the Debugger, do one of the following:
 * After you send a synced request, click **Debug** in the response pane.
 * In the sidebar, open the dropdown menu of a {{ site.konnect_short_name }} project and select "Start Debugging".
 
-The Debugger opens in a new tab for the project's control plane. To capture traces:
+The Debugger opens in a new tab for the project's control plane. To capture traces, do the following:
 
 1. From the **Duration** dropdown menu, select a duration between "15 seconds" and "30 minutes".
 1. Click **Start debugging**.
