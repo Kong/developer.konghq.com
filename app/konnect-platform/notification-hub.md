@@ -28,7 +28,7 @@ Notification delivery is scoped to users with [access to the relevant entity](/k
 
 You can manage your notification configurations through the [bell icon next to your user menu](https://cloud.konghq.com/global/notifications/) in the {{site.konnect_short_name}} UI, or the [Notification Hub API](/api/konnect/notification-hub/). 
 
-Organization administrators can also send organization-scoped events to HTTP endpoints using webhook destinations and subscriptions. These subscriptions are managed separately from user email and in-app preferences. See [Configure organization webhooks](/how-to/configure-konnect-notification-webhooks/) for setup steps. The [organization events API](/api/konnect/notification-hub/#/operations/list-org-configurations) lists the event types currently available to your organization.
+Organization administrators can also send organization-scoped events to HTTP endpoints using webhook destinations and subscriptions. These subscriptions are managed separately from user email and in-app preferences. See [Configure organization webhooks](/how-to/configure-konnect-notification-webhooks/) for setup steps. The [organization events API](/api/konnect/notification-hub/#/operations/list-org-configurations) lists the event types available to your organization.
 
 The Notification Hub generates notifications for the following areas:
 
