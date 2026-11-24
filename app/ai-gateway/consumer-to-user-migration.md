@@ -69,7 +69,7 @@ What changes for you:
 
 Before migrating, make sure you have the following:
 
-- An {{site.ai_gateway}} 2.3 or later control plane and data planes that authenticates callers with AI Consumers.
+- An {{site.ai_gateway}} 2.3 or later control plane and data planes that authenticate callers with AI Consumers.
 - A {{site.konnect_short_name}} [Personal Access Token (PAT) or System Account Access Token](/konnect-api/#konnect-api-authentication) with permission to manage the {{site.ai_gateway}} control plane and the {{site.identity}} directory.
 - A {{site.identity}} directory that accepts your {{site.ai_gateway}}. The directory needs `allow_all_control_planes: true`, or your gateway listed in `allowed_control_planes` (32 maximum). An org gets one directory per region. See [Directories](/identity/directories/).
 - The plaintext of every API key you want to keep, and a place to read it from, such as a secrets manager.
@@ -138,7 +138,7 @@ Run the step 2 loop and the step 3 key import in the same shell session so that 
 
 ## Migration overview
 
-By [linking a principal](/identity/principals/#principal-entity-mapping) and its AI Consumer makes every step before the last one in the migration reversible.
+Linking a [principal](/identity/principals/#principal-entity-mapping) to its AI Consumer makes every step before the last one in the migration reversible.
 When a principal is linked to an AI Consumer through a `control_plane_consumer` identity, the gateway loads that AI Consumer into the request context as if it had authenticated directly. 
 Policies, ACLs, AI Consumer Group membership, and per-Consumer analytics keep working while the principal does the authenticating.
 
@@ -163,7 +163,7 @@ rows:
     impact: "None"
     rollback: "Not needed"
   - step: "Verify keys"
-    what: "Prove each plaintext key authenticates as the AI Consumer it original belonged to."
+    what: "Prove each plaintext key authenticates as the AI Consumer it originally belonged to."
     impact: "None (test entity only)"
     rollback: "Not needed"
   - step: "Create shadow principals"
@@ -417,7 +417,6 @@ In this request:
 - `type` comes from `principal_kind` in the manifest.
 - `consumer_groups` is a reserved metadata key. It keeps the principal in its AI Consumer Groups after you unlink the AI Consumer in step 7. See [Principal entity mapping](/identity/principals/#principal-entity-mapping).
   Its values are the AI Consumer Group IDs from `group_ids`.
-  <!-- TODO: The original draft said consumer_groups must hold runtime Kong Consumer Group IDs, not AI Consumer Group IDs. In testing on 2.3.2, a principal with an AI Consumer Group ID in consumer_groups passed a gold-only ACL, while a different group's ID and a made-up ID were denied. The API also doesn't expose any runtime group ID. Confirm that AI Consumer Group IDs are the intended value before publishing. -->
 - Turn each group that expresses a tier, team, or budget into a plain attribute (`tier`, `team`) now. Step 6 Policies read these attributes directly.
 - A principal holds up to 50 metadata keys.
 
@@ -931,7 +930,7 @@ This is the one step you can't undo: after an AI Consumer and its credentials ar
 Complete the following before you delete anything:
 
 - Export the cohort's AI Consumers, credentials, AI Consumer Groups, and any AI Consumer-scoped AI Policies, and keep the export with the manifest. For the AI Consumers, use `kongctl dump declarative --resources=ai_gateways --include-child-resources --filter-name "$AI_GATEWAY_NAME"`. The dump holds configuration only: {{site.konnect_short_name}} can't return generated API key secrets, so the plaintext keys exist only in your secret store.
-- Confirm in {{site.konnect_short_name}} Explorer that the cohort's AI Consumers received no requests during the soak.
+- Confirm in {{site.konnect_short_name}} Explorer that the cohort's AI Consumers didn't receive any requests during the soak.
 - Confirm that no AI Policy, condition, or ACL references them (run the step 6 check again). The AI Rate Limiting Advanced Policy still relies on AI Consumer Groups. See [Known issues](#known-issues).
 
 #### Delete in this order
