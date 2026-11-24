@@ -354,7 +354,7 @@ body:
 <!--vale on-->
 
 In this example:
-* `config.principals.enabled`: Resolves the subject from `sub`, as principal mapping always has.
+* `config.principals.enabled`: Resolves the subject from `sub`, as principal mapping does.
 * `config.principals.actors`: Adds the second lookup. It has one source, which reads the `azp` claim and resolves it against the same directory.
 * `config.using_pseudo_issuer`, `config.jwks_endpoint`, and `config.token_endpoint`: Needed here because Keycloak runs in Docker in this tutorial. The data plane validates the `iss` claim against `config.issuer` but fetches keys over the Docker network, so the two addresses differ. Against a reachable identity provider, set `config.issuer` alone and let discovery find the endpoints.
 
@@ -379,6 +379,8 @@ body:
   type: conversion-listener
   enabled: true
   access:
+    acl_attribute_type:
+      - consumer
     auth_strategies:
       - delegated-oidc
     acls:
