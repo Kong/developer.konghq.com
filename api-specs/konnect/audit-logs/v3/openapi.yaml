@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Audit Log Settings
-  version: 3.3.0
+  version: 3.3.1
   description: The API for configuring Kong Konnect Audit Logs.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@8758c1f94510708747045d57362099c3f399b919
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8758c1f94510708747045d57362099c3f399b919'
+  x-oas-source: kong/platform-api@6b26c2b5622194addb00c4936b727da2e2f3df00
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6b26c2b5622194addb00c4936b727da2e2f3df00'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -1199,6 +1199,7 @@ components:
       value:
         audit_log_destination_id: 6945c4c4-3e06-4c5c-87e0-726d0cda4e05
         enabled: true
+        include_principal_name: false
     Get-Audit-Logs-Webhook-Status:
       value:
         webhook_enabled: true
@@ -1236,6 +1237,7 @@ components:
     Update-Audit-Logs-Webhook:
       value:
         audit_log_destination_id: 6945c4c4-3e06-4c5c-87e0-726d0cda4e05
+        include_principal_name: true
     Disable-Audit-Logs-Webhook:
       value:
         enabled: false
@@ -1393,6 +1395,10 @@ components:
                 description: Indicates if the data should be sent to the webhook.
                 type: boolean
                 default: false
+              include_principal_name:
+                description: Indicates if the principal name should be included in the audit logs sent to the webhook.
+                type: boolean
+                default: false
           examples:
             Update Audit Log Webhook:
               $ref: '#/components/examples/Update-Audit-Logs-Webhook'
@@ -1507,6 +1513,9 @@ components:
                 format: uuid
               enabled:
                 description: Indicates whether audit data should be sent to the webhook.
+                type: boolean
+              include_principal_name:
+                description: Indicates whether the principal name is included in the audit logs sent to the webhook.
                 type: boolean
             required:
               - audit_log_destination_id
