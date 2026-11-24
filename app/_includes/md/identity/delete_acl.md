@@ -3,7 +3,7 @@ Delete the access rule that you created in this guide:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v2/acls/$ACL_ID
+url: /v1/policies/acls/$ACL_ID
 status_code: 204
 method: DELETE
 headers:

@@ -2,7 +2,7 @@
 title: Restrict AI Model access to a group of {{site.identity}} principals
 permalink: /ai-gateway/restrict-ai-model-access-by-group-with-kong-identity/
 content_type: how_to
-description: Use the AI Access Policy Engine Policy and an access rule to let one group of {{site.identity}} principals call an AI Model while rejecting every other principal.
+description: Use the Access Policy Engine and an access rule to let one group of {{site.identity}} principals call an AI Model while rejecting every other principal.
 
 products:
   - ai-gateway
@@ -33,7 +33,7 @@ tldr:
   q: How do I let only one group of {{site.identity}} principals call an AI Model?
   a: |
     Put the principals in a {{site.identity}} group, then create an `allow` access rule (ACL) that anchors the group to the AI Model's upstream model name.
-    Add the [AI Access Policy Engine Policy](/ai-gateway/policies/access-policy-engine/) globally, and map the callers' credentials to {{site.identity}} principals with an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#principal-mapping).
+    Add the [Access Policy Engine](/ai-gateway/access-policy-engine/) globally, and map the callers' credentials to {{site.identity}} principals with an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#principal-mapping).
     Requests from principals in the group are proxied to the model. Requests from every other principal are rejected with a `403`.
 
 prereqs:
@@ -57,8 +57,8 @@ cleanup:
       include_content: cleanup/products/ai-gateway
 
 related_resources:
-  - text: AI Access Policy Engine Policy
-    url: /ai-gateway/policies/access-policy-engine/
+  - text: Access Policy Engine
+    url: /ai-gateway/access-policy-engine/
   - text: AI Auth Strategy entity
     url: /ai-gateway/entities/ai-auth-strategy/
   - text: AI Model entity
@@ -74,7 +74,7 @@ related_resources:
 In this guide, you'll let one group of {{site.identity}} [principals](/identity/principals/) call an [AI Model](/ai-gateway/entities/ai-model/), and reject every other principal.
 You'll create two principals, an `employee` and a `contractor`, and put only the `employee` in a group called `employees`.
 An access rule allows the `employees` group to call the model.
-The [AI Access Policy Engine Policy](/ai-gateway/policies/access-policy-engine/) evaluates every request against that rule.
+The [Access Policy Engine](/ai-gateway/access-policy-engine/) evaluates every request against that rule.
 
 Create the principal for the employee:
 
@@ -213,7 +213,7 @@ The Policy rejects every request unless an `allow` rule matches, so create the r
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v2/acls
+url: /v1/policies/acls
 status_code: 201
 method: POST
 headers:
@@ -225,9 +225,9 @@ body:
     id: $GROUP_ID
     directory_id: $DIRECTORY_ID
   effect: allow
-  resource:
-    type: Model
-    name: gpt-5-mini
+  resources:
+    - type: Model
+      name: gpt-5-mini
 extract_body:
   - name: 'id'
     variable: ACL_ID
@@ -341,10 +341,10 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Add the AI Access Policy Engine Policy
+## Add the Access Policy Engine
 
-Create the AI Access Policy Engine Policy with `global: true`.
-The Policy supports only global scope, so you attach nothing to the AI Model.
+Create an Access Policy Engine Policy with `global: true`.
+It only supports global scope, so you don't attach anything to the AI Model, and it doesn't have configuration of its own.
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -355,7 +355,7 @@ headers:
   - 'Content-Type: application/json'
 body:
   name: access-policy-engine
-  display_name: AI Access Policy Engine
+  display_name: Access Policy Engine
   type: access-policy-engine
   enabled: true
   global: true
