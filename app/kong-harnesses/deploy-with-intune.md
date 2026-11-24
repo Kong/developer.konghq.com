@@ -149,20 +149,7 @@ For how assignments work, see [Assign apps to groups with Microsoft Intune](http
 
 ## Verify the test device
 
-Under **Monitor** > **Device install status** for the app, the test device reports `Installed` when the installation completes.
-If you assigned a user group, check **User install status** instead.
-For more about install status, see [Monitor apps](https://learn.microsoft.com/en-us/intune/intune-service/apps/apps-monitor).
-
-Then check the executable on the device from a new PowerShell window.
-The installer updates the system `PATH`, which a PowerShell window that was open during the installation doesn't see.
-
-```powershell
-(Get-Command kong-harnesses).Source
-kong-harnesses version
-```
-
-The first command prints `C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe`.
-The second prints the release that you added to Intune with its leading `v`, for example `v1.2.3`.
+{% include kong-harnesses/intune-verify-device.md app="the app" process="installation" release="the release that you added to Intune" %}
 
 ## Roll out to the remaining groups
 

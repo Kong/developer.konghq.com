@@ -101,18 +101,7 @@ rows:
 
 ## Verify the test device
 
-Under **Monitor** > **Device install status** for the new app, the test device reports `Installed` when the upgrade completes.
-If you assigned a user group, check **User install status** instead.
-
-Then check the executable from a new PowerShell window:
-
-```powershell
-(Get-Command kong-harnesses).Source
-kong-harnesses version
-```
-
-The first command prints `C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe`.
-The second prints the new release with its leading `v`, for example `v1.2.4`.
+{% include kong-harnesses/intune-verify-device.md app="the new app" process="upgrade" release="the new release" %}
 
 ## Roll out and clean up
 
@@ -132,6 +121,5 @@ Removing the supersedence link first ensures that the new app stops referencing 
 
 ## Verify the upgrade
 
-Confirm that only the active kong-harnesses release app remains for the processor type you upgraded in **Apps** > **All apps**.
-Under **Monitor** > **Device install status** (or **User install status** for user groups), confirm that the assigned devices or users report `Installed`.
-On a managed Windows 11 device, run `kong-harnesses version` in a new PowerShell window and confirm that it prints the new release.
+In the [Microsoft Intune admin center](https://intune.microsoft.com), navigate to **Apps** > **All apps**, and confirm that only the active kong-harnesses release app remains for the processor type you upgraded.
+Then repeat [Verify the test device](#verify-the-test-device) on a managed Windows 11 device, and confirm that **Device install status** (or **User install status**) shows `Installed` for every assigned device or user.
