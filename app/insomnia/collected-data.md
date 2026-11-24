@@ -90,7 +90,7 @@ faqs:
 
   - q: Is {{ site.insomnia }} project data encrypted on disk?
     a: |
-      No. Project data is stored in raw form on disk. E2EE applies only to data transmitted over the network. 
+      Partly. In {{ site.insomnia }} 13.5 and later, sensitive fields such as passwords, tokens, and cookie values are encrypted in the local database. Other project data, such as request URLs and bodies, is stored on disk without encryption, and E2EE applies only to data transmitted over the network.
       You should take appropriate measures to secure your local environment from unauthorized access.
   - q: Where does {{ site.insomnia }} store application data?
     a: |
