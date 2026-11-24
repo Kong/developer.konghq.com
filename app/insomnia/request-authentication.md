@@ -49,7 +49,7 @@ Navigate to a request in a collection, click the **Auth** tab below your request
 
 ## How do I share authentication across requests?
 
-Set settings (including authentication) once on a folder or {% new_in 13.5 %} on the API Collection, using its **Auth** tab. Then set each request's authentication type to **Inherit from parent**.
+Set settings (including authentication) once on a folder or, if you're using {{ site.insomnia }} 13.5 or later, set them on the API Collection using its **Auth** tab. Then set each request's authentication type to **Inherit from parent**.
 
 {{ site.insomnia }} applies settings first from the API Collection, then from each folder (outermost first), then from the request:
 
