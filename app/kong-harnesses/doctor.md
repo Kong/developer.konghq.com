@@ -35,6 +35,7 @@ columns:
 rows:
   - client: "{{ site.claude_code }}"
     source: The `env` block of the [user settings](/kong-harnesses/developer-computer-changes/#claude-code-settings) when that block sets the variable, or else the environment.
+{% comment %}
   - client: OpenCode
     source: The environment, or the environment of the service when OpenCode runs as a background service.
   - client: omp
@@ -44,6 +45,7 @@ rows:
       `doctor` uses the directory where you run `doctor` as the directory where omp starts.
   - client: pi
     source: The environment.
+{% endcomment %}
 {% endtable %}
 
 ## Command usage

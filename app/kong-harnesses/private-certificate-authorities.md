@@ -32,8 +32,11 @@ related_resources:
 ---
 
 When the gateway, the identity provider or the profile server uses a certificate from a private certificate authority (CA), each computer that runs {{site.kong_harnesses}} must trust that CA.
+{% comment %}
 {{site.kong_harnesses}}, {{ site.claude_code }}, Codex, OpenCode and Hermes Agent trust these servers through the system trust store.
 When developers use Hermes Agent, omp or pi, also see [Agent CLIs that need more than the system trust store](#agent-clis-that-need-more-than-the-system-trust-store).
+{% endcomment %}
+{{site.kong_harnesses}} and {{ site.claude_code }} trust these servers through the system trust store.
 When you can't change the system trust store, see [CA settings per program](#ca-settings-per-program).
 
 {:.warning}
@@ -144,6 +147,7 @@ An older npm install that runs {{ site.claude_code }} on Node.js reads the syste
 Update that install to the native binary, or set `NODE_EXTRA_CA_CERTS` for that install.
 For the Node.js limits, see the [{{ site.claude_code }} CA certificate store](https://code.claude.com/docs/en/network-config#ca-certificate-store).
 
+{% comment %}
 ## Agent CLIs that need more than the system trust store
 
 ### Hermes Agent
@@ -228,6 +232,7 @@ When the environment doesn't set `NODE_EXTRA_CA_CERTS`, omp reads the variable f
 1. `~/.env`
 
 When `OMP_PROFILE` names an omp profile, omp reads `~/.omp/profiles/OMP_PROFILE_NAME/agent/.env` and `~/.omp/profiles/OMP_PROFILE_NAME/.env` in place of the second and third file, which belong to the default omp profile.
+{% endcomment %}
 
 ## CA settings per program
 
@@ -246,6 +251,7 @@ rows:
       `NODE_EXTRA_CA_CERTS` set to the CA file, in the `env` block of the {{ site.claude_code }} user settings.
       `profile activate` doesn't set `NODE_EXTRA_CA_CERTS`, and leaves a value that you set in place.
       When `profile activate` removes a CA bundle that an earlier {{site.kong_harnesses}} release wrote, `profile activate` restores the values that `NODE_EXTRA_CA_CERTS` and `CLAUDE_CODE_CERT_STORE` had before that release, and keeps a value that you changed after that release.
+{% comment %}
   - program: Codex
     setting: |
       `CODEX_CA_CERTIFICATE` set to the CA file, exported in the shell that starts Codex.
@@ -265,10 +271,14 @@ rows:
     setting: |
       `NODE_EXTRA_CA_CERTS` set to the CA file.
       For the effect of `NODE_EXTRA_CA_CERTS` and the `.env` files that omp reads, see [omp and pi](#omp-and-pi).
+{% endcomment %}
   - program: "{{site.kong_harnesses}}"
     setting: |
+{% comment %}
       `SSL_CERT_FILE` set to a bundle file with the public root CAs of the system and each private CA, exported in the shell that runs {{site.kong_harnesses}} and in the shell that starts {{ site.claude_code }}, Codex, omp or pi, because these agent CLIs run {{site.kong_harnesses}} to get each token.
       OpenCode and Hermes Agent sign in through their own plugins and don't run {{site.kong_harnesses}} for a token.
+{% endcomment %}
+      `SSL_CERT_FILE` set to a bundle file with the public root CAs of the system and each private CA, exported in the shell that runs {{site.kong_harnesses}} and in the shell that starts {{ site.claude_code }}, because {{ site.claude_code }} runs {{site.kong_harnesses}} to get each token.
 {% endtable %}
 
 How {{site.kong_harnesses}} reads `SSL_CERT_FILE` depends on the system:
@@ -329,7 +339,10 @@ In the same PowerShell session, write those root CAs and your CA to the bundle f
   Set-Content -Encoding ascii CA_BUNDLE_FILE
 ```
 
+{% comment %}
 Set both of the following variables in the PowerShell session that runs {{site.kong_harnesses}} and in the session that starts {{ site.claude_code }}, Codex, omp or pi.
+{% endcomment %}
+Set both of the following variables in the PowerShell session that runs {{site.kong_harnesses}} and in the session that starts {{ site.claude_code }}.
 Set `SSL_CERT_FILE` to the full path of the bundle:
 
 ```powershell

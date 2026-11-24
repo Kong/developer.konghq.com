@@ -60,29 +60,40 @@ columns:
     key: mode
   - title: Model ID
     key: model
+{% comment %}
   - title: Agent CLIs that the profile sets up
     key: clients
+{% endcomment %}
   - title: Models in the {{ site.claude_code }} model picker
     key: picker
 rows:
   - mode: "`anthropic` (Anthropic API, the default)"
     model: The model name that the gateway serves
+{% comment %}
     clients: |
       {{ site.claude_code }}, Codex, OpenCode, omp and pi.
       Hermes Agent too, when the profile uses the default sign-in with `--audience-parameter audience` and the default scopes.
+{% endcomment %}
     picker: The built-in models and the models that the gateway lists at `GET /v1/models`
   - mode: "`foundry` (Microsoft Foundry)"
     model: The Foundry deployment name
+{% comment %}
     clients: "{{ site.claude_code }} only"
+{% endcomment %}
     picker: Only the models that the profile names
   - mode: "`mantle` (Amazon Bedrock Mantle)"
     model: The Bedrock model ID
+{% comment %}
     clients: "{{ site.claude_code }} only"
+{% endcomment %}
     picker: Only the models that the profile names
 {% endtable %}
 
 Use the `anthropic` mode unless the gateway serves Claude only through Microsoft Foundry or Amazon Bedrock Mantle and you want {{ site.claude_code }} to use that cloud's model IDs.
+{% comment %}
 The `anthropic` mode is the only mode that sets up other agent CLIs, and the only mode in which {{ site.claude_code }} reads the model list from the gateway.
+{% endcomment %}
+The `anthropic` mode is the only mode in which {{ site.claude_code }} reads the model list from the gateway.
 
 ### Models in the model picker
 
@@ -112,7 +123,10 @@ Configure the [AI Model](/ai-gateway/entities/ai-model/) that serves {{ site.cla
 * Set `config.route.model` to `body_param: model`, with that model ID as the single entry of `values`.
 * Set `targets[].name` to the upstream deployment name or model ID.
 
+{% comment %}
 Each provider mode needs more settings:
+{% endcomment %}
+The `foundry` and `mantle` modes need more settings:
 
 {% table %}
 columns:
@@ -121,10 +135,12 @@ columns:
   - title: AI Model settings
     key: settings
 rows:
+{% comment %}
   - mode: "`anthropic`"
     settings: |
       Codex sends OpenAI Responses API requests to `/v1/responses` on the gateway origin, so Codex needs an AI Model in the OpenAI format, as in [Route OpenAI Codex CLI traffic through {{site.ai_gateway}}](/ai-gateway/use-codex-with-ai-gateway/).
       OpenCode, omp, pi and Hermes Agent send their requests to `/v1/messages`, the same route as {{ site.claude_code }}.
+{% endcomment %}
   - mode: "`foundry`"
     settings: Point the AI Model at your Foundry deployment, as in [Route Claude CLI traffic through {{site.ai_gateway}} and Azure](/ai-gateway/use-claude-code-with-ai-gateway-azure/).
   - mode: "`mantle`"
@@ -152,13 +168,19 @@ rows:
       A key that you give each developer, without an identity provider.
       Leave out `--issuer`, `--client-id` and `--audience`.
       `login` asks for the key.
+{% comment %}
     limits: The profile doesn't set up OpenCode or Hermes Agent.
+{% endcomment %}
+    limits: None.
   - kind: "`environment-key`"
     use: |
       The same kind of key, read from `KONG_HARNESSES_STATIC_KEY` on every call, for a CI job.
       Leave out `--issuer`, `--client-id` and `--audience`.
       Set the variable on the `profile activate` step and on the step that runs {{ site.claude_code }}.
+{% comment %}
     limits: The profile doesn't set up OpenCode or Hermes Agent.
+{% endcomment %}
+    limits: None.
   - kind: "`subscription`"
     use: |
       Each developer's own Claude subscription, with the same `--issuer`, `--client-id` and `--audience` flags as the default sign-in.
@@ -166,7 +188,10 @@ rows:
       See [Serve Claude subscriptions and company Claude models](/ai-gateway/use-claude-subscriptions-with-ai-gateway/).
     limits: |
       Needs the `anthropic` mode.
+{% comment %}
       The profile sets up only {{ site.claude_code }}, and can't list gateway MCP servers.
+{% endcomment %}
+      The profile can't list gateway MCP servers.
       Update {{site.kong_harnesses}} on each developer's computer first, because a release from before subscription sign-in refuses to import the profile.
 {% endtable %}
 

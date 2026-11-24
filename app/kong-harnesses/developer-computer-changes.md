@@ -58,12 +58,16 @@ kong-harnesses setup ./PROFILE_NAME.json
 1. `profile activate` writes the settings of each agent CLI that `setup` sets up.
 
 `setup` skips `login` for an `environment-key` profile.
+{% comment %}
 `setup` also skips `login` when every agent CLI that `setup` sets up is OpenCode or Hermes Agent, because these agent CLIs sign in through their own plugins.
 After `setup` sets up OpenCode or Hermes Agent, the developer runs the sign-in command that `kong-harnesses status` names for that agent CLI, and then restarts the agent CLI.
 This sign-in is also needed when the same run sets up {{ site.claude_code }}.
+{% endcomment %}
 
 When the command doesn't name `--client`, `setup` sets up every installed agent CLI that the profile lists and that passes the [agent CLI checks](#agent-cli-checks).
+{% comment %}
 Add `--client claude-code` to set up only {{ site.claude_code }}.
+{% endcomment %}
 
 When the developer adds `--auto-approve`, `setup` doesn't ask the developer to type the profile name or to confirm the list of agent CLIs, and prints the import summary to stderr.
 The sign-in step still opens the browser, or asks for the static key.
@@ -76,7 +80,10 @@ A step that is already done doesn't change anything: a sign-in that works stays,
 ### Agent CLI checks
 
 Before `setup` sets up an agent CLI, `setup` sends a test request to the gateway route of that agent CLI.
+{% comment %}
 The test request contains the developer's sign-in, unless the agent CLI signs in through its own plugin or the profile uses the `subscription` sign-in.
+{% endcomment %}
+The test request contains the developer's sign-in, unless the profile uses the `subscription` sign-in.
 
 In the following cases, `setup` warns that the agent CLI may not reach the gateway, tells the developer to send a prompt from that agent CLI to check, and goes on to the next check of the agent CLI:
 
@@ -91,8 +98,10 @@ A later check can still stop `setup` before `setup` writes the settings of any a
 In the following cases, a check fails, and `setup` names the fix for the agent CLI:
 
 - The gateway route of the agent CLI is missing, or the gateway refuses the sign-in.
+{% comment %}
 - The profile uses a plain `http://` gateway, and the agent CLI is Codex, OpenCode or Hermes Agent.
 - The agent CLI is OpenCode, and its npm plugin registry uses plain `http://` on another computer.
+{% endcomment %}
 
 When the command doesn't name `--client`, `setup` leaves out each agent CLI that fails a check and sets up the remaining agent CLIs, or stops when none remain.
 When the command names `--client`, `setup` stops.
@@ -162,8 +171,10 @@ In the `foundry` and `mantle` modes, `profile activate` also writes the followin
 - `replaceBuiltInOptions`, which hides the built-in models
 - `env.ANTHROPIC_DEFAULT_MODEL`, set to the profile's default model
 
+{% comment %}
 `profile activate` also writes the settings of each other agent CLI that the profile sets up.
 For the settings of the other agent CLIs, see [`profile activate`](/kong-harnesses/profile/activate/).
+{% endcomment %}
 `profile activate` refuses a credential that the {{ site.claude_code }} settings file already contains in `env.ANTHROPIC_AUTH_TOKEN` or `env.ANTHROPIC_API_KEY`.
 In the `foundry` mode, [`doctor`](/kong-harnesses/doctor/) fails when the shell or the settings file sets `ANTHROPIC_FOUNDRY_API_KEY` or `ANTHROPIC_FOUNDRY_AUTH_TOKEN`, because {{ site.claude_code }} would send that key instead of the sign-in.
 
