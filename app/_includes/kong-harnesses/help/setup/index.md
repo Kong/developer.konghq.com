@@ -12,7 +12,8 @@ they ask:
 <source> is a profile file or an HTTPS URL. With <source>, setup shows the
 gateway and identity provider of the profile, and asks you to type the
 profile name before it installs it. Without <source>, setup asks the
-questions of profile create, which needs a terminal.
+questions of profile create, which needs a terminal. With --profile <name>,
+setup uses that installed profile and starts at the sign-in.
 
 Without --client, setup sets up every installed agent CLI that the profile
 lists, as profile activate does. --auto-approve answers yes to the import and
@@ -22,10 +23,14 @@ sign-in, so setup skips the sign-in when they are the only agent CLIs. With
 --no-browser, open the printed URL in a browser on this computer.
 
 You can run setup again safely. It does not import a profile file that is
-already installed with the same content, keeps a sign-in that still works,
-and leaves an agent CLI that is already set up. If a step fails, setup stops
-and names the step. Run the same command again to continue from there. If the
-gateway or this computer refuses an agent CLI, setup names it with the fix.
+already installed with the same content, and keeps a sign-in that still works.
+It keeps the settings of an agent CLI only while they still match what the
+profile asks for, and updates them when the profile asks for something else,
+such as other model aliases. If a step fails, setup stops and names the step
+and the command that continues from there. After profile create has saved the
+profile, that command is setup --profile <name>, so the questions are not
+asked again. If the gateway or this computer refuses an agent CLI, setup names
+it with the fix.
 
 After setup, use login to fix a sign-in, profile activate to switch profiles,
 and profile cleanup to undo the setup.
@@ -45,6 +50,7 @@ Flags:
       --auto-approve       install the profile and set up the listed agent CLIs without asking
   -h, --help               help for setup
       --no-browser         print the sign-in URL instead of opening a browser; open the URL on this computer
+  -p, --profile profile    use the installed profile in place of a source, and skip the profile step
       --skip-route-check   do not send test requests to the gateway's routes
 
 Global Flags:
