@@ -1,0 +1,106 @@
+{
+  "0.18.0": {
+    "kong-harnesses": [
+      {
+        "message": "**fleet:** let --claude-code-any-version take out one recorded bound beside a new bound on the other side",
+        "type": "feature"
+      },
+      {
+        "message": "**fleet:** let --model move the pins in the Anthropic API mode",
+        "type": "feature"
+      },
+      {
+        "message": "**logout:** add --auto-approve for sessions without a terminal",
+        "type": "feature"
+      },
+      {
+        "message": "**profile:** ask whether Claude Code may send telemetry to Anthropic",
+        "type": "feature"
+      },
+      {
+        "message": "**profile:** let auto mode run its check through the gateway",
+        "type": "feature"
+      },
+      {
+        "message": "**clients:** make fast mode available behind the gateway",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** check every install path before the copy, and refuse one that is a link, a hard link, owned by another account or writable by other accounts, also through an ACL, and check it in a preinstall script of the macOS package",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** correct the --record help and the Windows executable path",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** find the Windows helper with wslpath in WSL, and name Windows interop when it is off",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** keep the recorded MCP choices on a rebuild, so a --record rebuild needs a recorded --mcp-servers mode other than allowlist again, and each server of the recorded allowlist again or the new --gateway-mcp-only, which takes out each entry the rebuild does not list again",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** keep the recorded models and version range on a rebuild, so a --record rebuild needs each recorded --model again or --profile-models, and each recorded bound again or --claude-code-any-version",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** keep the recorded policy on a rebuild, so a --record rebuild of a build with a policy needs --policy or --no-policy",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** keep the recorded WSL and host settings choices on a rebuild, so a --record rebuild of a --wsl inherit or --host-settings merge build needs --wsl or --host-settings again",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** make the administrator choose how MCP servers arrive, so a profile with gateway MCP servers now needs --mcp-servers exclusive, allowlist or any",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** make the install step name the build folder and paste as is, and leave the Linux build readable under a strict root umask",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** refuse a --policy that turns off the plugin that carries the gateway MCP servers, outside --mcp-servers exclusive",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** refuse a file build that leaves the policy choice open, so a --delivery file build now needs --policy or the new --no-policy",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** refuse a record a build could not have written, and a build whose record or files would be too large to read back",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** refuse a Windows policy that sets wslInheritsWindowsSettings without --wsl inherit",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** take a gateway MCP server out of managed-mcp.json only while it is the one the build wrote",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** write each allowlist address once, so a --mcp-url that repeats a gateway MCP server's address no longer makes the build's own record unreadable",
+        "type": "bugfix"
+      },
+      {
+        "message": "**login:** name the cause when sign-in fails without a message",
+        "type": "bugfix"
+      },
+      {
+        "message": "**login:** recover refused sign-ins, check OpenCode",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** keep Claude Code off a proxy on a plain http gateway",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** keep long labels on one line in profile create",
+        "type": "bugfix"
+      }
+    ]
+  }
+}
