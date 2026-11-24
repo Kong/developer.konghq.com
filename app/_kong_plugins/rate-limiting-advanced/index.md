@@ -119,7 +119,7 @@ See [Rate limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 The Rate Limiting Advanced plugin supports the following window types:
 
 * **Fixed window**: Fixed windows consist of buckets that are statically assigned to a definitive time range. Each request is mapped to only one fixed window based on its timestamp and will affect only that window’s counters.
-* **Sliding window** (default): A sliding window tracks the number of hits assigned to a specific key (such as an IP address, consumer, credential) within a given time window, taking into account previous hit rates to create a dynamically calculated rate.
+* **Sliding window** (default): A sliding window tracks the number of hits assigned to a specific key (for example, an IP address, consumer, or credential) within a given time window, taking into account previous hit rates to create a dynamically calculated rate.
 The default (and recommended) sliding window type ensures a resource is not consumed at a higher rate than what is configured.
 
 Learn more about how the different [window types](/gateway/rate-limiting/window-types/) work for rate limiting plugins.

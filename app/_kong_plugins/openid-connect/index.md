@@ -202,7 +202,7 @@ Set up session auth:
 #### JWT access token authentication flow
 
 For legacy reasons, the stateless `JWT Access Token` authentication is named `bearer` (see [`config.auth_methods`](/plugins/openid-connect/reference/#schema--config-auth-methods)). 
-Stateless authentication means that the signature verification uses the identity provider to publish public keys and the standard claims verification (such as `exp` or expiry). 
+Stateless authentication means that the signature verification uses the identity provider to publish public keys and the standard claims verification (for example, `exp` or expiry). 
 The client may receive the token directly from the identity provider or by other means.
 
 {% include_cached plugins/oidc/diagrams/jwt-access-token.md %}
@@ -290,8 +290,8 @@ Set up client credentials grant auth:
 #### Authorization code flow
 
 The authorization code flow is the three-legged OAuth/OpenID Connect flow.
-The sequence diagram below describes the participants and their interactions
-for this usage scenario, including the use of session cookies:
+The following sequence diagram describes the participants and their interactions
+for this scenario, including the use of session cookies:
 
 {% include_cached plugins/oidc/diagrams/auth-code.md %}
 
