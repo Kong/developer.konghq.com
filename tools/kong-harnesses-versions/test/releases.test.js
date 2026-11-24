@@ -42,7 +42,11 @@ test('groups releases by major.minor series, keeping the highest patch and marki
         '    released: 2026-10-01\n' +
         '  - release: "0.3"\n' +
         '    version: "0.3.2"\n' +
-        '    released: 2026-08-15\n',
+        '    released: 2026-08-15\n' +
+        '\nrelease_dates:\n' +
+        "  '0.4.1': 2026/10/01\n" +
+        "  '0.4.0': 2026/09/20\n" +
+        "  '0.3.2': 2026/08/15\n",
     ],
   );
   assert.equal(writes[0].filePath, dataFile);
@@ -120,7 +124,11 @@ test('ignores tags that the versions job refuses, so the data and the help name 
       '  - release: "0.5"\n' +
       '    version: "0.5.10"\n' +
       '    latest: true\n' +
-      '    released: 2026-10-06\n',
+      '    released: 2026-10-06\n' +
+      '\nrelease_dates:\n' +
+      "  '0.5.10': 2026/10/06\n" +
+      "  '0.5.9': 2026/10/05\n" +
+      "  '0.5.2': 2026/10/05\n",
   );
 });
 
@@ -147,7 +155,33 @@ test('derives the released date from published_at', async () => {
 
   await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
 
-  assert.equal(writes[0].content, 'name: kong-harnesses\n\nreleases:\n  - release: "0.4"\n    version: "0.4.1"\n    latest: true\n    released: 2026-10-01\n');
+  assert.equal(writes[0].content, 'name: kong-harnesses\n\nreleases:\n  - release: "0.4"\n    version: "0.4.1"\n    latest: true\n    released: 2026-10-01\n\nrelease_dates:\n  \'0.4.1\': 2026/10/01\n');
+});
+
+test('writes a release_dates entry per valid release, in YYYY/MM/DD, beyond the ten-series cap', async () => {
+  const releases = Array.from({ length: 12 }, (_, i) => ({
+    tag_name: `v0.${40 - i}.0`,
+    published_at: `2026-${String(12 - i).padStart(2, '0')}-01T10:00:00Z`,
+    draft: false,
+    prerelease: false,
+  }));
+  releases.push({ tag_name: 'v0.99.0-rc.1', published_at: '2026-12-20T10:00:00Z', draft: false, prerelease: true });
+  releases.push({ tag_name: 'v0.98.0', published_at: '2026-12-19T10:00:00Z', draft: true, prerelease: false });
+  const { fetchImpl } = fakeFetch(releases);
+  const { writeFile, writes } = fakeWriter();
+
+  await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
+
+  const content = writes[0].content;
+  const releaseLines = content.split('\n').filter((line) => line.trim().startsWith('- release:'));
+  const dateLines = content.split('\n').filter((line) => /^  '0\.\d+\.0': \d{4}\/\d{2}\/\d{2}$/.test(line));
+
+  assert.equal(releaseLines.length, 10);
+  assert.equal(dateLines.length, 12);
+  assert.ok(content.includes("release_dates:\n  '0.40.0': 2026/12/01\n"));
+  assert.ok(content.includes("'0.29.0': 2026/01/01"));
+  assert.equal(content.includes('0.99.0-rc.1'), false);
+  assert.equal(content.includes('0.98.0'), false);
 });
 
 test('reads every page, so a newer release on a later page is still the latest', async () => {
