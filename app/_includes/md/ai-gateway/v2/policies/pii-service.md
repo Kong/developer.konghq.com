@@ -41,46 +41,18 @@ The `name` must be unique for each pattern.
 
 #### How the score works
 
-The `score` is the confidence that the service assigns to text matched by a custom pattern. It must be a number greater than `0` and no greater than `1`. A score of `0` never matches, and a missing, negative, or greater-than-`1` score causes the request to fail with an `Invalid item found in custom_patterns` error.
+The `score` sets how confident the service is in a custom pattern match.
+The score only matters when a custom pattern and a built-in entity type, such as `email` or `nrp`, match the same text.
+In that case, the higher score is used, and the custom pattern takes precedence when scores are equal.
+Without an overlapping match, a custom pattern is redacted at any score above `0`.
 
-The score isn't a threshold. A custom pattern with a low score still matches, as long as no other entity type matches the same text. The score only matters when a custom pattern and a built-in entity type, such as `email` or `nrp`, match the same text:
+If the built-in type has the higher score and isn't in `anonymize`, the text isn't sanitized.
+To prevent this, set `score` to `1` or add the built-in type to `anonymize`.
 
-* The match with the higher score is used.
-* If the scores are equal, the custom pattern takes precedence.
-* Built-in entity types have their own scores, which you can't configure.
+For example, the pattern `TCK-[0-9]{5}` with `anonymize: [custom]` matches `My ticket is TCK-12345 please help`, and the built-in `nrp` type also matches `TCK-12345`:
 
-If a built-in entity type has the higher score and that type isn't in the `anonymize` array, the text isn't sanitized at all. To avoid this, set the custom pattern's `score` to `1`, or add the built-in entity type to `anonymize`.
-
-The following examples all use the pattern `TCK-[0-9]{5}`:
-
-{% table %}
-columns:
-  - title: Input text
-    key: text
-  - title: "`score`"
-    key: score
-  - title: "`anonymize`"
-    key: anonymize
-  - title: Result
-    key: result
-rows:
-  - text: "`ticket TCK-12345`"
-    score: "`0.3`"
-    anonymize: "`custom`"
-    result: "`TCK-12345` is redacted. No other entity type matches it, so the low score doesn't matter."
-  - text: "`My ticket is TCK-12345 please help`"
-    score: "`0.5`"
-    anonymize: "`custom`"
-    result: "`TCK-12345` isn't redacted. The built-in `nrp` type also matches it with a higher score, and `nrp` isn't in `anonymize`."
-  - text: "`My ticket is TCK-12345 please help`"
-    score: "`1`"
-    anonymize: "`custom`"
-    result: "`TCK-12345` is redacted as a custom pattern."
-  - text: "`My ticket is TCK-12345 please help`"
-    score: "`0.5`"
-    anonymize: "`custom`, `nrp`"
-    result: "`TCK-12345` is redacted as `nrp`."
-{% endtable %}
+* With `score: 0.5`, `TCK-12345` isn't redacted, because `nrp` has the higher score.
+* With `score: 1`, `TCK-12345` is redacted as a custom pattern.
 
 ### Fields that can be anonymized
 
