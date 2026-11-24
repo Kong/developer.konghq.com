@@ -42,6 +42,8 @@ related_resources:
     url: /ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/
   - text: OpenID Connect authentication with {{site.ai_gateway}} 2.0
     url: /ai-gateway/openid-connect/
+  - text: Migrate {{site.ai_gateway}} Consumers to users
+    url: /ai-gateway/consumer-to-user-migration/
 faqs:
   - q: What is the difference between an AI Auth Strategy and an AI Model Provider?
     a: |

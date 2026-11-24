@@ -51,6 +51,8 @@ related_resources:
     url: /identity/auth-servers/
   - text: "{{site.konnect_short_name}} control plane resource limits"
     url: /gateway/control-plane-resource-limits/
+  - text: "Migrate {{site.ai_gateway}} Consumers to users"
+    url: /ai-gateway/consumer-to-user-migration/
 ---
 
 {% include sections/principals-and-directories.md %}
