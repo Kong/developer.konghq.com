@@ -64,7 +64,7 @@ Each user sets their own encryption passphrase, which is never shared or stored.
 
 ## Local database encryption
 
-{% new_in 13.5 %} {{ site.insomnia }} encrypts sensitive fields in the local database that it keeps on your machine. Encryption applies to every project, including Scratch Pad and local projects, and doesn't require any action from your part.
+{% new_in 13.5 %} {{ site.insomnia }} encrypts sensitive fields in the local database that it keeps on your machine. Encryption applies to every project, including Scratch Pad and local projects, and doesn't require any action from you.
 
 {{ site.insomnia }} encrypts the following fields:
 
