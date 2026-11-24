@@ -236,7 +236,7 @@ After you've configured your vector database and ingested content, you can contr
 
 ### Collections
 
-A collection is a logical grouping of knowledge base articles with independent access control rules. When you ingest content via the Konnect API, assign it to a collection using the `collection` field in the metadata.
+A collection is a logical grouping of knowledge base articles with independent access control rules. When you ingest content via the Admin API, assign it to a collection using the `collection` field in the metadata.
 
 Example metadata structure:
 
