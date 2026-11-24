@@ -4770,7 +4770,7 @@ messages:
       Either upgrade the expressions to be 3.15 compatible and upgrade Kong Gateway to
       version 3.15 or above, or remove conditional expressions from the configuration.
     DocumentationURL: |
-      [Condition Plugin](/gateway/api/admin-ee/latest/#/Plugin)
+      [Condition Plugin](/gateway/entities/plugin/)
   - ID: D601
     Severity: warning
     Description: |
@@ -4873,7 +4873,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.15.0.0` or above.
     DocumentationURL: |
-      [Vault entity](/gateway/api/admin-ee/latest/#/Vault)
+      [Vault entity](/gateway/entities/vault/)
   - ID: D611
     Severity: warning
     Description: |
@@ -8657,7 +8657,7 @@ messages:
       Migrate to a Dedicated Cloud Gateway or remove custom-plugin entities from the
       config.
     DocumentationURL: |
-      [Custom Plugins](/plugins/custom-plugins/)
+      [Custom Plugins](/custom-plugins/)
   - ID: P417
     Severity: warning
     Description: |

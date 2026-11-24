@@ -227,7 +227,7 @@ function _M.init_worker()
 end
 ```
 
-In the example above, `worker_events.register()` should contain three parameters:
+The `worker_events.register()` function should contain three parameters:
 
 * The first parameter is the invalidation function, in which the plugin should call `kong.cache:invalidate()` to flush the “dirty” cache data.
   With that, the plugin can identify the operation (create, update, delete) and figure out which entity is old and which is new.

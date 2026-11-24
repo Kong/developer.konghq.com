@@ -151,7 +151,7 @@ kong-exporter:
 
 All the object keynames/prefixes mentioned in the following paragraphs are parameterized with the prefix given in the config and the {{site.base_gateway}} version. For example, let's say the node has a version of `3.6.0.0`. The backup nodes will create registering files to run the leader election with a prefix `test-prefix/3.6.0.0/election/`. You can set up a lifecycle rule to delete objects with this prefix if it's not updated for days. The selected node is responsible for writing to the S3 bucket when it receives new configuration. The file structure is automatically created inside of the bucket and shouldn't be created manually. The key name is `test-prefix/3.6.0.0/config.json`.
 
-In {{site.base_gateway}} 3.5 or earlier, this node is responsible for writing to the S3 bucket when it receives new configuration. The file structure is automatically created inside of the bucket and should not be created manually. If the node version is `3.2.0.0`, using the example above, the key name will be `test-prefix/3.2.0.0/config.json`.
+In {{site.base_gateway}} 3.5 or earlier, this node is responsible for writing to the S3 bucket when it receives new configuration. The file structure is automatically created inside of the bucket and should not be created manually. If the node version is `3.2.0.0` and the prefix is `test-prefix`, the key name will be `test-prefix/3.2.0.0/config.json`.
 
 Both the Control Plane and Data Plane can be configured to export configurations.
 
@@ -198,7 +198,7 @@ kong-dp-exporter:
 ```
 
 This node is responsible for writing to the GCP bucket when it receives a new configuration. 
-The file structure is automatically created inside of the bucket and should not be created manually. If the node version is `3.2.0.0`, using the example above, the key name will be `test-prefix/3.2.0.0/config.json`. 
+The file structure is automatically created inside of the bucket and should not be created manually. If the node version is `3.2.0.0` and the prefix is `test-prefix`, the key name will be `test-prefix/3.2.0.0/config.json`. 
 
 Both the Control Plane and Data Plane can be configured to export configurations.
 
@@ -222,7 +222,7 @@ You can configure new Data Planes to load a configuration from the GCP cloud sto
 
 You can configure non-AWS S3-compatible object storage. The process is similar to the AWS S3 process, but requires an additional parameter: `AWS_CONFIG_STORAGE_ENDPOINT`. This is set to the endpoint of your object storage provider. 
 
-The example below uses MinIO to demonstrate configuring a backup node: 
+The following example uses MinIO to demonstrate configuring a backup node: 
 
 ```yaml
   kong-exporter:
