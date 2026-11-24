@@ -1,7 +1,7 @@
 metadata:
-  title: AI in Insomnia
+  title: AI in {{ site.insomnia }}
   content_type: landing_page
-  description: Explore AI features in Insomnia 12, including MCP Servers, AI-assisted mock servers, and commit suggestions. Learn how to connect, configure, and manage AI integrations across your workspace.
+  description: Explore AI features in {{ site.insomnia }} 12, including MCP Servers, AI-assisted mock servers, and commit suggestions. Learn how to connect, configure, and manage AI integrations across your workspace.
   breadcrumbs:
     - /insomnia/
   products:
@@ -10,8 +10,8 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "AI in Insomnia"
-      sub_text: Explore the AI features available in Insomnia and learn how they enhance automation, collaboration, and productivity.
+      text: "AI in {{ site.insomnia }}"
+      sub_text: Explore the AI features available in {{ site.insomnia }} and learn how they enhance automation, collaboration, and productivity.
     columns:
       - blocks:
           - type: structured_text
@@ -22,9 +22,9 @@ rows:
                 - type: text
                   text: |
                     {:.decorative}
-                    > As of Insomnia v12, AI features are free to use, though this may change in future releases.
+                    > As of {{ site.insomnia }} v12, AI features are free to use, though this may change in future releases.
 
-                    Insomnia 12 introduces a suite of **AI-driven capabilities** that make API development faster, smarter, and more collaborative. These include:
+                    {{ site.insomnia }} 12 introduces a suite of **AI-driven capabilities** that make API development faster, smarter, and more collaborative. These include:
                     - [**MCP Servers and Clients**](/insomnia/ai-in-insomnia/#mcp-servers-and-clients), which connect to external AI-ready tools and resources.  
                     - [**AI-assisted mock server generation**](/insomnia/self-hosted-mocks/#create-an-auto-generated-mock-server), which transforms prompts or API definitions into mock APIs.  
                     - [**AI commit message suggestions**](/insomnia/ai-in-insomnia/#ai-driven-git-commits), which help maintain clear and atomic commit histories.
@@ -52,7 +52,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Once an LLM is activated, Insomnia unlocks multiple AI features that are designed to automate repetitive workflows, generate content dynamically, and enhance collaboration.
+                    Once an LLM is activated, {{ site.insomnia }} unlocks multiple AI features that are designed to automate repetitive workflows, generate content dynamically, and enhance collaboration.
 
                     {% table %}
                     columns:
@@ -71,7 +71,7 @@ rows:
                         context: "Available in the **Git Sync** interface. See [**Git Sync**](/insomnia/git-sync/)."
                       - feature: "MCP Client operations"
                         description: "Connect to MCP Servers that expose callable tools, prompts, and structured resources via JSON-RPC."
-                        context: "Manage connections under **MCP Servers** in Insomnia. See [**MCP clients in Insomnia**](/insomnia/mcp-clients-in-insomnia/)."
+                        context: "Manage connections under **MCP Servers** in {{ site.insomnia }}. See [**MCP clients in {{ site.insomnia }}**](/insomnia/mcp-clients-in-insomnia/)."
                     {% endtable %}
 
   - header:
@@ -97,7 +97,7 @@ rows:
                     {:.info}
                     > **Note**: Local LLMs require a `.gguf` file placed in the `/Insomnia/llms/` directory.
 
-                    Credentials for hosted LLM providers are stored securely on your local system by the Insomnia app and are never synced across accounts or devices.
+                    Credentials for hosted LLM providers are stored securely on your local system by the {{ site.insomnia }} app and are never synced across accounts or devices.
   - header:
       type: h2
       text: "MCP Servers and Clients"
@@ -113,7 +113,7 @@ rows:
                         - `resources/READ`
                         - `prompts/GET`
 
-                      When you connect Insomnia to an MCP Server, Insomnia creates an **MCP Client** that acts like a synchronized request group. The client stays updated with tools, prompts, and resources published by the server. When offline, you will view cached data until you resync.
+                      When you connect {{ site.insomnia }} to an MCP Server, {{ site.insomnia }} creates an **MCP Client** that acts like a synchronized request group. The client stays updated with tools, prompts, and resources published by the server. When offline, you will view cached data until you resync.
         - blocks:
           - type: structured_text
             config:
@@ -137,7 +137,7 @@ rows:
     type: h2
     text: "AI-driven Git commits"
     description: |
-      Insomnia's **Suggest comments and grouping for Commits** feature analyzes staged changes and helps maintain consistent, meaningful Git histories. For Git concepts and workflows, go to [**Git Sync**](/insomnia/git-sync/).
+      {{ site.insomnia }}'s **Suggest comments and grouping for Commits** feature analyzes staged changes and helps maintain consistent, meaningful Git histories. For Git concepts and workflows, go to [**Git Sync**](/insomnia/git-sync/).
     columns:
       - blocks:
           - type: structured_text
@@ -170,7 +170,7 @@ rows:
                   If AI is deactivated at the instance level, the feature toggles will remain unavailable in the UI.
               - q: How do I manage AI across my organization?
                 a: |
-                  Enterprise administrators can activate or deactivate AI features at the instance level from **Insomnia Admin → AI Settings**.  
+                  Enterprise administrators can activate or deactivate AI features at the instance level from **Policies** > [**Governance**](https://app.insomnia.rest/app/enterprise/policies/governance) > **AI Features** in {{ site.insomnia }} Admin.
                   When deactivated, the desktop app shows an explanatory message.  
                   When activated, each user must still activate a model before toggles become available.
                   This setting is available only for Enterprise plans.

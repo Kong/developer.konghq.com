@@ -249,6 +249,8 @@ To mark a variable as confidential or make it visible again, navigate to an envi
 1. Navigate to the **Preferences** settings at the bottom left in the {{ site.insomnia }} sidebar.
 1. In the **General** tab, turn off **Hide Confidential values in Preview/Console**.
 
+{% new_in 13.5 %} On Enterprise plans, an administrator can [enforce this setting](/insomnia/enterprise-account-management/#enforce-hiding-confidential-values) for the whole account. When it's enforced, the setting stays on, you can't change it, and it shows **Enforced by your organization**.
+
 ### Export and Git Sync
 
 When you export an environment or sync it with Git Sync, {{ site.insomnia }} records which variables are confidential in a `confidentialKeys` list in the v5 file. The list contains variable names only. Values are exported like any other variable value.
