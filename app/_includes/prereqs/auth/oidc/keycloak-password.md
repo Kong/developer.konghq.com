@@ -49,7 +49,7 @@ Add an audience mapper to the `kong` client so that tokens it issues include `ko
 1. In the Keycloak admin console sidebar, open **Clients** and click the `kong` client.
 1. Click the **Client scopes** tab.
 1. Click **kong-dedicated**.
-1. Click **Add mapper** and select **By configuration** from the dropdown.
+1. Click **Configure a new mapper**.
 1. Select **Audience**.
 1. Configure the mapper:
 {% capture instructions %}

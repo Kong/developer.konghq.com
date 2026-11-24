@@ -129,7 +129,7 @@ Find the credentials for the second client:
 1. Give the scope a unique name: `add-client-2-as-audience`.
 1. Save the scope.
 1. Click the **Mappers** tab.
-1. Click **Add mapper** and select **By configuration** from the dropdown.
+1. Click **Configure a new mapper**.
 1. Select **Audience**.
 1. Configure the mapper:
 

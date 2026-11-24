@@ -43,7 +43,7 @@ rows:
 
 1. In your client, click the **Client scopes** tab.
 1. Click the **kong-dedicated** client scope.
-1. Click **Add mapper** and select **By configuration** from the dropdown.
+1. Click **Configure a new mapper**.
 1. Select **Hardcoded claim**.
 1. In the **Name** field, enter `tier`.
 1. In the **Token Claim Name** field, enter `tier`.
