@@ -200,7 +200,7 @@ Folders can be used to organize requests, but you can also add configuration to 
 
 You can also add documentation about the folder.
 
-{% new_in 13.5 %} The API Collection has the same settings, so you can set them once for every request in it. See [Collection settings](/insomnia/collections/#collection-settings).
+{% new_in 13.5 %} The API Collection has the same settings, so you can set them once for every request in it. See [How do I share authentication across requests?](/insomnia/request-authentication/#how-do-i-share-authentication-across-requests).
 
 ## Request timeout (ms)
 
