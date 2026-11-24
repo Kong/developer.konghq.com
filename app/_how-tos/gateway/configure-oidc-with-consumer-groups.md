@@ -106,23 +106,24 @@ variables:
 In this example:
 * `issuer`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
 * `auth_methods`:  Specifies that the plugin should use the client credentials grant.
-* `consumer_group_claim`: Looks for a client claim name in the token payload and maps it to the Consumer Group entity by the entity's `name` value.
+* `consumer_groups_claim`: Looks for a client claim name in the token payload and maps it to the Consumer Group entity by the entity's `name` value.
 
 ## Create a Consumer Group
 
-First, let's try to access the Service without a matching Consumer Group.
-Request the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
+First, let's try to access the Service before a matching Consumer Group exists.
+Request the Service with the client credentials created in the [prerequisites](#prerequisites):
 
 {% validation request-check %}
 url: /anything
 method: GET
-status_code: 401
+status_code: 403
 headers:
-  - 'Authorization: Basic {{ "kong:wrong-secret" | base64 }}'
+  - 'Authorization: Basic {{ "kong:$CLIENT_SECRET" | base64 }}'
 display_headers: true
 {% endvalidation %}
 
-You should get a `401 Unauthorized` error code, which means the Service is protected by claim authorization.
+You should get a `403 Forbidden` error code. The token is valid, but its `tier` claim doesn't match any Consumer Group, and `consumer_groups_optional` defaults to `false`, so the plugin refuses the request.
+A request with a wrong client secret fails earlier, at authentication, and gets `401 Unauthorized`.
 
 Create a Consumer Group with a name that matches the client claim value in your IdP, in this case `gold`:
 
