@@ -90,6 +90,10 @@ rows:
       [Add Principal attributes to metrics](./examples/metrics-principal-attributes/) {% new_in 3.16 %}
     description: Attach the authenticated Principal's ID and display name to request count and bandwidth metrics.
 
+  - use_case: |
+      [Add the credential attribute to metrics](./examples/metrics-credential-attributes/) {% new_in 3.17 %}
+    description: Attach the authenticated credential's ID to request count and bandwidth metrics.
+
   - use_case: "[Enable the OTEL plugin for API transactional logs](./examples/transactional-logs/)"
     description: Configure the OpenTelemetry plugin to send API transactional logs.
 
@@ -140,14 +144,14 @@ In {{site.base_gateway}}, metrics are natively supported by the OpenTelemetry pl
 {:.info}
 > **Metrics memory**: {{site.base_gateway}} stores metric data in the `otel_metrics` shared dictionary, which is 10 MB by default.
 > Each distinct combination of attribute values creates a new metric series. High-cardinality attributes, such as Consumer, Principal, or credential attributes, use more memory.
-> If the dictionary is full, {{site.base_gateway}} can lose new metric data.
+> If the dictionary is full, {{site.base_gateway}} might drop new metric data.
 >
-> To increase the size, set the `nginx_http_lua_shared_dict` parameter, for example `nginx_http_lua_shared_dict = otel_metrics 20m` in `kong.conf` or `KONG_NGINX_HTTP_LUA_SHARED_DICT="otel_metrics 20m"` as an environment variable. Then restart {{site.base_gateway}}.
+> To increase the size, set the [`nginx_http_lua_shared_dict`](/gateway/configuration/#nginx-injected-directives-section) parameter. For example, use `nginx_http_lua_shared_dict = otel_metrics 20m` in `kong.conf` or `KONG_NGINX_HTTP_LUA_SHARED_DICT="otel_metrics 20m"` as an environment variable. Then restart {{site.base_gateway}} to apply the change.
 
 ### Identifying requests in metrics
 
 You can attach the client's identity as attributes to the `http.server.request.count`, `http.server.request.size`, and `http.server.response.size` metrics. 
-These attributes can capture the [Consumer](/gateway/entities/consumer/) and the [Principal](/identity/principals/). You can enable both at the same time.
+These attributes can capture the [Consumer](/gateway/entities/consumer/), the [Principal](/identity/principals/), and the authenticated credential. You can enable them at the same time.
 
 Enable these identity attributes alongside `enable_request_metrics` or `enable_bandwidth_metrics`, which produce the metrics themselves.
 
@@ -172,10 +176,35 @@ rows:
     config: |
       [`enable_principal_attribute`](./reference/#schema--config-metrics-enable-principal-attribute) {% new_in 3.16 %}
     description: Display name of the authenticated Principal managed by {{site.identity}}.
+  - attribute: "`kong.auth.credential.id`"
+    config: |
+      [`enable_credential_attribute`](./reference/#schema--config-metrics-enable-credential-attribute) {% new_in 3.17 %}
+    description: ID of the authenticated credential, as set by the authentication plugin.
 {% endtable %}
 <!--vale on-->
 
 If the request has no authenticated Consumer or Principal, the corresponding attribute is left empty on the exported metrics.
+
+#### Credential attribute and limit
+
+The `kong.auth.credential.id` attribute holds the ID that the authentication plugin sets for the credential. For example:
+* [OpenID Connect](/plugins/openid-connect/) with `credential_claim` sets the value of that claim, for example `sub` or `email`.
+* [Key Auth](/plugins/key-auth/) sets the ID of the Key Auth credential.
+
+If you also set `enable_ai_metrics` to `true`, the plugin adds the attribute to the `gen_ai.client.token.usage` and `kong.gen_ai.llm.cost` metrics.
+If a request has no authenticated credential, the plugin omits the attribute.
+
+Each new credential ID creates a new metric series, and {{site.base_gateway}} keeps that series in memory.
+To limit memory use, each Nginx worker records at most [`opentelemetry_metrics_credential_attr_limit`](/gateway/configuration/#opentelemetry-metrics-credential-attr-limit) distinct credential IDs. The default is `200`.
+
+When a worker reaches the limit:
+* It logs a warning once.
+* It omits the attribute for new credential IDs but still counts their requests.
+* Credential IDs that the worker already recorded stay in the metrics.
+
+All OpenTelemetry plugin instances in a worker share this limit. Because requests are spread across all Nginx workers, each worker usually sees the same credentials. Set the limit to the number of distinct credentials that you expect one node to handle.
+
+To enable the attribute, see the [Add the credential attribute to metrics](./examples/metrics-credential-attributes/) example.
 
 ### Custom metrics {% new_in 3.16 %}
 
