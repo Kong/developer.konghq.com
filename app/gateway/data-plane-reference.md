@@ -287,11 +287,18 @@ A node that's already running a configuration keeps running it if it rejects a n
 To limit that exposure, {{site.konnect_short_name}} stores the most recent configuration that a data plane node accepted, for each {{site.base_gateway}} version.
 If a node without a configuration rejects the configuration it's sent, {{site.konnect_short_name}} sends it the stored configuration instead, so the node starts proxying traffic.
 That node then runs an older configuration than the one you last published, and {{site.konnect_short_name}} reports it as **Last known good config**.
+{{site.konnect_short_name}} enables this for all control planes, and you don't need to configure it.
 
 A node that doesn't have a configuration yet is the exception: if it rejects the configuration it's sent, it has nothing to serve.
 This happens most often to nodes that are created by an autoscaling event, a rolling deploy, or a new pod.
 
 ### How the last known good configuration works
+
+A data plane node can reject a configuration for the following reasons:
+
+* A version compatibility transformation fails for the node's {{site.base_gateway}} version.
+* The configuration contains an entity or plugin shape that the node's {{site.base_gateway}} version doesn't support.
+* A problem on the control plane side prevents the node from applying the full configuration. This doesn't include a control plane outage.
 
 {{site.konnect_short_name}} stores and sends a last known good configuration in the following sequence:
 
@@ -305,11 +312,27 @@ This happens most often to nodes that are created by an autoscaling event, a rol
 The node runs the stored configuration until the next configuration change.
 At that point, the control plane reconciles every connected node, and any node that can apply the new configuration returns to **In sync**.
 
+### Recovery time
+
+Under normal conditions, a node receives the stored configuration within seconds of reporting that it rejected the current one.
+{{site.konnect_short_name}} allows up to one minute to retrieve and send the stored configuration after it receives the node's error.
+This is the limit for a single attempt, not a service level agreement.
+
+{{site.konnect_short_name}} doesn't send a rejected configuration to the same node again.
+It also throttles repeated failures for the same node and the same rejected configuration.
+
 ### Check the configuration status of your nodes
 
 To see the configuration status of your data plane nodes, call `GET /v2/control-planes/{controlPlaneId}/nodes`, or go to **API Gateway**, select a control plane, and click the **Data plane nodes** tab.
 To see one node, call `GET /v2/control-planes/{controlPlaneId}/nodes/{nodeId}`, or select the node in the **Data plane nodes** tab.
 Both endpoints return the node's `config_sync` state, the hash of the configuration it's running, and any errors it reported.
+The `config_sync.state` field is one of `STATE_UNSPECIFIED`, `STATE_IN_SYNC`, `STATE_PENDING`, or `STATE_RESILIENCY`.
+For a node on the last known good configuration, the `config_sync.resiliency` object includes the following fields:
+
+* `fallback_hash`: The hash of the fallback configuration.
+* `activated_at`: When the fallback was activated.
+* `latest_config_errors`: The errors from the configuration that the node rejected.
+
 For the full response, see the [Control Planes Config API](/api/konnect/control-planes-config/).
 
 The **Configuration status** summary counts the nodes in each state, and lists the {{site.base_gateway}} versions that are running the last known good configuration.
@@ -357,6 +380,32 @@ rows:
     meaning: "The node was already running a configuration and kept it. {{site.konnect_short_name}} doesn't replace a configuration that a node is already running."
   - reason: "The node is running its current config because the control plane withheld the latest config."
     meaning: "{{site.konnect_short_name}} never sent the latest configuration, because the node's {{site.base_gateway}} version can't apply it. Check the **Compatibility** card and [version compatibility in control planes](/gateway/data-plane-version-compatibility/)."
+{% endtable %}
+
+### Last known good configuration and data plane resilience
+
+{{site.konnect_short_name}} also supports [data plane resilience](/gateway/cp-outage/), which configures new nodes from a backup in object storage when the control plane is unreachable.
+The two features cover different failures:
+
+{% table %}
+columns:
+  - title: Feature
+    key: feature
+  - title: Failure it covers
+    key: failure
+  - title: Managed by
+    key: owner
+  - title: Setup
+    key: setup
+rows:
+  - feature: Last known good configuration
+    failure: "The control plane is running, but the node rejects the current configuration."
+    owner: "{{site.konnect_short_name}}"
+    setup: "None"
+  - feature: "[Data plane resilience](/gateway/cp-outage/)"
+    failure: "The control plane is unreachable."
+    owner: "You"
+    setup: "A backup node and S3-compatible or Google Cloud storage."
 {% endtable %}
 
 ### Limitations
