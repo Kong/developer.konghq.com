@@ -734,6 +734,17 @@ The OpenID Connect plugin performs the following checks on the incoming token be
 
 Afterwards, the rest of the OpenID Connect plugin flow continues on the exchanged token.
 
+By default, if the exchange fails {{site.base_gateway}} rejects the request with a `401 Unauthorized` response.
+The `WWW-Authenticate` header includes `error="invalid_token"`.
+The response is the same whether the token endpoint refuses the exchange or is unavailable, so clients can't tell the two apart.
+
+The data plane log shows the cause:
+* If the token endpoint returns an error, the log contains `invalid status code received from the token endpoint (<status>)`.
+* If it doesn't respond within [`config.timeout`](/plugins/openid-connect/reference/#schema--config-timeout), the log contains `timeout`.
+* When token exchange caching is enabled, both messages start with `failed to get from node cache:`.
+
+After a timeout, the plugin retries the token request once, so the client waits about twice the length of `config.timeout` before receiving the `401`.
+
 Depending on the use case, {{site.base_gateway}} can exchange the token either with the same authorization server that issued the initial subject token, or exchange tokens between different authorization servers.
 
 Set up token exchange:
