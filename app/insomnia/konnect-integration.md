@@ -101,7 +101,7 @@ rows:
     how: |
       Open a synced request and click the **Plugins** tab in the request pane. See [Plugins tab](#plugins-tab).
   - feature: "Debugger"
-    usage: "Capture traces from your data plane nodes with a {{ site.konnect_short_name }} debug session. Available in {{ site.insomnia }} 13.5 and later."
+    usage: "{% new_in 13.5 %} Capture traces from your data plane nodes with a {{ site.konnect_short_name }} debug session."
     how: |
       Send a synced request and click **Debug** in the response pane. See [Debugger](#debugger).
 {% endtable %}
