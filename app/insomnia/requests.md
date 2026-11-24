@@ -124,7 +124,7 @@ rows:
     steps: In the **Body** tab, select the type of body from the dropdown list.
   - element: Authentication
     steps: >-
-      In the **Auth** tab, select the authentication type from the dropdown list to get the corresponding form. Select **Inherit from parent** to use the authentication of the nearest parent folder or, if you're using {{ site.insomnia }} 13.5 or later, set them on the API Collection. See [Collection settings](/insomnia/collections/#collection-settings).
+      In the **Auth** tab, select the authentication type from the dropdown list to get the corresponding form. Select **Inherit from parent** to use the authentication of the nearest parent folder or, in {{ site.insomnia }} 13.5 and later, of the API Collection. See [Collection settings](/insomnia/collections/#collection-settings).
   - element: Headers
     steps: >-
       In the **Headers** tab, click **Add** to create a new header and enter the name and value. You can also add a description. You can use the checkbox next to the header to remove it from the request without deleting it completely.
