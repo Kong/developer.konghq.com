@@ -26,6 +26,7 @@ tags:
 
 tools:
     - konnect-api
+    - deck
 
 tldr:
   q: How do I compute a plugin's config from a CEL expression instead of a fixed value?
@@ -151,39 +152,16 @@ Configure the plugin globally with:
 * `identifier: principal`, so the plugin keys and limits by the authenticated Principal.
 * A static `config.limit` and `config.custom_key`, used as the fallback whenever a request's expressions can't be evaluated.
 * `expressions.limit` and `expressions.custom_key`, reading the authenticated Principal's `rate_limit` and `partner_id` metadata.
+* `config.namespace`: Groups this plugin's counters. Set it explicitly with decK or in DB-less mode, so the namespace isn't regenerated on every update.
 
 <!--vale off-->
-{% konnect_api_request %}
-url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugins/
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  name: rate-limiting-advanced
-  config:
-    identifier: principal
-    custom_key: unknown-partner
-    limit:
-      - 10
-    window_size:
-      - 60
-    strategy: local
-  expressions:
-    custom_key: principal.metadata.partner_id
-    limit:
-      - principal.metadata.rate_limit
-{% endkonnect_api_request %}
-<!--vale on-->
-
-{% comment %}
-_to do: uncomment and replace API instructions once decK support is added_
 {% entity_examples %}
 entities:
   plugins:
     - name: rate-limiting-advanced
       config:
         identifier: principal
+        namespace: idp-claims
         custom_key: unknown-partner
         limit:
           - 10
@@ -197,7 +175,7 @@ entities:
 formats:
   - deck
 {% endentity_examples %}
-{% endcomment %}
+<!--vale on-->
 
 ## Validate
 
