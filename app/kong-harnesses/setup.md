@@ -25,10 +25,13 @@ Use it to go from a profile to a working agent CLI with one command.
 
 If you pass both a profile source and `--profile`, `setup` exits with a usage error.
 
+`setup` skips the sign-in step when the profile uses `sign_in: environment_key`, because each command reads the key from `KONG_HARNESSES_STATIC_KEY`.
+{% comment %}
 `setup` skips the sign-in step in two cases:
 
 * The profile uses `sign_in: environment_key`, because each command reads the key from `KONG_HARNESSES_STATIC_KEY`.
 * Every agent CLI that `setup` configures signs in through its own plugin, as OpenCode and Hermes Agent do.
+{% endcomment %}
 
 ## Run setup again
 

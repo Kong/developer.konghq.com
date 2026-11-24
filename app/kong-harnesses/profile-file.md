@@ -47,7 +47,7 @@ To see an installed profile, run `profile get` with [jq](https://jqlang.org/), w
 kong-harnesses profile get PROFILE_NAME -o json | jq '.profile'
 ```
 
-The following profile signs developers in with an identity provider and sets up {{ site.claude_code }} and Codex:
+The following profile signs developers in with an identity provider and sets up {{ site.claude_code }}{% comment %} and Codex{% endcomment %}:
 
 ```json
 {
@@ -69,10 +69,10 @@ The following profile signs developers in with an identity provider and sets up 
       "tool_reference": true,
       "advisor": false,
       "artifact": false
-    },
+    }{% comment %},
     "openai": {
       "protocol": "openai-responses"
-    }
+    }{% endcomment %}
   },
   "clients": {
     "claude-code": {
@@ -91,10 +91,10 @@ The following profile signs developers in with an identity provider and sets up 
       "auto_updates": false,
       "tool_search": true,
       "advisor": false
-    },
+    }{% comment %},
     "codex": {
       "route": "openai"
-    }
+    }{% endcomment %}
   }
 }
 ```
@@ -158,7 +158,8 @@ rows:
       Some `sign_in` values, and `mcp_servers`, need a newer release, as the list after this table shows.
     release: "0.6.0 and later"
   - version: "13"
-    adds: "The `codex`, `opencode`, and `omp` client blocks."
+    adds: "No changes for {{ site.claude_code }}."{% comment %}
+    adds: "The `codex`, `opencode`, and `omp` client blocks."{% endcomment %}
     release: "0.7.0 and later"
   - version: "14"
     adds: >-
@@ -166,10 +167,12 @@ rows:
       Each choice is optional.
     release: "0.9.0 and later"
   - version: "15"
-    adds: "A client block other than `claude-code` in a profile that sets `gateway_ca_bundle`."
+    adds: "No changes for {{ site.claude_code }}."{% comment %}
+    adds: "A client block other than `claude-code` in a profile that sets `gateway_ca_bundle`."{% endcomment %}
     release: "0.14.0 and later"
   - version: "16"
-    adds: "The `hermes` and `pi` client blocks."
+    adds: "No changes for {{ site.claude_code }}."{% comment %}
+    adds: "The `hermes` and `pi` client blocks."{% endcomment %}
     release: "0.14.0 and later"
   - version: "17"
     adds: "`sign_in` set to `environment_key`."
@@ -261,17 +264,20 @@ rows:
 Versions 2 to 11 keep the {{ site.claude_code }} settings at the top level: `models`, `telemetry`, `request_shape`, `auto_updates`, `model_metadata`, and `pricing`.
 From version 12, these fields go in `clients.claude-code`, and the top level refuses them.
 A profile before version 12 doesn't have client blocks.
-`profile activate` can set up every agent CLI except Hermes Agent for it, subject to the refusals in [Clients](#clients).
+`profile activate` can set up {{ site.claude_code }} for it.{% comment %}
+`profile activate` can set up every agent CLI except Hermes Agent for it, subject to the refusals in [Clients](#clients).{% endcomment %}
 
 ### Plain HTTP gateways
 
 Requests to an `http://` gateway aren't encrypted, so a proxy could read the credential.
 {{site.kong_harnesses}} keeps these requests off proxies:
 
+* {{ site.claude_code }} works with an `http://` gateway.
+  `profile activate` sets it up when the profile configures it, it is installed or named with `--client`, and the checks in this list pass.{% comment %}
 * Codex, OpenCode, and Hermes Agent need an `https://` gateway, even for a gateway on this computer.
   They choose their proxy in ways that {{site.kong_harnesses}} can't check, so `profile activate` doesn't set them up for an `http://` gateway.
 * {{ site.claude_code }}, `omp`, and pi work with an `http://` gateway.
-  `profile activate` sets them up when the profile configures them, they are installed or named with `--client`, and the checks in this list pass.
+  `profile activate` sets them up when the profile configures them, they are installed or named with `--client`, and the checks in this list pass.{% endcomment %}
   `profile activate` doesn't change any client settings when a pre-write check fails.
 * When a proxy variable in the command environment applies to the gateway host, `profile activate` doesn't set up any client.
   `credential` and `token` also don't return a credential.
@@ -423,18 +429,19 @@ rows:
   - field: "`protocol`"
     description: >-
       Required.
-      `anthropic-messages` for the Anthropic API, `foundry-messages` for Microsoft Foundry, `bedrock-mantle-messages` for Amazon Bedrock Mantle, `openai-responses` for Codex, or `gateway-plugin` for OpenCode.
+      `anthropic-messages` for the Anthropic API, `foundry-messages` for Microsoft Foundry, or `bedrock-mantle-messages` for Amazon Bedrock Mantle.{% comment %}
+      `anthropic-messages` for the Anthropic API, `foundry-messages` for Microsoft Foundry, `bedrock-mantle-messages` for Amazon Bedrock Mantle, `openai-responses` for Codex, or `gateway-plugin` for OpenCode.{% endcomment %}
   - field: "`tool_reference`"
     description: >-
-      Required for the three Anthropic API protocols, and refused for the others.
+      Required{% comment %} for the three Anthropic API protocols, and refused for the others{% endcomment %}.
       `true` when the route serves the tool references that {{ site.claude_code }} tool search sends.
   - field: "`advisor`"
     description: >-
-      Required for the three Anthropic API protocols, and refused for the others.
+      Required{% comment %} for the three Anthropic API protocols, and refused for the others{% endcomment %}.
       `true` when the route serves the {{ site.claude_code }} advisor tool.
   - field: "`artifact`"
     description: >-
-      Required for the three Anthropic API protocols, and refused for the others.
+      Required{% comment %} for the three Anthropic API protocols, and refused for the others{% endcomment %}.
       `true` when the route serves the {{ site.claude_code }} artifact tool.
       The `artifact: true` choice of the `claude-code` block needs `artifact: true` here.
       From version 14, when a `subscription` profile leaves out the `artifact` choice and the route has `artifact: false`, `profile activate` writes `enableArtifact: false`.
@@ -443,7 +450,9 @@ rows:
 ## Clients
 
 `clients` has one block for each agent CLI that `profile activate` sets up.
-Each block has a `route` field, which names a route with the protocol that the client uses:
+The `claude-code` block has a `route` field, which names a route with one of these protocols:{% comment %}
+`clients` has one block for each agent CLI that `profile activate` sets up.
+Each block has a `route` field, which names a route with the protocol that the client uses:{% endcomment %}
 
 {% table %}
 columns:
@@ -457,6 +466,7 @@ rows:
   - block: "`claude-code`"
     version: "12"
     protocol: "`anthropic-messages`, `foundry-messages`, or `bedrock-mantle-messages`"
+{% comment %}
   - block: "`codex`"
     version: "13"
     protocol: "`openai-responses`"
@@ -472,8 +482,11 @@ rows:
   - block: "`pi`"
     version: "16"
     protocol: "`anthropic-messages`"
+{% endcomment %}
 {% endtable %}
 
+A `subscription` profile has only a `claude-code` block, on an `anthropic-messages` route.
+{% comment %}
 Some blocks have more rules:
 
 * The `hermes` block also needs `model`, the gateway model that Hermes Agent starts with, 1 to 128 bytes of visible ASCII.
@@ -489,6 +502,7 @@ Some blocks have more rules:
 * Codex, OpenCode, and Hermes Agent don't take an `http://` gateway.
   See [Plain HTTP gateways](#plain-http-gateways).
 * In a profile before version 12, top-level `telemetry` stops Codex, OpenCode, `omp`, and pi, and top-level `models` stops Codex.
+{% endcomment %}
 
 ### Claude Code
 

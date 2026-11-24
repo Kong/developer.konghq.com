@@ -98,7 +98,7 @@ rows:
 An interrupted sign-in renewal (`refresh-pending`) resumes on the next credential call, so `doctor` reports `ok` on the `login` check for it.
 When `doctor` finds a failure, it uses these exit codes:
 
-* `1` for the network, the identity provider, the gateway or its MCP routes, the OpenCode plugin download, the `--inference` request, or a check that couldn't complete.
+* `1` for the network, the identity provider, the gateway or its MCP routes, {% comment %}the OpenCode plugin download, {% endcomment %}the `--inference` request, or a check that couldn't complete.
   This includes a failure that doesn't go away on a retry, such as a missing route or a refused sign-in.
 * `2` for the profile, the agent CLI or its settings, the shell that starts the agent CLI, or the {{site.kong_harnesses}} install on Windows.
   This includes a `login` finding when `max_access_token_lifetime_seconds` is too low.
@@ -238,11 +238,11 @@ Check the values against the [profile file reference](/kong-harnesses/profile-fi
 The end of the message gives the reason and the fix, for example:
 
 * "only Claude Code signs in to a Claude subscription": A `subscription` profile sets up only {{ site.claude_code }}.
-  Use `--client claude-code`, or use a different `--sign-in`.
+  Use `--client claude-code`, or use a different `--sign-in`.{% comment %}
 * "needs an identity provider": OpenCode and Hermes Agent don't work with `--sign-in static-key` or `--sign-in environment-key`.
   Create the profile with an identity provider.
 * "pass --audience-parameter audience and no other --scope": Hermes Agent sends the audience in the `audience` parameter and requests only the scopes `openid`, `profile`, `email`, and `offline_access`.
-  Add `--audience-parameter audience`, and remove the other `--scope` values.
+  Add `--audience-parameter audience`, and remove the other `--scope` values.{% endcomment %}
 * "only Claude Code reaches the gateway in this provider mode": Only {{ site.claude_code }} works with the `--provider` that you gave.
   Use `--client claude-code`, or use a different `--provider`.
 
@@ -452,10 +452,12 @@ The full message says that your {{ site.claude_code }} settings file sets `ANTHR
 {{ site.claude_code }} would send that value in place of your sign-in.
 Delete the variable from the settings file, then try again.
 
+{% comment %}
 ### "has a saved key for the kong provider"
 
 pi has its own saved key for the `kong` provider, and it would send that key in place of your sign-in.
 Run `pi auth logout kong`, then try again.
+{% endcomment %}
 
 ### "a proxy is set for the plain-HTTP gateway"
 
@@ -463,12 +465,14 @@ The profile uses an `http://` gateway, and a proxy variable in the shell applies
 The proxy could read the credential, so `profile activate` doesn't set up any client.
 To fix it, follow the row for this message in [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token), then run `profile activate` again.
 
+{% comment %}
 ### "is not configured: it can choose a proxy"
 
 The full message is `CLIENT_NAME is not configured: it can choose a proxy that would read the credential for the plain-HTTP gateway GATEWAY_URL unencrypted; use an HTTPS gateway for it`.
 `profile activate` doesn't set up Codex, OpenCode, or Hermes Agent for an `http://` gateway, and sets up the other clients as [Plain HTTP gateways](/kong-harnesses/profile-file/#plain-http-gateways) describes.
 A failure while writing the settings can still leave some clients set up.
 Give these clients a profile with an `https://` gateway.
+{% endcomment %}
 
 ### "is not configured" for a missing or refused gateway route
 
@@ -478,12 +482,14 @@ Ask the operators of the gateway to add the route or give you access, then run `
 Some gateway routes match on a header that only the agent CLI sends, such as its `User-Agent`.
 For such a route, run `profile activate` again with `--skip-route-check`.
 
+{% comment %}
 ### "uses plain http, or redirects to it"
 
 The full message names the npm registry of OpenCode and says that it uses plain HTTP or redirects to it.
 When `profile activate` sets up several agent CLIs, the message starts with `OpenCode is not configured:`.
 OpenCode installs the {{site.kong_harnesses}} plugin from that registry, and over plain HTTP the network could read the registry credential and change the package.
 Set the registry in your npm configuration to an `https://` URL, or to a registry on this computer, then run `profile activate` again.
+{% endcomment %}
 
 ### "managed settings could send"
 
@@ -526,11 +532,13 @@ Then run `kong-harnesses profile cleanup --client CLIENT_NAME`, or remove the le
 It can't tell which record is newer.
 Remove the leftover values and both records manually, then run the `profile activate` command that the message names.
 
+{% comment %}
 ### "resolve the same ownership document"
 
 pi and `omp` both read `PI_CODING_AGENT_DIR`, so when that variable is set, a profile that sets up both points them at the same folder.
 `profile activate` refuses before it changes a file.
 Unset `PI_CODING_AGENT_DIR`, or configure one of the two clients manually.
+{% endcomment %}
 
 ### "a client configuration directory environment variable is invalid"
 
