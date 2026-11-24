@@ -296,8 +296,6 @@ A `serverName` entry is an exception: it matches the name as written, before the
   A remote server that takes its host from such a variable then doesn't have a host to reach.
   A gateway MCP URL that names the same such variable more than once can also leave the server undecided.
   Write the value as a literal.
-* The URL of the server or of a `serverUrl` entry has a form that `fleet build` can't compare as {{ site.claude_code }} does, such as a percent escape or a host that isn't ASCII.
-  Write the URL in plain ASCII, without percent escapes, backslashes, or spaces.
 
 `fleet build` refuses a blocked or undecided server.
 It names each server, the cause, and the fix, such as a literal allowlist entry or a value for the variable in the `env` of the policy.
