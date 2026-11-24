@@ -96,7 +96,8 @@ rows:
       From the **Konnect** tab, click **Sync**.
   - feature: |
       **Plugins** tab
-    usage: "List the {{ site.konnect_short_name }} plugins that can apply to a synced request. {% new_in 13.5 %}"
+    usage: |
+      {% new_in 13.5 %} List the {{ site.konnect_short_name }} plugins that can apply to a synced request.
     how: |
       Open a synced request and click the **Plugins** tab in the request pane. See [Plugins tab](#plugins-tab).
   - feature: "Debugger"

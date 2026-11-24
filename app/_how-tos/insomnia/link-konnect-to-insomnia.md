@@ -53,7 +53,7 @@ tldr:
 
 ## Link {{ site.insomnia }} to {{ site.konnect_short_name }}
 
-1. In your workspace, open the **Konnect** tab
+1. In your workspace, click the **Konnect** tab.
 1. In the **Personal Access Token**, paste the PAT
 1. Click **Connect & Sync**
 
