@@ -163,6 +163,34 @@ The namespace field is auto-generated for the plugin instance. It's optional whe
 If you are managing {{site.base_gateway}} with decK or running {{site.base_gateway}} in DB-less mode, set the namespace explicitly in your declarative configuration.
 Otherwise the field will be regenerated automatically with every update.
 
+## Cloning the plugin {% new_in 3.17 %}
+
+The Rate Limiting Advanced plugin supports [cloning](/gateway/entities/plugin/#cloning-plugins), which lets you run multiple instances of the plugin with different identifiers.
+
+### Counter rollback when a request is denied
+
+When a request matches more than one Rate Limiting Advanced instance, the instances run in order and each one increments its own counters.
+This also applies across other rate limiting plugin instances that share this mechanism, such as [Service Protection](/plugins/service-protection/) or [ACE](/plugins/ace/), when they run on the same request.
+
+If an instance rejects the request with a `429`, each instance that already incremented its counters decides what to do with them.
+Each instance uses only its own [`disable_penalty`](./reference/#schema--config-disable-penalty) setting:
+
+* `disable_penalty: false` (default): The denied request still counts against the limit, so the instance keeps the counter that it incremented.
+* `disable_penalty: true`: Denied requests don't count against the limit, so the instance rolls back the counter it incremented for this request.
+
+The same rule applies to every instance's counters: whether an instance rolls back or keeps its counter depends only on its own `disable_penalty` configuration, not on the configuration of the instance that rejected the request.
+
+### Merged response headers
+
+When multiple instances match a request, the client receives a single set of rate limiting headers (`RateLimit-*` and `X-RateLimit-*`).
+{{site.base_gateway}} merges the headers from all matching instances, including the base plugin, its clones, and other rate limiting
+plugins on the same request, such as [Service Protection](/plugins/service-protection/) or [ACE](/plugins/ace/).
+
+The merged headers reflect the most restrictive instance:
+
+* If the `remaining` values of the instances differ, the headers report the instance with the smallest `remaining` value.
+* If multiple instances report the same `remaining` value, the headers report the instance with the longer reset time.
+
 
 ## Strategies
 
@@ -185,6 +213,8 @@ Otherwise the field will be regenerated automatically with every update.
 ## Headers sent to the client
 
 {% include_cached /plugins/rate-limiting/headers.md name=page.name %}
+
+When multiple plugin instances (for example, a base plugin and its clones) match the same request, the client receives one merged set of headers. See [Merged response headers](#merged-response-headers) for the merge rules.
 
 ## Rate limiting for Consumer Groups
 
