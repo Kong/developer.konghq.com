@@ -62,7 +62,7 @@ Use a group when you want to apply these actions to a set of principals:
 Group membership works in the following ways:
 
 * **Manual membership:** You add and remove each member explicitly, and a principal must already exist in the directory before you can add it to a group.
-* **Automatic mapping from an IdP:** When you enable the [Token Vault](/identity/token-vault/) on a directory, {{site.identity}} can provision principals from a trusted IdP and add them to groups based on the group names your IdP sends in its tokens. If a group doesn't exist, {{site.identity}} creates it. Automatic mapping only adds principals to groups of type `group`.
+* **Automatic mapping from an IdP:** When you enable the [Token Vault](/identity/token-vault/) on a directory, {{site.identity}} can provision principals from a trusted IdP and add them to groups based on the group names your IdP sends in its tokens. If a group doesn't exist, {{site.identity}} creates it. Automatic mapping only adds principals to groups of type `group`. Groups of types `teams` and `project` don't support automatic mapping.
 
 {{site.identity}} doesn't cache group membership. When membership changes, the new groups apply the next time the gateway authenticates the principal.
 
