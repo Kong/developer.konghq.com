@@ -22,9 +22,8 @@ description: "Named sets of principals in a directory. Use a group to apply one 
 faqs:
   - q: Can I create a team and add users to it manually?
     a: |
-       No. You can only create a team from the [org structure file](/ai-cost-management/org-chart/) you import.
+      No. You can only create a team from the [org structure file](/ai-cost-management/org-chart/) you import.
       {{site.konnect_short_name}} creates teams from the reporting lines in the file, and teams and their members change only when you upload a new file.
-
 
 related_resources:
   - text: "{{site.identity}} principals"
