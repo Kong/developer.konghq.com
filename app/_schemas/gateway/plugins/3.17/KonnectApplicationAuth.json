@@ -1471,6 +1471,61 @@
                       "principals": {
                         "description": "Configuration for Kong Identity principal hydration after token verification.",
                         "properties": {
+                          "actors": {
+                            "description": "Resolve the entities that act on behalf of the subject (for example an AI agent or a workload) as Kong Identity principals. Kong exposes them with `kong.client.get_actors()`. Requires principals.enabled.",
+                            "properties": {
+                              "enabled": {
+                                "default": false,
+                                "description": "When true, resolve the actors named by sources after the subject principal is found.",
+                                "type": "boolean"
+                              },
+                              "principal_by": {
+                                "description": "Custom identity name for the actor lookups. When absent, principals.principal_by applies.",
+                                "minLength": 1,
+                                "type": "string"
+                              },
+                              "sources": {
+                                "description": "Ordered list of places to find actors. The order of the sources is the order of the actors. A source that finds nothing in the token adds no actor.",
+                                "items": {
+                                  "properties": {
+                                    "claim": {
+                                      "description": "Path of the claim that holds the actor identifier. Required for `claim`. Not allowed for the other types.",
+                                      "items": {
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "minItems": 1,
+                                      "type": "array"
+                                    },
+                                    "max_depth": {
+                                      "default": 5,
+                                      "description": "Maximum number of `act` levels to resolve. Used by `act_chain` only. Other source types ignore it.",
+                                      "maximum": 10,
+                                      "minimum": 1,
+                                      "type": "integer"
+                                    },
+                                    "type": {
+                                      "description": "`client_id` uses the client id that the plugin selected for the request. `claim` uses the value of the claim in `claim`. `act_chain` uses `act.sub`, `act.act.sub`, and so on (RFC 8693).",
+                                      "enum": [
+                                        "act_chain",
+                                        "claim",
+                                        "client_id"
+                                      ],
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "type"
+                                  ],
+                                  "type": "object"
+                                },
+                                "maxItems": 5,
+                                "minItems": 1,
+                                "type": "array"
+                              }
+                            },
+                            "type": "object"
+                          },
                           "directory": {
                             "default": "default",
                             "description": "The Kong Identity directory instance to look up against.",

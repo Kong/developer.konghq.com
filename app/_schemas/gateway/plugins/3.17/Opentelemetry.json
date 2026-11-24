@@ -128,6 +128,10 @@
               "type": "string",
               "x-referenceable": true
             },
+            "max_export_batch_size": {
+              "description": "The maximum number of data points in a batch that are exported at once. If set, the metrics are split into several requests of up to this many data points, which avoids the request being rejected by an OTLP server that limits the request body size. If it is not set, the `OTEL_METRIC_EXPORT_MAX_BATCH_SIZE` environment variable is used, and if that is not set either, all metrics are exported in one request.",
+              "type": "integer"
+            },
             "push_interval": {
               "default": 60,
               "description": "The interval in seconds at which metrics are pushed to the OTLP server. This setting is only applicable when `endpoint` is set.",

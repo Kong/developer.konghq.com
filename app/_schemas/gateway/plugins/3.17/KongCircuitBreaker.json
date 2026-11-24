@@ -176,7 +176,7 @@
           "type": "object"
         },
         "response_body": {
-          "description": "Optional body returned while a circuit is open. It is sent as written, with response_content_type. Leave it unset to return the standard Kong error response for the status code.",
+          "description": "Body returned while a circuit is open when response_mode is custom. It is sent as written. When it is unset or empty, the body is empty. Ignored when response_mode is kong_default.",
           "type": "string"
         },
         "response_code": {
@@ -188,7 +188,16 @@
         },
         "response_content_type": {
           "default": "application/json",
-          "description": "Content-Type header sent with response_body. Ignored when response_body is unset.",
+          "description": "Content-Type header sent when response_mode is custom, also with an empty body. Ignored when response_mode is kong_default.",
+          "type": "string"
+        },
+        "response_mode": {
+          "default": "kong_default",
+          "description": "How to build the response while a circuit is open. kong_default returns the standard Kong error response for response_code. custom returns response_body with response_content_type.",
+          "enum": [
+            "custom",
+            "kong_default"
+          ],
           "type": "string"
         }
       },

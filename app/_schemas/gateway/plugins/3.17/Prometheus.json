@@ -4,7 +4,7 @@
       "properties": {
         "ai_metrics": {
           "default": false,
-          "description": "A boolean value that determines if ai metrics should be collected. If enabled, the `ai_llm_requests_total`, `ai_llm_cost_total` and `ai_llm_tokens_total` metrics will be exported.",
+          "description": "A boolean value that determines if AI metrics should be collected. If enabled, the `ai_llm_requests_total`, `ai_llm_cost_total`, and `ai_llm_tokens_total` metrics will be exported. Additionally, if AI MCP plugins are used, MCP-related metrics like `kong_ai_mcp_response_body_size_bytes`, `kong_ai_mcp_latency_ms`, and `kong_ai_mcp_error_total` will also be exported.",
           "type": "boolean"
         },
         "bandwidth_metrics": {

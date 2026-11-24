@@ -2,6 +2,10 @@
   "properties": {
     "config": {
       "properties": {
+        "allow_response_buffering": {
+          "description": "Whether to buffer the proxied response so that response-phase plugins and the PDK can read it. When unset or false, the plugin streams the response and the response phase does not run. When true and a plugin on the route needs the response body, Kong buffers the whole response in memory and runs the response phase over it. Event-stream responses are always streamed, because they never end. Do not turn this option on for an upstream that streams its responses.",
+          "type": "boolean"
+        },
         "auth_password": {
           "description": "The password to authenticate with, if the forward proxy is protected\nby basic authentication. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
           "type": "string",
