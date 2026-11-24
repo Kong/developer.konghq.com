@@ -1,9 +1,10 @@
 metadata:
   title: "AI Management"
   content_type: landing_page
-  description: "AI Management is the {{site.konnect_short_name}} area where admins set up {{site.ai_gateway}} resources and other users request access to them."
+  description: "AI Management is the {{site.konnect_short_name}} area where you run {{site.ai_gateway}}, control who can use your AI resources, track AI spend, and monitor AI traffic."
   products:
     - ai-gateway
+    - ai-cost-management
   works_on:
     - konnect
   tags:
@@ -23,7 +24,13 @@ rows:
               Org Admins set up AI Models, AI Model Providers, AI MCP Servers, and AI Agents.
               Everyone else requests access to them.
 
-              These resources are [{{site.ai_gateway}} entities](/ai-gateway/entities/).
+              AI Management brings these parts together:
+              * [{{site.ai_gateway}}](/ai-gateway/) runs the traffic to your models, MCP servers, and agents.
+              * [Access Management](/ai-access-management/) controls who can use each resource.
+              * [{{site.ai_cost_management}}](/ai-cost-management/) tracks spend and alerts you before it reaches a budget.
+              * [{{site.observability}}](/ai-management/observability/) shows traffic, latency, errors, and cost.
+
+              The resources are [{{site.ai_gateway}} entities](/ai-gateway/entities/).
               The people and agents that call them are [{{site.identity}} principals](/identity/principals/).
       - blocks:
           - type: image
@@ -31,6 +38,210 @@ rows:
               url: /assets/images/ai-management/ai-management-home.png
               alt_text: "The AI Management home page in {{site.konnect_short_name}}, with AI Models, AI MCP Servers, AI Agents, AI Gateways, Access Management, Cost Management, and Observability in the navigation, and cards to add a model, MCP server, or agent"
               expandable: true
+
+  - header:
+      type: h2
+      text: "Get started with AI Management"
+      description: "Everything in AI Management runs through an {{site.ai_gateway}}. Start by creating one."
+    columns:
+      - blocks:
+        - type: tabs
+          tab_group: run-ai-management
+          config:
+            - title: AI Agent
+              content: |
+                Connect your AI agent to the {{site.konnect_product_name}} MCP Server, then ask the agent to deploy an {{site.ai_gateway}} for you.
+
+                1. Add the {{site.konnect_product_name}} MCP Server to your agent.
+                   For example, in {{site.claude}} Code:
+
+                   ```sh
+                   claude mcp add --transport http kong-konnect https://us.mcp.konghq.com/
+                   ```
+
+                   Your agent opens a browser window where you sign in to {{site.konnect_short_name}}.
+                   If your organization is in another region, or you use a different client, see [Install the {{site.konnect_product_name}} MCP Server](/konnect-platform/konnect-mcp/installation/).
+                1. Ask your agent:
+
+                   ```text
+                   Deploy a Kong AI Gateway in Konnect and run a local data plane for it in Docker.
+                   ```
+
+                The agent creates the {{site.ai_gateway}} in {{site.konnect_short_name}} through the MCP server.
+                To start the data plane, the agent must be able to run Docker commands on your machine.
+            - title: Quickstart
+              content: |
+                Run the [quickstart script](https://get.konghq.com/ai) to create an {{site.ai_gateway}} in {{site.konnect_short_name}} and a local data plane in Docker.
+
+                This command requires a [{{site.konnect_short_name}} access token](https://cloud.konghq.com/global/account/tokens).
+
+                ```sh
+                curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN
+                ```
+
+                When the script finishes, the new gateway appears in AI Management under **Gateways**.
+            - title: Konnect UI
+              content: |
+                1. Sign in to [{{site.konnect_short_name}}](https://cloud.konghq.com/).
+                1. In the {{site.konnect_short_name}} sidebar, click **AI**.
+                1. In the AI sidebar, click **Gateways**.
+                1. Click **New AI gateway**.
+                1. Select **Self-managed** or **Dedicated Cloud**.
+                1. Complete the **Control plane**, **Data plane setup**, and **Deploy instances** steps.
+
+  - header:
+      type: h3
+      text: "Build on your gateway"
+    column_count: 4
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Send your first request
+              description: Add an AI Model Provider and an AI Model, then proxy an LLM request through your gateway.
+              icon: /assets/icons/llm-quickstart.svg
+              cta:
+                text: LLM quickstart
+                url: /ai-gateway/get-started/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Control access
+              description: Add users and groups, connect an identity provider, and issue virtual keys.
+              icon: /assets/icons/team.svg
+              cta:
+                text: Access management concepts
+                url: /ai-access-management/concepts/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Set a budget
+              description: Attribute spend to users and teams, then get alerts before spend reaches a limit.
+              icon: /assets/icons/money.svg
+              cta:
+                text: Get started with {{site.ai_cost_management}}
+                url: /ai-cost-management/getting-started/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Monitor traffic
+              description: Watch traffic, latency, errors, and cost for every AI Model, AI MCP Server, and AI Agent.
+              icon: /assets/icons/monitor.svg
+              cta:
+                text: Observability in AI Management
+                url: /ai-management/observability/
+                align: end
+
+  - header:
+      type: h2
+      text: "AI Management use cases"
+    columns:
+      - blocks:
+          - type: use_case_table
+            config:
+              usecase_title: |
+                **Use case**
+
+                *(You're trying to...)*
+              columns:
+                - title: |
+                    **Outcome**
+
+                    *(...so that you can...)*
+                  key: outcome
+                - title: |
+                    **Feature**
+
+                    *(...using these solutions...)*
+                  key: feature
+              rows:
+                - usecase: |
+                    **Give every team governed access to AI**, without each team managing its own vendor relationship
+                  outcomes:
+                    - outcome: |
+                        Centralize LLM provider credentials in one place and rotate them without touching every team's configuration
+                      feature: |
+                        [AI Model Provider](/ai-gateway/entities/ai-model-provider/)
+                    - outcome: |
+                        Scope model access and token budgets by team or department instead of managing permissions per person
+                      feature: |
+                        [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/)
+                    - outcome: |
+                        Standardize prompts and default instructions across every team instead of each team writing their own
+                      feature: |
+                        [AI Prompt Template](/ai-gateway/policies/ai-prompt-template/)
+                - usecase: |
+                    **See and control AI spend** across users, groups, models, and teams
+                  outcomes:
+                    - outcome: |
+                        Record who made each request, so that you can break spend down by user, application, or custom tag
+                      feature: |
+                        [Attribution](/ai-cost-management/attribution/)
+                    - outcome: |
+                        Track spend against a limit and get alerts as spend approaches it
+                      feature: |
+                        [Budgets](/ai-cost-management/budgets/)
+                - usecase: |
+                    **Package and bill AI access like a product**, for customers paying for usage
+                  outcomes:
+                    - outcome: |
+                        Create pricing tiers (like Free, Pro, and Enterprise) with different token quotas and cost budgets
+                      feature: |
+                        [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/)
+                    - outcome: |
+                        Track token usage and automate invoicing based on prompt and response volume
+                      feature: |
+                        [Metering and billing](/metering-and-billing/)
+                    - outcome: |
+                        Enforce per-tier spend caps driven by identity claims instead of managing group membership manually
+                      feature: |
+                        [Set up a {{site.identity}} auth server for tiered AI budgets](/ai-gateway/set-up-kong-identity-for-tiered-ai-budgets/) and [Enforce tiered AI budgets with {{site.identity}}](/ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/)
+
+  - header:
+      type: h2
+      text: "{{site.ai_gateway}}"
+      description: "{{site.ai_gateway}} is the runtime in AI Management. It proxies LLM, MCP, and A2A traffic and applies AI Policies to each request."
+    column_count: 4
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.ai_gateway}} overview"
+              description: "Learn how {{site.ai_gateway}} secures, governs, and observes AI traffic."
+              icon: /assets/icons/ai-gateway.svg
+              cta:
+                text: "{{site.ai_gateway}}"
+                url: /ai-gateway/
+      - blocks:
+          - type: card
+            config:
+              title: Providers
+              description: "See which LLM providers {{site.ai_gateway}} supports and how to connect to each one."
+              icon: /assets/icons/cloud.svg
+              cta:
+                text: "{{site.ai_gateway}} providers"
+                url: /ai-gateway/ai-providers/
+      - blocks:
+          - type: card
+            config:
+              title: AI Policies
+              description: Attach behavior for authentication, guardrails, transformations, and more to your AI resources.
+              icon: /assets/icons/lock.svg
+              cta:
+                text: All AI Policies
+                url: /ai-gateway/policies/
+      - blocks:
+          - type: card
+            config:
+              title: Load balancing
+              description: Fail over to a different provider or model when one is slow or unavailable.
+              icon: /assets/icons/ai.svg
+              cta:
+                text: Load balancing in {{site.ai_gateway}}
+                url: /ai-gateway/load-balancing/
 
   - header:
       type: h2
@@ -83,6 +294,15 @@ rows:
       - blocks:
           - type: card
             config:
+              title: Roles and permissions
+              description: "AI Management roles control who can create and manage AI Models, AI MCP Servers, AI Agents, and virtual keys, and who can view cost data."
+              icon: /assets/icons/team.svg
+              cta:
+                text: AI Management roles and permissions
+                url: /ai-management/roles-and-permissions/
+      - blocks:
+          - type: card
+            config:
               title: Users
               description: "A user is a person who signs in to AI Management. An admin, an org chart import, or just-in-time provisioning at first sign-in adds each user."
               icon: /assets/icons/team.svg
@@ -125,15 +345,6 @@ rows:
               cta:
                 text: Virtual keys in access management
                 url: /ai-access-management/concepts/#virtual-keys
-      - blocks:
-          - type: card
-            config:
-              title: Roles and permissions
-              description: "AI Management roles control who can create and manage AI Models, AI MCP Servers, AI Agents, and virtual keys, and who can view cost data."
-              icon: /assets/icons/team.svg
-              cta:
-                text: AI Management roles and permissions
-                url: /ai-management/roles-and-permissions/
       - blocks:
           - type: card
             config:
@@ -203,3 +414,47 @@ rows:
               cta:
                 text: "Model cost management in {{site.ai_gateway}}"
                 url: /ai-gateway/model-cost-management/
+
+  - header:
+      type: h2
+      text: "AI Management guides"
+    column_count: 3
+    columns:
+      - header:
+          type: h3
+          text: "{{site.ai_gateway}}"
+        blocks:
+          - type: how_to_list
+            config:
+              products:
+                - ai-gateway
+              tags:
+                - openai
+                - bedrock
+                - gemini
+                - mcp
+                - a2a
+                - traffic-control
+              quantity: 4
+      - header:
+          type: h3
+          text: Access and identity
+        blocks:
+          - type: how_to_list
+            config:
+              products:
+                - ai-gateway
+              tags:
+                - kong-identity
+                - openid-connect
+                - security
+              quantity: 4
+      - header:
+          type: h3
+          text: "{{site.ai_cost_management}}"
+        blocks:
+          - type: how_to_list
+            config:
+              products:
+                - ai-cost-management
+              quantity: 4

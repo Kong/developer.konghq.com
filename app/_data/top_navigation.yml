@@ -67,6 +67,10 @@ platform:
           icon: /assets/icons/money.svg
           url: /ai-cost-management/
           color: green
+        - text: Observability
+          icon: /assets/icons/analytics.svg
+          url: /ai-observability/
+          color: green
     - title: Build and run APIs
       links:
         - text: Kong Insomnia

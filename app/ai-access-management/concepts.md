@@ -18,7 +18,7 @@ tags:
 min_version:
   ai-gateway: '2.3'
 
-description: "Learn how to add users, create teams and groups, and manage access to {{site.ai_gateway}} resources."
+description: "How to add users and agents, create teams and groups, and manage access to {{site.ai_gateway}} resources."
 
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -51,7 +51,7 @@ Access management features define:
 * Which limits apply to them.
 * How your organization is structured.
 
-You can apply rules to users individually, or in bulk using [groups](#groups).
+Callers are [users](#users) or [agents](#agents). A [group](#groups) can hold a [virtual key](#virtual-keys). You can apply rules to each caller individually, or in bulk using groups.
 
 ## Users
 
@@ -105,13 +105,72 @@ Because teams change only through import, upload the file again whenever your or
 
 See [Org chart in {{site.ai_cost_management}}](/ai-cost-management/org-chart/) for the file format, the upload steps, and how to set spend limits on teams and people.
 
+## Agents
+
+An agent is a software system that calls your {{site.ai_gateway}} resources, either on its own behalf or on behalf of a user. For example, an agent deployed to AWS AgentCore that calls a model and an MCP server is an agent.
+
+An agent has its own identity, separate from the users who manage it:
+
+* **Own access rules:** The rules that apply to an agent are independent from the rules that apply to the users who manage it.
+* **Own credentials:** An agent authenticates with its own credentials like [virtual keys](#virtual-keys) to call models, or with an OAuth client from your identity provider to call MCP servers.
+* **Own attribution:** {{site.ai_gateway}} attributes requests to the agent that makes them, not to the users who manage it.
+
+When an agent acts on behalf of a user (for example, when it authenticates to an MCP server for that user), {{site.ai_gateway}} identifies the agent and the user separately. An access decision can depend on the user, the agent, or both.
+
+Admins create agents manually. An agent has a name, a description, labels, and metadata. After you create an agent, you can:
+
+* Edit its details.
+* Add it to one or more [groups](#groups).
+* Issue it a [virtual key](#virtual-keys) by choosing the agent as the key holder.
+* See its virtual keys, groups, and OAuth credentials in the agent's details.
+* Deactivate it to stop it from authenticating, and reactivate it later without creating new credentials.
+* Delete it.
+
+In the {{site.identity}} API, an agent is a [principal](/identity/principals/) with `type` set to `agent`.
+
+### Users vs agents
+
+Users and agents are both callers, but they represent different things and are managed differently:
+
+{% table %}
+columns:
+  - title: Aspect
+    key: aspect
+  - title: User
+    key: user
+  - title: Agent
+    key: agent
+rows:
+  - aspect: "**Represents**"
+    user: "A person."
+    agent: "A software system that acts on its own behalf or on behalf of a user."
+  - aspect: "**Creation**"
+    user: "Created manually by an admin, [imported from an org structure](#import-an-org-structure), or [provisioned automatically](#identity-providers) on first sign-in."
+    agent: "Created manually by an admin."
+  - aspect: "**Authentication**"
+    user: "Signs in through an [identity provider](#identity-providers), or uses a [virtual key](#virtual-keys)."
+    agent: "Uses a [virtual key](#virtual-keys), or an OAuth client from an identity provider."
+  - aspect: "**Groups**"
+    user: "Can belong to one or more [groups](#groups)."
+    agent: "Can belong to one or more [groups](#groups)."
+  - aspect: "**Teams**"
+    user: "Can belong to a [team](#teams) through an org structure import."
+    agent: "Can't belong to a team."
+  - aspect: "**Access rules**"
+    user: "Apply to the user."
+    agent: "Apply to the agent, independently from the users who manage it."
+  - aspect: "**Deactivation**"
+    user: "Deactivate to stop the user from signing in while keeping their history."
+    agent: "Deactivate to stop the agent from authenticating. Reactivate to restore access with its existing credentials."
+{% endtable %}
+
 ## Groups
 
-A group is a list of users that share the same rules. Instead of setting rules on each member, you set them once on the group. For example, you can select a group when setting up a spend limit.
+A group is a list of users and agents that share the same rules. Instead of setting rules on each member, you set them once on the group. For example, you can select a group when setting up a spend limit.
 
 Admins create groups manually. A group has a name, a description, labels, and metadata. A group can't contain another group.
 
-Add users to a group from the group's detail page. You can also add or remove a user from one or more groups from the user's details.
+Add users and agents to a group from the group's detail page. You can also add or remove a user or an agent from one or more groups from its details.
 
 ### Groups vs teams
 
@@ -127,14 +186,14 @@ columns:
     key: team
 rows:
   - aspect: "**Purpose**"
-    group: "Share the same rules across a list of users, for example in a spend limit."
+    group: "Share the same rules across a list of users and agents, for example in a spend limit."
     team: "Reflect your org structure."
   - aspect: "**Creation**"
     group: "Created manually by an admin."
     team: "Created automatically when you [import an org structure](#import-an-org-structure). Can't be created manually."
   - aspect: "**Membership**"
-    group: "Add or remove users from the group's detail page or from the user's details."
-    team: "Set by the org structure import."
+    group: "Users and agents. Add or remove members from the group's detail page or from the member's details."
+    team: "Users only. Set by the org structure import."
   - aspect: "**Nesting**"
     group: "A group can't contain another group."
     team: "A team can be nested under a parent team."
@@ -181,14 +240,14 @@ For example, an organization with one Anthropic API key can generate a virtual k
 Use virtual keys to:
 
 * **Reinforce API key security:** Virtual keys can be generated and deleted.
-* **Attribute and control costs:** Requests made with a personal virtual key are attributed to its holder. The spend limits set on the user apply to that traffic.
+* **Attribute and control costs:** Requests made with a virtual key are attributed to its holder, a user, an [agent](#agents), or a [group](#groups). The spend limits set on a user apply to that user's traffic.
 
 The gateway treats whoever holds the key as the caller.
 
 Virtual keys require {{site.identity}} and [principals](/identity/principals/). To use a virtual key with an [AI Model](/ai-gateway/entities/ai-model/), [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), or [AI Agent](/ai-gateway/entities/ai-agent/), do the following:
 
 1. Assign the entity a Key Auth [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) that authenticates against {{site.identity}} (`config.principals.enabled: true`). See [Principal mapping](/ai-gateway/entities/ai-auth-strategy/#principal-mapping).
-1. Create the user or group that will hold the key.
+1. Create the user, agent, or group that will hold the key.
 1. Create the virtual key.
 1. Send the virtual key in requests to the entity, in the header or query parameter that the AI Auth Strategy defines.
 

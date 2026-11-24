@@ -1,0 +1,257 @@
+metadata:
+  title: "AI observability"
+  content_type: landing_page
+  description: "Track traffic, latency, tokens, errors, and cost for {{site.ai_gateway}} in {{site.konnect_short_name}}."
+  permalink: /ai-observability/
+  products:
+    - ai-gateway
+  works_on:
+    - konnect
+  breadcrumbs:
+    - /ai-management/
+  tags:
+    - ai
+    - analytics
+  min_version:
+    ai-gateway: '2.4'
+
+rows:
+  - header:
+      type: h1
+      text: "AI observability"
+      sub_text: Traffic, latency, token, and cost analytics for {{site.ai_gateway}}
+
+  - header:
+      type: h2
+      text: "Introducing AI observability"
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              AI observability is the {{site.observability}} part of [AI Management](/ai-management/).
+              It shows traffic, latency, errors, and cost for [AI Models](/ai-gateway/entities/ai-model/), [AI MCP Servers](/ai-gateway/entities/ai-mcp-server/), and [AI Agents](/ai-gateway/entities/ai-agent/) that run on {{site.ai_gateway}}.
+
+              Use AI observability to:
+              * Track request count, latency, token usage, error rate, and cost for a time range.
+              * See which models, providers, and MCP servers handle the most traffic.
+              * Break down LLM traffic by AI Consumer.
+              * Build custom queries and dashboards from LLM and agentic usage data.
+              * Get alerts about unusual error rates, latency, or traffic for a model, route, or provider.
+              * Read control plane logs and Dedicated Cloud Gateway logs.
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/ai-observability/overview.png
+              alt_text: "The AI observability Overview page in {{site.konnect_short_name}}"
+
+  - header:
+      type: h2
+      text: "Get started with AI observability"
+    column_count: 2
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              {{site.ai_gateway}} sends traffic data to AI observability by default. There's nothing to turn on.
+
+              1. Send a request through an AI Model.
+              1. In {{site.konnect_short_name}}, go to **Observability** > **Overview**. Traffic from a self-managed data plane appears within a few minutes.
+              1. Go to **Explorer** and group the **LLM usage** data by **AI gateway model**.
+      - blocks:
+          - type: card
+            config:
+              title: Get started with AI Management
+              description: |
+                Launch an {{site.ai_gateway}}, then add an AI Model Provider and an AI Model to send your first request.
+              icon: /assets/icons/rocket.svg
+              featured: true
+              ctas:
+                - text: Get started with AI Management
+                  url: /ai-management/#get-started-with-ai-management
+                - text: LLM quickstart
+                  url: /ai-gateway/get-started/
+
+  - header:
+      type: h2
+      text: "AI observability features"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Overview
+              description: |
+                Review the health and cost of AI traffic, with the top models, providers, and MCP servers.
+              icon: /assets/icons/monitor.svg
+              cta:
+                text: Review AI traffic
+                url: /ai-management/observability/#overview-page
+      - blocks:
+          - type: card
+            config:
+              title: Explorer
+              description: |
+                Answer specific questions with custom queries on LLM usage and agentic usage data.
+              icon: /assets/icons/search.svg
+              cta:
+                text: Query AI traffic
+                url: /ai-management/observability/#explorer
+      - blocks:
+          - type: card
+            config:
+              title: Alerts
+              description: |
+                Know when error rates, latency, or traffic leave their usual range. Five detection rules are on from the start.
+              icon: /assets/icons/warning.svg
+              cta:
+                text: Set up alerts
+                url: /ai-management/observability/#alerts
+      - blocks:
+          - type: card
+            config:
+              title: Dashboards
+              description: |
+                Build and share your own dashboards from {{site.ai_gateway}} metrics, or start from an AI traffic template.
+              icon: /assets/icons/graph.svg
+              cta:
+                text: Create a dashboard
+                url: /ai-management/observability/#dashboards
+      - blocks:
+          - type: card
+            config:
+              title: Sessions
+              description: |
+                Follow a conversation across requests, with its content and the spans of each request.
+              icon: /assets/icons/chat.svg
+              cta:
+                text: Review sessions
+                url: /ai-management/observability/#sessions
+      - blocks:
+          - type: card
+            config:
+              title: Logs
+              description: |
+                Search control plane logs and the runtime logs of Dedicated Cloud Gateways.
+              icon: /assets/icons/logs.svg
+              cta:
+                text: Read logs
+                url: /ai-management/observability/#logs
+      - blocks:
+          - type: card
+            config:
+              title: Cost
+              description: |
+                See what each request costs. To track spend, budgets, and budget alerts across users, groups, models, and teams, use {{site.ai_cost_management}}.
+              icon: /assets/icons/money.svg
+              cta:
+                text: Track AI spend
+                url: /ai-cost-management/
+
+  - header:
+      type: h2
+      text: "Key references"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Observability in AI Management
+              description: |
+                Monitor traffic, latency, errors, and cost for AI Models, AI MCP Servers, and AI Agents.
+              icon: /assets/icons/analytics.svg
+              cta:
+                url: /ai-management/observability/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Gen AI OTLP metrics
+              description: |
+                OpenTelemetry metrics that {{site.ai_gateway}} emits for generative AI, MCP, and A2A traffic.
+              icon: /assets/icons/opentelemetry.svg
+              cta:
+                url: /ai-gateway/ai-otel-metrics/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Gen AI span attributes
+              description: |
+                OpenTelemetry Gen AI span attributes that {{site.ai_gateway}} emits for generative AI requests.
+              icon: /assets/icons/opentelemetry.svg
+              cta:
+                url: /ai-gateway/llm-open-telemetry/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.ai_gateway}} logs"
+              description: |
+                Where {{site.ai_gateway}} logs are located, the different log levels, and how to configure them.
+              icon: /assets/icons/logs.svg
+              cta:
+                url: /ai-gateway/ai-logs/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Audit log
+              description: |
+                The standardized logging format that AI Policies use for analytics events.
+              icon: /assets/icons/audit.svg
+              cta:
+                url: /ai-gateway/ai-audit-log-reference/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Analytics and debugging
+              description: |
+                Dashboards, Explorer, and the events debugger in {{site.ai_cost_management}}.
+              icon: /assets/icons/money.svg
+              cta:
+                url: /ai-cost-management/analytics-and-debugging/
+                align: end
+
+  - header:
+      type: h2
+      text: How-to guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              products:
+                - ai-gateway
+              tags:
+                - observability
+              quantity: 5
+              allow_empty: true
+
+  - header:
+      type: h2
+      text: "Frequently asked questions"
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: Do I need to turn on AI observability?
+              a: |
+                No. {{site.ai_gateway}} reports AI traffic to {{site.konnect_short_name}} without extra configuration.
+            - q: Why does Overview show a cost when I didn't set a price for my model?
+              a: |
+                [Dynamic pricing](/ai-cost-management/price-catalog/) is on by default, so {{site.ai_gateway}} prices requests from the price catalog.
+            - q: Why don't I see logs from my self-managed data plane on the Logs page?
+              a: |
+                The Logs page shows control plane logs and the runtime logs of Dedicated Cloud Gateways.
+                For a self-managed data plane, read the logs on the host. See [{{site.ai_gateway}} logs](/ai-gateway/ai-logs/).
+            - q: Do I need to set up alerts?
+              a: |
+                No. Five [detection rules](/ai-management/observability/#default-detection-rules) are on by default and trigger alerts on the **Alerts** page.
+                To get notified, add an email address or a webhook to a rule.
+            - q: How are AI observability alerts different from budget alerts?
+              a: |
+                AI observability alerts watch the health of AI traffic, such as error rate and latency.
+                [Budget alerts](/ai-cost-management/budgets/) in {{site.ai_cost_management}} watch spend against a budget.
+            - q: How long is AI observability data kept?
+              a: |
+                The metrics that Overview, Dashboards, and Explorer show are kept for one year.
