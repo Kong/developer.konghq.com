@@ -50,6 +50,7 @@ This plugin supports the following encryption algorithms:
 * {% new_in 3.10 %} A128CBC-HS256
 * {% new_in 3.10 %} A192CBC-HS384
 * {% new_in 3.10 %} A256CBC-HS512
+* {% new_in 3.17 %} RSA-OAEP-256
 
 ## Failure modes
 
