@@ -31,7 +31,7 @@ config:
 expressions:
   custom_key: access_token.claims.sub
   limit:
-    - '(has(access_token.claims.tier) && access_token.claims.tier == "gold") ? 100 : 5'
+    - '(has(access_token.claims.tier) && access_token.claims.tier == "gold") ? 100 :5'
 
 min_version:
   gateway: '3.17'

@@ -10,12 +10,10 @@ related_resources:
     url: /plugins/openid-connect/#cel-based-authorization-using-token-claims
   - text: Conditional expressions for plugins
     url: /gateway/plugins/conditions/
-  - text: CEL expressions for plugins
+  - text: CEL reference
     url: /gateway/plugins/expressions/
   - text: Dynamic plugin config with CEL
     url: /gateway/plugins/expressible-fields/
-  - text: Configure dynamic plugin config with CEL in {{site.base_gateway}}
-    url: /gateway/configure-dynamic-plugin-config-with-cel/
   - text: OpenID Connect tutorials
     url: /how-to/?query=openid-connect
 
@@ -67,8 +65,12 @@ description: Use the claims in a validated OpenID Connect token to decide who ca
 tldr:
   q: How do I authorize and rate limit callers by what their identity provider says about them, instead of by Consumer or Principal?
   a: |
-    Enable the [OpenID Connect plugin](/plugins/openid-connect/) to validate each caller's token.
-    Use `access_token.claims` in the [ACL plugin](/plugins/acl/)'s `allow_when` field to decide who can reach the Service, and in a [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) plugin's `expressions` to give each caller their own counter and limit.
+    Enable the [OpenID Connect plugin](/plugins/openid-connect/) to validate each caller's token, then read that token's claims in CEL with `access_token.claims`.
+
+    Use those claims in the [ACL plugin](/plugins/acl/)'s `allow_when` field to decide who can reach the Service.
+    Then, use them in a [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) plugin's `expressions` field to give each caller their own counter and limit.
+    
+    Because every decision comes from the token, {{site.base_gateway}} doesn't need a Consumer or a Principal for each caller.
 
 faqs:
   - q: Can I use an identity provider other than Keycloak?
@@ -89,8 +91,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Generate salt token
@@ -99,7 +99,8 @@ automated_tests: false
 
 ## Enable the OpenID Connect plugin
 
-Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), enable the OpenID Connect plugin on the `example-service` Service.
+Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), enable the [OpenID Connect plugin](/plugins/openid-connect/) on the `example-service` Service.
+
 The plugin uses the client credentials grant, validates the token that Keycloak issues, and makes the token's claims available to the plugins that run after it.
 
 {% entity_examples %}
@@ -131,7 +132,7 @@ A validated token is enough to pass authentication.
 
 ## Authorize callers by claim
 
-Authentication and authorization are separate here.
+In this setup, authentication and authorization are separate.
 The OpenID Connect plugin accepts any valid token from Keycloak.
 The [ACL plugin](/plugins/acl/)'s `allow_when` field restricts the Service to callers with `tier: gold`:
 
@@ -169,7 +170,7 @@ entities:
       expressions:
         custom_key: access_token.claims.sub
         limit:
-          - '(has(access_token.claims.tier) && access_token.claims.tier == "gold") ? 100 : 5'
+          - '(has(access_token.claims.tier) && access_token.claims.tier == "gold") ? 100 :5'
 {% endentity_examples %}
 
 In this example:
@@ -195,6 +196,8 @@ display_headers: true
 {% endvalidation %}
 <!--vale on-->
 
+You should see a `401` response.
+
 Now send the same request with the Keycloak client's credentials.
 {{site.base_gateway}} runs the client credentials grant against Keycloak, validates the token it gets back, and makes its claims available to the ACL and Rate Limiting Advanced plugins:
 
@@ -209,7 +212,7 @@ display_headers: true
 {% endvalidation %}
 <!--vale on-->
 
-The request succeeds, because the token carries `tier: gold` and the ACL plugin allows it.
+This time, the request succeeds with a 200, because the token carries `tier: gold` and the ACL plugin allows it.
 
 Check the `RateLimit-Limit` response header:
 
