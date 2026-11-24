@@ -6,17 +6,19 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 (async () => {
   try {
+    const repo = process.env.KONG_HARNESSES_RELEASES_REPO;
+    if (!repo) {
+      throw new Error('Set KONG_HARNESSES_RELEASES_REPO to the <owner>/<name> of the repository that publishes the kong-harnesses releases');
+    }
     const series = await syncReleases({
-      repo: 'Kong/kong-harnesses',
+      repo,
       name: 'kong-harnesses',
-      internalRepo: true,
+      tokenRequired: true,
       dataFile: path.resolve(__dirname, '../../app/_data/tools/kong-harnesses.yml'),
     });
 
-    if (series.length > 0) {
-      console.log(`Updated kong-harnesses versions (${series.length} releases)`);
-      console.log(`Latest version: ${series[0].version}`);
-    }
+    console.log(`Updated kong-harnesses versions (${series.length} releases)`);
+    console.log(`Latest version: ${series[0].version}`);
   } catch (error) {
     console.error(`Error: ${error.message}`);
     process.exit(1);
