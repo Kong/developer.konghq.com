@@ -294,7 +294,7 @@ A `serverName` entry is an exception: it matches the name as written, before the
   If `--policy` sets the minimum, set `requiredMinimumVersion` and `minimumVersion` to `2.1.219` or later instead.
 * The server or an entry names a variable that {{ site.claude_code }} can read as an empty credential, even when the `env` of the policy sets it.
   A remote server that takes its host from such a variable then doesn't have a host to reach.
-  A gateway MCP URL that names the same such variable more than once is also undecided.
+  A gateway MCP URL that names the same such variable more than once can also leave the server undecided.
   Write the value as a literal.
 * The URL of the server or of a `serverUrl` entry has a form that `fleet build` can't compare as {{ site.claude_code }} does, such as a percent escape or a host that isn't ASCII.
   Write the URL in plain ASCII, without percent escapes, backslashes, or spaces.
