@@ -50,7 +50,7 @@ If you want to make a rule, such as "contractors don't get the expensive model,"
 The Access Policy Engine allows you to make those decisions globally.
 You write access rules once for your organization in {{site.konnect_short_name}}, and {{site.ai_gateway}} checks every request from a {{site.identity}} [principal](/identity/principals/) against them.
 
-The Policy evaluates AI Model traffic and AI MCP Server traffic.
+The Access Policy Engine evaluates AI Model traffic and AI MCP Server traffic.
 MCP traffic is always evaluated, and you can't turn it off separately.
 
 The Access Policy Engine doesn't evaluate the following:
@@ -68,8 +68,7 @@ HTTP and HTTPS. -->
 
 ## How it works
 
-The Access Policy Engine doesn't have settings of its own.
-You control it through the access rules, and creating the Policy turns on enforcement.
+You control the Access Policy Engine entirely through access rules, and creating the Policy turns on enforcement.
 To use it:
 
 1. Set up callers as {{site.identity}} principals.
@@ -86,7 +85,7 @@ If you run production and staging as separate control planes and want the same r
 {:.warning}
 > **Create your allow rules first**
 >
-> A principal without a matching allow rule is rejected, and so is a principal without any rules.
+> A principal needs a matching allow rule, or the request is rejected.
 > If you create the Policy before any rules exist, every request from a principal is rejected.
 
 ## Use cases
@@ -132,7 +131,7 @@ From that point:
 * An unauthenticated request, or a request from an [AI Consumer](/ai-gateway/entities/ai-consumer/) without a linked principal, isn't evaluated at all.
 
 Every rejected request gets the same `403` response with the body `{"message":"Forbidden"}`.
-You can't customize it.
+The response is fixed.
 
 ## Choose between access control options
 
@@ -171,7 +170,7 @@ Use the Access Policy Engine when your callers are {{site.identity}} principals 
 Use `access.acls` or the ACL Policy when your callers are AI Consumers, or when you need to control access to [AI Agents](/ai-gateway/entities/ai-agent/), which the Access Policy Engine doesn't evaluate.
 
 The three options work independently of each other.
-`access.acls` and the ACL Policy aren't deprecated, and they don't act as a fallback for the Access Policy Engine.
+`access.acls` and the ACL Policy remain fully supported, and each one is evaluated independently of the Access Policy Engine.
 
 <!-- TODO: confirm with eng. When one request matches both this Policy and an entity
 `access.acls` or ACL Policy, do both evaluate, and does the request need an allow from
@@ -180,8 +179,7 @@ both? They're separate plugins, so that's the likely answer, but nothing confirm
 ## Write access rules
 
 Access rules are called ACLs in the {{site.konnect_short_name}} API.
-A rule has an effect, `allow` or `deny`, the resources it applies to, and an optional anchor that limits it to a group or a principal.
-A rule without an anchor applies to everyone in the organization.
+A rule has an effect (`allow` or `deny`), the resources it applies to, and an optional anchor, which limits it to a group or a principal.
 A deny always takes precedence over an allow.
 
 A new rule takes effect after a delay:
@@ -190,7 +188,7 @@ A new rule takes effect after a delay:
 
 ### Allow a group to access a family of models
 
-Use the model name that the provider serves, which can differ from the name your clients send.
+Access rules for a model match the model name that the provider serves, which can differ from the name your clients send.
 A trailing wildcard keeps the rule working when the provider releases a new version.
 The following request creates a rule that allows the `employees` group to call every model that matches `gpt-*`:
 
@@ -216,7 +214,7 @@ body:
 
 ### Disable a model for everyone
 
-Leave the anchor out so that the rule applies to the whole organization.
+A rule without an anchor applies to the whole organization.
 Use this when a model is withdrawn and you don't want to edit each group's rules.
 The following request creates a rule that denies `gpt-4-turbo` to everyone:
 
@@ -238,9 +236,9 @@ body:
 
 ### Limit which MCP tools a caller can use
 
-List the tools to restrict a caller to part of a server.
+A rule for an MCP server can list tools to restrict a caller to part of that server.
 Leave `tools` out to cover the whole server, including its session.
-The following request creates a rule that allows one principal to only call `get_ticket` and `list_tickets` on the `jira` MCP server:
+The following request creates a rule that allows one principal to call only `get_ticket` and `list_tickets` on the `jira` MCP server:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -272,5 +270,5 @@ body:
   A deny rule on a whole MCP server closes the session.
 * A principal that doesn't have any access rules is rejected, even when an organization-wide rule would allow the request.
 * If a gateway node can't read the organization-wide rules, it keeps enforcing the rules attached to each principal and retries.
-  An organization-wide deny created during that window isn't enforced until the node can read the rules again, so a new deny rule isn't an instant kill switch.
+  An organization-wide deny created during that window isn't enforced until the node can read the rules again, so a new deny rule doesn't take effect immediately.
 * When the Policy can't evaluate a request, it returns a `500` response rather than the `403` used for a rejection.
