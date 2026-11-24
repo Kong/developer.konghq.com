@@ -51,7 +51,7 @@ The Access Policy Engine allows you to make those decisions globally.
 You write access rules once for your organization in {{site.konnect_short_name}}, and {{site.ai_gateway}} checks every request from a {{site.identity}} [principal](/identity/principals/) against them.
 
 The Access Policy Engine evaluates AI Model traffic and AI MCP Server traffic.
-MCP traffic is always evaluated, and you can't turn it off separately.
+MCP traffic is always evaluated.
 
 The Access Policy Engine doesn't evaluate the following:
 
