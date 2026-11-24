@@ -75,6 +75,7 @@ Here are some common use cases for setting a condition on a plugin:
 * Enforce a plugin only for specific HTTP methods, headers, or query parameters.
 * Make one plugin's execution depend on context set by a higher-priority plugin.
 * Condition plugin behavior on the authenticated Consumer, matched Route, or target Gateway Service.
+* Apply or skip a plugin based on a claim in the token that the [OpenID Connect plugin](/plugins/openid-connect/) validated, such as the caller's tier, team, or role. {% new_in 3.17 %}
 
 ## How it works
 

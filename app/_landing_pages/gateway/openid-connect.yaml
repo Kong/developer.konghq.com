@@ -202,6 +202,15 @@ rows:
                     You can use {{site.base_gateway}} [Consumer Groups](/gateway/entities/consumer-group/) for authorization and to dynamically map claim values to Consumer Groups. 
                   example: "[Consumer-based authorization example](/plugins/openid-connect/examples/consumer-group-auth/)"
                   howto: "[OpenID Connect and Keycloak with Consumer Groups](/how-to/configure-oidc-with-consumer-groups/)"
+                - auth: CEL-based authorization using token claims {% new_in 3.17 %}
+                  description: |
+                    You can read a validated token's claims in CEL expressions through `access_token.claims`.
+                    Use the claims in [plugin conditions](/gateway/plugins/conditions/), the [ACL plugin](/plugins/acl/)'s `allow_when` field, and expressible config fields.
+                    You don't need to map each caller to a Consumer, Consumer Group, or Principal.
+                    <br><br>
+                    Learn more about [CEL-based authorization](/plugins/openid-connect/#cel-based-authorization-using-token-claims) in the OpenID Connect plugin documentation.
+                  example: "[ACL allow by token claims example](/plugins/acl/examples/allow-when-token-claims/)"
+                  howto: "[Authorize and rate limit requests by IdP claims](/how-to/authorize-and-rate-limit-by-idp-claims/)"
 
   - header:
       type: h2

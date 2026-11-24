@@ -80,6 +80,9 @@ When `allow_when` or `deny_when` is configured:
 * `hide_groups_header`, `include_consumer_groups`, and `always_use_authenticated_groups` are all ignored.
 * The `X-Consumer-Groups` header isn't sent to the upstream service, since there's no matched group list to report.
 
-For example plugin configurations, see [Allow by Principal metadata](/plugins/acl/examples/allow-when-principal-metadata/) and [Deny by Principal metadata](/plugins/acl/examples/deny-when-principal-metadata/).
+When the [OpenID Connect plugin](/plugins/openid-connect/) authenticates the request, `allow_when` and `deny_when` expressions can also read the validated token's claims with `access_token.claims`. {% new_in 3.17 %}
+See [CEL-based authorization using token claims](/plugins/openid-connect/#cel-based-authorization-using-token-claims).
+
+For example plugin configurations, see [Allow by Principal metadata](/plugins/acl/examples/allow-when-principal-metadata/), [Deny by Principal metadata](/plugins/acl/examples/deny-when-principal-metadata/), and [Allow by token claims](/plugins/acl/examples/allow-when-token-claims/).
 
 For general information on this class of CEL-driven plugin config, see [Dynamic plugin config with CEL](/gateway/plugins/expressible-fields/).

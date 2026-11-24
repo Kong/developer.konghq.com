@@ -47,9 +47,9 @@ Keycloak 26.6.2 and later requires the introspecting client to be present in the
 Add an audience mapper to the `kong` client so that tokens it issues include `kong` in the audience:
 
 1. In the Keycloak admin console sidebar, open **Clients** and click the `kong` client.
-1. Open the **Client scopes** tab.
+1. Click the **Client scopes** tab.
 1. Click **kong-dedicated**.
-1. Click **Add mapper** > **Configure a new mapper**.
+1. Click **Configure a new mapper**.
 1. Select **Audience**.
 1. Configure the mapper:
 {% capture instructions %}
@@ -77,11 +77,11 @@ rows:
 {% endif %}
 
 #### Set up keys and credentials
-1. In your client, open the **Credentials** tab.
+1. In your client, click the **Credentials** tab.
 1. Set **Client Authenticator** to **Client ID and Secret**.
 1. Copy the **Client Secret**.
 1. Switch to the Users menu and add a user.
-1. Open the user's **Credentials** tab and add a password. Be sure to disable **Temporary Password**.
+1. Click the user's **Credentials** tab and add a password. Be sure to disable **Temporary Password**.
 
 In this guide, we're going to use an example user named `alex` with the password `doe`.
 

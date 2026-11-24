@@ -1,0 +1,42 @@
+description: 'Rate limit each caller, using CEL expressions that read the claims of the validated access token to set the limit and the rate limiting key.'
+
+extended_description: |
+  Rate limit each caller using CEL expressions that read the claims of the validated access token to set the limit and the rate limiting key.
+  The [OpenID Connect plugin](/plugins/openid-connect/) validates the token.
+
+  In this example:
+  1. The `sub` claim keys the counter.
+  2. Callers with a `tier` claim of `gold` get 100 requests per minute, and everyone else gets 5.
+  3. The static `config.custom_key` and `config.limit` values are the fallback for any request whose expression can't be evaluated.
+  
+  For a complete tutorial, see [Authorize and rate limit requests by IdP claims](/how-to/authorize-and-rate-limit-by-idp-claims/).
+
+title: 'Rate limit by token claims'
+
+weight: 700
+
+requirements:
+  - "[OpenID Connect plugin](/plugins/openid-connect/) configured to validate tokens from your identity provider"
+
+config:
+  identifier: ip
+  namespace: idp-claims
+  custom_key: unknown-caller
+  limit:
+    - 5
+  window_size:
+    - 60
+  strategy: local
+
+expressions:
+  custom_key: access_token.claims.sub
+  limit:
+    - '(has(access_token.claims.tier) && access_token.claims.tier == "gold") ? 100 :5'
+
+min_version:
+  gateway: '3.17'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
