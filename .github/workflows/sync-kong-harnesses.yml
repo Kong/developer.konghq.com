@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       dev_site_base_branch:
-        description: "Branch to sync. Leave empty for release/kong-harnesses while it exists, else the default branch. The branch needs the scripts in tools/kong-harnesses-versions."
+        description: "Dev site base branch to sync, release/kong-harnesses when empty. The branch needs the scripts in tools/kong-harnesses-versions."
         required: false
         type: string
   schedule:
@@ -19,64 +19,12 @@ defaults:
     shell: bash
 
 jobs:
-  # GitHub runs a schedule only from the default branch, so this job sends the
-  # sync to the docs release branch while that branch exists.
-  base:
-    name: Pick the base branch
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    outputs:
-      branch: ${{ steps.pick.outputs.branch }}
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
-        with:
-          egress-policy: audit
-
-      - name: Pick the base branch
-        id: pick
-        env:
-          REQUESTED: ${{ inputs.dev_site_base_branch }}
-          REPOSITORY_URL: ${{ github.server_url }}/${{ github.repository }}.git
-        run: |
-          # git ls-remote reads its argument as a pattern, so release/* would
-          # match. Only a valid branch name that the output lists exactly counts,
-          # and a failed listing stops the run instead of picking another branch.
-          branch_exists() {
-            if ! git check-ref-format --branch "$1" >/dev/null; then
-              echo "::error::$1 is not a valid branch name"
-              exit 1
-            fi
-            if ! refs=$(git ls-remote "$REPOSITORY_URL" "refs/heads/$1"); then
-              echo "::error::Could not list the branches of $REPOSITORY_URL"
-              exit 1
-            fi
-            printf '%s\n' "$refs" | awk -v ref="refs/heads/$1" '$2 == ref { found = 1 } END { exit !found }'
-          }
-          if [ -n "$REQUESTED" ]; then
-            if ! branch_exists "$REQUESTED"; then
-              echo "::error::Branch $REQUESTED does not exist"
-              exit 1
-            fi
-            branch="$REQUESTED"
-          elif branch_exists release/kong-harnesses; then
-            branch=release/kong-harnesses
-          else
-            branch=$(git ls-remote --symref "$REPOSITORY_URL" HEAD | awk '/^ref:/ { sub("refs/heads/", "", $2); print $2 }')
-          fi
-          if [ -z "$branch" ]; then
-            echo "::error::Could not find the default branch of $REPOSITORY_URL"
-            exit 1
-          fi
-          echo "branch=$branch" >> "$GITHUB_OUTPUT"
-
   kong-harnesses-versions:
     name: Fetch kong-harnesses Versions
-    needs: base
     # Runs for one base branch queue, so an older run can't replace the data
     # that a newer run wrote to the same pull request.
     concurrency:
-      group: sync-kong-harnesses-${{ needs.base.outputs.branch }}
+      group: sync-kong-harnesses-${{ inputs.dev_site_base_branch || 'release/kong-harnesses' }}
       cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -109,12 +57,12 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ needs.base.outputs.branch }}
+          ref: ${{ inputs.dev_site_base_branch || 'release/kong-harnesses' }}
           persist-credentials: false
 
       - name: Check that the branch has the sync scripts
         env:
-          BRANCH: ${{ needs.base.outputs.branch }}
+          BRANCH: ${{ inputs.dev_site_base_branch || 'release/kong-harnesses' }}
         run: |
           if [ ! -f tools/kong-harnesses-versions/package-lock.json ]; then
             echo "::error::Branch $BRANCH has no tools/kong-harnesses-versions, so it can't be synced yet"
@@ -163,8 +111,8 @@ jobs:
         with:
           title: Sync kong-harnesses Releases
           commit-message: Sync kong-harnesses Releases
-          branch: sync-kong-harnesses/releases/${{ needs.base.outputs.branch }}
-          base: ${{ needs.base.outputs.branch }}
+          branch: sync-kong-harnesses/releases/${{ inputs.dev_site_base_branch || 'release/kong-harnesses' }}
+          base: ${{ inputs.dev_site_base_branch || 'release/kong-harnesses' }}
           labels: skip-changelog,review:general
           token: ${{ steps.pr-token.outputs.token }}
           add-paths: |
