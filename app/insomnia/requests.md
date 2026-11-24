@@ -1,7 +1,7 @@
 ---
-title: Requests in Insomnia
+title: Requests in {{ site.insomnia }}
 
-description: Insomnia allows you to configure and send different types of requests.
+description: "{{ site.insomnia }} allows you to configure and send different types of requests."
 
 content_type: reference
 layout: reference
@@ -22,19 +22,19 @@ related_resources:
     url: /insomnia/keyboard-shortcuts/   
 
 faqs:
-  - q: What type of requests can I send with Insomnia?
+  - q: What type of requests can I send with {{ site.insomnia }}?
     a: |
-      Insomnia supports:
+      {{ site.insomnia }} supports:
       * HTTP
       * Event streams (SSE)
       * GraphQL
       * gRPC
       * WebSocket
-  - q: Does Insomnia automatically encode special characters in request URLs?
+  - q: Does {{ site.insomnia }} automatically encode special characters in request URLs?
     a: |
-      Yes. Insomnia automatically encodes special characters in request URLs. This behavior ensures proper formatting for HTTP requests, but it may cause issues for users who intentionally want to send characters without encoding.
+      Yes. {{ site.insomnia }} automatically encodes special characters in request URLs. This behavior ensures proper formatting for HTTP requests, but it may cause issues for users who intentionally want to send characters without encoding.
 
-  - q: How can I check the actual request URL that Insomnia sends?
+  - q: How can I check the actual request URL that {{ site.insomnia }} sends?
     a: |
       After sending a request, open the **Timeline** tab on the right-side panel. This shows the exact encoded request that was transmitted, allowing you to verify how special characters were handled.
 
@@ -42,30 +42,30 @@ faqs:
     a: |
       Here are a few options for troubleshooting special character encoding issues:
       * Manually encode your request using tools like [`urlencoder`](https://www.urlencoder.org/) or [W3Schools](https://www.w3schools.com/tags/ref_urlencode.ASP)
-      * Use the [Insomnia encoder plugin](https://github.com/sypbiz/insomnia-plugin-encode-uri)
+      * Use the [{{ site.insomnia }} encoder plugin](https://github.com/sypbiz/insomnia-plugin-encode-uri)
       * Suggest advanced options like:
         - Per-parameter encoding toggle
         - Global workspace setting for encoding behavior
         - Character allowlist for fine-grained control
         - Disabling encoding entirely (not recommended unless necessary)
-  - q: How do I delete a large request body that crashes Insomnia?
+  - q: How do I delete a large request body that crashes {{ site.insomnia }}?
     a: |
-      1. Quit Insomnia and back up your app data directory. See [Application Data](https://docs.insomnia.rest/insomnia/application-data) for location info.
+      1. Quit {{ site.insomnia }} and back up your app data directory. See [Application Data](https://docs.insomnia.rest/insomnia/application-data) for location info.
       2. Open the `insomnia.requests.db` file in a code editor.
       3. Find the offending request and clear its `body` field.
       4. Search for any other uses of the same request ID and clear those `body` fields as well.
-      5. Save and relaunch Insomnia.
+      5. Save and relaunch {{ site.insomnia }}.
   - q: Can I use variables in request paths?
     a: |
-      Yes. Insomnia supports variables in request paths through **template tags** and **environment variables**.  
+      Yes. {{ site.insomnia }} supports variables in request paths through **template tags** and **environment variables**.  
       Define variables in your environment, then reference them directly in a request URL using Liquid syntax, for example:  
       ```liquid
       {% raw %}https://api.example.com/users/{{ user_id }}{% endraw %}
       ```  
       For detailed usage examples, go to [**Pre-request scripts**](/how-to/write-pre-request-scripts/). 
-  - q: Why does my request return an error in Insomnia but succeed with other tools?
+  - q: Why does my request return an error in {{ site.insomnia }} but succeed with other tools?
     a: |
-      It may be due to the `Content-Length` header. Insomnia might be sending a fixed `Content-Length`, causing the server to validate it against the body, and failing if they don't match. To resolve the error:
+      It may be due to the `Content-Length` header. {{ site.insomnia }} might be sending a fixed `Content-Length`, causing the server to validate it against the body, and failing if they don't match. To resolve the error:
       
       1. Go to your request's **Mock Header** tab.
       2. Remove or deactivate the `Content-Length` header.
@@ -73,9 +73,9 @@ faqs:
 
 ---
 
-## How do I create requests in Insomnia?
+## How do I create requests in {{ site.insomnia }}?
 
-In Insomnia, requests are contained in collections. Before you can create a request, you need to create a collection. To do that, click **Create** > **Request collection** in your Insomnia project.
+In {{ site.insomnia }}, requests are contained in collections. Before you can create a request, you need to create a collection. To do that, click **Create** > **Request collection** in your {{ site.insomnia }} project.
 
 Once your collection is created, there are several ways to create requests. Click the `+` button and select an option:
 
@@ -89,16 +89,16 @@ rows:
   - option: Create a request from scratch
     steps: Select the type or request to create (HTTP, Event Stream, GraphQL, gRPC, or WebSocket).
   - option: Import a cURL command
-    steps: Select **cURL**, paste your command, and click **Import**. Insomnia converts the command into a request and opens it automatically.
+    steps: Select **cURL**, paste your command, and click **Import**. {{ site.insomnia }} converts the command into a request and opens it automatically.
   - option: Import from a file (Postman collection, Swagger, OpenAPI, HAR, WSDL)
     steps: Click **From File**, select an import option (file, URL, or clipboard), specify the file to import, then click **Scan** and **Import**.
 {% endtable %}
 
-After creating or importing a request, Insomnia automatically opens it in the editor so you can review and send it immediately.
+After creating or importing a request, {{ site.insomnia }} automatically opens it in the editor so you can review and send it immediately.
 
 ## How can I configure requests?
 
-In Insomnia, you can configure every part of your request, and you can also add scripts and documentation.
+In {{ site.insomnia }}, you can configure every part of your request, and you can also add scripts and documentation.
 
 {:.info}
 > All of these options apply to HTTP, GraphQL, and event stream requests. WebSocket requests have all of these expect for methods and scripts, and gRPC requests have a completely different configuration. <!-- Link to gRPC docs? -->
@@ -116,7 +116,7 @@ rows:
     steps: Enter a URL, and use environment variables and template tags if needed.
   - element: Path parameters
     steps: >-
-      Define dynamic values that replace variables in the request path. For example, in **Path Parameters**, if the URL is `https://api.example.com/users/{id}` and you set `id = 123`, Insomnia sends the request to `https://api.example.com/users/123`.
+      Define dynamic values that replace variables in the request path. For example, in **Path Parameters**, if the URL is `https://api.example.com/users/{id}` and you set `id = 123`, {{ site.insomnia }} sends the request to `https://api.example.com/users/123`.
   - element: Query parameters
     steps: >-
       In the **Params** tab, click **Add** to create a new query parameter and enter the name and value. You can also add a description. The value can be single line or multi-line text. You can use the checkbox next to the parameter to remove it from the URL without deleting it completely.
@@ -124,7 +124,7 @@ rows:
     steps: In the **Body** tab, select the type of body from the dropdown list.
   - element: Authentication
     steps: >-
-      In the **Auth** tab, select the authentication type from the dropdown list to get the corresponding form. If the request is in a folder, you can select **Inherit from parent** to use the folder's authentication.
+      In the **Auth** tab, select the authentication type from the dropdown list to get the corresponding form. Select **Inherit from parent** to use the authentication of the nearest parent folder or, if you're using {{ site.insomnia }} 13.5 or later, set them on the API Collection. See [Collection settings](/insomnia/collections/#collection-settings).
   - element: Headers
     steps: >-
       In the **Headers** tab, click **Add** to create a new header and enter the name and value. You can also add a description. You can use the checkbox next to the header to remove it from the request without deleting it completely.
@@ -138,7 +138,7 @@ rows:
 
 ## What can I do with requests?
 
-You can click **Send** to send a request, but you can also click the context menu to see more options, or change how Insomnia displays the response.
+You can click **Send** to send a request, but you can also click the context menu to see more options, or change how {{ site.insomnia }} displays the response.
 
 {:.info}
 > These options are only available for HTTP and event stream requests.
@@ -158,26 +158,26 @@ rows:
     description: "Send the request on a loop with a specific interval. The loop needs to be stopped manually by clicking **Cancel**."
 {% endtable %}
 
-{% new_in 13.3 %} For event stream requests, click the **Summary** tab in the response pane to combine the messages in a response into one readable output. Enter a JSONPath, for example `$.choices[0].delta.content`, to select the field to extract from each message. Insomnia automatically detects and fills in the JSONPath on OpenAI, Anthropic, and Gemini streaming endpoints.
+{% new_in 13.3 %} For event stream requests, click the **Summary** tab in the response pane to combine the messages in a response into one readable output. Enter a JSONPath, for example `$.choices[0].delta.content`, to select the field to extract from each message. {{ site.insomnia }} automatically detects and fills in the JSONPath on OpenAI, Anthropic, and Gemini streaming endpoints.
 
-## WebSocket support in Insomnia
+## WebSocket support in {{ site.insomnia }}
 
-Insomnia supports WebSocket requests alongside REST, GraphQL, and gRPC, allowing bi-directional data flow over a persistent connection. You can configure authentication, headers, and message formats using the request interface.
+{{ site.insomnia }} supports WebSocket requests alongside REST, GraphQL, and gRPC, allowing bi-directional data flow over a persistent connection. You can configure authentication, headers, and message formats using the request interface.
 
 WebSocket messages can be sent in JSON or raw formats, and received messages appear in the Events panel. Detailed previews are available for both sent and received messages.
 
 ## Environment variables and limitations
 
-Insomnia 2022.6 adds support for [environment variables](/insomnia/environments/) and Nunjucks template tags in WebSocket URLs and message bodies.
+{{ site.insomnia }} 2022.6 adds support for [environment variables](/insomnia/environments/) and Nunjucks template tags in WebSocket URLs and message bodies.
 
 Limitations include:
 
 * Custom WebSocket protocols aren't supported.
-* Syncing WebSocket requests across different Insomnia versions (pre- and post-2022.6) may result in data loss. Ensure all devices are on version 2022.6 or later when using sync.
+* Syncing WebSocket requests across different {{ site.insomnia }} versions (pre- and post-2022.6) may result in data loss. Ensure all devices are on version 2022.6 or later when using sync.
 
 ## SOAP requests
 
-SOAP (simple object access protocol) is an XML-based protocol used to communicate structured data. To send a SOAP request from Insomnia, select the XML body type and setting the Content-Type header to `text/xml`. Then, construct your XML body as required.
+SOAP (simple object access protocol) is an XML-based protocol used to communicate structured data. To send a SOAP request from {{ site.insomnia }}, select the XML body type and setting the Content-Type header to `text/xml`. Then, construct your XML body as required.
 
 ## Posting CSV data
 
@@ -187,7 +187,7 @@ This method allows you to send raw CSV files directly in the request payload.
 
 ## Generating random data in requests
 
-Insomnia provides [template tags](/insomnia/template-tags/) that allow you to generate random data. Add a template tag in a request URL, query parameters, body, or authentication by pressing `Control+Space` and selecting a **Faker** tag. You can generate random timestamps, dates, text, and passwords.
+{{ site.insomnia }} provides [template tags](/insomnia/template-tags/) that allow you to generate random data. Add a template tag in a request URL, query parameters, body, or authentication by pressing `Control+Space` and selecting a **Faker** tag. You can generate random timestamps, dates, text, and passwords.
 
 ## What can I do with folders in an API collection?
 
@@ -200,13 +200,15 @@ Folders can be used to organize requests, but you can also add configuration to 
 
 You can also add documentation about the folder.
 
+{% new_in 13.5 %} The API Collection has the same settings, so you can set them once for every request in it. See [Collection settings](/insomnia/collections/#collection-settings).
+
 ## Request timeout (ms)
 
 Use the **Request timeout (ms)** preference to control how long the application waits before failing a network request.
 
 Go to **Preferences > General > Request / Response > Request timeout (ms)**.
 
-Enter the timeout value in milliseconds. The default is **30000 ms**. This value determines how long Insomnia allows a request to remain active before timing out during execution.
+Enter the timeout value in milliseconds. The default is **30000 ms**. This value determines how long {{ site.insomnia }} allows a request to remain active before timing out during execution.
 
 To configure request timeout behaviour for automated or CI-based workflows, use the Inso CLI.  
 See the following pages for the CLI flag and configuration options:
