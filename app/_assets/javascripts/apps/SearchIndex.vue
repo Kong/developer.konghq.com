@@ -4,7 +4,7 @@
       <div class="grid grid-cols-1 md:grid-cols-4 gap-16">
           <div id="filters" class="filters md:flex" >
             <MobileDrawer :areFiltersOpen="areFiltersOpen" @toggleDrawer="toggleFilters">
-                <ais-panel>
+                <ais-panel v-if="showTags">
                         <template v-slot:default="{ hasRefinements }">
                             <div class="flex flex-col gap-3">
                                 <div class="text-sm text-links font-semibold">Tags</div>
@@ -160,12 +160,16 @@ export default {
             searchParameters: '',
             filters,
             areFiltersOpen: false,
+            showTags: true,
         };
     },
     mounted() {
         const contentType = document.getElementById('search-index-app');
         if (contentType !== undefined && contentType.dataset.contentType) {
             this.searchParameters = `content_type:${contentType.dataset.contentType}`;
+        }
+        if (contentType !== undefined && contentType.dataset.hideTags === 'true') {
+            this.showTags = false;
         }
     },
     methods: {
