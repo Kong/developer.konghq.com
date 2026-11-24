@@ -177,6 +177,9 @@ step-by-step guide.
 
 1. Log in to the [{{site.konnect_short_name}} UI](https://cloud.konghq.com/gateway-manager/) and validate that your Workspaces and entities migrated correctly.
 
+{:.info}
+> **Basic Authentication credentials**: a plain dump and sync can't migrate Basic Authentication credentials, because their password field holds a hash, not the password itself. See [Migrate Basic Authentication credentials to Konnect](/how-to/migrate-basic-auth-credentials-to-konnect/) to move existing Consumer credentials over without resetting passwords.
+
 In addition to decK, {{site.konnect_short_name}} provides
 other tools that could be used for migrating your configuration. Each tool requires a different process. See their documentation for more information:
 
