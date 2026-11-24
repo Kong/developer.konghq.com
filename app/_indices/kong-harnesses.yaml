@@ -10,11 +10,11 @@ groups:
       - items:
           - path: /kong-harnesses/sign-in/
           - path: /kong-harnesses/sign-in/claude-code/
-          - path: /kong-harnesses/sign-in/codex/
-          - path: /kong-harnesses/sign-in/opencode/
-          - path: /kong-harnesses/sign-in/hermes/
-          - path: /kong-harnesses/sign-in/omp/
-          - path: /kong-harnesses/sign-in/pi/
+          # - path: /kong-harnesses/sign-in/codex/
+          # - path: /kong-harnesses/sign-in/opencode/
+          # - path: /kong-harnesses/sign-in/hermes/
+          # - path: /kong-harnesses/sign-in/omp/
+          # - path: /kong-harnesses/sign-in/pi/
 
   - title: CLI References
     sections:

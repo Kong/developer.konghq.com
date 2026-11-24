@@ -3,6 +3,7 @@ title: Sign in to pi with kong-harnesses
 description: Create an AI Model and a kong-harnesses profile, clear any saved kong key in pi, sign in to {{ site.ai_gateway }} for pi, and validate your setup.
 
 content_type: how_to
+published: false
 permalink: /kong-harnesses/sign-in/pi/
 breadcrumbs:
   - /kong-harnesses/

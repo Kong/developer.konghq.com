@@ -32,7 +32,7 @@ tldr:
   a: |
     Run `kong-harnesses login --profile PROFILE_NAME` in an interactive terminal to sign in, and validate with `kong-harnesses doctor --profile PROFILE_NAME`.
     Sign out with `kong-harnesses logout --profile PROFILE_NAME`.
-    For OpenCode and Hermes Agent, follow each agent CLI's own guide instead.
+    {% comment %}For OpenCode and Hermes Agent, follow each agent CLI's own guide instead.{% endcomment %}
 
 related_resources:
   - text: Sign-in errors in kong-harnesses
@@ -71,6 +71,9 @@ cleanup:
 [kong-harnesses](/kong-harnesses/) signs you in to {{ site.ai_gateway }}, stores the sign-in in your computer's secret store, and gives your agent CLI short-lived access tokens.
 When an identity provider token is close to expiring, kong-harnesses renews it without opening your browser.
 
+For end-to-end setup with {{ site.claude_code }}, follow [Sign in to {{ site.claude_code }}](/kong-harnesses/sign-in/claude-code/), or follow the sign-in workflow below with an existing profile.
+
+{% comment %}
 Choose your agent CLI guide for client-specific steps, or follow the shared kong-harnesses workflow:
 
 {% table %}
@@ -107,6 +110,7 @@ rows:
       Clear any saved `kong` entry from the pi `auth.json` first.
     guide: "[Sign in to pi](/kong-harnesses/sign-in/pi/)"
 {% endtable %}
+{% endcomment %}
 
 ## Sign in to a profile
 

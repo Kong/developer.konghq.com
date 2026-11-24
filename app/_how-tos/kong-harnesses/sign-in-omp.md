@@ -3,6 +3,7 @@ title: Sign in to omp with kong-harnesses
 description: Create an AI Model and a kong-harnesses profile, sign in to {{ site.ai_gateway }} for omp, and validate your setup.
 
 content_type: how_to
+published: false
 permalink: /kong-harnesses/sign-in/omp/
 breadcrumbs:
   - /kong-harnesses/

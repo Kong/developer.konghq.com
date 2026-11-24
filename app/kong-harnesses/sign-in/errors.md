@@ -107,9 +107,9 @@ rows:
       The profile uses a local `http://` gateway and a proxy variable (even an invalid one) applies to the gateway host, where the proxy could read the access token.
     fix: >-
       Add the gateway host to `NO_PROXY` and `no_proxy` in your shell (for IPv6, add every form named in the error, such as `[::1]:8000,[::1],::1`), or switch to an `https://` gateway.
-      For {{ site.claude_code }}, run `kong-harnesses doctor --profile PROFILE_NAME --client claude-code` from your project folder, follow its proxy steps, run `kong-harnesses profile activate PROFILE_NAME --client claude-code`, and restart {{ site.claude_code }}.
+      For {{ site.claude_code }}, run `kong-harnesses doctor --profile PROFILE_NAME --client claude-code` from your project folder, follow its proxy steps, run `kong-harnesses profile activate PROFILE_NAME --client claude-code`, and restart {{ site.claude_code }}.{% comment %}
       For omp and pi, set those exclusions in the shell that starts the CLI.
-      Codex, OpenCode, and Hermes Agent require an `https://` gateway.
+      Codex, OpenCode, and Hermes Agent require an `https://` gateway.{% endcomment %}
   - message: "`the profiles in FOLDER could not be moved to FOLDER`"
     cause: kong-harnesses couldn't move the profiles of an earlier release to their new folder.
     fix: Move the profile folder to the path named in the error, then try again.
@@ -222,7 +222,7 @@ When a line starts with `selected profile`, run [`kong-harnesses profile list`](
 ## When the login or logout command fails
 
 When `login` or `logout` can't finish, it prints one line starting with `Error:`.
-The following table lists the lines printed only by `login` and `logout`, and the refusal messages for agent CLIs that sign in through their own plugin:
+The following table lists the lines printed only by `login` and `logout`{% comment %}, and the refusal messages for agent CLIs that sign in through their own plugin{% endcomment %}:
 
 {% table %}
 columns:
@@ -232,13 +232,13 @@ columns:
     key: cause
   - title: What to do
     key: fix
-rows:
+rows:{% comment %}
   - message: "`OpenCode owns authentication`"
     cause: "You ran `login`, `logout`, `credential`, or `token` with `--client opencode`."
     fix: "Follow [Sign in to OpenCode with kong-harnesses](/kong-harnesses/sign-in/opencode/)."
   - message: "`the Kong AI Gateway plugin owns authentication for Hermes`"
     cause: "You ran `login`, `logout`, `credential`, or `token` with `--client hermes`."
-    fix: "Follow [Sign in to Hermes Agent with kong-harnesses](/kong-harnesses/sign-in/hermes/)."
+    fix: "Follow [Sign in to Hermes Agent with kong-harnesses](/kong-harnesses/sign-in/hermes/)."{% endcomment %}
   - message: "`login requires an interactive controlling terminal` or `logout asks you to type the profile name, so it needs an interactive controlling terminal`"
     cause: "`login` or `logout` ran without a terminal, for example in a script or CI job."
     fix: >-

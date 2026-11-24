@@ -3,6 +3,7 @@ title: Sign in to OpenCode with kong-harnesses
 description: Create an AI Model and a kong-harnesses profile, install the {{ site.ai_gateway }} plugin in OpenCode, sign in through OpenCode, and validate your setup.
 
 content_type: how_to
+published: false
 permalink: /kong-harnesses/sign-in/opencode/
 breadcrumbs:
   - /kong-harnesses/

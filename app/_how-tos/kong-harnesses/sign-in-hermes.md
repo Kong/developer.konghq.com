@@ -3,6 +3,7 @@ title: Sign in to Hermes Agent with kong-harnesses
 description: Create an AI Model and a kong-harnesses profile, sign in to {{ site.ai_gateway }} for Hermes Agent through the Hermes Agent gateway plugin, and validate your setup.
 
 content_type: how_to
+published: false
 permalink: /kong-harnesses/sign-in/hermes/
 breadcrumbs:
   - /kong-harnesses/
