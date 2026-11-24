@@ -139,9 +139,11 @@ rows:
 If a request has no authenticated AI Consumer, Principal, or credential, the corresponding attribute is left empty on the exported metrics.
 
 {:.warning}
-> Each distinct identity creates a new metric series, and those series are retained until the data plane restarts. A large user base can overload your metrics backend.
+> Each distinct identity creates a new metric series, and the data plane retains those series until it restarts. A large user base can overload your metrics backend.
 >
-> Each worker records up to 200 distinct credential identities by default. Past that limit, requests from new identities are still counted, but their credential attribute is left empty. Change the limit with `opentelemetry_metrics_credential_attr_limit` in the [{{site.ai_gateway}} configuration](/ai-gateway/configuration/).
+> Each worker records up to 200 distinct credential identities by default.
+> After a worker reaches that limit, it still counts requests from new identities but omits their credential attributes.
+> To change the limit, set `opentelemetry_metrics_credential_attr_limit` in the [{{site.ai_gateway}} configuration](/ai-gateway/configuration/#opentelemetry-metrics-credential-attr-limit).
 
 
 ## Tracing

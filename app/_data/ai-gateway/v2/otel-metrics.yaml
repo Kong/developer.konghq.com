@@ -308,7 +308,7 @@ attributes:
   kong.service.name: Name of the Gateway Service.
   kong.route.name: Name of the Route.
   kong.auth.consumer.name: Name of the authenticated AI Consumer.
-  kong.auth.credential.id: "ID of the credential the request authenticated with. Only set when [`enable_credential_attribute`](/ai-gateway/policies/opentelemetry/reference/#schema--config-metrics-enable-credential-attribute) is turned on and the request authenticated."
+  kong.auth.credential.id: "ID of the credential the request authenticated with. Only set when [`enable_credential_attribute`](/ai-gateway/policies/opentelemetry/reference/#schema--config-metrics-enable-credential-attribute) is turned on and the request is authenticated."
   kong.workspace.name: Name of the Workspace.
   error.type: Type of error that occurred.
   gen_ai.provider.name: Name of the Gen AI provider.
