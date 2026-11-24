@@ -24,8 +24,7 @@ automated_tests: false
 tldr:
   q: How do I delete an invalid kong-harnesses user profile or leftover gateway MCP server keys?
   a: |
-    Delete an invalid user profile with `kong-harnesses profile delete PROFILE_NAME`, then {% comment %}sign out of OpenCode or Hermes Agent if needed and {% endcomment %}run `kong-harnesses profile cleanup`.
-    If the `Login` field warns that a saved sign-in might remain, import a valid copy of the profile, run `kong-harnesses logout --profile PROFILE_NAME`, and delete it again.
+    Delete an invalid user profile with `kong-harnesses profile delete PROFILE_NAME`, then run `kong-harnesses profile cleanup`.
     Remove any leftover gateway MCP server keys (`PROFILE_NAME.mcp-key.*`) from macOS Keychain, Linux Secret Service, or `%LOCALAPPDATA%\kong-harnesses\vault` on Windows.
 
 related_resources:
@@ -44,71 +43,36 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Desktop session with kong-harnesses installed
+    - title: An invalid user profile
       content: |
-        Keep kong-harnesses installed while you delete invalid profiles and clean up agent CLI settings.
-        Run these steps in your own user account in an interactive desktop session that can reach your system password store.
+        A user profile that `doctor`, `logout`, `profile get`, or `profile list` reports as invalid or unreadable, and whose message names `kong-harnesses profile delete`.
+        If the message names a different fix, follow it instead. For details, see [Profile errors](/kong-harnesses/errors/#profile-errors).
+        Keep kong-harnesses installed until you finish these steps.
 ---
 
 When a user profile is invalid or unreadable, `kong-harnesses logout` can't read it to revoke your sign-in.
-Gateway MCP server keys can also stay in your system password store after `profile delete` or `logout`.
-Use these steps to delete an invalid user profile and remove any leftover gateway MCP server keys.
+Gateway MCP server keys can also stay in your system password store after `profile delete`.
+Use these steps to delete an invalid user profile and remove any leftover keys.
+Run them in your own user account, in a desktop session that can reach your system password store.
 
-## Delete an invalid profile
+## Delete the invalid profile
 
-Delete an invalid user profile when `doctor`, `logout`, `profile get`, or `profile list` reports that the profile is invalid or unreadable and names `kong-harnesses profile delete`.
-For other unreadable profiles, follow the next step in the error message:
-
-* **Needs a newer kong-harnesses (`update kong-harnesses`):** Update kong-harnesses, then follow [Sign out of each profile](/kong-harnesses/remove-kong-harnesses/#sign-out-of-each-profile) and [Delete each profile](/kong-harnesses/remove-kong-harnesses/#delete-each-profile).
-* **Unreadable machine-wide profile (`ask your administrator to reinstall it` or `ask your administrator to remove it`):** For an invalid or untrusted machine-wide profile, ask your administrator to reinstall it so you can run `logout` before they remove the fleet build.
-  For a machine-wide file whose name isn't a profile name, ask your administrator to remove the file.
-* **User file whose name isn't a profile name (`no command can use or delete it`):** Skip that entry, because no kong-harnesses command can sign out of it or delete it.
-
-For details on unreadable profile messages, see [Profile errors](/kong-harnesses/errors/#profile-errors).
-
-1. Delete the invalid user profile without running `logout`, replacing `PROFILE_NAME` with the profile name:
+1. Delete the profile, replacing `PROFILE_NAME` with the profile name:
 
    ```sh
    kong-harnesses profile delete PROFILE_NAME
    ```
 
-   For an invalid user profile, `profile delete` doesn't refuse while an agent CLI uses the profile or while a saved sign-in remains.
-   After you confirm, it removes the profile and the saved gateway MCP server keys for each server that the invalid document lists.
-   If `profile delete` can't remove a key or can't read the server list from the document, the `Gateway MCP keys` field lists the items (`PROFILE_NAME.mcp-key.SERVER_NAME` or `PROFILE_NAME.mcp-key.*`) to delete from your system password store.
-   When a saved sign-in might remain, `profile delete` warns you before asking you to confirm and again in the `Login` field.
-1. Type the profile name when prompted to confirm.
-{%- comment %}
-1. If you use OpenCode or Hermes Agent and haven't signed out through their plugins yet, sign out using [Sign out of each profile](/kong-harnesses/remove-kong-harnesses/#sign-out-of-each-profile) before running `profile cleanup`.
-{% endcomment %}
-1. Clean up each agent CLI that still uses the deleted profile:
+   Type the profile name when prompted to confirm.
+   For an invalid profile, `profile delete` doesn't refuse while an agent CLI uses it, and it removes the saved gateway MCP server keys that it can find.
+1. Clean up each agent CLI that used the profile:
 
    ```sh
    kong-harnesses profile cleanup --client CLIENT_NAME
    ```
 
    Omit `--client CLIENT_NAME` to clean up every supported agent CLI.
-
-If the `Login` field reports that a saved sign-in might remain, revoke and remove it before continuing:
-
-1. Import a valid copy of the profile using [`kong-harnesses profile import`](/kong-harnesses/profile/import/), replacing `PROFILE_SOURCE` with the profile file path or URL:
-
-   ```sh
-   kong-harnesses profile import PROFILE_SOURCE
-   ```
-
-1. Sign out of the profile:
-
-   ```sh
-   kong-harnesses logout --profile PROFILE_NAME
-   ```
-
-1. Delete the profile:
-
-   ```sh
-   kong-harnesses profile delete PROFILE_NAME
-   ```
-
-If the `Gateway MCP keys` field lists items that might remain, continue to [Delete leftover gateway MCP server keys](#delete-leftover-gateway-mcp-server-keys).
+1. If the `Login` field warns that a saved sign-in might remain, import a valid copy of the profile with [`profile import`](/kong-harnesses/profile/import/), run `kong-harnesses logout --profile PROFILE_NAME`, and delete the profile again.
 
 ## Delete leftover gateway MCP server keys
 
@@ -122,14 +86,10 @@ Profile names can't contain a dot, so `PROFILE_NAME.mcp-key.` matches only the i
 {% navtab "macOS" %}
 
 Each item is a generic password with the service `io.kong.kong-harnesses.login` and the item name as its account.
-kong-harnesses saves items in your default keychain (normally the login keychain) and searches only the keychains that `security list-keychains` prints.
+kong-harnesses saves items in your default keychain and searches only the keychains that `security list-keychains` prints, so `profile delete` doesn't report a copy in any other keychain.
 
-A later save updates the matching item in that search list, or creates a new item in your default keychain when none matches.
-If more than one item matches, the save fails without changes.
-As a result, a copy in a keychain outside `security list-keychains` stays behind, and `profile delete` doesn't report it in the `Gateway MCP keys` field.
-
-Repeat these steps once for each keychain that `security list-keychains` prints, skipping `/Library/Keychains/System.keychain` because kong-harnesses doesn't save items there.
-If a keychain was your default at any time after you set up kong-harnesses and isn't in `security list-keychains`, repeat these steps for its path too, even when the `Gateway MCP keys` field is absent.
+Repeat these steps for each keychain that `security list-keychains` prints, except `/Library/Keychains/System.keychain`.
+Also repeat them for a former default keychain that isn't in that output.
 macOS can ask for the keychain password, normally your login password, to allow each deletion.
 
 1. List the keychains in your search list:
@@ -144,17 +104,15 @@ macOS can ask for the keychain password, normally your login password, to allow 
    IFS= read -r KEYCHAIN_PATH
    ```
 
-   Paste a path from `security list-keychains`, or the path of a former default keychain that isn't in that output, then press Enter.
+   Paste the path without the double quotes that `security list-keychains` prints around it, or the path of a former default keychain that isn't in that output, then press Enter.
    For example: `/Users/USER/Library/Keychains/login.keychain-db`.
-   Don't paste the spaces and double quotes that `security list-keychains` prints around the path.
-   Reading into a variable preserves the path exactly, even when it holds a space, single quote, or `$`.
 1. In the same terminal, unlock the keychain:
 
    ```sh
    security unlock-keychain "$KEYCHAIN_PATH"
    ```
 
-   Enter the keychain password when `security` asks for it.
+   Enter the keychain password when asked.
 1. List the item names of that profile in the keychain, whatever the `Gateway MCP keys` field shows:
 
    ```sh
@@ -174,16 +132,16 @@ macOS can ask for the keychain password, normally your login password, to allow 
    while security delete-generic-password -s io.kong.kong-harnesses.login -a 'ITEM_NAME' "$KEYCHAIN_PATH" >/dev/null; do :; done
    ```
 
-   `security delete-generic-password` deletes only the first matching item, so the loop runs until every match is deleted.
+   The loop runs until every match is deleted, because `security delete-generic-password` deletes one item at a time.
 1. Check that each item is gone, even if `security` reported that the password was deleted:
 
    ```sh
    security find-generic-password -s io.kong.kong-harnesses.login -a 'ITEM_NAME' "$KEYCHAIN_PATH" >/dev/null
    ```
 
-   The command prints a message stating that the item couldn't be found in the keychain.
-   This result counts only after the unlock step succeeded, because `security` also prints it when the keychain stays locked.
-   Any other message, or no message, means that the item is still there.
+   The item is gone when the command prints that it couldn't be found in the keychain.
+   Any other result means that the item is still there.
+   This counts only if the unlock step succeeded, because `security` also prints that message when the keychain is locked.
 
 {% endnavtab %}
 {% navtab "Linux" %}
