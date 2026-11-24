@@ -129,7 +129,7 @@ rows:
   - model: "`M_Account`"
     definition: A user that can log in
   - model: "`M_Resource`"
-    definition: An entity that can be synced (e.g. Request, Workspace, etc.)
+    definition: An entity that can be synced (Request, Workspace, etc.)
   - model: "`M_ResourceGroup`"
     definition: A group of M_Resource that can be shared as one
   - model: "`M_Link`"
