@@ -102,9 +102,11 @@ ai_gateway_models:
             - claude-sonnet-5-5
 {% endentity_examples %}
 
-Match the earlier AI Model in two more ways:
+Match the earlier AI Model in three more ways:
 
 * Copy its other `access` settings, such as `access.acls`, and attach the same [AI Policies](/ai-gateway/entities/ai-model/#attach-ai-policies), such as guardrails and rate limits.
+* Copy `config.route.paths` and the rest of `config`, such as `response_streaming`, from the earlier AI Model.
+  The fleet sends requests to the path of the earlier AI Model, such as `/claude-code-sso` in the [Claude Code SSO cookbook](/cookbooks/claude-code-sso/), so a new AI Model on another path gets none of them.
 * Give the new AI Model its own value in the routing rule (`config.route.model`), so each model gets its own requests.
 
 {:.warning}
@@ -115,9 +117,11 @@ Match the earlier AI Model in two more ways:
 
 Rebuild with `--model 'FAMILY=NEW_MODEL_ID'`.
 `FAMILY` is the {{ site.claude_code }} model family that you move: `opus`, `sonnet`, `haiku`, or `fable`.
-`NEW_MODEL_ID` is the name of the new AI Model.
+`NEW_MODEL_ID` is the value that the routing rule (`config.route.model`) of the new AI Model accepts, one of its `values`.
+In the example, the value is the same as the AI Model name, but the two can differ.
 To move more than one family, repeat the option for each family.
-Families that you don't name keep their earlier model.
+If the earlier build set `--model` for a family that you don't name, `fleet build` refuses until you pass that `--model` again.
+A family that had no earlier `--model` gets the model that the profile has now, which can differ from the earlier one.
 
 {% include kong-harnesses/fleet-rebuild.md change="--model 'FAMILY=NEW_MODEL_ID'" %}
 
@@ -150,7 +154,7 @@ If `/status` still shows the earlier model, ask them to run `/model FAMILY`.
 ## Remove the earlier AI Model
 
 When every policy group has the new build, check the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger), filtered by **Model**.
-After it shows no new requests for the earlier model, remove the earlier AI Model from {{ site.ai_gateway }}.
+After the Events debugger stops showing new requests for the earlier model, remove the earlier AI Model from {{ site.ai_gateway }}.
 
 ## Validate
 

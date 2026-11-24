@@ -75,7 +75,7 @@ rows:
         - type: card
           config:
             title: Pin a version range
-            description: Hold managed computers to the Claude Code versions that you tested through AI Gateway.
+            description: Limit managed computers to the Claude Code versions that you tested through AI Gateway.
             cta:
               text: Pin a version range
               url: /kong-harnesses/pin-a-claude-code-fleet/

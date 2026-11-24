@@ -5,7 +5,7 @@ permalink: /kong-harnesses/pin-a-claude-code-fleet/
 breadcrumbs:
   - /kong-harnesses/
 
-description: Hold managed {{ site.claude_code }} computers to the versions that you tested through {{ site.ai_gateway }}, so an automatic update never moves the fleet to an untested release.
+description: Limit managed {{ site.claude_code }} computers to the versions that you tested through {{ site.ai_gateway }}, so an automatic update never moves the fleet to an untested release.
 
 products:
   - ai-gateway
@@ -51,15 +51,15 @@ prereqs:
         Test the releases that you want to allow through {{ site.ai_gateway }}, on at least one computer.
 
 tldr:
-  q: How do I hold a managed {{ site.claude_code }} fleet to tested versions?
+  q: How do I limit a managed {{ site.claude_code }} fleet to tested versions?
   a: |
     Run `kong-harnesses fleet build --record RECORD_FILE --claude-code-minimum OLDEST_VERSION --claude-code-maximum NEWEST_VERSION`.
     Test the new build on one computer in each policy group, then deploy it to the rest.
 ---
 
-{{ site.claude_code }} updates itself, so a release that you haven't tested can reach every managed computer.
-A [kong-harnesses](/kong-harnesses/) fleet build can hold the computers to a version range.
-{{ site.claude_code }} refuses to start outside the range, and its updates stay inside it.
+{{ site.claude_code }} updates itself, so a release that you haven't tested can install on every managed computer.
+A [kong-harnesses](/kong-harnesses/) fleet build sets a version range in the managed settings.
+{{ site.claude_code }} refuses to start outside the range, and it updates only to releases inside the range.
 
 ## Choose the version range
 
@@ -76,14 +76,14 @@ columns:
     key: why
 rows:
   - bound: "`OLDEST_VERSION`"
-    rule: "`2.1.163` or later. Use `2.1.285` or later."
+    rule: "`2.1.285` or later."
     why: "A release earlier than `2.1.163` ignores version bounds. A release earlier than `2.1.285` doesn't keep every session on the gateway."
   - bound: "`NEWEST_VERSION`"
     rule: "`2.1.285` or later."
     why: "{{ site.claude_code }} can update to any release inside the range, so test the releases between the bounds too."
 {% endtable %}
 
-To hold the fleet to one release, use the same version for both bounds.
+To limit the fleet to one release, use the same version for both bounds.
 For how each install method updates inside the range, and the extra steps for Homebrew and Claude Desktop, see [How version bounds behave](/kong-harnesses/fleet-build-options/#how-version-bounds-behave).
 
 {:.warning}

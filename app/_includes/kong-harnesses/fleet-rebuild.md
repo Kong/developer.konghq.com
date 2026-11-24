@@ -17,12 +17,19 @@ Replace these placeholders in the command:
 * `DELIVERY`: The `delivery` value in the record file, `file` or `mdm`.
 * `POLICY_FILE`: The policy that your computers get now. The tab for your platform names it.
 * `NEW_FOLDER`: A new or empty folder for the new build, without spaces in its name.
+* `MCP_CONFIG_FILE`: For an `exclusive` MCP build, the `managed-mcp.json` that your computers have now. The tab for your platform names it.
 
 {% navtabs "fleet-rebuild" %}
 {% navtab "macOS" %}
 
 For `POLICY_FILE`, use the MDM policy (`com.anthropic.claudecode.plist`) for an MDM build, or `/Library/Application Support/ClaudeCode/managed-settings.json` from a managed computer for a file build.
 If the computers don't have that file, replace `--policy 'POLICY_FILE'` with `--no-policy`.
+
+The command passes `/usr/local/bin/kong-harnesses`, where the installer package installs kong-harnesses.
+If the earlier build used another `--executable` path, copy that argument with its quotes.
+
+For an `exclusive` MCP build, use `/Library/Application Support/ClaudeCode/managed-mcp.json` from a managed computer for `MCP_CONFIG_FILE`.
+Add `--mcp-config 'MCP_CONFIG_FILE'` to the command, also when the earlier build didn't use `--mcp-config`.
 
 ```sh
 kong-harnesses fleet build \
@@ -39,9 +46,15 @@ kong-harnesses fleet build \
 {% endnavtab %}
 {% navtab "Linux" %}
 
-Linux builds use file delivery, so the command has no `--delivery` option.
+Linux builds use file delivery, so the command doesn't have a `--delivery` option.
 For `POLICY_FILE`, use `/etc/claude-code/managed-settings.json` from a managed computer.
 If the computers don't have that file, replace `--policy 'POLICY_FILE'` with `--no-policy`.
+
+The command passes `/usr/bin/kong-harnesses`, where the Linux packages install kong-harnesses.
+If the earlier build used another `--executable` path, copy that argument with its quotes.
+
+For an `exclusive` MCP build, use `/etc/claude-code/managed-mcp.json` from a managed computer for `MCP_CONFIG_FILE`.
+Add `--mcp-config 'MCP_CONFIG_FILE'` to the command, also when the earlier build didn't use `--mcp-config`.
 
 ```sh
 kong-harnesses fleet build \
@@ -59,6 +72,12 @@ kong-harnesses fleet build \
 
 For `POLICY_FILE`, use the MDM policy (`Settings.json`) for an MDM build, or `C:\Program Files\ClaudeCode\managed-settings.json` from a managed computer for a file build.
 If the computers don't have that file, replace `--policy 'POLICY_FILE'` with `--no-policy`.
+
+The command passes `C:\Program Files\Kong\kong-harnesses\kong-harnesses.exe`, where the MSI installer installs kong-harnesses.
+If the earlier build used another `--executable` path, copy that argument with its quotes.
+
+For an `exclusive` MCP build, use `C:\Program Files\ClaudeCode\managed-mcp.json` from a managed computer for `MCP_CONFIG_FILE`.
+Add `--mcp-config 'MCP_CONFIG_FILE'` to the command, also when the earlier build didn't use `--mcp-config`.
 
 ```powershell
 kong-harnesses fleet build `
@@ -78,6 +97,6 @@ kong-harnesses fleet build `
 `fleet build` writes the build to `NEW_FOLDER` and prints the build ID and the path of the new record file.
 
 If the build refuses to run, it names the flag to add.
-The earlier build can have used options that you keep, such as `--mcp-servers`, `--mcp-url`, `--host-settings`, `--wsl`, or `--executable` with another path.
+The earlier build can have used options that you keep, such as `--mcp-servers`, `--mcp-url`, `--host-settings`, or `--wsl`.
 Add the flag from the error to the command, and run it again with a new or empty `NEW_FOLDER`.
 To drop an option of the earlier build instead, see [Keep or revert recorded flags](/kong-harnesses/fleet-build-options/#keep-or-revert-recorded-flags).
