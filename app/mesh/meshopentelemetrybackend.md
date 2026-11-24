@@ -1,269 +1,75 @@
 ---
 title: MeshOpenTelemetryBackend
-description: Shared OpenTelemetry collector configuration that MeshMetric, MeshTrace, and MeshAccessLog can reference instead of duplicating endpoint settings.
-
+description: Define a shared OpenTelemetry collector connection for MeshMetric, MeshTrace, and MeshAccessLog policies.
 content_type: reference
 layout: reference
 products:
   - mesh
 breadcrumbs:
   - /mesh/
-
-related_resources:
-  - text: MeshMetric
-    url: /mesh/policies/meshmetric/
-  - text: MeshTrace
-    url: /mesh/policies/meshtrace/
-  - text: MeshAccessLog
-    url: /mesh/policies/meshaccesslog/
-  - text: Multi-zone deployment
-    url: /mesh/mesh-multizone-service-deployment/
-  - text: Deploy an OpenTelemetry collector
-    url: /mesh/deploy-an-opentelemetry-collector/
-
-min_version:
-  mesh: '2.14'
-
-tech_preview: true
-
 tags:
   - observability
   - metrics
   - tracing
-  - logging
+related_resources:
+  - text: MeshMetric policy
+    url: /mesh/policies/meshmetric/
+  - text: MeshTrace policy
+    url: /mesh/policies/meshtrace/
+  - text: MeshAccessLog policy
+    url: /mesh/policies/meshaccesslog/
+  - text: Migrate policies to {{site.mesh_product_name}} 3.x
+    url: /mesh/migrate-policies-to-3/
+min_version:
+  mesh: '3.0'
 ---
 
-`MeshOpenTelemetryBackend` defines an OpenTelemetry collector endpoint that observability policies reference through a `backendRef`. Without it, every [`MeshMetric`](/mesh/policies/meshmetric/), [`MeshTrace`](/mesh/policies/meshtrace/), and [`MeshAccessLog`](/mesh/policies/meshaccesslog/) policies carry their own copy of the collector address. With it, the address lives in one place and the policies point at it by name.
+`MeshOpenTelemetryBackend` defines how data plane proxies connect to an OpenTelemetry collector.
+[MeshMetric](/mesh/policies/meshmetric/), [MeshTrace](/mesh/policies/meshtrace/), and
+[MeshAccessLog](/mesh/policies/meshaccesslog/) policies reference it through a `backendRef`, so
+the collector address, protocol, and environment-variable behavior live in one place.
 
-{:.warning}
-> Inline `endpoint` fields on those three policies still work in 2.14 but are deprecated and will be removed in 3.0. New deployments should use `backendRef`.
+Use it to send several telemetry signals to the same collector, update a collector connection
+without editing every observability policy, or let each data plane resolve a node-local
+collector from its environment.
 
-On Kubernetes, the `MeshOpenTelemetryBackend` resource must be created in the system namespace (`kong-mesh-system`). On Universal, it lives in the global control plane store.
+It isn't a policy. There is no `targetRef`: the resource describes a collector, and the
+policies referencing it decide which proxies send to it. On Kubernetes, it's accepted only in
+the system namespace.
 
-## Migrate from inline endpoint
+Creating a backend doesn't enable telemetry by itself. At least one observability policy must
+reference it, and the policy's `targetRef` determines which proxies export the signal.
 
-1. Create one `MeshOpenTelemetryBackend` with OpenTelemetry collector endpoint. For example:
-   ```yaml
-   apiVersion: kuma.io/v1alpha1
-   kind: MeshOpenTelemetryBackend
-   metadata:
-     name: main-collector
-     namespace: kong-mesh-system
-     labels:
-       kuma.io/mesh: default
-   spec:
-     endpoint:
-       address: otel-collector.observability
-       port: 4317
-     protocol: grpc
-   ```
-1. On each policy, replace the inline `endpoint` with the following configuration:
-   ```yaml
-   backendRef: 
-    kind: MeshOpenTelemetryBackend, 
-    name: main-collector
-   ```
+## Define a collector and reference it
 
-1. Keep signal-specific fields (`refreshInterval`, `attributes`, `body`, `sampling`) on the policy.
-
-If the collector endpoint changes, you'll only need to edit the `MeshOpenTelemetryBackend` and the change will automatically apply to the policies that use it.
-
-## Reference a backend from a policy
-
-Every observability policy that supports OpenTelemetry has a `backendRef` field on its OTel backend block. The reference works the same way as `BackendRef` on `MeshHTTPRoute`: use `name` to reference a resource in the same cluster, use `labels` to reference a resource synced from another cluster.
-
-{% table %}
-columns:
-  - title: Field
-    key: field
-  - title: Description
-    key: description
-rows:
-  - field: '`backendRef.kind`'
-    description: 'Must be `MeshOpenTelemetryBackend`.'
-  - field: '`backendRef.name`'
-    description: |
-      `metadata.name` of the backend. Use this when the `MeshOpenTelemetryBackend` and the policy are in the same zone. 
-      
-      If `name` doesn't resolve, the policy carries a `BackendRefsResolved: False` status condition with the reason `UnresolvedBackendRefs`.'
-  - field: '`backendRef.labels`'
-    description: |
-      Label selector. Required for cross-zone references because [KDS](/mesh/mesh-multizone-service-deployment/) appends a hash suffix to `metadata.name` on synced resources. 
-      
-      When the `labels` match more than one backend, the oldest by creation time is used. In this case, the control plane doesn't emit a warning, so check creation timestamps if a policy resolves to an unexpected backend.
-{% endtable %}
-
-For cross-zone references, match on `kuma.io/display-name` so the resource resolves regardless of the hashed name added during sync:
-
-```yaml
-backendRef:
-  kind: MeshOpenTelemetryBackend
-  labels:
-    kuma.io/display-name: main-collector
-```
-
-### Per-zone collectors in multi-zone deployments
-
-When zones run separate collectors, create one backend per zone on the global control plane and scope each policy to the matching zone. Because both the backend and the policy live on the global control plane, the control plane resolves `backendRef.name` before KDS sync, so the hashed name that appears on zones never matters.
-
-If the policy is created on a zone control plane and references a backend synced from the global control plane, use `backendRef.labels` instead, because the synced backend's `metadata.name` carries a hash suffix that doesn't match a plain `name`.
-
-When all zones can share the same collector service name, one backend on the global control plane is enough, and DNS resolves to the local collector in each zone.
-
-## Environment-variable resolution
-
-`kuma-dp` reads `OTEL_EXPORTER_OTLP_*` environment variables locally at startup and merges them with the backend config. Secret-bearing values (headers, client keys, certificates) stay local to `kuma-dp`. During startup, `kuma-dp` reports only which environment variable keys are present to the control plane, never the values.
-
-Here are the variables used:
-* Shared: 
-  * `OTEL_EXPORTER_OTLP_ENDPOINT`
-  * `OTEL_EXPORTER_OTLP_PROTOCOL`
-  * `OTEL_EXPORTER_OTLP_HEADERS`
-  * `OTEL_EXPORTER_OTLP_INSECURE`
-  * `OTEL_EXPORTER_OTLP_TIMEOUT`
-  * `OTEL_EXPORTER_OTLP_COMPRESSION`
-  * `OTEL_EXPORTER_OTLP_CERTIFICATE`
-  * `OTEL_EXPORTER_OTLP_CLIENT_KEY`
-  * `OTEL_EXPORTER_OTLP_CLIENT_CERTIFICATE`
-* Per-signal (override shared per signal): 
-  * `OTEL_EXPORTER_OTLP_TRACES_*`
-  * `OTEL_EXPORTER_OTLP_LOGS_*`
-  * `OTEL_EXPORTER_OTLP_METRICS_*`
-
-For each field, `kuma-dp` resolves the first available source. By default, environment variables take precedence:
-
-1. Signal-specific environment variable (when `allowSignalOverrides: true`)
-1. Shared environment variable
-1. Explicit field on the backend
-1. Built-in default
-
-You can customize this behavior:
-* Set [`env.precedence`](#schema--env-precedence) to `ExplicitFirst` to use the explicit backend field first.
-
-* Set [`env.mode`](/#schema--env-mode) to `Disabled` to skip environment variables entirely.
-
-* Set [`env.mode`](/#schema--env-mode) to `Required` to block the signal when input blocks are missing or invalid, even if the explicit configuration or defaults could otherwise fill the gap. Use `Required` when missing input should fail loudly. The signal blocks, `RequiredEnvMissing` appears in `DataplaneInsight`, and you can alert on the absence of exported data.
-
-Environment variable values change only when `kuma-dp` restarts and re-bootstraps. Status updates pick them up at the same time.
-
-### Ambiguity rule
-
-OpenTelemetry environment variables are process-global. If one data plane resolves more than one backend for the same signal and both backends allow environment input, the control plane can't tell which backend the values belong to. The control plane marks the signal `ambiguous` and drops environment input for it. Explicit configuration still applies. Plan one backend per signal per data plane, or set `mode: Disabled` on backends that should never receive environment input.
-
-## Examples
-
-The following examples show how to configure `MeshOpenTelemetryBackend` for different use cases.
-
-### Single collector for all three signals
-
-This is the most common configuration: one backend resource carries the collector address and three policies point at it by name.
-
-{% navtabs "environment" %}
-{% navtab "Kubernetes" %}
-
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshOpenTelemetryBackend
-metadata:
-  name: main-collector
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: default
-spec:
-  endpoint:
-    address: otel-collector.observability
-    port: 4317
-  protocol: grpc
----
-apiVersion: kuma.io/v1alpha1
-kind: MeshMetric
-metadata:
-  name: all-metrics
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: default
-spec:
-  targetRef:
-    kind: Mesh
-  default:
-    backends:
-      - type: OpenTelemetry
-        openTelemetry:
-          backendRef:
-            kind: MeshOpenTelemetryBackend
-            name: main-collector
-          refreshInterval: 30s
----
-apiVersion: kuma.io/v1alpha1
-kind: MeshTrace
-metadata:
-  name: all-traces
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: default
-spec:
-  targetRef:
-    kind: Mesh
-  default:
-    backends:
-      - type: OpenTelemetry
-        openTelemetry:
-          backendRef:
-            kind: MeshOpenTelemetryBackend
-            name: main-collector
-    sampling:
-      overall: 80
----
-apiVersion: kuma.io/v1alpha1
-kind: MeshAccessLog
-metadata:
-  name: all-access-logs
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: default
-spec:
-  targetRef:
-    kind: Mesh
-  default:
-    backends:
-      - type: OpenTelemetry
-        openTelemetry:
-          backendRef:
-            kind: MeshOpenTelemetryBackend
-            name: main-collector
-```
-
-{% endnavtab %}
-{% navtab "Universal" %}
-
+{% policy_yaml %}
 ```yaml
 type: MeshOpenTelemetryBackend
-name: main-collector
 mesh: default
+name: otel-collector
+labels:
+  kuma.io/display-name: otel-collector
 spec:
   endpoint:
     address: otel-collector.observability
     port: 4317
-  protocol: grpc
----
-type: MeshMetric
-name: all-metrics
-mesh: default
-spec:
-  targetRef:
-    kind: Mesh
-  default:
-    backends:
-      - type: OpenTelemetry
-        openTelemetry:
-          backendRef:
-            kind: MeshOpenTelemetryBackend
-            name: main-collector
-          refreshInterval: 30s
----
+```
+{% endpolicy_yaml %}
+
+What each field does:
+
+* `mesh` scopes the backend to the `default` mesh. Policies in another mesh can't reference it.
+* `labels` gives policies a stable way to select this backend.
+* `endpoint` tells selected data plane proxies to connect to
+  `otel-collector.observability:4317`.
+
+A policy then references it by labels:
+
+{% policy_yaml namespace=kong-mesh-demo %}
+```yaml
 type: MeshTrace
-name: all-traces
 mesh: default
+name: otel-tracing
 spec:
   targetRef:
     kind: Mesh
@@ -273,344 +79,216 @@ spec:
         openTelemetry:
           backendRef:
             kind: MeshOpenTelemetryBackend
-            name: main-collector
-    sampling:
-      overall: 80
----
-type: MeshAccessLog
-name: all-access-logs
-mesh: default
-spec:
-  targetRef:
-    kind: Mesh
-  default:
-    backends:
-      - type: OpenTelemetry
-        openTelemetry:
-          backendRef:
-            kind: MeshOpenTelemetryBackend
-            name: main-collector
+            labels:
+              kuma.io/display-name: otel-collector
 ```
+{% endpolicy_yaml %}
 
-{% endnavtab %}
-{% endnavtabs %}
+In the policy, `targetRef` selects which proxies export traces, while `backendRef` selects
+which collector connection they use. Updating the backend's endpoint changes the collector
+connection for every policy that references it; the policies don't need to change.
 
-### Node-local collector
+A `backendRef` carries only `kind` and `labels`. `labels` is required, and an
+empty set is rejected. When several backends match the labels, the oldest by creation time
+wins.
 
-If the collector runs as a DaemonSet with `hostPort`, an empty backend is enough. `kuma-dp` uses the default `grpc` protocol and resolves `HOST_IP:4317` on Kubernetes (Downward API) and `127.0.0.1:4317` on Universal and VMs.
+## Collector placement
 
-{% navtabs "environment" %}
-{% navtab "Kubernetes" %}
+The proxy doesn't send OTLP through its own outbound listeners. `kuma-dp` runs a local
+receiver on a Unix socket, Envoy writes to that socket, and `kuma-dp` exports to the address in
+this resource. That export leaves the sidecar's own process, which transparent proxying doesn't 
+intercept, so it arrives at the collector as plain gRPC with no mesh mTLS.
 
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshOpenTelemetryBackend
-metadata:
-  name: node-collector
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: default
-```
+That decides where a collector can run:
 
-{% endnavtab %}
-{% navtab "Universal" %}
+{% table %}
+columns:
+  - title: Collector
+    key: where
+  - title: Result
+    key: result
+rows:
+  - where: "Outside the mesh"
+    result: "Works. The export is plaintext and nothing expects otherwise."
+  - where: "In the mesh, default `Strict`"
+    result: "Fails silently. No telemetry arrives and `kuma-dp` logs `failed to upload metrics: ... error reading server preface: unexpected EOF`, because the collector's inbound rejects the unauthenticated connection."
+  - where: "In the mesh, with [MeshTLS](/mesh/policies/meshtls/) `Permissive` on the collector"
+    result: "Works, but a `Permissive` inbound accepts unauthenticated plaintext from anything that can reach it, and [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) can't apply to those connections."
+{% endtable %}
 
-```yaml
-type: MeshOpenTelemetryBackend
-name: node-collector
-mesh: default
-```
+Running the collector outside the mesh is the simpler choice. If it has to sit inside, use
+network controls to limit who can reach its OTLP port, since mesh authorization doesn't.
 
-{% endnavtab %}
-{% endnavtabs %}
+## Configure the collector connection
 
-If the DaemonSet exposes OTLP/HTTP on a different port, override only the fields that change:
-
-```yaml
-spec:
-  endpoint:
-    port: 4318
-    path: /otlp
-  protocol: http
-```
-
-### Reuse OpenTelemetry environment variables from the sidecar
-
-Many setups already inject standard `OTEL_EXPORTER_OTLP_*` environment variables into the sidecar (OpenTelemetry Operator on Kubernetes, systemd unit on Universal, container runtime, wrapper script). An empty backend reuses the default `env` configuration:
-
-```yaml
-env:
-  mode: Optional
-  precedence: EnvFirst
-  allowSignalOverrides: true
-```
-
-With per-signal variables, traces can target a different collector while logs and metrics share the default. For example, if the sidecar has the following environment variables:
-
-* OTEL_EXPORTER_OTLP_ENDPOINT=https://otel-gateway.observability:4318
-* OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
-* OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://tempo.observability:4318
-
-{{site.mesh_product_name}} will use the specific `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` value for traces, and the default `OTEL_EXPORTER_OTLP_ENDPOINT` value for logs and metrics.
-
-{% navtabs "environment" %}
-{% navtab "Kubernetes" %}
-
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshOpenTelemetryBackend
-metadata:
-  name: from-env
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: default
-```
-
-{% endnavtab %}
-{% navtab "Universal" %}
-
-```yaml
-type: MeshOpenTelemetryBackend
-name: from-env
-mesh: default
-```
-
-{% endnavtab %}
-{% endnavtabs %}
-
-When environment input must be ignored, set `mode: Disabled`. When the backend is meaningless without environment input (per-tenant headers, mTLS client keys), set `mode: Required`. In this case, the signal stays `missing` until the keys are present.
-
-### Per-zone collector
-
-When each zone runs its own collector, create one backend per zone on the global control plane and scope each policy to the matching zone with `MeshSubset` and the `kuma.io/zone` tag.
-
-{% navtabs "environment" %}
-{% navtab "Kubernetes" %}
-
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshOpenTelemetryBackend
-metadata:
-  name: collector-us-east
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: default
-spec:
-  endpoint:
-    address: collector.us-east.internal
-    port: 4317
----
-apiVersion: kuma.io/v1alpha1
-kind: MeshMetric
-metadata:
-  name: metrics-us-east
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: default
-spec:
-  targetRef:
-    kind: MeshSubset
-    tags:
-      kuma.io/zone: us-east
-  default:
-    backends:
-      - type: OpenTelemetry
-        openTelemetry:
-          backendRef:
-            kind: MeshOpenTelemetryBackend
-            name: collector-us-east
-          refreshInterval: 30s
-```
-
-{% endnavtab %}
-{% navtab "Universal" %}
-
-```yaml
-type: MeshOpenTelemetryBackend
-name: collector-us-east
-mesh: default
-spec:
-  endpoint:
-    address: collector.us-east.internal
-    port: 4317
----
-type: MeshMetric
-name: metrics-us-east
-mesh: default
-spec:
-  targetRef:
-    kind: MeshSubset
-    tags:
-      kuma.io/zone: us-east
-  default:
-    backends:
-      - type: OpenTelemetry
-        openTelemetry:
-          backendRef:
-            kind: MeshOpenTelemetryBackend
-            name: collector-us-east
-          refreshInterval: 30s
-```
-
-{% endnavtab %}
-{% endnavtabs %}
-
-## Troubleshooting
-
-The control plane writes runtime status per backend and signal to each [`DataplaneInsight`](/mesh/dataplane/) under `status.openTelemetry`. Run the following commands to read it:
-
-{% navtabs "environment" %}
-{% navtab "Kubernetes" %}
-
-```sh
-kubectl get dataplaneinsight $DATAPLANE_NAME -o yaml
-```
-
-{% endnavtab %}
-{% navtab "Universal" %}
-
-```sh
-kumactl inspect dataplane $DATAPLANE_NAME
-```
-
-{% endnavtab %}
-{% endnavtabs %}
-
-The following fields are available for each signal:
+Every field is optional. An empty spec is valid, and describes the node-local default: the
+control plane defaults the port to 4317 and leaves the address unset, and `kuma-dp` resolves it
+at runtime from `HOST_IP`, falling back to `127.0.0.1`.
 
 {% table %}
 columns:
   - title: Field
     key: field
-  - title: Description
-    key: description
+  - title: Value
+    key: value
 rows:
-  - field: '`enabled`'
-    description: 'Whether a policy targets this signal on this backend. `false` means no policy asked for it, distinct from `state: missing` (asked for but unresolved).'
-  - field: '`state`'
-    description: |
-      The state of the signal. The value can be:
-      * `ready`
-      * `blocked`
-      * `missing`
-      * `ambiguous`
-  - field: '`envAllowed`'
-    description: 'Whether `env.mode` permits environment input for this backend.'
-  - field: '`envInputPresent`'
-    description: 'Whether `kuma-dp` reported any matching environment variable keys at bootstrap.'
-  - field: '`overrideKinds`'
-    description: |
-      OTLP fields where a per-signal variable overrides the shared layer. For example:
-      * `endpoint`
-      * `protocol`
-      * `headers`
-      * `timeout`
-  - field: '`missingFields`'
-    description: |
-      Fields the merge could not produce. For example:
-      * `endpoint`
-      * `protocol`
-      * `headers`
-      * `client_key`
-  - field: '`blockedReasons`'
-    description: |
-      The reason the signal was blocked. The value can be one or more of the following:
-      * `EnvDisabledByPolicy`
-      * `RequiredEnvMissing`
-      * `SignalOverridesDisallowed`
-      * `MultipleBackendsForSignal`
+  - field: "`endpoint.address`"
+    value: "The collector's hostname or IP. Anything that is neither is rejected with `address has to be a valid IP or hostname`. Unset, `kuma-dp` resolves it at runtime."
+  - field: "`endpoint.port`"
+    value: "The collector's port, 1 to 65535. Defaults to 4317."
+  - field: "`endpoint.path`"
+    value: |
+      A base path prefix for HTTP endpoints, to which the control plane appends `/v1/traces`, `/v1/metrics` or `/v1/logs`. Accepted only with `protocol: http`.
+
+      This field has three constraints: 
+      * It must not be set when the protocol is `grpc`
+      * It must begin with a slash
+      * It must carry no query or fragment
+  - field: "`protocol`"
+    value: "`grpc`, the default, or `http`. With `protocol: http` and `endpoint.port: 443`, `kuma-dp` exports over HTTPS automatically."
+  - field: "`env`"
+    value: "How OpenTelemetry environment variables on the sidecar combine with the other fields in this table. See [Combine backend fields with environment variables](#combine-backend-fields-with-environment-variables)."
 {% endtable %}
 
-A signal is `ready` when the merge produces an `endpoint`. Other fields fall back to OpenTelemetry SDK defaults.
+## Combine backend fields with environment variables
 
-There are two types of blocks:
-* Soft blocks (`EnvDisabledByPolicy` and `SignalOverridesDisallowed`) mean that the control plane ignored the environment input but the export still works. 
-* Hard blocks (`RequiredEnvMissing` and `MultipleBackendsForSignal`) prevent export entirely and move the state out of `ready`.
+`kuma-dp` reads `OTEL_EXPORTER_OTLP_*` variables at startup and merges them with this
+resource's fields. Values that carry secrets (headers, client keys, certificates) stay local
+to `kuma-dp`: at bootstrap it reports only which variable keys are present to the control
+plane, never their values.
 
-### Signal missing: no endpoint resolved
+The shared variables are:
+* `OTEL_EXPORTER_OTLP_ENDPOINT`
+* `_PROTOCOL`
+* `_HEADERS`
+* `_INSECURE`
+* `_TIMEOUT`
+* `_COMPRESSION`
+* `_CERTIFICATE`
+* `_CLIENT_KEY`
+* `_CLIENT_CERTIFICATE`. 
 
-A `state: missing` entry means a policy asked for the signal but the merge couldn't produce an `endpoint`. For example:
+Each also has a per-signal form (`OTEL_EXPORTER_OTLP_TRACES_*`, `_METRICS_*` and `_LOGS_*`) which
+overrides the shared value for that signal.
 
-```yaml
-openTelemetry:
-  backends:
-  - name: from-env
-    metrics:
-      enabled: true
-      state: missing
-      envAllowed: true
-      envInputPresent: false
-      missingFields:
-      - endpoint
+For each field, the first available source wins. By default, the proxy resolves configuration
+in this order:
+
+1. The per-signal environment variable, when `allowSignalOverrides` is true
+2. The shared environment variable
+3. The field on this resource
+4. The built-in default
+
+`spec.env` changes that:
+
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Values
+    key: values
+rows:
+  - field: "`mode`"
+    values: |
+      * `Optional`, the default, uses environment variables when present and tolerates their absence
+      * `Disabled` skips them entirely, leaving only this resource's fields and the built-in defaults
+      * `Required` blocks the signal when the variables don't supply the missing fields, even where an explicit value or default could have filled them
+  - field: "`precedence`"
+    values: |
+      * `EnvFirst`, the default, lets environment variables win and this resource's fields fill the gaps
+      * `ExplicitFirst` reverses that, and built-in defaults are the last fallback either way
+  - field: "`allowSignalOverrides`"
+    values: |
+      * `true`, the default, lets per-signal variables diverge from the shared ones
+      * `false` ignores the per-signal variables and applies the shared values to every signal
+{% endtable %}
+
+`Required` is for making missing input fail loudly: the signal blocks, `RequiredEnvMissing`
+appears in the status, and the absence of exported data becomes something to alert on.
+
+`kuma-dp` reads environment variable values only when it restarts and re-bootstraps, and the
+status picks them up at the same time.
+
+### One backend per signal per proxy
+
+OpenTelemetry environment variables are process-global, so when a proxy resolves more than one
+backend for the same signal and both allow environment input, there is no way to tell which
+backend the values belong to. The control plane marks that signal `ambiguous` and drops the
+environment input for it; this resource's explicit fields still apply.
+
+Plan one backend per signal per proxy, or set `mode: Disabled` on the backends that should never
+take environment input.
+
+## Per-zone collectors
+
+Where zones run their own collectors, create one backend per zone and scope each policy to the
+matching zone with labels.
+
+Where every zone can use the same collector service name, one backend is enough and DNS resolves
+to the local collector in each zone.
+
+## Verify backend references
+
+On Kubernetes, inspect the backend in the system namespace:
+
+```sh
+kubectl get meshopentelemetrybackend otel-collector -n {{site.mesh_namespace}} -o yaml
 ```
-{:.no-copy-code}
 
-The backend has no explicit address and no environment input was found. Either set `endpoint.address` on the backend or check the sidecar environment for `OTEL_EXPORTER_OTLP_ENDPOINT` or `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT`.
+`status.conditions` contains `type: ReferencedByPolicies`. A reason of `Referenced` confirms
+that at least one observability policy selects the backend. `NotReferenced` isn't a runtime
+error, but it means the backend isn't currently used.
 
-### Signal blocked: required input missing
+## Verify signal export
 
-A backend configured with `mode: Required` reports `state: blocked` and `RequiredEnvMissing` when `kuma-dp` doesn't report the expected environment keys. For example:
+The control plane writes per-backend, per-signal status to each proxy's `DataplaneInsight` under
+`status.openTelemetry`:
 
-```yaml
-openTelemetry:
-  backends:
-  - name: tenant-cloud
-    traces:
-      enabled: true
-      state: blocked
-      envAllowed: true
-      envInputPresent: false
-      blockedReasons:
-      - RequiredEnvMissing
+```sh
+kubectl get dataplaneinsight $DATAPLANE_NAME -n $NAMESPACE -o yaml
 ```
-{:.no-copy-code}
 
-The backend has `mode: Required` but `kuma-dp` didn't report the expected environment keys. Inject them on the sidecar and restart the data plane so the keys reach the control plane through bootstrap.
+`$DATAPLANE_NAME` is the name of the proxy's `Dataplane`, which on Kubernetes is the Pod name,
+and `$NAMESPACE` is the namespace the Pod runs in.
 
-### Signal ambiguous: more than one backend competing for input
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Meaning
+    key: meaning
+rows:
+  - field: "`enabled`"
+    meaning: "Whether any policy targets this signal on this backend. `false` means nothing asked for it, which is different from `state: missing`."
+  - field: "`state`"
+    meaning: "`ready`, `blocked`, `missing` or `ambiguous`."
+  - field: "`envAllowed`"
+    meaning: "Whether `env.mode` permits environment input for this backend."
+  - field: "`envInputPresent`"
+    meaning: "Whether `kuma-dp` reported any matching variable keys at bootstrap."
+  - field: "`overrideKinds`"
+    meaning: "The OTLP fields where a per-signal variable overrode the shared one."
+  - field: "`missingFields`"
+    meaning: "Required fields that the environment variables didn't supply. Set only with `env.mode: Required`."
+  - field: "`blockedReasons`"
+    meaning: "`EnvDisabledByPolicy`, `RequiredEnvMissing`, `SignalOverridesDisallowed` or `MultipleBackendsForSignal`."
+{% endtable %}
 
-When two backends resolve to the same data plane for the same signal and both allow environment input, every competing backend reports `state: ambiguous` with `MultipleBackendsForSignal`. For example:
+The state comes from `blockedReasons` and `missingFields` only. 
+A signal is `ready` when it has no hard blocked reason and no missing fields, even if
+nothing listens at the resolved endpoint. Fields that neither this resource nor the
+environment set fall back to OpenTelemetry SDK defaults.
 
-```yaml
-openTelemetry:
-  backends:
-  - name: backend-a
-    traces:
-      enabled: true
-      state: ambiguous
-      envAllowed: true
-      envInputPresent: true
-      blockedReasons:
-      - MultipleBackendsForSignal
-  - name: backend-b
-    traces:
-      enabled: true
-      state: ambiguous
-      envAllowed: true
-      envInputPresent: true
-      blockedReasons:
-      - MultipleBackendsForSignal
-```
-{:.no-copy-code}
+The blocked reasons divide in two. `EnvDisabledByPolicy` and `SignalOverridesDisallowed` are
+soft: the control plane ignored some environment input and export still works.
+`RequiredEnvMissing` and `MultipleBackendsForSignal` are hard: they stop export and move the
+state out of `ready`.
 
-Set `mode: Disabled` on every backend that should not receive environment input, or scope policies so only one backend reaches each data plane.
-
-### Backend reference doesn't resolve
-
-`MeshOpenTelemetryBackend` carries a `ReferencedByPolicies` condition with reason `Referenced` while at least one policy points at it. Otherwise the reason is `NotReferenced`. When a policy points at a backend that doesn't exist, the control plane logs through the `otel-backend-resolution` logger and skips the OTel export for that signal:
-
-```text
-MeshOpenTelemetryBackend not found, skipping backend  name=main-collector  labels=null
-```
-{:.no-copy-code}
-
-In multi-zone, the most common cause is a zone-authored policy referencing a backend synced from the global control plane by `name` instead of `labels`. Switch to `labels` with the `kuma.io/display-name` label. A backend only applied on the global control plane can also take a few seconds to reach zone control planes through KDS, so expect short-lived `NotReferenced` and `not found` log lines while sync catches up.
-
-### Mixed-version data planes during upgrade
-
-`backendRef` requires the data plane to advertise the `feature-otel-via-kuma-dp` feature. All 2.14 data planes do by default. During an upgrade where some proxies are still on 2.13, the control plane silently skips the OTel pipe route for those proxies and emits no log entry. The signal doesn't export through the backend. Read `status.openTelemetry` on the affected proxies and confirm that the control plane writes no signal status entries for backends referenced with `backendRef` until the proxy advertises the feature.
-
-Inline `endpoint` configurations stay on the direct Envoy export path and keep working through the upgrade.
+`state: missing` appears only with `env.mode: Required`, when the environment variables don't
+supply the required fields. A `backendRef` whose labels match no backend
+produces no entry for that backend in `status.openTelemetry` at all, so check the
+[`ReferencedByPolicies` condition](#verify-backend-references) and the policy's
+labels instead.
 
 ## Schema
 

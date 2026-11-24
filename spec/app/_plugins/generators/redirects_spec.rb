@@ -3,74 +3,129 @@
 require_relative '../../../../app/_plugins/generators/redirects'
 
 RSpec.describe Jekyll::RefirectsGenerator do
-  let(:site) { JekyllSite.instance }
-  let(:build_filter) { Jekyll::BuildFilter.new(env: {}) }
+  subject(:generator) { described_class.new }
 
-  around do |example|
-    data_keys = %w[ai_gateway_policies event_gateway_policies kong_plugins]
-    snapshot = data_keys.to_h { |key| [key, site.data[key]] }
-    pages = site.pages.dup
-    example.run
-    site.pages.replace(pages)
-    data_keys.each do |key|
-      next unless snapshot[key].nil?
+  def policy(url:, get_started_url:)
+    instance_double(Jekyll::Page, url:, data: { 'get_started_url' => get_started_url })
+  end
 
-      site.data.delete(key)
+  describe '#mesh_examples_redirects' do
+    it 'emits no line for a current-major policy with no examples' do
+      site = instance_double(
+        Jekyll::Site,
+        data: {
+          'mesh_policies' => {
+            3 => { 'meshaccesslog' => policy(url: '/mesh/policies/meshaccesslog/', get_started_url: nil) }
+          }
+        }
+      )
+
+      expect(generator.mesh_examples_redirects(site)).to eq([])
+    end
+
+    it 'still emits a line for a major-2 policy that has examples' do
+      site = instance_double(
+        Jekyll::Site,
+        data: {
+          'mesh_policies' => {
+            2 => { 'meshretry' => policy(url: '/mesh/v2/policies/meshretry/', get_started_url: '/mesh/v2/policies/meshretry/examples/some-example/') }
+          }
+        }
+      )
+
+      expect(generator.mesh_examples_redirects(site)).to eq(
+        ["/mesh/v2/policies/meshretry/examples/\t/mesh/v2/policies/meshretry/examples/some-example/"]
+      )
+    end
+
+    it 'ignores the latest alias so a policy is not redirected twice' do
+      major_3_policies = { 'meshretry' => policy(url: '/mesh/policies/meshretry/', get_started_url: '/mesh/policies/meshretry/examples/some-example/') }
+      site = instance_double(
+        Jekyll::Site,
+        data: {
+          'mesh_policies' => {
+            3 => major_3_policies,
+            'latest' => major_3_policies
+          }
+        }
+      )
+
+      expect(generator.mesh_examples_redirects(site)).to eq(
+        ["/mesh/policies/meshretry/examples/\t/mesh/policies/meshretry/examples/some-example/"]
+      )
     end
   end
 
-  before do
-    allow(Jekyll).to receive(:sites).and_return([site])
-    site.data['kong_plugins'] ||= {}
-    site.data['ai_gateway_policies'] ||= {}
-    site.data['event_gateway_policies'] ||= {}
+  describe '#generate' do
+    let(:site) { JekyllSite.instance }
+    let(:build_filter) { Jekyll::BuildFilter.new(env: {}) }
 
-    generate_ai_gateway_policy_pages('ai-loom-guard')
-    generate_ai_gateway_policy_pages('ai-loom-rate-limit')
-    generate_event_gateway_policy_pages('acl')
-    described_class.new.generate(site)
-  end
+    around do |example|
+      data_keys = %w[ai_gateway_policies event_gateway_policies kong_plugins]
+      snapshot = data_keys.to_h { |key| [key, site.data[key]] }
+      pages = site.pages.dup
+      example.run
+      site.pages.replace(pages)
+      data_keys.each do |key|
+        next unless snapshot[key].nil?
 
-  let(:redirects_page) { site.pages.find { |page| page.url == '/_redirects' } }
-  let(:redirects_content) { redirects_page.content }
+        site.data.delete(key)
+      end
+    end
 
-  it 'builds the _redirects page' do
-    expect(redirects_page).not_to be_nil
-  end
+    before do
+      allow(Jekyll).to receive(:sites).and_return([site])
+      site.data['kong_plugins'] ||= {}
+      site.data['ai_gateway_policies'] ||= {}
+      site.data['event_gateway_policies'] ||= {}
 
-  it 'redirects an AI Gateway policy examples URL to its highest-weight example' do
-    expect(redirects_content).to include(
-      "/ai-gateway/policies/ai-loom-guard/examples/\t/ai-gateway/policies/ai-loom-guard/examples/block-requests/"
-    )
-  end
+      generate_ai_gateway_policy_pages('ai-loom-guard')
+      generate_ai_gateway_policy_pages('ai-loom-rate-limit')
+      generate_event_gateway_policy_pages('acl')
+      described_class.new.generate(site)
+    end
 
-  it 'emits no row and no blank line for an AI Gateway policy without examples' do
-    expect(redirects_content).not_to include('ai-loom-rate-limit')
-    expect(redirects_content).to include(
-      "/ai-gateway/policies/ai-loom-guard/examples/block-requests/" \
-      "\n# Redirects for the fixture site."
-    )
-  end
+    let(:redirects_page) { site.pages.find { |page| page.url == '/_redirects' } }
+    let(:redirects_content) { redirects_page.content }
 
-  it 'redirects an Event Gateway policy examples URL to its highest-weight example' do
-    expect(redirects_content).to include(
-      "/event-gateway/policies/acl/examples/\t/event-gateway/policies/acl/examples/read-only-topic/"
-    )
-  end
+    it 'builds the _redirects page' do
+      expect(redirects_page).not_to be_nil
+    end
 
-  def generate_ai_gateway_policy_pages(slug)
-    policy = Jekyll::AIGatewayPolicyPages::Policy.new(
-      folder: File.join(site.source, '_ai_gateway_policies', slug),
-      slug:
-    )
-    Jekyll::AIGatewayPolicyPages::Generator.new(site, build_filter:).generate_pages(policy)
-  end
+    it 'redirects an AI Gateway policy examples URL to its highest-weight example' do
+      expect(redirects_content).to include(
+        "/ai-gateway/policies/ai-loom-guard/examples/\t/ai-gateway/policies/ai-loom-guard/examples/block-requests/"
+      )
+    end
 
-  def generate_event_gateway_policy_pages(slug)
-    policy = Jekyll::EventGatewayPolicyPages::Policy.new(
-      folder: File.join(site.source, '_event_gateway_policies', slug),
-      slug:
-    )
-    Jekyll::EventGatewayPolicyPages::Generator.new(site, build_filter:).generate_pages(policy)
+    it 'emits no row and no blank line for an AI Gateway policy without examples' do
+      expect(redirects_content).not_to include('ai-loom-rate-limit')
+      expect(redirects_content).to include(
+        "/ai-gateway/policies/ai-loom-guard/examples/block-requests/" \
+        "\n# Redirects for the fixture site."
+      )
+    end
+
+    it 'redirects an Event Gateway policy examples URL to its highest-weight example' do
+      expect(redirects_content).to include(
+        "/event-gateway/policies/acl/examples/\t/event-gateway/policies/acl/examples/read-only-topic/"
+      )
+    end
+
+    def generate_ai_gateway_policy_pages(slug)
+      policy = Jekyll::AIGatewayPolicyPages::Policy.new(
+        folder: File.join(site.source, '_ai_gateway_policies', slug),
+        slug:
+      )
+      Jekyll::AIGatewayPolicyPages::Generator.new(site, build_filter:).generate_pages(policy)
+    end
+
+    def generate_event_gateway_policy_pages(slug)
+      policy = Jekyll::EventGatewayPolicyPages::Policy.new(
+        folder: File.join(site.source, '_event_gateway_policies', slug),
+        slug:
+      )
+      Jekyll::EventGatewayPolicyPages::Generator.new(site, build_filter:).generate_pages(policy)
+    end
   end
 end

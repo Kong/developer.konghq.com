@@ -1,0 +1,29 @@
+title: 'Send connections to a different destination'
+
+description: 'Point every connection a client opens to one destination at another, without the client changing its address.'
+
+weight: 800
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshTCPRoute
+  name: frontend-redirect
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            kuma.io/display-name: backend
+        rules:
+          - default:
+              backendRefs:
+                - kind: MeshService
+                  labels:
+                    kuma.io/display-name: backend-replacement
+                  port: 8080

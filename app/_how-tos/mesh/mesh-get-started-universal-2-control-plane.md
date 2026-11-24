@@ -1,6 +1,6 @@
 ---
 title: Set up the {{site.mesh_product_name}} control plane
-description: "Start the {{site.mesh_product_name}} control plane as a Docker container and configure kumactl to connect to it."
+description: "Run the {{site.mesh_product_name}} control plane in Universal mode as a container, and point kongctl at it."
 content_type: how_to
 permalink: /mesh/get-started/universal/control-plane/
 breadcrumbs:
@@ -9,23 +9,30 @@ products:
   - mesh
 works_on:
   - on-prem
+tools:
+  - kongctl
 tags:
   - get-started
   - universal-mode
   - docker
-min_version:
-  mesh: '2.10'
 series:
-  id: mesh-get-started-universal
+  id: mesh-get-started-universal-3
   position: 2
 tldr:
   q: How do I start the {{site.mesh_product_name}} control plane in Universal mode?
-  a: Run the control plane as a Docker container, retrieve the admin token, configure kumactl to connect to it, and enable `MeshService` resources in Exclusive mode.
+  a: Run `kuma-cp` as a container in `zone` mode, read its admin token, then point `kongctl` at its API with `--control-plane-url` and `--control-plane-token`.
+related_resources:
+  - text: Universal control plane
+    url: /mesh/universal-control-plane/
+  - text: "{{site.mesh_product_name}} CLI"
+    url: /mesh/cli/
+min_version:
+  mesh: '3.0'
 ---
 
 ## Start the control plane
 
-Run the {{site.mesh_product_name}} control plane using the `kuma-cp` Docker image:
+Run `kuma-cp` on the network you created, publishing its API port to the host:
 
 ```sh
 docker run \
@@ -35,56 +42,70 @@ docker run \
   --network kong-mesh-demo \
   --ip 172.18.78.1 \
   --publish 25681:5681 \
-  --volume "$KONG_MESH_DEMO_TMP:/demo" \
-  kong/kuma-cp:{{site.data.mesh_latest.version}} run
+  --volume "$KONG_MESH_DEMO_DIR:/demo" \
+  kong/kuma-cp:{{page.latest_release.version}} run
 ```
 
-You can now access the {{site.mesh_product_name}} user interface at <http://127.0.0.1:25681/gui>.
+The control plane defaults to `mode: zone` with an in-memory store, which is what a single-node
+demo wants. In a real deployment, use PostgreSQL. For more information, see
+[Universal control plane](/mesh/universal-control-plane/).
 
-## Configure kumactl
+Two ports are important:
+* 5681, which serves the HTTP API and the GUI. This is what `kongctl` uses.
+* 5678, which serves the data plane server where proxies connect.
 
-To manage the deployment with [kumactl](/mesh/cli/), connect it to the control plane you started in the previous section.
+You can reach the GUI at <http://127.0.0.1:25681/gui>.
 
-1. Run the following command to get the admin token from the control plane:
+## Get the admin token
 
-   ```sh
-   export KONG_MESH_DEMO_ADMIN_TOKEN="$( 
-     docker exec --tty --interactive kong-mesh-demo-control-plane \
-       wget --quiet --output-document - \
-       http://127.0.0.1:5681/global-secrets/admin-user-token \
-       | jq --raw-output .data \
-       | base64 --decode
-   )"
-   ```
+The {{site.mesh_product_name}} API enforces RBAC. It treats only requests from the control plane's own
+host as admin, and requests through the published port come from outside the
+container.
 
-1. Use the retrieved token to link kumactl to the control plane:
-
-   ```sh
-   kumactl config control-planes add \
-     --name kong-mesh-demo \
-     --address http://127.0.0.1:25681 \
-     --auth-type tokens \
-     --auth-conf "token=$KONG_MESH_DEMO_ADMIN_TOKEN" \
-     --skip-verify
-   ```
-
-1. Run the following command to verify the connection:
-
-   ```sh
-   kumactl get meshes
-   ```
-
-   You should see one mesh listed: `default`.
-
-## Configure the default mesh
-
-Configure the default mesh to use [`MeshService`](/mesh/meshservice/) resources in [Exclusive mode](/mesh/meshservice/#exclusive):
+This means `kongctl` needs a token. The control plane creates an admin token at startup and
+stores it as the `admin-user-token` global secret. Fetch it from inside the container:
 
 ```sh
-echo 'type: Mesh
-name: default
-meshServices:
-  mode: Exclusive' | kumactl apply -f -
+export KONG_MESH_ADMIN_TOKEN="$(
+  docker exec kong-mesh-demo-control-plane \
+    wget --quiet --output-document - \
+    http://127.0.0.1:5681/global-secrets/admin-user-token \
+    | sed -n 's/.*"data": *"\([^"]*\)".*/\1/p' \
+    | base64 --decode
+)"
 ```
 
-`MeshService` resources are explicit representations of traffic destinations. They define which [data plane proxies](/mesh/data-plane-proxy/) serve the traffic and the available ports, IPs, and hostnames.
+`sed` extracts the secret's base64-encoded `data` field, which `base64` decodes into the token.
+If `KONG_MESH_ADMIN_TOKEN` is empty, the control plane is still starting: wait a few seconds and
+run the command again.
+
+## Point kongctl at the control plane
+
+`kongctl` reaches a self-managed control plane through `--control-plane-url`, and authenticates
+with `--control-plane-token`. 
+
+1. Export the control plane URL:
+
+   ```sh
+   export KONG_MESH_CP=http://127.0.0.1:25681
+   ```
+
+1. Pass both flags to list the control plane's resource types:
+
+   ```sh
+   kongctl get mesh resource-types \
+     --control-plane-url "$KONG_MESH_CP" \
+     --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+   ```
+
+   The command lists every resource type this control plane serves.
+
+## Confirm the default mesh
+
+Check that the control plane includes the `default` mesh:
+
+```sh
+kongctl get mesh meshes \
+  --control-plane-url "$KONG_MESH_CP" \
+  --control-plane-token "$KONG_MESH_ADMIN_TOKEN"
+```

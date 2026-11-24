@@ -6,7 +6,7 @@ previous_major_url_segment: v<major>
 releases:
   - release: "2.3"
     latest: true
-    version: "2.3.1"
+    version: "2.3.2"
     name: "v1"
     eol: 2026-12-04
     sunset_eol: 2027-01-04
@@ -24,7 +24,7 @@ releases:
         arm: true
         fips: true
   - release: "2.2"
-    version: "2.2.1"
+    version: "2.2.2"
     name: "v1"
     stable: true
     eol: 2027-03-30
@@ -56,6 +56,8 @@ releases:
   - release: "1.0"
 
 release_dates:
+  '2.2.2': 2026/11/19
+  '2.3.2': 2026/11/19
   '2.3.1': 2026/11/10
   '2.2.1': 2026/11/10
   '2.3.0': 2026/11/04

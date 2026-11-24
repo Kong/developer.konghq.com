@@ -1,7 +1,8 @@
 {%- navtabs "policy-yaml" additional_classes heading_level -%}
 {%- if show_kubernetes -%}
 {%- navtab "Kubernetes" -%}
-{%- if use_meshservice -%}
+{%- if show_meshservice -%}
+{%- if show_legacy -%}
 {%- if page.output_format != 'markdown' -%}
 <div class="meshservice text-sm">
 <label class="flex gap-2 py-0.5 w-full text-sm text-primary md:pl-1 items-center">
@@ -13,13 +14,17 @@
 {% if page.output_format == 'markdown' %}Using `MeshService` Kubernetes resources:{% endif %}
 {{kube | liquify}}
 {%- else -%}
+{{kube | liquify}}
+{%- endif -%}
+{%- else -%}
 {{kube_legacy | liquify}}
 {%- endif -%}
 {%- endnavtab -%}
 {%- endif -%}
 {%- if show_universal -%}
 {%- navtab "Universal" -%}
-{%- if use_meshservice -%}
+{%- if show_meshservice -%}
+{%- if show_legacy -%}
 {%- if page.output_format != 'markdown' -%}
 <div class="meshservice text-sm">
 <label class="flex gap-2 py-0.5 w-full text-sm text-primary md:pl-1 items-center">
@@ -30,6 +35,9 @@
 {{uni_legacy | liquify}}
 {% if page.output_format == 'markdown' %}Using `MeshService` Kubernetes resources:{% endif %}
 {{uni | liquify}}
+{%- else -%}
+{{uni | liquify}}
+{%- endif -%}
 {%- else -%}
 {{uni_legacy | liquify}}
 {%- endif -%}

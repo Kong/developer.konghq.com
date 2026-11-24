@@ -1,0 +1,24 @@
+title: 'Limit new TCP connections'
+
+description: 'Cap how often clients may open a connection to a destination, rather than what they send over one.'
+
+weight: 800
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshRateLimit
+  name: backend-connection-limit
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    rules:
+      - default:
+          local:
+            tcp:
+              connectionRate:
+                num: 5
+                interval: 10s

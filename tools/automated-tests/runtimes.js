@@ -26,7 +26,9 @@ async function konnectRegion() {
 export async function getRuntimeConfig(deploymentModel, product) {
   const fileContent = await fs.readFile(`./config/runtimes.yaml`, "utf8");
   const configs = load(fileContent);
-  const imageName = `automated-tests`;
+  // Published by .github/workflows/build-automated-tests-image.yaml as a
+  // public, multi-arch image, so a run needs no build and no registry login.
+  const imageName = `ghcr.io/kong/automated-tests:latest`;
 
   if (!configs[deploymentModel]) {
     throw new Error(`Unsupported deployment model: ${deploymentModel}`);

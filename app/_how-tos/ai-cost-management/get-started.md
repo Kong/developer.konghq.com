@@ -57,6 +57,9 @@ prereqs:
     - title: OIDC provider
       include_content: prereqs/auth/oidc/keycloak-client-credentials-ai-gateway-org-chart
       icon_url: /assets/icons/keycloak.svg
+    - title: (optional) Export org chart from your HRIS
+      include_content: prereqs/ai-cost-management/export-org-chart
+      icon_url: /assets/icons/organization.svg
   konnect:
     - name: "KONG_CUSTOM_PLUGIN_STREAMING_ENABLED"
       value: "on"

@@ -22,6 +22,11 @@ module Jekyll
         environment['navtabs-stack'] ||= []
         environment['navtabs-stack'].push(tabs_id)
 
+        # Computed before rendering children: a nested {% tabs %} relies on
+        # its enclosing {% tab %} still having `tab_id` set, which its own
+        # child tabs clear once they finish rendering.
+        heading_level = parse_heading_level(context)
+
         super
 
         environment['navtabs-stack'].pop
@@ -31,7 +36,7 @@ module Jekyll
           context['tab_group'] = tabs_id
           context['environment'] = environment
           context['navtabs_id'] = tabs_id
-          context['heading_level'] = parse_heading_level(context)
+          context['heading_level'] = heading_level
           ComponentTemplates.fetch('tabs', @page['output_format']).render(context)
         end
       end
@@ -62,11 +67,13 @@ module Jekyll
           @title = ref if ref
         end
 
-        contents = super
-
         environment = context.environments.first
-
         tabs_id = environment['navtabs-stack'].last
+
+        context['tab_id'] = tabs_id
+        contents = super
+        context['tab_id'] = nil
+
         environment["navtabs-#{tabs_id}"][@title] = {
           'content' => block_content(context, contents),
           'attributes' => { 'slug' => Jekyll::Utils.slugify(@title) }

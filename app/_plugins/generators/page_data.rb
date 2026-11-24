@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module Jekyll
-  class PageDataGenerator < Generator # rubocop:disable Style/Documentation
-    priority :lowest
+require_relative '../lib/ordered_generator'
 
+module Jekyll
+  class PageDataGenerator < OrderedGenerator # rubocop:disable Style/Documentation
     def generate(site)
       Data::Series.new(site:).process
 

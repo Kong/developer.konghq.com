@@ -9,6 +9,10 @@ products:
   - ai-gateway
 works_on:
   - konnect
+search_aliases:
+  - k4a
+  - kong 4 all
+  - tourist mode
 tags:
   - ai
   - access-control
@@ -58,6 +62,8 @@ rows:
 <!-- vale on -->
 
 A {{site.konnect_short_name}} user with no matching principal has no AI Management role.
+
+If an Org Admin is also a manager in the [org chart](/ai-cost-management/org-chart/), they keep their Org Admin permissions. The Team Manager role doesn't limit them to their team.
 The match works in either order. An org chart import or automatic user provisioning can create the principal before or after the user exists.
 
 ### Invite a user to AI Management
@@ -316,10 +322,18 @@ rows:
   - capability: "View the cost dashboard and explorer"
     admin: "Yes, for the whole organization"
     manager: "Yes, for their teams"
-    individual: false
-  - capability: "View and create budgets"
+    individual: "Yes, for their own usage"
+  - capability: "View budgets"
+    admin: "All budgets"
+    manager: "Budgets for their teams"
+    individual: "Budgets that apply to them"
+  - capability: "Create, edit, and delete budgets"
     admin: "Yes, for the whole organization"
-    manager: "View only"
+    manager: "Yes, for their teams"
+    individual: "Yes, for their own personal budgets"
+  - capability: "Set budget notification thresholds"
+    admin: true
+    manager: "Yes, for their teams' budgets"
     individual: false
   - capability: "Use the price catalog, attribution, and exports"
     admin: true

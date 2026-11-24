@@ -1,6 +1,6 @@
 ---
 title: AI Rate Limit Alerts
-description: Notify Slack, PagerDuty, or a webhook before a Consumer hits its AI token quota, instead of waiting for HTTP 429.
+description: Send a webhook alert when an AI Consumer uses 80% of its token quota on {{site.ai_gateway_name}}, before requests fail with HTTP 429.
 url: "/cookbooks/ai-rate-limit-alerts/"
 content_type: cookbook
 layout: cookbook
@@ -8,82 +8,77 @@ products:
   - ai-gateway
 tools:
   - kongctl
-canonical: true
 works_on:
   - konnect
 min_version:
-  gateway: "3.14"
-  ai-gateway: "2.0"
+  ai-gateway: '2.0'
 categories:
   - cost-optimization
   - observability
 featured: false
 popular: false
-
-plugins:
-  - key-auth
-  - ai-rate-limiting-advanced
-  - post-function
-  - ai-model
-  - ai-model-provider
-requires_embeddings: false
-providers:
-  - openai
-
-hint: "Requires an OpenAI API key, a webhook.site URL, and Python 3.11+."
 prereqs:
   skip_product: true
   skip_tool: true
   inline:
     - title: "{{site.konnect_product_name}}"
       content: |
-        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped {{site.ai_gateway}} and local Data Plane. The runnable demo sends alerts with a [post-function](/ai-gateway/policies/post-function/) Policy to `DECK_WEBHOOK_URL`.
+        This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped {{site.ai_gateway}} and local data plane.
 
-        1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
-        1. Export your token. The same token is reused later for kongctl commands:
+        1. Create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+        1. Export your token. You reuse the same token later for kongctl commands:
 
            ```bash
            export KONNECT_TOKEN='YOUR_KONNECT_PAT'
            ```
 
-        1. Create a unique URL at [webhook.site](https://webhook.site/) and export it. The data plane reads this value when the post-function Policy sends the alert:
+        1. Open [webhook.site](https://webhook.site/) and copy your unique URL. The data plane sends the alert to this URL and reads it when the data plane starts, so export it before you run the quickstart script:
 
            ```bash
-           export DECK_WEBHOOK_URL='https://webhook.site/YOUR-UUID'
+           export ALERT_WEBHOOK_URL='https://webhook.site/YOUR-UUID'
            ```
 
-        1. Set the recipe-scoped AI Gateway name and run the quickstart script. `KONG_UNTRUSTED_LUA=on` lets the post-function Policy call `resty.http`. `-e DECK_WEBHOOK_URL` sets the webhook URL on the container, and `KONG_NGINX_MAIN_ENV=DECK_WEBHOOK_URL` exposes it to nginx workers so `os.getenv` works inside post-function:
+        1. Set the recipe-scoped {{site.ai_gateway}} name and run the quickstart script. The three `-e` settings let the Post-Function Policy send the alert:
+
+           * `KONG_UNTRUSTED_LUA=on` turns off the Lua sandbox ([`untrusted_lua`](/ai-gateway/configuration/#untrusted-lua)). The policy uses `ngx.timer.at`, `ngx.shared`, and `os.getenv`, which the [sandbox](/ai-gateway/sandboxing/) doesn't allow in the default `strict` mode or in `lax` mode. It also loads `resty.http`, which only `lax` mode allows. See the warning in [Post-Function Policy](#post-function-policy).
+           * `ALERT_WEBHOOK_URL` passes the webhook URL from your shell to the data plane container.
+           * `KONG_NGINX_MAIN_ENV=ALERT_WEBHOOK_URL` adds the `env ALERT_WEBHOOK_URL;` directive to the NGINX `main` context ([NGINX injected directives](/ai-gateway/configuration/#nginx-injected-directives-section)). NGINX removes inherited environment variables unless an `env` directive keeps them ([NGINX documentation](https://nginx.org/en/docs/ngx_core_module.html#env)), so the policy can read the URL with `os.getenv` only with this setting.
 
            ```bash
            export KONNECT_CONTROL_PLANE_NAME='ai-rate-limit-alerts-recipe'
-           curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN \
-             -e KONG_UNTRUSTED_LUA=on \
-             -e DECK_WEBHOOK_URL \
-             -e KONG_NGINX_MAIN_ENV=DECK_WEBHOOK_URL
+           curl -Ls https://get.konghq.com/ai | \
+             bash -s -- -k $KONNECT_TOKEN \
+               -e KONG_UNTRUSTED_LUA=on \
+               -e ALERT_WEBHOOK_URL \
+               -e KONG_NGINX_MAIN_ENV=ALERT_WEBHOOK_URL
            ```
 
-           This provisions an AI Gateway named `ai-rate-limit-alerts-recipe`, a local Data Plane connected to it, and prints `export` lines for the rest of the session vars, including `AI_GATEWAY_ID`. Paste those into your shell when prompted.
+           This provisions an {{site.ai_gateway}} named `ai-rate-limit-alerts-recipe`, a local data plane connected to it, and prints `export` lines for the rest of the session vars, including `AI_GATEWAY_ID`. Paste those into your shell when prompted.
     - title: kongctl
       content: |
         This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
+        1. Install **kongctl** from the [kongctl documentation](/kongctl/).
         1. Verify it's installed:
 
            ```bash
            kongctl version
            ```
-    - title: OpenAI
+    - title: AI Credentials
       content: |
-        This tutorial uses OpenAI:
+        Export the credentials of the provider that the AI Model calls. The provider's tab in [Apply the Kong configuration](#apply-the-kong-configuration) reads these variables.
 
+        {% navtabs "Providers" %}
+        {% navtab "OpenAI" %}
         1. [Create an OpenAI account](https://auth.openai.com/create-account).
         1. [Get an API key](https://platform.openai.com/api-keys).
-        1. Export the API key as an environment variable:
+        1. Export the API key:
 
            ```sh
-           export DECK_OPENAI_TOKEN='Bearer sk-YOUR-KEY'
+           export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
            ```
+        {% endnavtab %}
+        {% endnavtabs %}
     - title: Python 3.11+
       icon_url: /assets/icons/python.svg
       content: |
@@ -95,159 +90,43 @@ prereqs:
         pip install 'openai>=1.0.0'
         ```
 overview: |
-  LLM quotas are measured in tokens, not request counts, so HTTP 429 often arrives after
-  the budget is already gone. [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/)
-  writes remaining and limit headers, but it has no built-in 80% notify field. A post-function
-  Policy reads those headers on the {{site.konnect_product_name}} data plane and sends a POST request to
-  `DECK_WEBHOOK_URL` at 80% used. By the end you have a `/ai-rate-limit-alerts` chat endpoint
-  that still returns 200 at 80%, notifies an external channel, and only returns 429 after the
-  quota is exhausted.
+  Send an alert to a webhook when an AI Consumer uses 80% of its token quota, so that you can act before {{site.ai_gateway_name}} rejects requests with HTTP 429. You'll set up:
+
+  * A `/ai-rate-limit-alerts` chat endpoint with a token quota that the AI Rate Limiting Advanced Policy enforces
+  * A Post-Function Policy that sends a JSON alert to a webhook at 80% of the quota, while requests still succeed
+  * AI Consumer authentication, with the OpenAI API key kept in {{site.ai_gateway}}
 ---
 
-## The problem
+## What this cookbook solves
 
-REST rate limits usually wait until the client exceeds the cap, then return 429. That is late
-for LLM traffic:
-
-- **Token spend is uneven.** A short greeting and a long RAG prompt both count as one HTTP
-  request. The unit that matters is tokens, which the client cannot predict from request count.
-- **429 is a hard stop.** Ops and finance want "about to hit the cap" so they can raise the
-  quota or shed load before callers fail.
-- **Per-app header polling does not scale.** The AI Rate Limiting Advanced Policy can expose
-  remaining and limit headers. Every client must read them, and every language stack copies
-  the same threshold logic.
-- **Token windows have no built-in early-warning field.** The policy can enforce a hard cap
-  and emit remaining/limit headers, but it does not POST an external channel at 80% used.
-
-## The solution
-
-Kong already writes `X-AI-RateLimit-Remaining-*` and `X-AI-RateLimit-Limit-*` after a chat
-returns. A [post-function](/ai-gateway/policies/post-function/) AI Policy reads those headers after the
-response body finishes and computes `(limit - remaining) / limit`. At 80% it sends a POST request to
-`DECK_WEBHOOK_URL` with `resty.http` via `ngx.timer.at`. Without post-function there is no 80% signal.
-
-<!-- vale off -->
-{% mermaid %}
-sequenceDiagram
-    autonumber
-    participant C as Client
-    participant DP as Kong AI Gateway
-    participant LLM as OpenAI
-    participant WH as webhook URL
-
-    C->>DP: chat completions (apikey)
-    Note over DP: key-auth Auth Strategy, then token window Policy
-    alt quota remaining
-        DP->>LLM: AI Model + Provider
-        LLM-->>DP: 200 plus token usage
-        Note over DP: post-function POST if used/limit >= 0.8
-        DP->>WH: webhook POST (Konnect path)
-        DP-->>C: 200
-    else quota exhausted
-        DP-->>C: 429
-    end
-{% endmermaid %}
-<!-- vale on -->
+Rate limits usually tell clients about a quota only when a request fails with `429`, which causes the following problems:
 
 {% table %}
 columns:
-  - title: Component
-    key: component
-  - title: Responsibility
-    key: responsibility
+  - title: Problem
+    key: problem
+  - title: Solution
+    key: solution
 rows:
-  - component: key-auth Auth Strategy
-    responsibility: Maps the `apikey` header to a Consumer for the rate-limit partition.
-  - component: ai-rate-limiting-advanced Policy
-    responsibility: Counts `total_tokens` per Consumer, sets remaining and limit headers, returns 429 when the window is empty.
-  - component: post-function Policy
-    responsibility: Computes 80% from those headers and sends a POST request to the webhook at `DECK_WEBHOOK_URL`.
-  - component: AI Model + Provider
-    responsibility: Injects the OpenAI credential and proxies `/ai-rate-limit-alerts`.
+  - problem: "A limit on the request count doesn't follow LLM cost. A short greeting and a long RAG prompt each count as one request, but the provider bills tokens."
+    solution: "The AI Rate Limiting Advanced Policy counts the tokens that OpenAI reports for each request and returns `429` when the window has no tokens left."
+  - problem: "A `429` is a hard stop. Operations and finance teams learn about the quota only after callers fail, too late to raise the quota or shed load."
+    solution: "A Post-Function Policy sends a JSON alert to a webhook when 80% of the window is used. The request that crosses the threshold still gets `200`."
+  - problem: "Each client must read the rate limit headers and repeat the same threshold logic in each language."
+    solution: "The Post-Function Policy reads the rate limit headers on the data plane, so clients don't change."
+  - problem: "An alert on every request after the threshold floods the channel."
+    solution: "The Post-Function Policy sends at most one alert for each AI Consumer in 60 seconds."
 {% endtable %}
 
-## How it works
+## Try it out
 
-1. The client calls `/ai-rate-limit-alerts` with an `apikey`.
-2. The key-auth AI Auth Strategy maps the key to a Consumer.
-3. The ai-rate-limiting-advanced Policy counts `total_tokens` for that Consumer and writes remaining and limit headers. If the window is empty, Kong returns 429 and stops.
-4. On a successful chat, the AI Model proxies OpenAI.
-5. The post-function Policy runs in `body_filter`, computes percent used, and at 80% schedules a webhook POST to `DECK_WEBHOOK_URL`. The caller still receives 200.
+Apply the configuration, then run a demo script that sends short chat requests until the token quota runs out, checks that the webhook received one alert, and sends one request with an invalid API key.
 
-### Key Auth: Consumer identity for the quota
+### Apply the Kong configuration
 
-The key-auth AI Auth Strategy identifies the caller so AI Rate Limiting Advanced
-can partition by Consumer. The demo key is `demo-api-key`. Production should use one key per
-application.
+The configuration creates an AI Model Provider with your OpenAI API key, a Key Auth AI Auth Strategy, an AI Consumer with a demo API key, an [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy with a 50-token window, a [Post-Function](/ai-gateway/policies/post-function/) Policy that sends the alert, and an AI Model on `/ai-rate-limit-alerts` that answers to the `chat` alias.
 
-#### Configuration details
-
-```yaml
-ai_gateway_auth_strategies:
-- type: key-auth
-  config:
-    key_names:
-      - apikey
-    hide_credentials: true
-```
-{:.no-copy-code}
-
-**`key_names`** is the request header the client sends.  
-**`hide_credentials`** strips the key before the request reaches OpenAI.
-
-### AI Rate Limiting Advanced: token window and headers
-
-The [ai-rate-limiting-advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy counts
-`total_tokens` per Consumer. Set **`hide_client_headers`** to `false` so post-function can
-read remaining and limit. The 50-token / 60-second window is small so the demo reaches 80% quickly.
-In {{site.ai_gateway}} 2.0 the window lives under `config.policies[]` with a top-level `identifier`.
-
-#### Configuration details
-
-```yaml
-ai_gateway_policies:
-- type: ai-rate-limiting-advanced
-  config:
-    strategy: local
-    identifier: consumer
-    tokens_count_strategy: total_tokens
-    hide_client_headers: false
-    policies:
-      - window_type: fixed
-        limits:
-          - limit: 50
-            window_size: 60
-```
-{:.no-copy-code}
-
-Use `strategy: redis` when more than one data plane shares the counter.
-
-### Post-function: 80% signal
-
-The [post-function](/ai-gateway/policies/post-function/) Policy runs in `body_filter` (`eof`). It scans
-`X-AI-RateLimit-Remaining-*` and `X-AI-RateLimit-Limit-*` (suffixes vary by mode)
-after `total_tokens` headers exist. At 80% used it schedules `resty.http` with
-`ngx.timer.at` (`cosockets` are not available in filter phases) and sends a POST request to `DECK_WEBHOOK_URL`.
-
-**`threshold = 80`** is percent used. **`dict:add(..., 1, 60)`** snoozes repeat alerts for 60 seconds.
-`resty.http` needs `KONG_UNTRUSTED_LUA=on`. The data plane also needs
-`KONG_NGINX_MAIN_ENV=DECK_WEBHOOK_URL` so workers can read `DECK_WEBHOOK_URL`.
-
-### AI Model: chat proxy
-
-The AI Model injects the OpenAI key through its Provider and proxies the chat on
-`/ai-rate-limit-alerts`.
-
-{:.info}
-> In production, store credentials in [Kong Vaults](/gateway/entities/vault/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables.
-
-Do not send secrets, prompts, or full messages in the webhook body.
-
-## Apply the Kong configuration
-
-The following configuration creates an AI Model Provider, a key-auth AI Auth Strategy and Consumer, an ai-rate-limiting-advanced Policy, a post-function Policy for the 80% webhook, and one AI Model on `/ai-rate-limit-alerts`. Every resource is scoped using a kongctl namespace. See the [kongctl documentation](/kongctl/) for more on federated configuration management.
-
-First, adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so the following apply commands can manage it.
+Adopt the quickstart {{site.ai_gateway}} into a [kongctl namespace](/kongctl/). Adoption adds the `KONGCTL-namespace` label to the {{site.ai_gateway}}:
 
 ```bash
 kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
@@ -255,20 +134,26 @@ kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
   --pat "${KONNECT_TOKEN}"
 ```
 
-Adoption stamps the `KONGCTL-namespace` label on the {{site.ai_gateway}}.
-
-Export the demo Consumer's API key and chat model. `KONNECT_CONTROL_PLANE_NAME`, `KONNECT_TOKEN`, `DECK_OPENAI_TOKEN`,
-`AI_GATEWAY_ID`, and `DECK_WEBHOOK_URL` are already set in Prerequisites.
+Export the demo AI Consumer's API key. The credential's `api_key` field is write-only, so its value must come from an environment variable, even for a fixed demo key:
 
 ```bash
-export DECK_CONSUMER_API_KEY='demo-api-key'
-export DECK_CHAT_MODEL='gpt-4o-mini'
+export CONSUMER_API_KEY='demo-api-key'
+```
+
+Select your provider. The tab exports `CHAT_MODEL`, the OpenAI model that the AI Model calls, then applies the configuration. The provider credentials and the webhook URL come from the prerequisites.
+
+{% navtabs "Providers" %}
+{% navtab "OpenAI" %}
+
+Export the model env var:
+
+```bash
+export CHAT_MODEL='gpt-4o-mini'
 ```
 
 Apply the Kong configuration:
 
 ```bash
-{%- raw %}
 cat <<'EOF' > kong-recipe.yaml
 _defaults:
   kongctl:
@@ -284,7 +169,7 @@ ai_gateway_model_providers:
       type: basic
       headers:
       - name: Authorization
-        value: !secret {source: !env 'DECK_OPENAI_TOKEN'}
+        value: !secret {source: !env 'OPENAI_TOKEN'}
 ai_gateway_auth_strategies:
 - ref: ai-rate-limit-alerts-auth
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -306,7 +191,7 @@ ai_gateway_consumers:
     name: ai-rate-limit-alerts-credential
     display_name: ai-rate-limit-alerts demo API key
     type: api-key
-    api_key: !secret {source: !env 'DECK_CONSUMER_API_KEY'}
+    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
 ai_gateway_policies:
 - ref: ai-rate-limit-alerts-rla
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -330,30 +215,76 @@ ai_gateway_policies:
   type: post-function
   config:
     body_filter:
-    - "if not ngx.arg[2] then\n  return\nend\nlocal rem, lim\nlocal headers = kong.response.get_headers()\
-      \ or {}\nfor name, value in pairs(headers) do\n  local lower = string.lower(name)\n\
-      \  if lower:find(\"x-ai-ratelimit-remaining-\", 1, true)\n     and not lower:find(\"\
-      reset\", 1, true)\n     and not lower:find(\"retry\", 1, true) then\n    rem\
-      \ = tonumber(value)\n  elseif lower:find(\"x-ai-ratelimit-limit-\", 1, true)\n\
-      \     and not lower:find(\"reset\", 1, true)\n     and not lower:find(\"retry\"\
-      , 1, true) then\n    lim = tonumber(value)\n  end\nend\nif not rem or not lim\
-      \ or lim <= 0 then\n  return\nend\nlocal threshold = 80\nif (lim - rem) / lim\
-      \ * 100 < threshold then\n  return\nend\nlocal consumer = kong.client.get_consumer()\
-      \ or {}\nlocal id = consumer.id or kong.client.get_forwarded_ip() or \"anon\"\
-      \nlocal dict = ngx.shared.kong\nif dict then\n  local added = dict:add(\"ai-rate-alert:\"\
-      \ .. id, 1, 60)\n  if not added then\n    return\n  end\nend\nlocal url = os.getenv(\"\
-      DECK_WEBHOOK_URL\")\nif not url or url == \"\" then\n  return\nend\nlocal username\
-      \ = consumer.username or \"unknown\"\nlocal ok, err = ngx.timer.at(0, function(premature)\n\
-      \  if premature then\n    return\n  end\n  local http = require(\"resty.http\"\
-      )\n  local cjson = require(\"cjson.safe\")\n  local httpc = http.new()\n  httpc:set_timeout(3000)\n\
-      \  httpc:request_uri(url, {\n    method = \"POST\",\n    body = cjson.encode({\n\
-      \      text = string.format(\n        \"%s reached %s%% of the token quota.\
-      \ %s tokens remaining.\",\n        username,\n        tostring(threshold),\n\
-      \        tostring(rem)\n      ),\n      username = username,\n      remaining\
-      \ = rem,\n      limit = lim,\n      rate = lim - rem,\n      threshold = threshold,\n\
-      \      window = \"minute\",\n    }),\n    headers = { [\"Content-Type\"] = \"\
-      application/json\" },\n    ssl_verify = true,\n  })\nend)\nif not ok then\n\
-      \  kong.log.err(\"ai-rate-alert timer: \", err)\nend\n"
+    - |
+      if not ngx.arg[2] then
+        return
+      end
+      local rem, lim
+      local headers = kong.response.get_headers() or {}
+      for name, value in pairs(headers) do
+        local lower = string.lower(name)
+        if lower:find("x-ai-ratelimit-remaining-", 1, true)
+           and not lower:find("reset", 1, true)
+           and not lower:find("retry", 1, true) then
+          rem = tonumber(value)
+        elseif lower:find("x-ai-ratelimit-limit-", 1, true)
+           and not lower:find("reset", 1, true)
+           and not lower:find("retry", 1, true) then
+          lim = tonumber(value)
+        end
+      end
+      if not rem or not lim or lim <= 0 then
+        return
+      end
+      local threshold = 80
+      if (lim - rem) / lim * 100 < threshold then
+        return
+      end
+      local consumer = kong.client.get_consumer() or {}
+      local id = consumer.id or kong.client.get_forwarded_ip() or "anon"
+      local dict = ngx.shared.kong
+      if dict then
+        local added = dict:add("ai-rate-alert:" .. id, 1, 60)
+        if not added then
+          return
+        end
+      end
+      local url = os.getenv("ALERT_WEBHOOK_URL")
+      if not url or url == "" then
+        return
+      end
+      local username = consumer.username or "unknown"
+      local ok, err = ngx.timer.at(0, function(premature)
+        if premature then
+          return
+        end
+        local http = require("resty.http")
+        local cjson = require("cjson.safe")
+        local httpc = http.new()
+        httpc:set_timeout(3000)
+        httpc:request_uri(url, {
+          method = "POST",
+          body = cjson.encode({
+            text = string.format(
+              "%s reached %s%% of the token quota. %s tokens remaining.",
+              username,
+              tostring(threshold),
+              tostring(rem)
+            ),
+            username = username,
+            remaining = rem,
+            limit = lim,
+            rate = lim - rem,
+            threshold = threshold,
+            window = "minute",
+          }),
+          headers = { ["Content-Type"] = "application/json" },
+          ssl_verify = true,
+        })
+      end)
+      if not ok then
+        kong.log.err("ai-rate-alert timer: ", err)
+      end
 ai_gateway_models:
 - ref: ai-rate-limit-alerts-model
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -385,13 +316,16 @@ ai_gateway_models:
       - POST
       - OPTIONS
       strip_path: true
+      model:
+        body_param: model
+        values:
+        - chat
   targets:
-  - name: !env 'DECK_CHAT_MODEL'
+  - name: !env 'CHAT_MODEL'
     provider: ai-rate-limit-alerts-provider
     config:
       type: openai
 EOF
-{% endraw -%}
 
 kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
@@ -399,36 +333,36 @@ rm -f kong-recipe.yaml
 ```
 {: data-test-step="block" .collapsible }
 
-## Try it out
+{% endnavtab %}
+{% endnavtabs %}
 
-The demo sends short `hi` chats with `max_tokens=1` until the 50-token window is empty. Watch
-`X-AI-RateLimit-Remaining-*` fall, then confirm the webhook received a POST at 80%. After
-the quota, Kong returns 429.
+### Run the demo
+
+The script sends `hi` chat requests with `max_tokens=1` until the 50-token window is empty, and prints the remaining tokens from the rate limit headers of each response. After the `429`, it checks the webhook.site inbox for the alert, then sends one request with an invalid API key. In the output, look for the `[THRESHOLD]` line, the `[BLOCKED] 429` line, and the `[WEBHOOK]` line.
 
 {:.info}
-> The OpenAI SDK sends `api_key` as `Authorization: Bearer`. This demo uses
-> `default_headers={"apikey": ...}` instead. See
-> [Authenticate OpenAI SDK clients with Key Auth](/how-to/authenticate-openai-sdk-clients-with-key-auth/).
+> The demo passes the API key in `default_headers` because the OpenAI SDK always sends `api_key` as an `Authorization: Bearer` header. To let clients use `api_key` directly, add a global [Pre-Function](/ai-gateway/policies/pre-function/) Policy (`global: true`) that copies the Bearer token to the `apikey` header. A global Pre-Function Policy runs before authentication, while one attached to the AI Model runs after it.
 
 Create the demo script:
 
 ```bash
 cat <<'EOF' > demo.py
-"""AI rate limit early-alert demo.
+"""AI rate limit early-alert demo for Kong AI Gateway.
 
-Sends short chat completions through Kong until the Consumer uses 80% of a
-50-token / 60-second window. Kong should POST a JSON alert to DECK_WEBHOOK_URL
-at that threshold, then return HTTP 429 after the quota is exhausted.
+Sends short chat completions through Kong until the AI Consumer uses its
+50-token, 60-second window. At 80% used, the Post-Function Policy sends a JSON
+alert to ALERT_WEBHOOK_URL. When the window is empty, Kong returns 429. Then the
+script sends one request with an invalid API key.
 
 Expected output:
-  - Early requests -> 200, remaining headers well above 20%
-  - At 80% used    -> 200, webhook inbox grows
-  - After the quota -> 429
+  - Early requests: [ALLOWED] 200, with the remaining tokens going down
+  - At 80% used: [ALLOWED] 200 and [THRESHOLD], and the webhook inbox grows by one
+  - After the quota: [BLOCKED] 429
+  - Invalid API key: [BLOCKED] 401
 
-Run:
-  export PROXY_URL=http://localhost:8000
-  export DECK_WEBHOOK_URL=https://webhook.site/YOUR-UUID
-  python demo.py
+Run: python demo.py (set PROXY_URL if the data plane is not at http://localhost:8000,
+and CONSUMER_API_KEY if you changed the demo key). ALERT_WEBHOOK_URL must be your
+webhook.site URL.
 """
 
 from __future__ import annotations
@@ -444,8 +378,9 @@ import urllib.request
 from openai import APIStatusError, OpenAI
 
 PROXY_URL = os.getenv("PROXY_URL", "http://localhost:8000")
-API_KEY = "demo-api-key"
-WEBHOOK_URL = os.getenv("DECK_WEBHOOK_URL", "")
+API_KEY = os.getenv("CONSUMER_API_KEY", "demo-api-key")
+WEBHOOK_URL = os.getenv("ALERT_WEBHOOK_URL", "")
+MODEL_ALIAS = "chat"
 LIMIT = 50
 THRESHOLD_PCT = 80
 
@@ -465,19 +400,19 @@ def DIM(s: str) -> str:
 
 
 def GREEN(s: str) -> str:
-    return _c("32", s)
+    return _c("32;1", s)
 
 
 def RED(s: str) -> str:
-    return _c("31", s)
+    return _c("31;1", s)
 
 
 def YELLOW(s: str) -> str:
-    return _c("33", s)
+    return _c("33;1", s)
 
 
 def BLUE(s: str) -> str:
-    return _c("34", s)
+    return _c("34;1", s)
 
 
 def remaining_from(headers: dict[str, str]) -> tuple[int | None, int | None]:
@@ -511,20 +446,28 @@ def webhook_count(token: str) -> int:
     return len(body.get("data") or [])
 
 
-def make_client() -> OpenAI:
+def make_client(api_key: str) -> OpenAI:
     return OpenAI(
         base_url=f"{PROXY_URL}/ai-rate-limit-alerts",
         api_key="unused",
-        default_headers={"apikey": API_KEY},
+        default_headers={"apikey": api_key},
+    )
+
+
+def chat(client: OpenAI):
+    return client.chat.completions.with_raw_response.create(
+        model=MODEL_ALIAS,
+        messages=[{"role": "user", "content": "hi"}],
+        max_tokens=1,
     )
 
 
 def main() -> int:
     if not WEBHOOK_URL:
-        print(RED("Set DECK_WEBHOOK_URL to your webhook.site unique URL."))
+        print(RED("Set ALERT_WEBHOOK_URL to your webhook.site unique URL."))
         return 1
 
-    client = make_client()
+    client = make_client(API_KEY)
     token = webhook_token(WEBHOOK_URL)
     before = webhook_count(token)
     print(BOLD("[SETUP]"))
@@ -535,11 +478,7 @@ def main() -> int:
     for i in range(1, 20):
         print(f"\n{BOLD('[REQUEST]')} chat {i}")
         try:
-            raw = client.chat.completions.with_raw_response.create(
-                model="gpt-4o-mini",
-                messages=[{"role": "user", "content": "hi"}],
-                max_tokens=1,
-            )
+            raw = chat(client)
             headers = {k.lower(): v for k, v in raw.headers.items()}
             rem, lim = remaining_from(headers)
             used = (lim - rem) if rem is not None and lim else None
@@ -547,11 +486,11 @@ def main() -> int:
             rem_s = f"{rem}/{lim}" if rem is not None and lim is not None else "n/a"
             used_s = f"{pct}%" if pct is not None else "n/a"
             remaining_s = f"remaining={rem_s}"
-            print(f"  {GREEN('200')} {BLUE(remaining_s)} {DIM('used=' + used_s)}")
+            print(f"  {GREEN('[ALLOWED] 200')} {BLUE(remaining_s)} {DIM('used=' + used_s)}")
             if pct is not None and pct >= THRESHOLD_PCT:
-                print(f"  {YELLOW(f'THRESHOLD {THRESHOLD_PCT}% reached')}")
+                print(f"  {YELLOW(f'[THRESHOLD] {THRESHOLD_PCT}% reached')}")
         except APIStatusError as err:
-            print(f"  {RED(str(err.status_code))} {DIM(str(err.message)[:120])}")
+            print(f"  {RED(f'[BLOCKED] {err.status_code}')} {DIM(str(err.message)[:120])}")
             if err.status_code == 429:
                 got_429 = True
                 break
@@ -575,6 +514,16 @@ def main() -> int:
         print(RED("[FAIL] expected HTTP 429 after the token quota"))
         return 1
 
+    bad_key = "not-a-real-key"
+    print(f"\n{BOLD('[REQUEST]')} invalid API key")
+    print(f"  Trying apikey={bad_key!r}")
+    try:
+        chat(make_client(bad_key))
+        print(f"  {RED('[ALLOWED]')} Kong accepted the invalid key")
+        return 1
+    except APIStatusError as err:
+        print(f"  {RED(f'[BLOCKED] {err.status_code}')}")
+
     print(f"\n{GREEN('[OK]')} early alert fired before the 429")
     return 0
 
@@ -588,7 +537,6 @@ EOF
 Run it:
 
 ```bash
-export PROXY_URL=http://localhost:8000
 python demo.py
 ```
 
@@ -600,69 +548,288 @@ Example output:
   webhook inbox before=0
 
 [REQUEST] chat 1
-  200 remaining=42/50 used=16%
+  [ALLOWED] 200 remaining=48/50 used=4%
+
+[REQUEST] chat 2
+  [ALLOWED] 200 remaining=39/50 used=22%
+
+[REQUEST] chat 3
+  [ALLOWED] 200 remaining=30/50 used=40%
+
+[REQUEST] chat 4
+  [ALLOWED] 200 remaining=21/50 used=57%
 
 [REQUEST] chat 5
-  200 remaining=10/50 used=80%
-  THRESHOLD 80% reached
+  [ALLOWED] 200 remaining=12/50 used=76%
+
+[REQUEST] chat 6
+  [ALLOWED] 200 remaining=3/50 used=94%
+  [THRESHOLD] 80% reached
 
 [REQUEST] chat 7
-  429 API rate limit exceeded
+  [BLOCKED] 429 Error code: 429 - AI token rate limit exceeded for provider(s):
 
 [WEBHOOK] inbox grew 0 -> 1
 
+[REQUEST] invalid API key
+  Trying apikey='not-a-real-key'
+  [BLOCKED] 401
+
 [OK] early alert fired before the 429
 ```
-{:.no-copy-code}
+{: .no-copy-code .collapsible }
 
-Example webhook body:
+The remaining values depend on how many tokens OpenAI counts for each request. The webhook.site inbox shows one POST with a JSON body like the following:
 
 ```json
 {
-  "text": "demo-app reached 80% of the token quota. 10 tokens remaining.",
-  "username": "demo-app",
-  "remaining": 10,
+  "text": "ai-rate-limit-alerts-consumer reached 80% of the token quota. 3 tokens remaining.",
+  "username": "ai-rate-limit-alerts-consumer",
+  "remaining": 3,
   "limit": 50,
-  "rate": 40,
+  "rate": 47,
   "threshold": 80,
   "window": "minute"
 }
 ```
 {:.no-copy-code}
 
-Exact remaining values depend on how many tokens OpenAI reports for `hi`. The script looks
-for used/limit at or above 80%, then for HTTP 429.
+### Check the results
 
+The output confirms the following:
 
-### What happened
+{% table %}
+columns:
+  - title: Behavior
+    key: behavior
+  - title: Evidence
+    key: evidence
+rows:
+  - behavior: "Token counting"
+    evidence: "`remaining` goes down by the tokens of each request, 9 for each `hi` in this run, not by one for each request."
+  - behavior: "Alert before the quota runs out"
+    evidence: "Chat 6 reaches 94% used and still gets `200`. The `[WEBHOOK]` line shows that webhook.site received a POST."
+  - behavior: "Hard limit"
+    evidence: "Chat 7 gets `429` from the AI Rate Limiting Advanced Policy, because the window has fewer tokens left than the request needs."
+  - behavior: "Authentication before the quota"
+    evidence: "The invalid key gets `401`, and the request never reaches OpenAI."
+{% endtable %}
 
-1. **Key Auth** mapped `apikey: demo-api-key` to the demo Consumer.
-2. **AI Rate Limiting Advanced** counted `total_tokens` and updated remaining/limit headers.
-3. **Post-function** sent one POST request at 80%. Further chats in the same 60 seconds are snoozed.
-4. **429** arrived only after the window was empty. The caller still received 200 at 80%.
+To review the created entities, and per-consumer usage, open the `ai-rate-limit-alerts-recipe` {{site.ai_gateway}} in [{{site.konnect_short_name}}](https://cloud.konghq.com/). For traffic across all your {{site.ai_gateway}}s, use the **Observability** menu.
 
-### Explore in Konnect
+## How it works
 
-Open [Konnect](https://cloud.konghq.com/) and find the {{site.ai_gateway}} named `ai-rate-limit-alerts-recipe`. The recipe created an AI Model Provider, one AI Model on `/ai-rate-limit-alerts`, a key-auth AI Auth Strategy, an ai-rate-limiting-advanced Policy, a post-function Policy, and a Consumer with a demo API key, all scoped by the kongctl namespace applied above.
+Kong authenticates the AI Consumer, checks the token window, and forwards the request to OpenAI. When Kong sends the response, the Post-Function Policy reads the rate limit headers and, at 80% used, starts a timer that sends the alert, so the client gets the response without waiting for the webhook.
 
-For platform-wide traffic analysis across every {{site.ai_gateway}}, head to the **Observability** L1 menu in Konnect.
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+    participant C as Client
+    participant K as Kong AI Gateway
+    participant O as OpenAI
+    participant W as Webhook
+
+    C->>K: POST /ai-rate-limit-alerts/chat/completions (apikey, model chat)
+    activate K
+    K->>K: Key Auth AI Auth Strategy identifies the AI Consumer (else 401)
+    K->>K: AI Rate Limiting Advanced Policy checks the token window (else 429)
+    K->>O: Request with the OpenAI key
+    activate O
+    O-->>K: Completion and token usage
+    deactivate O
+    K-->>C: 200 with the rate limit headers
+    K->>K: Post-Function Policy computes the used share from the headers
+    K->>W: Timer sends the JSON alert at 80% used, once in 60 seconds
+    deactivate K
+{% endmermaid %}
+<!-- vale on -->
+
+### Key Auth AI Auth Strategy and AI Consumer
+
+Authentication is an AI Auth Strategy, not an AI Policy. The Key Auth AI Auth Strategy reads the `apikey` header and matches the key against the AI Consumer credentials. On a match, Kong attaches the AI Consumer to the request. The AI Consumer is the identity that rate limits, ACLs, and analytics use, and the Post-Function Policy puts its name in the alert.
+
+The following settings configure the Key Auth AI Auth Strategy and the AI Consumer:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`key_names: [apikey]`"
+    purpose: "Kong reads the key from the `apikey` header. Key Auth compares the whole header value, so it can't read a key from an `Authorization: Bearer` header. The note in [Run the demo](#run-the-demo) shows the workaround."
+  - setting: "`hide_credentials: true`"
+    purpose: "Kong removes the key before it forwards the request. OpenAI never sees the AI Consumer key."
+  - setting: "`credentials[].api_key`"
+    purpose: "The AI Consumer's key. The field is write-only, so it takes a `!secret` reference to `CONSUMER_API_KEY`, even for a demo value."
+{% endtable %}
+
+Kong adds `X-Consumer-Username` and related headers to the upstream request, not to the response. Per-consumer usage appears in {{site.konnect_short_name}} analytics.
+
+### AI Rate Limiting Advanced Policy
+
+The AI Rate Limiting Advanced Policy counts prompt and completion tokens, the unit that drives LLM cost. It allows 50 tokens in a 60-second window, which the demo uses up in a few requests. Kong counts a request's tokens after OpenAI answers, so concurrent requests can go over the limit. A request whose prompt is larger than the tokens left gets `429` before Kong calls OpenAI.
+
+The following settings configure the AI Rate Limiting Advanced Policy:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`config.policies[].limits`"
+    purpose: "The token limit and the window size in seconds: `50` and `60`."
+  - setting: "`window_type: fixed`"
+    purpose: "Assigns each request to one 60-second bucket, so the quota restores at the end of the window. A `sliding` window weighs the current window against the previous one."
+  - setting: "`identifier: consumer`"
+    purpose: "Counts usage for each AI Consumer. In a test on runtime 2.3.1, two AI Consumers that called from the same machine shared one counter. This cookbook hasn't confirmed separate budgets for AI Consumers on different machines."
+  - setting: "`tokens_count_strategy: total_tokens`"
+    purpose: "Counts prompt and completion tokens. Other values count only prompt tokens, only completion tokens, or cost."
+  - setting: "`hide_client_headers: false`"
+    purpose: "Kong adds the limit and remaining headers to each response. The Post-Function Policy reads these headers, so with `true`, no alert is sent."
+  - setting: "`strategy: local`"
+    purpose: "Keeps the counters in memory on each data plane node. For several nodes, use `redis` so that the nodes share the counters."
+{% endtable %}
+
+### Post-Function Policy
+
+The Post-Function Policy runs Lua code from its `config.body_filter` list while Kong sends the response body. It's listed on the AI Model, so it runs after authentication, and `kong.client.get_consumer()` returns the AI Consumer. The alert carries only counters and the AI Consumer name. Don't add prompts, responses, or keys to it, because the webhook receiver is outside Kong.
+
+The following settings configure the Post-Function Policy:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`body_filter`"
+    purpose: "Runs the code for each chunk of the response body. `if not ngx.arg[2]` returns early until the last chunk, so the code runs once for each response, after Kong has set the rate limit headers."
+  - setting: "`X-AI-RateLimit-Remaining-*` and `X-AI-RateLimit-Limit-*`"
+    purpose: "The code reads both headers with any suffix and skips the reset and retry headers. The suffix depends on the window and the policy index, for example `-minute-policy-1`."
+  - setting: "`local threshold = 80`"
+    purpose: "The share of the limit, in percent, that triggers the alert. The code computes `(limit - remaining) / limit * 100`."
+  - setting: "`ngx.shared.kong` and `dict:add(..., 1, 60)`"
+    purpose: "Stores a key for each AI Consumer for 60 seconds. `add` fails when the key exists, so the code sends at most one alert for each AI Consumer in 60 seconds on each data plane node."
+  - setting: "`os.getenv(\"ALERT_WEBHOOK_URL\")`"
+    purpose: "Reads the webhook URL from the data plane environment. If the variable is empty, the code sends no alert."
+  - setting: "`ngx.timer.at(0, ...)`"
+    purpose: "Runs the POST in a zero-delay timer. OpenResty disables network sockets in the body filter phase, and recommends a zero-delay timer when the request doesn't need the result ([OpenResty documentation](https://github.com/openresty/lua-nginx-module#cosockets-not-available-everywhere))."
+  - setting: "`resty.http` `request_uri`"
+    purpose: "Sends the alert as a JSON POST with a 3-second timeout and TLS certificate verification (`ssl_verify = true`)."
+  - setting: "Alert fields"
+    purpose: "`text` (a summary), `username` (the AI Consumer name), `remaining`, `limit`, `rate` (the tokens used), `threshold`, and `window`."
+{% endtable %}
+
+{:.warning}
+> `KONG_UNTRUSTED_LUA=on` turns off the Lua sandbox on the data plane. Lua code in every AI Policy on that data plane, not only this Post-Function Policy, then has complete access to the environment and to all modules, with no protections ([sandboxing](/ai-gateway/sandboxing/)). Use this setting only for this local demo, and don't use it on a data plane that serves other traffic.
+
+### AI Model Provider and AI Model
+
+The AI Model Provider holds the OpenAI API key and adds it to each request to OpenAI. The AI Model `ai-rate-limit-alerts-model` accepts OpenAI-format requests on `/ai-rate-limit-alerts`, answers to the `chat` alias, and lists both AI Policies.
+
+The following settings configure the AI Model Provider and the AI Model:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`config.auth` (AI Model Provider)"
+    purpose: "The OpenAI API key, from `OPENAI_TOKEN`. Kong adds it to each request to OpenAI. The field is write-only, so {{site.konnect_short_name}} never returns it."
+  - setting: "`config.route.model`"
+    purpose: "Kong reads the `model` field of the request body (`body_param: model`) and matches it against `chat`. Another value, including `gpt-4o-mini`, matches no AI Model and returns `500` with `failed the initial dns/balancer resolve for 'ai-gateway.upstream.local'`."
+  - setting: "`policies`"
+    purpose: "Attaches the AI Rate Limiting Advanced Policy and the Post-Function Policy to the AI Model. A Post-Function Policy runs after the other AI Policies in each phase."
+  - setting: "`access.auth_strategies`"
+    purpose: "Each request must have a valid AI Consumer key."
+  - setting: "`formats: [{type: openai}]` and `capabilities: [generate]`"
+    purpose: "The AI Model accepts OpenAI-format chat completion requests."
+  - setting: "`config.route.paths`"
+    purpose: "`/ai-rate-limit-alerts`. The `generate` capability adds `/chat/completions`, so the endpoint is `/ai-rate-limit-alerts/chat/completions`."
+  - setting: "`targets[].name`"
+    purpose: "The OpenAI model, from `CHAT_MODEL`."
+  - setting: "`config.route.protocols: [http, https]`"
+    purpose: "Accepts HTTP, so you can call the local data plane at `http://localhost:8000`."
+  - setting: "`config.route.strip_path: true`"
+    purpose: "Kong removes `/ai-rate-limit-alerts` from the path before it forwards the request."
+  - setting: "`config.max_request_body_size: 10485760`"
+    purpose: "Accepts request bodies up to 10 MB, instead of the 8 MB default."
+  - setting: "`config.response_streaming: allow`"
+    purpose: "Clients can request streamed responses."
+  - setting: "`config.logging.payloads: true`"
+    purpose: "Kong logs request and response payloads. The default is `false`."
+{% endtable %}
+
+{:.info}
+> **Production credentials:** This cookbook stores the AI Consumer's API key and the OpenAI API key in environment variables for simplicity. In production, use [AI Vaults](/ai-gateway/entities/ai-vault/) to reference them from a secret manager, for example AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, or Azure Key Vault.
+
+### Response headers
+
+The AI Rate Limiting Advanced Policy adds the following headers to each response:
+
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Description
+    key: description
+rows:
+  - header: "`X-AI-RateLimit-Limit-minute-policy-1`"
+    description: "The token limit for the 60-second window of the first entry in `config.policies`."
+  - header: "`X-AI-RateLimit-Remaining-minute-policy-1`"
+    description: "The tokens left in the current window. The demo and the Post-Function Policy compute the used share from this header and the limit header."
+  - header: "`X-AI-RateLimit-Reset`"
+    description: "The seconds until the quota is restored."
+  - header: "`X-AI-RateLimit-Retry-After`"
+    description: "On a `429` response, the seconds until the AI Consumer can send requests again. There is no plain `Retry-After` header."
+{% endtable %}
 
 ## Variations and next steps
 
-**Raise the quota.** Change `limits.limit` and `window_size`, or edit `local threshold = 80`.
+You can change or extend this configuration in the following ways:
 
-**Point the webhook at Slack or PagerDuty.** Format `text` for Slack Incoming Webhooks, or
-switch the body to the PagerDuty Events API. Do not include prompts or API keys.
-
-**Use Redis** when more than one data plane shares counters. See
-[AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/).
-
-**Combine with cost-based limits.** See [LLM Cost Optimization](/cookbooks/llm-cost-optimization/).
+{% table %}
+columns:
+  - title: Variation
+    key: variation
+  - title: How
+    key: how
+rows:
+  - variation: "Change the quota or the threshold"
+    how: "Change `limit` and `window_size` in the AI Rate Limiting Advanced Policy, or `local threshold = 80` in the Post-Function Policy, and re-apply the configuration from [Apply the Kong configuration](#apply-the-kong-configuration). For a daily quota, set `window_size: 86400`, and change `window = \"minute\"` in the alert to match."
+  - variation: "Send the alert to Slack"
+    how: "Before you run the quickstart script, export `ALERT_WEBHOOK_URL` with a Slack [incoming webhook](https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/) URL. Slack posts the `text` field of the alert as the message."
+  - variation: "Send the alert to PagerDuty"
+    how: "Change the alert body in the Post-Function Policy to the PagerDuty Events API v2 format (`routing_key`, `event_action: trigger`, and a `payload` with `summary`, `source`, and `severity`), and set `ALERT_WEBHOOK_URL` to `https://events.pagerduty.com/v2/enqueue`. See [Send an alert event](https://docs.pagerduty.com/developer/send-alert-event)."
+  - variation: "Share counters across data plane nodes"
+    how: "Set `strategy: redis` and point the AI Rate Limiting Advanced Policy at a shared Redis instance. The 60-second alert suppression in `ngx.shared` stays on each node, so each node can send one alert."
+  - variation: "Give each AI Consumer Group its own quota"
+    how: "Set `identifier: consumer-group` on the AI Rate Limiting Advanced Policy and list the policy in the [AI Consumer Group](/ai-gateway/entities/ai-consumer-group/)'s `policies`. See the [LLM cost optimization cookbook](/cookbooks/llm-cost-optimization/) for an example."
+  - variation: "Authenticate users with an identity provider"
+    how: "Replace the Key Auth AI Auth Strategy with an [OpenID Connect AI Auth Strategy](/ai-gateway/openid-connect/) and map JWT claims to AI Consumers. The AI Model, AI Model Provider, and AI Policies don't change. See the [Claude Code SSO cookbook](/cookbooks/claude-code-sso/) for an example with Okta."
+{% endtable %}
 
 ## Cleanup
 
-The recipe's kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration. Tear down the local Data Plane and delete the {{site.ai_gateway}} from Konnect:
+The quickstart created an {{site.ai_gateway}} for this recipe only, so this teardown removes only this recipe's configuration. Tear down the local data plane and delete the {{site.ai_gateway}} from {{site.konnect_short_name}}:
 
 ```bash
 export KONNECT_CONTROL_PLANE_NAME='ai-rate-limit-alerts-recipe' && curl -Ls https://get.konghq.com/ai | bash -s -- -d -k $KONNECT_TOKEN
 ```
+
+Leave the virtual environment and remove the files and environment variables that the recipe created:
+
+```bash
+deactivate
+rm -rf .venv demo.py
+unset CONSUMER_API_KEY CHAT_MODEL ALERT_WEBHOOK_URL
+```
+
+If you created the OpenAI API key only for this recipe, delete it in the [OpenAI dashboard](https://platform.openai.com/api-keys).

@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect Organizations
-  version: 3.1.0
+  version: 3.2.1
   description: Konnect Organizations API.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@57f63a71e5855ef7b4dbb8203ddee34276258c4c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/57f63a71e5855ef7b4dbb8203ddee34276258c4c'
+  x-oas-source: kong/platform-api@c9ce89d11b36012b42c539044894aaa155bef3ac
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c9ce89d11b36012b42c539044894aaa155bef3ac'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -136,6 +136,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
       tags:
         - Organizations
     get:
@@ -161,10 +163,13 @@ paths:
       operationId: put-vpce-id-allow-list
       summary: Set VPCE ID restriction for organization
       description: |
-        Sets the VPCE ID restriction for an organization.
+        Sets the VPCE ID restriction for an organization, replacing any existing configuration.
+        Returns `201` when the configuration is created and `200` when an existing configuration is replaced.
       requestBody:
         $ref: '#/components/requestBodies/CreateOrganizationVpceIdRestriction'
       responses:
+        '200':
+          $ref: '#/components/responses/OrganizationVpceIdRestriction'
         '201':
           $ref: '#/components/responses/OrganizationVpceIdRestriction'
         '400':
@@ -193,6 +198,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
       tags:
         - Organizations
     get:

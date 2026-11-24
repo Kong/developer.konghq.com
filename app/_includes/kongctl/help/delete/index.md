@@ -26,86 +26,86 @@ Available Commands:
 
 
 Flags:
-      --auto-approve                      Skip confirmation prompt
-      --base-dir string                   Base directory boundary for !file resolution.
-                                          Defaults to each -f source root (file: its parent dir, dir: the directory itself). For stdin and URLs, defaults to CWD.
-                                          - Config path: [ konnect.declarative.base-dir ]
-      --base-url string                   Base URL for Konnect API requests.
-                                          - Config path: [ konnect.base-url ]
-                                          - Default   : [ https://us.api.konghq.com ]
-      --color-theme string                Configures the CLI UI/theme (prompt, tables, TUI elements).
-                                          - Config path: [ color-theme ]
-                                          - Examples   : [ auto, 0_x_96_f, 12_bit_rainbow, 13_th_floor, 3024_day ]
-                                          - List       : [ kongctl list themes ] (default "auto")
-      --config-file string                Path to the configuration file to load.
-                                          - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
-                                          - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
-      --dry-run                           Preview deletions without executing them
-      --execution-report-file string      Save execution report as JSON to file
-  -f, --filename strings                  File, directory, URL, or '-' to use to create the resource (can specify multiple)
-      --force                             Force deletion even when related resources exist (not configurable)
-  -h, --help                              help for delete
-      --http-retry-backoff-factor float   Exponential backoff growth factor for retries (for example: 2.0).
-                                          - Config path: [ konnect.http-retry-backoff-factor ]
-      --http-retry-initial-interval int   Initial retry backoff interval in milliseconds (0 = use default).
-                                          - Config path: [ konnect.http-retry-initial-interval ]
-      --http-retry-max-attempts int       Maximum total attempts for retryable HTTP requests (0 = use default, 1 disables retries).
-                                          - Config path: [ konnect.http-retry-max-attempts ]
-      --http-retry-max-interval int       Maximum retry backoff interval in milliseconds (0 = use default).
-                                          - Config path: [ konnect.http-retry-max-interval ]
-      --http-retry-on-connection-errors   Retry selected retryable connection-level errors.
-                                          - Config path: [ konnect.http-retry-on-connection-errors ]
-      --log-file string                   Write execution logs to the specified file instead of STDERR.
-                                          - Config path: [ log-file ]
-      --log-level string                  Configures the logging level. Execution logs are written to STDERR.
-                                          - Config path: [ log-level ]
-                                          - Allowed    : [ trace|debug|info|warn|error ] (default "error")
-      --max-concurrency int               Maximum number of concurrent API operations during execution (min 1, max 200).
-                                          When the plan contains execution_groups, operations within each group run
-                                          concurrently up to this limit. Use 1 for sequential execution.
-                                          - Config path: [ konnect.declarative.max-concurrency ] (default 5)
-      --no-telemetry                      Disable telemetry for this command invocation. Overrides config and env.
-                                          - Config path: [ telemetry.enabled ]
-                                          - Env var    : [ KONGCTL_NO_TELEMETRY ]
-                                          - Default    : [ false ]
-      --no-trunc                          Preserve full cell widths in static text tables beyond terminal width.
-                                          Does not change column selection, UUID formatting, or explicit string slices.
-                                          - Config path: [ text.no-trunc ]
-                                          - Default    : [ false ]
-  -o, --output string                     Configures the format of data written to STDOUT.
-                                          - Config path: [ output ]
-                                          - Allowed    : [ json|yaml|text ] (default "text")
-      --pat string                        Konnect Personal Access Token (PAT) used to authenticate the CLI.
-                                          Setting this value overrides tokens obtained from the login command.
-                                          - Config path: [ konnect.pat ]
-      --plan string                       Path to existing delete-mode plan file
-  -p, --profile string                    Specify the profile to use for this command. (default "default")
-  -R, --recursive                         Process the directory used in -f, --filename recursively
-      --region string                     Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
-                                          - Config path: [ konnect.region ]
-      --remote-file-auth string           Authentication mode for remote -f URL sources (auto|none).
-                                          In auto mode, kongctl sends the current Konnect bearer token only to HTTPS Konnect hosts.
-                                          - Config path: [ konnect.declarative.remote-file-auth ] (default "auto")
-  -s, --remote-file-save-dir string       Save remote -f URL sources into this local directory before loading
-  -F, --remote-file-save-force            Overwrite existing files when saving remote -f URL sources with --remote-file-save-dir
-      --require-any-namespace             Require explicit namespace on all resources (via kongctl.namespace or _defaults.kongctl.namespace).
-                                          Cannot be used with --require-namespace.
-                                          - Config path: [ konnect.declarative.require-any-namespace ]
-      --require-namespace strings         Require specific namespaces. Accepts comma-separated list or repeated flags.
-                                          Cannot be used with --require-any-namespace.
-                                          Examples:
-                                            --require-namespace=foo                          # Allow only 'foo' namespace
-                                            --require-namespace=foo,bar                      # Allow 'foo' or 'bar' (comma-separated)
-                                            --require-namespace=foo --require-namespace=bar  # Allow 'foo' or 'bar' (repeated flags)
-                                          - Config path: [ konnect.declarative.require-namespace ]
-      --text-id-format string             Configure UUID rendering in static text-table ID columns.
-                                          - Config path: [ text.id-format ]
-                                          - Allowed    : [ compact|full ]
-                                          - Default    : [ compact ]
-      --text-layout string                Configure static text-table column selection.
-                                          - Config path: [ text.layout ]
-                                          - Allowed    : [ compact|auto|wide ]
-                                          - Default    : [ compact ]
+      --auto-approve[=true|false]                      Skip confirmation prompt
+      --base-dir string                                Base directory boundary for !file resolution.
+                                                       Defaults to each -f source root (file: its parent dir, dir: the directory itself). For stdin and URLs, defaults to CWD.
+                                                       - Config path: [ konnect.declarative.base-dir ]
+      --base-url string                                Base URL for Konnect API requests.
+                                                       - Config path: [ konnect.base-url ]
+                                                       - Default   : [ https://us.api.konghq.com ]
+      --color-theme string                             Configures the CLI UI/theme (prompt, tables, TUI elements).
+                                                       - Config path: [ color-theme ]
+                                                       - Examples   : [ auto, 0_x_96_f, 12_bit_rainbow, 13_th_floor, 3024_day ]
+                                                       - List       : [ kongctl list themes ] (default "auto")
+      --config-file string                             Path to the configuration file to load.
+                                                       - Environment variable: KONGCTL_CONFIG_FILE (overridden by this flag)
+                                                       - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
+      --dry-run[=true|false]                           Preview deletions without executing them
+      --execution-report-file string                   Save execution report as JSON to file
+  -f, --filename strings                               File, directory, URL, or '-' to use to create the resource (can specify multiple)
+      --force[=true|false]                             Force deletion even when related resources exist (not configurable)
+  -h, --help[=true|false]                              help for delete
+      --http-retry-backoff-factor float                Exponential backoff growth factor for retries (for example: 2.0).
+                                                       - Config path: [ konnect.http-retry-backoff-factor ]
+      --http-retry-initial-interval int                Initial retry backoff interval in milliseconds (0 = use default).
+                                                       - Config path: [ konnect.http-retry-initial-interval ]
+      --http-retry-max-attempts int                    Maximum total attempts for retryable HTTP requests (0 = use default, 1 disables retries).
+                                                       - Config path: [ konnect.http-retry-max-attempts ]
+      --http-retry-max-interval int                    Maximum retry backoff interval in milliseconds (0 = use default).
+                                                       - Config path: [ konnect.http-retry-max-interval ]
+      --http-retry-on-connection-errors[=true|false]   Retry selected retryable connection-level errors.
+                                                       - Config path: [ konnect.http-retry-on-connection-errors ]
+      --log-file string                                Write execution logs to the specified file instead of STDERR.
+                                                       - Config path: [ log-file ]
+      --log-level string                               Configures the logging level. Execution logs are written to STDERR.
+                                                       - Config path: [ log-level ]
+                                                       - Allowed    : [ trace|debug|info|warn|error ] (default "error")
+      --max-concurrency int                            Maximum number of concurrent API operations during execution (min 1, max 200).
+                                                       When the plan contains execution_groups, operations within each group run
+                                                       concurrently up to this limit. Use 1 for sequential execution.
+                                                       - Config path: [ konnect.declarative.max-concurrency ] (default 5)
+      --no-telemetry[=true|false]                      Disable telemetry for this command invocation. Overrides config and env.
+                                                       - Config path: [ telemetry.enabled ]
+                                                       - Env var    : [ KONGCTL_NO_TELEMETRY ]
+                                                       - Default    : [ false ]
+      --no-trunc[=true|false]                          Preserve full cell widths in static text tables beyond terminal width.
+                                                       Does not change column selection, UUID formatting, or explicit string slices.
+                                                       - Config path: [ text.no-trunc ]
+                                                       - Default    : [ false ]
+  -o, --output string                                  Configures the format of data written to STDOUT.
+                                                       - Config path: [ output ]
+                                                       - Allowed    : [ json|yaml|text ] (default "text")
+      --pat string                                     Konnect Personal Access Token (PAT) used to authenticate the CLI.
+                                                       Setting this value overrides tokens obtained from the login command.
+                                                       - Config path: [ konnect.pat ]
+      --plan string                                    Path to existing delete-mode plan file
+  -p, --profile string                                 Specify the profile to use for this command. (default "default")
+  -R, --recursive[=true|false]                         Process the directory used in -f, --filename recursively
+      --region string                                  Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
+                                                       - Config path: [ konnect.region ]
+      --remote-file-auth string                        Authentication mode for remote -f URL sources (auto|none).
+                                                       In auto mode, kongctl sends the current Konnect bearer token only to HTTPS Konnect hosts.
+                                                       - Config path: [ konnect.declarative.remote-file-auth ] (default "auto")
+  -s, --remote-file-save-dir string                    Save remote -f URL sources into this local directory before loading
+  -F, --remote-file-save-force[=true|false]            Overwrite existing files when saving remote -f URL sources with --remote-file-save-dir
+      --require-any-namespace[=true|false]             Require explicit namespace on all resources (via kongctl.namespace or _defaults.kongctl.namespace).
+                                                       Cannot be used with --require-namespace.
+                                                       - Config path: [ konnect.declarative.require-any-namespace ]
+      --require-namespace strings                      Require specific namespaces. Accepts comma-separated list or repeated flags.
+                                                       Cannot be used with --require-any-namespace.
+                                                       Examples:
+                                                         --require-namespace=foo                          # Allow only 'foo' namespace
+                                                         --require-namespace=foo,bar                      # Allow 'foo' or 'bar' (comma-separated)
+                                                         --require-namespace=foo --require-namespace=bar  # Allow 'foo' or 'bar' (repeated flags)
+                                                       - Config path: [ konnect.declarative.require-namespace ]
+      --text-id-format string                          Configure UUID rendering in static text-table ID columns.
+                                                       - Config path: [ text.id-format ]
+                                                       - Allowed    : [ compact|full ]
+                                                       - Default    : [ compact ]
+      --text-layout string                             Configure static text-table column selection.
+                                                       - Config path: [ text.layout ]
+                                                       - Allowed    : [ compact|auto|wide ]
+                                                       - Default    : [ compact ]
 
 Use "kongctl delete [command] --help" for more information about a command.
 

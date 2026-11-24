@@ -150,21 +150,21 @@ Trusted IdPs, providers, and credentials are all scoped to the directory, so no 
 ## Trusted IdP
 
 The trusted IdP is what tells Token Vault whose tokens to trust. A {{site.identity}} admin configures a trusted IdP (for example, Okta) on the directory using the `issuer_url`, and optionally a `jwks_uri` ({{site.identity}} can automatically discover the `jwks_uri` from the IdP). 
-A directory can have more than one trusted IdP, each identified by a unique `issuer_url`. Token Vault only accepts an IdP's tokens when you set `vault_access_enabled` to `true` on the directory. The trusted IdP can be your corporate IdP, or the {{site.identity}} authorization server, for example when clients authenticate with an Identity Assertion JWT Authorization Grant (ID-JAG) issued by your corporate IdP.
+A directory can have more than one trusted IdP, each identified by a unique `issuer_url`. Token Vault only accepts an IdP's tokens when you set `vault_access_enabled` to `true` on that trusted IdP (for example, your corporate IdP).
 
 Token Vault verifies tokens and never queries the IdP about a user directly.
 When it receives a token, it:
 
 1. Checks that the token's signature matches the trusted IdP's published public keys, and confirms the IdP actually issued it. Only asymmetric signing algorithms (RS, PS, and ES families) are accepted.
 1. Checks the token's expiry (`exp`) and not-before (`nbf`) claims.
-1. Reads the issuer (`iss`) and subject (`sub`) already embedded in the token, to determine who it was issued to.
+1. Reads the subject already embedded in the token, to determine who it was issued to. By default, the subject is the `sub` claim.
 
 Users don't need to exist in {{site.identity}} beforehand. Token Vault supports just-in-time (JIT) provisioning, also called automatic user provisioning, on its identity providers (IdPs). When `jit_provisioning_enabled` is `true` (the default) and no [{{site.identity}} principal](/identity/principals/) matches the token's issuer and subject, Token Vault creates one. Per-user credentials are stored for that principal.
 
 To enable JIT provisioning in the {{site.konnect_short_name}} UI, go to **AI** > **Access Management** > **Identity Providers**, then create a new IdP or edit an existing one, and enable **Automatic user provisioning**.
 
 
-To add a trusted IdP, send a `POST` request to the `/v2/directories/{directoryId}/trusted-idps` endpoint. The `issuer_url` must be unique within the directory, so a `POST` reusing an existing issuer returns a `409`. The request accepts the following body parameters:
+To add a trusted IdP, send a `POST` request to the `/v2/directories/{directoryId}/trusted-idps` endpoint. The `issuer_url` must be unique within the directory, so a `POST` reusing an existing issuer returns a `409`. The comparison ignores case and trailing slashes, so `https://example.com/` and `https://EXAMPLE.com` count as the same issuer. The request accepts the following body parameters:
 
 <!--vale off-->
 {% table %}
@@ -179,11 +179,11 @@ rows:
   - param: "`issuer_url`"
     required: Yes
     description: |
-      The IdP's issuer URL. Token Vault only trusts subject tokens whose `iss` claim matches this value.
+      The IdP's issuer URL. Must use `https` and can't include a query string or fragment. Token Vault only trusts subject tokens whose `iss` claim matches this value.
   - param: "`jwks_uri`"
     required: No
     description: |
-      Where Token Vault fetches the IdP's public keys to verify token signatures. Must use `https`. If you omit it, {{site.identity}} discovers it from the issuer's `/.well-known/openid-configuration` document.
+      Where Token Vault fetches the IdP's public keys to verify token signatures. Must use `https`. If you omit it, {{site.identity}} discovers it from the issuer's `/.well-known/openid-configuration` document when a token is exchanged, and caches the result. When you create the trusted IdP, {{site.identity}} only checks that it can retrieve the IdP's signing keys.
   - param: "`display_name`"
     required: No
     description: |
@@ -196,6 +196,10 @@ rows:
     required: No
     description: |
       Whether {{site.identity}} creates a principal just in time for a token subject that doesn't match an existing principal. Defaults to `true`.
+  - param: "`jit.mapping.identifier`"
+    required: No
+    description: |
+      The token claim that identifies the user. Defaults to `sub`.
 {% endtable %}
 
 `PUT` on `/v2/directories/{directoryId}/trusted-idps/{trustedIdpId}` replaces the whole configuration, so omitted fields reset to their defaults. Use `PATCH` to change individual fields.
@@ -210,6 +214,8 @@ To list the templates and their defaults, send a `GET` request to `/v2/credentia
 
 * `template_name`: The provider template to bind, listed in the following table.
 * `name`: The custom name for this provider. Use it to tell apart several providers built from the same template. Must be unique in the directory, and match `^[a-zA-Z0-9_-]+$`.
+
+When you register an OAuth app with the third-party service, set its redirect URI to the {{site.ai_gateway}}'s `/_vault/callback` endpoint, for example `https://gateway.example.com/_vault/callback`. For a local data plane, use `http://localhost:8000/_vault/callback`.
 
 The following provider templates are available:
 
@@ -345,7 +351,7 @@ During enrollment, Token Vault creates the credential for the first time.
 When you configure a provider (for example, GitHub), Token Vault registers it as a service it knows how to talk to. It doesn't mean any user has actually authorized anything yet, since there are still no credentials to hand back for Token Vault. The enrollment process follows these steps:
 
 1. When a request comes in from the agent, Token Vault returns an enrollment URL, valid for 10 minutes, to open the third-party service's OAuth consent screen. The screen lists exactly the scopes the provider requested (for example, `repo` on GitHub).
-1. When the user approves, the third-party service redirects back to Token Vault's `callback` endpoint and sends an authorization code.
+1. When the user approves, the third-party service redirects back to the {{site.ai_gateway}}'s `/_vault/callback` endpoint and sends an authorization code. The `token-vault-callback-handler` policy serves this endpoint.
 1. Token Vault exchanges the authorization code for the third-party service's access token and refresh token. This exchange happens only between Token Vault and the third-party service, not through the agent.
 1. Token Vault writes a new credential row for the access token, encrypted with your directory's vault key and stored for that user and provider. This is the credential that Token Vault releases to the {{site.ai_gateway}} on every future request.
 

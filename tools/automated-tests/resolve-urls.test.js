@@ -202,6 +202,91 @@ test("explicit file targeting aborts when the version inputs gate the guide", as
   });
 });
 
+// An ai-gateway guide that declares a minimum newer than the version these
+// tests pin. Written into the shared temp repo for the duration of one test,
+// mirroring withGatedGuide above, so the exact-list assertions elsewhere still
+// see the untouched fixture set.
+function gatedAiGuidePath() {
+  return path.join(tmpRoot, "app/_how-tos/ai-gateway/gated-ai.md");
+}
+
+async function withGatedAiGuide(fn) {
+  await fs.mkdir(path.dirname(gatedAiGuidePath()), { recursive: true });
+  await fs.writeFile(
+    gatedAiGuidePath(),
+    [
+      "---",
+      "title: Gated AI",
+      "products:",
+      "  - ai-gateway",
+      "min_version:",
+      "  ai-gateway: '2.3'",
+      "permalink: /how-to/gated-ai/",
+      "---",
+      "",
+      "Body.",
+      "",
+    ].join("\n"),
+  );
+  try {
+    return await fn();
+  } finally {
+    await fs.rm(gatedAiGuidePath(), { force: true });
+    await fs.rm(path.dirname(gatedAiGuidePath()), { recursive: true, force: true });
+  }
+}
+
+test("the product run gates an ai-gateway guide on the ai-gateway version input", async () => {
+  await withGatedAiGuide(async () => {
+    const { urlsToTest } = await resolveUrlsToTest(
+      { product: "ai-gateway" },
+      config,
+      { repoRoot: tmpRoot, aiGatewayMinVersion: "2.2" },
+    );
+
+    assert.equal(
+      urlsToTest.some((url) => url.includes("/how-to/gated-ai/")),
+      false,
+    );
+
+    const manifest = load(await readManifest());
+    const row = manifest.find((entry) => entry.reason === "min-version");
+    assert.ok(row, "expected a min-version skip row");
+    assert.match(row.message, /2\.3/);
+    assert.match(row.message, /2\.2/);
+    assert.deepEqual(row.products, ["ai-gateway"]);
+  });
+});
+
+test("the full scan threads the ai-gateway version input into the filter", async () => {
+  await withGatedAiGuide(async () => {
+    const { urlsToTest } = await resolveUrlsToTest({}, config, {
+      aiGatewayMinVersion: "2.2",
+    });
+
+    assert.equal(
+      urlsToTest.some((url) => url.includes("/how-to/gated-ai/")),
+      false,
+    );
+    const manifest = load(await readManifest());
+    assert.ok(manifest.some((entry) => entry.reason === "min-version"));
+  });
+});
+
+test("explicit file targeting aborts when the ai-gateway version input gates the guide", async () => {
+  await withGatedAiGuide(async () => {
+    await assert.rejects(
+      () =>
+        resolveUrlsToTest(
+          { files: "../../app/_how-tos/ai-gateway/gated-ai.md" },
+          config,
+          { aiGatewayMinVersion: "2.2" },
+        ),
+      /requires AI Gateway >= 2\.3, but the version under test is 2\.2/,
+    );
+  });
+});
+
 test("explicit URL targeting bypasses the version gate", async () => {
   const result = await resolveUrlsToTest(
     { urls: `${config.baseUrl}/how-to/gated/` },

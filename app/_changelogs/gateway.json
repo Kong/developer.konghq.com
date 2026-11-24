@@ -28978,7 +28978,7 @@
         "scope": "Admin API"
       },
       {
-        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` header by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
+        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` and `X-Forwarded-Prefix` headers by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
         "type": "bugfix",
         "scope": "Core"
       },
@@ -29097,7 +29097,7 @@
         "scope": "Admin API"
       },
       {
-        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` header by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
+        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` and `X-Forwarded-Prefix` headers by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
         "type": "bugfix",
         "scope": "Core"
       },
@@ -29221,7 +29221,7 @@
         "scope": "Admin API"
       },
       {
-        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` header by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
+        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` and `X-Forwarded-Prefix` headers by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
         "type": "bugfix",
         "scope": "Core"
       },
@@ -29340,7 +29340,7 @@
         "scope": "Admin API"
       },
       {
-        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` header by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
+        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` and `X-Forwarded-Prefix` headers by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
         "type": "bugfix",
         "scope": "Core"
       },
@@ -29459,7 +29459,7 @@
         "scope": "Admin API"
       },
       {
-        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` header by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
+        "message": "Security: Fixed CVE-2026-92441 in the `X-Forwarded-Path` and `X-Forwarded-Prefix` headers by normalizing and escaping the path, preventing unsafe paths from being sent to the upstream service.",
         "type": "bugfix",
         "scope": "Core"
       },
@@ -29471,6 +29471,90 @@
       {
         "message": "Improved the performance of proxied requests by skipping the regular expression engine when URI path escaping finds nothing to escape.",
         "type": "performance",
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.16.0.3": {
+    "kong-ee": [
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-123633.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-123007.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.15.0.8": {
+    "kong-ee": [
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-123633.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-123007.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.14.0.18": {
+    "kong-ee": [
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-123633.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-123007.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.13.0.13": {
+    "kong-ee": [
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-123633.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-123007.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.10.0.21": {
+    "kong-ee": [
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-123633.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-123007.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.4.3.30": {
+    "kong-ee": [
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-123633.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Applied upstream nginx security patches for CVE-2026-123007.",
+        "type": "bugfix",
         "scope": "Core"
       }
     ]

@@ -22,8 +22,8 @@ related_resources:
     url: https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html
   - text: AWS VPC peering
     url: /dedicated-cloud-gateways/aws-vpc-peering/
-  - text: Specify AWS VPC endpoints that can connect to {{site.konnect_short_name}}
-    url: /konnect-platform/network/#specify-aws-vpc-endpoints-that-can-connect-to-konnect
+  - text: Connect {{ site.operator_product_name }} to {{site.konnect_short_name}} over AWS PrivateLink
+    url: /operator/konnect/how-to/private-link/
 
 tags:
   - aws

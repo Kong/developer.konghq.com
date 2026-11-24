@@ -97,5 +97,11 @@ This policy runs during the [produce phase](/event-gateway/entities/policy/#phas
 
 ## Security considerations
 
+A path that doesn't match a field in the record, for example because of a typo or a field renamed in a newer schema version,
+doesn't trigger an error or warning.
+{{site.event_gateway_short}} sends the contents of that field to the backend cluster unencrypted.
+
+To keep the encrypted fields in sync with the schema, [select them from schema registry tags](/event-gateway/encrypt-kafka-message-fields-from-schema/) {% new_in 1.3 %}.
+
 If `paths` is set to an expression that reads `record.value.schema.metadata.tags` or `record.value.schema.metadata.properties`, the schema registry becomes a trusted input to this policy. Anyone with write access to the registry can change which fields get encrypted by editing a schema's tags or properties, without touching this policy's configuration at all.
 

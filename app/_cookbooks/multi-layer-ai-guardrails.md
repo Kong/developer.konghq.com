@@ -8,39 +8,14 @@ products:
   - ai-gateway
 tools:
   - kongctl
-canonical: true
 works_on:
   - konnect
 min_version:
-  gateway: '3.14'
   ai-gateway: '2.0'
 categories:
   - guardrails
 featured: false
 popular: false
-
-# Machine-readable fields for AI agent setup
-plugins:
-  - key-auth
-  - ai-model
-  - ai-model-provider
-  - ai-sanitizer
-  - ai-prompt-guard
-  - ai-semantic-prompt-guard
-requires_embeddings: true
-providers:
-  - openai
-  - bedrock
-  - azure
-extra_services:
-  - name: Redis Stack
-    env_vars: [REDIS_HOST]
-    hint: "Provide a Redis Stack instance with vector search support."
-  - name: PII Anonymizer Service
-    env_vars: [PII_SERVICE_HOST]
-    hint: "Run the Kong PII Anonymizer Docker container."
-
-hint: "Requires LLM provider credentials, a Redis Stack instance, the PII Anonymizer service, and Python 3.11+."
 prereqs:
   skip_product: true
   skip_tool: true
@@ -50,7 +25,7 @@ prereqs:
         This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped {{site.ai_gateway}} and local data plane.
 
         1. Create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
-        1. Export your token. The same token is reused later for kongctl commands:
+        1. Export your token. You reuse the same token later for kongctl commands:
 
            ```bash
            export KONNECT_TOKEN='YOUR_KONNECT_PAT'
@@ -63,7 +38,7 @@ prereqs:
            curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN
            ```
 
-           The script provisions an {{site.ai_gateway}} named `multi-layer-ai-guardrails-recipe`, a local data plane connected to it, and prints `export` lines (including `AI_GATEWAY_ID`) for the rest of the session vars. Paste those into your shell when prompted.
+           This provisions an {{site.ai_gateway}} named `multi-layer-ai-guardrails-recipe`, a local data plane connected to it, and prints `export` lines for the rest of the session vars, including `AI_GATEWAY_ID`. Paste those into your shell when prompted.
     - title: kongctl
       content: |
         This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configuration.
@@ -76,54 +51,48 @@ prereqs:
            ```
     - title: AI Credentials
       content: |
+        Pick the provider you want to route to and export its credentials. The same provider serves chat and embeddings. The provider's tab in [Apply the Kong configuration](#apply-the-kong-configuration) reads these variables.
+
         {% navtabs "Providers" %}
         {% navtab "OpenAI" %}
-
-        This tutorial uses OpenAI:
-
         1. [Create an OpenAI account](https://auth.openai.com/create-account).
         1. [Get an API key](https://platform.openai.com/api-keys).
-        1. Export the API key as an environment variable:
+        1. Export the API key:
 
            ```sh
            export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
            ```
-
         {% endnavtab %}
         {% navtab "AWS Bedrock" %}
-
-        This tutorial uses AWS Bedrock:
-
-        1. Ensure you have an AWS account with [Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled.
-        1. Export your AWS credentials:
+        1. Get an AWS account with [Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled for a chat model and for Amazon Titan Text Embeddings V2.
+        1. Export your AWS credentials and region:
 
            ```sh
            export AWS_ACCESS_KEY_ID='your-access-key'
            export AWS_SECRET_ACCESS_KEY='your-secret-key'
            export AWS_REGION='us-east-1'
            ```
-
         {% endnavtab %}
-        {% navtab "Azure" %}
-
-        This tutorial uses Azure OpenAI. Each Azure deployment is bound to a single model at deployment time, so you need **two** deployments: one for chat and one for embeddings.
+        {% navtab "Azure OpenAI" %}
+        Azure binds each deployment to one model, so the recipe needs two deployments: one for chat and one for embeddings.
 
         1. [Create an Azure OpenAI resource](https://portal.azure.com/#create/Microsoft.CognitiveServicesOpenAI).
-        1. Deploy a chat model and an embeddings model. Note your instance name, both deployment IDs, and the API version.
-        1. Export your credentials:
+        1. Deploy a chat model, for example `gpt-4o`, and the `text-embedding-3-large` embeddings model in the resource.
+        1. Export your credentials and both deployment IDs. Use the current API version from the [Azure OpenAI REST API reference](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference):
 
            ```sh
            export AZURE_API_KEY='your-azure-api-key'
            export AZURE_INSTANCE='your-instance-name'
-           export AZURE_API_VERSION='YOUR-API-VERSION'  # check Azure docs for current version
+           export AZURE_DEPLOYMENT_ID='your-chat-deployment-id'
+           export AZURE_EMBEDDINGS_DEPLOYMENT_ID='your-embeddings-deployment-id'
+           export AZURE_API_VERSION='YOUR-API-VERSION'
            ```
-
         {% endnavtab %}
         {% endnavtabs %}
     - title: Redis Stack
       icon_url: /assets/icons/redis.svg
       content: |
-        The [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/) Policy uses Redis as the vector database for storing and matching deny-rule embeddings.
+        The [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/) Policy stores the embeddings of its deny prompts in Redis.
 
         1. Run [Redis Stack](https://redis.io/docs/latest/) locally:
 
@@ -131,28 +100,22 @@ prereqs:
            docker run -d --name redis-stack -p 6379:6379 redis/redis-stack-server:latest
            ```
 
-        1. Export the Redis host so the policy can connect from inside the data plane container:
+        1. Export the host so the data plane container can reach Redis:
 
            ```sh
            export REDIS_HOST='host.docker.internal'
            ```
-    - title: PII Anonymizer Service
+    - title: AI PII Anonymizer service
       content: |
-        The [AI PII Sanitizer](/ai-gateway/policies/ai-sanitizer/) Policy requires an external PII Anonymizer service to detect and replace sensitive data. Kong publishes the [AI PII Anonymizer service](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service) as public Docker images, with one image per supported language model.
+        The [AI PII Sanitizer](/ai-gateway/policies/ai-sanitizer/) Policy sends prompts to the [AI PII Anonymizer service](/ai-gateway/policies/ai-sanitizer/#ai-pii-anonymizer-service), which detects and replaces personal data. Kong publishes the service as public Docker images, with one image for each language.
 
-        1. Start the PII Anonymizer service. The image tag selects the language model in `version-lang_code` format, for example `v0.2.2-en` for English or `v0.2.2-es` for Spanish. See the [available language tags](/ai-gateway/policies/ai-sanitizer/#available-language-tags) for the full list. Each model needs at least 600 MB of memory:
+        1. Run the English image locally. For other languages, see the [available language tags](/ai-gateway/policies/ai-sanitizer/#available-language-tags):
 
            ```bash
-           docker run -d \
-             --name kong-pii-anonymizer \
-             --memory=1g \
-             -p 8080:8080 \
-             kong/ai-pii-service:v0.2.2-en
+           docker run -d --name kong-pii-anonymizer -p 8080:8080 kong/ai-pii-service:v0.3.1-en
            ```
 
-           Pulling this image requires no authentication. Kong publishes only an `amd64` build, so on Apple Silicon add `--platform linux/amd64` to the command above to run it under Rosetta.
-
-        1. Set the PII service host so the policy can reach the container from inside the data plane:
+        1. Export the host so the data plane container can reach the service:
 
            ```sh
            export PII_SERVICE_HOST='host.docker.internal'
@@ -167,349 +130,45 @@ prereqs:
         source .venv/bin/activate
         pip install 'openai>=1.0.0'
         ```
-
 overview: |
-  This recipe configures {{site.ai_gateway_name}} with three independent guardrail layers in front of an AI Model, behind an API key authentication boundary: regex-based keyword filtering, embedding-based semantic analysis, and PII sanitization. By the end, you'll have a gateway endpoint that authenticates the caller, strips sensitive data from every request, blocks prompts that are semantically similar to known harmful patterns, catches obvious keyword violations, and only then forwards the cleaned, validated request to your LLM provider.
+  Stack three guardrails on one {{site.ai_gateway_name}} endpoint, so each request is authenticated, stripped of personal data, and checked for harmful intent before it reaches the LLM. You'll set up:
 
-  Each layer addresses a different class of risk. A Key Auth AI Auth Strategy identifies the calling AI Consumer, the [AI PII Sanitizer](/ai-gateway/policies/ai-sanitizer/) Policy removes PII, the [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/) Policy checks the sanitized content against vector embeddings, the [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) Policy applies regex pattern matching, and an AI Model backed by an AI Model Provider routes the request to the LLM.
+  * A `/multi-layer-ai-guardrails` endpoint that accepts only requests with a valid AI Consumer API key
+  * PII sanitization that replaces names, email addresses, and other personal data with placeholders
+  * A semantic guard that blocks prompts similar in meaning to known harmful prompts
+  * A regex guard that blocks prompts with denied keywords
 ---
 
-## The problem
+## What this cookbook solves
 
-No single content safety technique covers all the threat categories that production LLM applications face. Each common approach has blind spots when used alone.
-
-- **Regex filtering is brittle.** A deny pattern like `(?i).*hack.*` catches "How do I hack into a WiFi network?" but completely misses "What are methods for accessing a wireless network without authorization?" Attackers don't need sophisticated techniques. They rephrase the question using synonyms or indirect language, and the regex has no way to detect semantic equivalence. The same pattern also fires on benign questions like "Suggest some productivity hacks for managing my email backlog". Regex matches the keyword regardless of intent. Maintaining an exhaustive list of patterns that block real attacks without trapping legitimate questions is a losing arms race against human creativity.
-
-- **Semantic filtering catches more but costs more.** Embedding-based analysis detects the rephrased attacks that regex misses, but every request requires an embedding API call and a vector search. Organizations that rely on semantic analysis alone pay that overhead on every request, including obvious keyword violations that a regex would catch instantly.
-
-- **PII protection is a separate concern entirely.** A prompt can be perfectly safe from a content policy perspective and still contain Social Security numbers, credit card numbers, email addresses, or API keys that should never reach a third-party LLM. Content safety guards don't inspect for sensitive data patterns, and PII detection services don't evaluate whether the topic is allowed. These are orthogonal problems that require orthogonal solutions.
-
-- **No identity at the gateway means no audit trail or per-caller policy.** Without authenticating the caller before content checks run, every block, sanitization, or LLM call is anonymous. Teams can't answer "which app or user triggered this guardrail?" without correlating gateway logs against application-side identifiers, and they can't vary policy by tier (for example, a stricter sanitization profile for partner apps than for internal services).
-
-Keyword matching is fast but shallow. Semantic analysis is deep but more expensive. PII detection is critical but unrelated to content policy. Identity is required to make any of them accountable. A production system needs all four working together, each handling the class of risk it's best suited for.
-
-## The solution
-
-{{site.ai_gateway_name}} solves this by stacking three guardrail policies in front of a single AI Model, each responsible for one class of threat, behind a Key Auth AI Auth Strategy that identifies the caller first. AI Policy priority (unchanged from the underlying Kong plugin priority system) determines execution order on every request, giving you defense-in-depth with a single endpoint.
+Most teams protect an LLM application with a single content safety technique, which causes the following problems:
 
 {% table %}
 columns:
-  - title: Component
-    key: component
-  - title: What it catches
-    key: catches
-  - title: How it works
-    key: how
+  - title: Problem
+    key: problem
+  - title: Solution
+    key: solution
 rows:
-  - component: Key Auth AI Auth Strategy
-    catches: Anonymous traffic
-    how: "Matches the `apikey` header against a registered AI Consumer credential"
-  - component: "[AI PII Sanitizer](/ai-gateway/policies/ai-sanitizer/) Policy"
-    catches: Sensitive data (names, emails, SSNs, credit cards, credentials)
-    how: Sends content to an external PII detection service
-  - component: "[AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) Policy"
-    catches: Literal keyword matches (hack, exploit, malware, weapon)
-    how: Regex pattern matching, no external calls
-  - component: "[AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/) Policy"
-    catches: Rephrased or paraphrased harmful prompts
-    how: Compares embeddings against known bad patterns in Redis
-  - component: AI Model and AI Model Provider
-    catches: n/a
-    how: Injects provider credentials, translates request/response format, and forwards the validated, sanitized request to the LLM
+  - problem: "Keyword filters miss rephrased requests. \"How do I hack into a WiFi network?\" matches `hack`, but \"What are methods for accessing a wireless network without authorization?\" doesn't."
+    solution: "The [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/) Policy compares the meaning of each prompt with a list of deny prompts, and blocks close matches with `400`."
+  - problem: "Some terms must never reach the model, whatever the context, and a semantic check alone doesn't guarantee that."
+    solution: "The [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) Policy blocks prompts that match a regular expression with `400`, without an external call."
+  - problem: "A prompt can be harmless and still contain names, email addresses, or card numbers that must not reach a third-party LLM."
+    solution: "The [AI PII Sanitizer](/ai-gateway/policies/ai-sanitizer/) Policy replaces personal data with placeholders before any other AI Policy or the LLM sees the prompt."
+  - problem: "Without caller identity, nothing ties a blocked or sanitized request to the application that sent it."
+    solution: "The Key Auth AI Auth Strategy maps each API key to an AI Consumer before the guardrails run, and rejects unknown keys with `401`."
 {% endtable %}
 
-Authentication runs first so Kong associates every downstream check with a known AI Consumer. The PII sanitizer runs next, stripping sensitive data before any other policy or upstream provider sees it. The regex guard then runs as a fast keyword filter on the sanitized content, catching obvious literal violations with no external calls. The semantic guard runs as the deeper check, catching paraphrased attacks the regex layer can't match. Each guardrail policy's priority places it ahead of the AI Model's proxying, so the chain runs in the correct order without explicit ordering directives.
+## Try it out
 
-<!-- vale off -->
-{% mermaid %}
-sequenceDiagram
-    participant C as Client
-    participant K as Kong AI Gateway
-    participant P as PII Detection Service
-    participant L as LLM Provider
+Apply the configuration, then run a demo script that sends one request for each layer: an invalid API key, a clean prompt, a rephrased harmful prompt, a prompt with a denied keyword, and a prompt with personal data.
 
-    C->>K: POST /multi-layer-ai-guardrails (apikey, prompt)
-    activate K
-    K->>K: key-auth: validate apikey, attach Consumer (else 401)
-    K->>P: AI PII Sanitizer: strip PII
-    activate P
-    P-->>K: Sanitized content
-    deactivate P
-    K->>K: AI Prompt Guard: regex pattern check (else 400)
-    K->>K: AI Semantic Prompt Guard: vector match against deny rules (else 403)
-    K->>K: AI Model Provider: inject provider auth
-    K->>L: Forwarded request
-    activate L
-    L-->>K: Native response
-    deactivate L
-    K-->>C: OpenAI-format response
-    deactivate K
-{% endmermaid %}
-<!-- vale on -->
+### Apply the Kong configuration
 
-Each layer handles a different class of risk: the Key Auth AI Auth Strategy identifies the caller, the AI PII Sanitizer protects sensitive data, the semantic guard catches rephrased attacks that keyword matching would miss, and the regex guard catches literal violations. All three guardrail policies and the Key Auth AI Auth Strategy attach to the same AI Model, and a request must pass all of them before reaching the LLM.
+The configuration creates an AI Model Provider with your provider's credentials, a Key Auth AI Auth Strategy, an AI Consumer with a demo API key, three guardrail AI Policies (AI PII Sanitizer, AI Semantic Prompt Guard, and AI Prompt Guard), and an AI Model that references them. A kongctl namespace scopes every resource, so you can remove this configuration without affecting anything else on the same {{site.ai_gateway}}. See the [kongctl documentation](/kongctl/) for more on namespaces.
 
-## How it works
-
-When a request arrives at the AI Model's `/multi-layer-ai-guardrails` route, Kong runs the AI Auth Strategy and policies in priority order:
-
-1. The Key Auth AI Auth Strategy extracts the `apikey` header and matches it against a registered AI Consumer credential. Kong short-circuits unauthenticated requests with `401 Unauthorized` before any guardrail or upstream call runs.
-
-2. The AI PII Sanitizer Policy sends the prompt content to the PII Anonymizer service, which scans for names, phone numbers, emails, credit card numbers, SSNs, and other sensitive types. The policy replaces detected PII with placeholder tokens like `PLACEHOLDER1` and `PLACEHOLDER2` before the request continues. If the PII service is unreachable and `stop_on_error` is `true`, the policy rejects the request rather than forwarding it with unsanitized content.
-
-3. The AI Prompt Guard Policy applies regex pattern matching against the sanitized prompt content. If any message matches a deny pattern (for example, `(?i).*hack.*` or `(?i).*malware.*`), Kong returns `400 Bad Request`. The regex check is local and zero-cost, so it runs before the embedding-based semantic guard.
-
-4. The AI Semantic Prompt Guard Policy generates a vector embedding of the sanitized prompt, then searches Redis for stored vectors of known harmful prompt patterns. If the cosine distance between the incoming prompt and any deny rule falls below the threshold (0.75), Kong returns `403 Forbidden`. The request never reaches the LLM. This layer catches paraphrased attempts that the regex layer can't match.
-
-5. The AI Model forwards the validated, sanitized request to its target. The AI Model Provider handles provider authentication and translates the request and response between OpenAI format and the provider's native format.
-
-### Key Auth: AI Consumer identification
-
-The Key Auth AI Auth Strategy establishes identity at the edge so every downstream check is attributable. When a request arrives with an `apikey` header, Kong looks up the credential, attaches the matching AI Consumer to the request context, and lets it continue. Kong rejects requests without a valid key with `401 Unauthorized` before the guardrails run, so unauthenticated traffic never consumes PII detection, embedding calls, or LLM tokens.
-
-#### Configuration details
-
-{%- raw %}
-```yaml
-ai_gateway_auth_strategies:
-  - ref: multi-layer-ai-guardrails-auth
-    type: key-auth
-    display_name: "multi-layer-ai-guardrails key auth"
-    config:
-      key_names:
-        - apikey
-      hide_credentials: true
-
-ai_gateway_consumers:
-  - ref: multi-layer-ai-guardrails-consumer
-    name: multi-layer-ai-guardrails-consumer
-    display_name: "multi-layer-ai-guardrails demo consumer"
-    type: api-key
-    credentials:
-      - ref: multi-layer-ai-guardrails-credential
-        name: multi-layer-ai-guardrails-credential
-        display_name: "multi-layer-ai-guardrails demo API key"
-        type: api-key
-        api_key: !secret {source: !env CONSUMER_API_KEY}
-```
-{% endraw -%}
-{:.no-copy-code}
-
-**`key_names: [apikey]`**, the request header (or query parameter) Kong reads to find the credential. Clients send `apikey: <value>` alongside their normal request body.
-
-**`hide_credentials: true`**, strips the `apikey` header before Kong forwards the request upstream. The LLM provider never sees the gateway-side credential.
-
-**`api_key` is write-only.** An AI Consumer credential's `api_key` field must be a `!secret` reference. Kong rejects a plain string here, even for a demo value like this recipe's. You export `CONSUMER_API_KEY` once in [Apply the Kong configuration](#apply-the-kong-configuration) and reuse it across every provider tab.
-
-For additional fields (anonymous AI Consumer fallback, multiple credential locations), see the [AI Auth Strategy entity reference](/ai-gateway/entities/ai-auth-strategy/).
-
-### AI PII Sanitizer: PII protection
-
-The AI PII Sanitizer Policy addresses the data leakage problem that content safety guards can't solve. A prompt like "My name is John Smith, my email is john.smith@company.com" is perfectly safe from a topic perspective, but sending those PII values to a third-party LLM creates compliance and privacy risks. The sanitizer replaces detected PII with sequential placeholder tokens (`PLACEHOLDER1`, `PLACEHOLDER2`, and so on, with each unique value getting a stable token) before any other processing occurs, so the LLM receives a structurally equivalent prompt with no real sensitive data.
-
-#### Configuration details
-
-{%- raw %}
-```yaml
-ai_gateway_policies:
-  - ref: multi-layer-ai-guardrails-sanitizer
-    type: ai-sanitizer
-    display_name: "multi-layer-ai-guardrails PII sanitizer"
-    config:
-      anonymize:
-        - all_and_credentials
-      host: !env PII_SERVICE_HOST
-      port: 8080
-      scheme: http
-      redact_type: placeholder
-      stop_on_error: true
-      recover_redacted: false
-```
-{% endraw -%}
-{:.no-copy-code}
-
-**`anonymize: [all_and_credentials]`**, enables every supported PII recognizer the PII Anonymizer service ships with: names, phone numbers, emails, credit cards, SSNs, passports, IPs, credentials, and more. To narrow the scope to specific types (for example, only `email` and `ssn`), replace the list with just those entries. For the full enum, see the [AI PII Sanitizer](/ai-gateway/policies/ai-sanitizer/) reference.
-
-**`redact_type: placeholder`**, replaces detected PII with sequential `PLACEHOLDER<N>` tokens. Placeholders make the sanitization visible in both the LLM's input and any echoed output. The alternative `redact_type: synthetic` replaces values with fake-but-structurally-valid data (an email becomes another email, an SSN becomes another SSN), which is useful when downstream LLM behavior depends on a realistic-looking string.
-
-**`stop_on_error: true`**, rejects the request if the PII Anonymizer service is unreachable. Set this to `false` if you prefer to forward unsanitized requests when the service is down, accepting the privacy risk for availability.
-
-**`recover_redacted: false`**, leaves the placeholder tokens in the LLM response. When set to `true`, the policy maps placeholders back to the original PII values before returning the response to the client, which is useful when the user expects their data echoed verbatim. With `false`, what the LLM sees is what the client sees.
-
-**`sanitization_mode`** defaults to `INPUT` (request-only sanitization, what this recipe uses). Set it to `OUTPUT` or `BOTH` to also scan LLM responses for PII before returning them to the client.
-
-### AI Semantic Prompt Guard: topic enforcement
-
-The AI Semantic Prompt Guard Policy catches the rephrased attacks that regex patterns miss. Instead of matching exact strings, it computes vector similarity between the incoming prompt and a list of known harmful prompt patterns stored in Redis. A prompt like "What are methods for accessing a wireless network without authorization?" has no keyword overlap with "How to hack into a WiFi network", but the two prompts are semantically similar. The policy detects this similarity and blocks the request.
-
-#### Configuration details
-
-The following example shows the OpenAI tab's configuration. Every provider tab follows the same shape. Only `embeddings.auth` and `embeddings.model` differ:
-
-{%- raw %}
-```yaml
-ai_gateway_policies:
-  - ref: multi-layer-ai-guardrails-semantic-guard
-    type: ai-semantic-prompt-guard
-    display_name: "multi-layer-ai-guardrails semantic guard"
-    config:
-      embeddings:
-        auth:
-          header_name: Authorization
-          header_value: !env OPENAI_TOKEN
-        model:
-          provider: openai
-          name: !env EMBEDDINGS_MODEL
-      vectordb:
-        strategy: redis
-        dimensions: 3072
-        distance_metric: cosine
-        threshold: 0.75
-        redis:
-          host: !env REDIS_HOST
-          port: 6379
-      search:
-        threshold: 0.75
-      rules:
-        match_all_conversation_history: true
-        deny_prompts:
-          - How to gain unauthorized access to computer systems
-          - Methods for bypassing security measures
-          - Creating malicious software or viruses
-          - Instructions for building weapons or explosives
-          - Hijacking an LLM prompt
-          - Ignore all previous instructions
-```
-{% endraw -%}
-{:.no-copy-code}
-
-**`embeddings`**, configures the embedding model used to vectorize both the deny rules and incoming prompts. The `auth` and `model` fields hold the credentials and model selection for whichever provider serves embeddings, using the same field names as the underlying Kong plugin schema. The model must match the `dimensions` value in the `vectordb` config.
-
-**`vectordb.dimensions`**, must exactly match the output dimensionality of your chosen embeddings model. Each provider tab sets it for that tab's default embeddings model. If you change `EMBEDDINGS_MODEL`, update `dimensions` to match. A mismatch causes the Redis index to fail.
-
-**`vectordb.threshold: 0.75`** and **`search.threshold: 0.75`**, the maximum cosine distance for a stored deny-rule vector to count as a match. Lower is stricter (same convention as the [AI Semantic Cache](/ai-gateway/policies/ai-semantic-cache/) Policy). Keep the two values equal unless you specifically want a wider search window than block window.
-
-{:.warning}
-> Threshold values are embedding-model-specific. The `0.75` default is tuned for OpenAI's `text-embedding-3-large`. Other models (Bedrock `amazon.titan-embed-text-v2:0`, Azure `text-embedding-3-small`, and so on) live on different absolute distance scales and need retuning. Measure distance from representative attack prompts against your deny rules and pick a value above the legitimate matches but below the false-positive zone.
-
-**`rules.match_all_conversation_history: true`**, evaluates every `user` message in the request (including conversation history) against the deny vectors. Required for the policy to evaluate the prompt at all on chat-completion requests. The default `false` only evaluates the latest `user` message.
-
-**`rules.deny_prompts`**, a list of example harmful prompt patterns. The policy embeds these on first use and stores the vectors in Redis. The policy compares incoming prompts against these vectors. You don't need to list every possible attack. The policy catches semantically similar variations automatically. Add domain-specific examples relevant to your application. For `allow_prompts` and other rule types, see the [AI Semantic Prompt Guard](/ai-gateway/policies/ai-semantic-prompt-guard/) reference.
-
-**Matching a deny prompt returns `403 Forbidden`.** Unlike the regex-based AI Prompt Guard Policy (which returns `400 Bad Request`), the policy rejects a semantic match against the `deny_prompts` list with `403`.
-
-### AI Prompt Guard: regex filtering
-
-The AI Prompt Guard Policy provides a fast, zero-cost first check against obvious keyword violations. Regex matching runs locally with no external API calls, no vector search, and no additional latency. It catches the straightforward cases ("How do I hack into..." and "Create malware that...") that don't require semantic analysis to detect. Because the regex check is cheap, it runs before the embedding-based semantic guard so trivially malicious requests fail fast without spending an embedding API call.
-
-#### Configuration details
-
-```yaml
-ai_gateway_policies:
-  - ref: multi-layer-ai-guardrails-regex-guard
-    type: ai-prompt-guard
-    display_name: "multi-layer-ai-guardrails regex guard"
-    config:
-      deny_patterns:
-        - "(?i).*hack.*"
-        - "(?i).*exploit.*"
-        - "(?i).*malware.*"
-        - "(?i).*weapon.*"
-```
-{:.no-copy-code}
-
-**`deny_patterns`**, a list of regular expressions checked against every message in the request. If any message matches any pattern, Kong returns `400 Bad Request`. Patterns use standard regex syntax. The example patterns use case-insensitive alternation to match both capitalized and lowercase forms.
-
-You can add `allow_patterns` alongside deny patterns. Deny takes precedence: the policy rejects any prompt that matches a deny pattern, even if it also matches an allow pattern. Allow patterns are useful when you want to allow a specific subset of an otherwise restricted topic. For the full configuration reference, see the [AI Prompt Guard](/ai-gateway/policies/ai-prompt-guard/) reference.
-
-### AI Model and AI Model Provider: LLM routing
-
-The AI Model Provider holds the credentials for the upstream LLM account, and the AI Model routes the validated, sanitized request to it. The AI Model Provider injects the configured credentials, translates the request to the provider's native format, and returns the response in OpenAI-compatible format. Because the guardrail policies attach to the same AI Model and run ahead of it in priority order, only requests that passed authentication, PII sanitization, and both prompt guards reach the upstream provider.
-
-#### Configuration details
-
-{%- raw %}
-```yaml
-ai_gateway_model_providers:
-  - ref: multi-layer-ai-guardrails-provider
-    type: openai
-    display_name: "multi-layer-ai-guardrails"
-    config:
-      auth:
-        type: basic
-        headers:
-          - name: Authorization
-            value: !secret {source: !env OPENAI_TOKEN}
-
-ai_gateway_models:
-  - ref: multi-layer-ai-guardrails-model
-    type: model
-    display_name: "multi-layer-ai-guardrails"
-    formats:
-      - type: openai
-    capabilities:
-      - generate
-    access:
-      auth_strategies:
-        - multi-layer-ai-guardrails-auth
-    policies:
-      - multi-layer-ai-guardrails-sanitizer
-      - multi-layer-ai-guardrails-regex-guard
-      - multi-layer-ai-guardrails-semantic-guard
-    config:
-      max_request_body_size: 10485760
-      response_streaming: deny
-      logging:
-        payloads: true
-      route:
-        paths:
-          - /multi-layer-ai-guardrails
-    targets:
-      - name: !env CHAT_MODEL
-        provider: multi-layer-ai-guardrails-provider
-        config:
-          type: openai
-```
-{% endraw -%}
-{:.no-copy-code}
-
-**`policies`**, references the three guardrail policies by name so they run in front of every request this AI Model handles. Each policy's own priority (unchanged from the underlying Kong plugin) determines actual execution order, not this list's order.
-
-**`max_request_body_size: 10485760`**, sets a 10 MB cap on incoming request bodies. Tune for your expected payload size: large RAG injections or long conversation histories may need a higher value, and stricter limits make sense for narrow chatbot routes.
-
-**`response_streaming: deny`**, disables response streaming for this AI Model. The guardrail chain inspects full responses before returning them to the client (for example, the AI PII Sanitizer's `recover_redacted` mode replaces placeholders with originals on the way back). Streaming would defeat post-response inspection, so this recipe opts out. For interactive chat without post-response processing, set `allow` instead.
-
-**`logging.payloads: true`**, logs the full request and response content. Enable this during development and testing. In production, evaluate whether logging full payloads meets your organization's data retention and compliance policies.
-
-This recipe uses `formats: [{type: openai}]`, which accepts OpenAI-format requests and normalizes provider responses back to OpenAI format. To pass requests through in a provider's native format instead, set `formats` to that value (for example `anthropic` or `bedrock`): Kong still injects credentials and records analytics without translating the body. See the [AI Model entity reference](/ai-gateway/entities/ai-model/) for the full list of supported formats.
-
-The AI Model annotates every response with headers that confirm which upstream model served the request and how Kong spent its processing time:
-
-{% table %}
-columns:
-  - title: Header
-    key: header
-  - title: Description
-    key: description
-rows:
-  - header: "`X-Kong-LLM-Model`"
-    description: Upstream model that served the request
-  - header: "`X-Kong-Upstream-Latency`"
-    description: Time (ms) Kong spent waiting for the provider to respond
-  - header: "`X-Kong-Proxy-Latency`"
-    description: Time (ms) Kong spent on auth, PII sanitization, and guardrails
-{% endtable %}
-
-### Production considerations
-
-{:.info}
-> In production, store credentials in [AI Vaults](/ai-gateway/entities/ai-vault/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. AI Vaults support HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the {{site.konnect_short_name}} Config Store.
-
-## Apply the Kong configuration
-
-The following configuration creates an AI Model Provider holding your chosen provider's credentials, a Key Auth AI Auth Strategy and an AI Consumer with the `apikey` credential `demo-api-key`, three guardrail policies described in [How it works](#how-it-works), and an AI Model that references all of them. A kongctl namespace scopes every resource, so you can tear down the recipe cleanly without affecting other configurations on the same {{site.ai_gateway}}.
-
-First, adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so the following apply commands can manage it:
+Adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so that kongctl can manage it. Adoption adds the `KONGCTL-namespace` label to the {{site.ai_gateway}}:
 
 ```bash
 kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
@@ -517,30 +176,27 @@ kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
   --pat "${KONNECT_TOKEN}"
 ```
 
-Adoption stamps the `KONGCTL-namespace` label on the {{site.ai_gateway}}.
-
-Export the demo AI Consumer's API key. The AI Consumer credential's `api_key` field is write-only and must come from an env var, even for this fixed demo value:
+Export the demo AI Consumer's API key. The credential's `api_key` field is write-only, so its value must come from an environment variable, even for a fixed demo key:
 
 ```bash
 export CONSUMER_API_KEY='demo-api-key'
 ```
 
-You set provider credentials, the Redis host, and the PII service host in the prerequisites, and they remain in scope. Each of the following tabs sets only the model env vars and runs the apply.
+Select your provider. Each tab exports `CHAT_MODEL`, the upstream chat model, and `EMBEDDINGS_MODEL`, the model that the AI Semantic Prompt Guard Policy uses for embeddings, then applies the configuration. Each tab's configuration sets the embedding dimensions of that tab's embeddings model. Provider credentials, the Redis host, and the PII service host come from the prerequisites.
 
 {% navtabs "Providers" %}
-{% tab OpenAI %}
+{% navtab "OpenAI" %}
 
 Export the model env vars:
 
 ```bash
-export CHAT_MODEL='gpt-4o'  # or gpt-4o-mini, o3
-export EMBEDDINGS_MODEL='text-embedding-3-large'  # the configuration sets dimensions: 3072 to match
+export CHAT_MODEL='gpt-4o'
+export EMBEDDINGS_MODEL='text-embedding-3-large'
 ```
 
 Apply the Kong configuration:
 
 ```bash
-{%- raw %}
 cat <<'EOF' > kong-recipe.yaml
 _defaults:
   kongctl:
@@ -622,12 +278,12 @@ ai_gateway_policies:
       strategy: redis
       dimensions: 3072
       distance_metric: cosine
-      threshold: 0.75
+      threshold: 0.5
       redis:
         host: !env 'REDIS_HOST'
         port: 6379
     search:
-      threshold: 0.75
+      threshold: 0.5
     rules:
       match_all_conversation_history: true
       deny_prompts:
@@ -669,13 +325,16 @@ ai_gateway_models:
       - POST
       - OPTIONS
       strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'CHAT_MODEL'
   targets:
   - name: !env 'CHAT_MODEL'
     provider: multi-layer-ai-guardrails-provider
     config:
       type: openai
 EOF
-{% endraw -%}
 
 kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
@@ -683,20 +342,19 @@ rm -f kong-recipe.yaml
 ```
 {: data-test-step="block" .collapsible }
 
-{% endtab %}
-{% tab AWS Bedrock %}
+{% endnavtab %}
+{% navtab "AWS Bedrock" %}
 
 Export the model env vars:
 
 ```bash
-export CHAT_MODEL='amazon.nova-pro-v1:0'  # or global.anthropic.claude-sonnet-4-5-20250929-v1:0
+export CHAT_MODEL='amazon.nova-pro-v1:0'
 export EMBEDDINGS_MODEL='amazon.titan-embed-text-v2:0'
 ```
 
 Apply the Kong configuration:
 
 ```bash
-{%- raw %}
 cat <<'EOF' > kong-recipe.yaml
 _defaults:
   kongctl:
@@ -827,6 +485,10 @@ ai_gateway_models:
       - POST
       - OPTIONS
       strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'CHAT_MODEL'
   targets:
   - name: !env 'CHAT_MODEL'
     provider: multi-layer-ai-guardrails-provider
@@ -834,7 +496,6 @@ ai_gateway_models:
       region: !env 'AWS_REGION'
       type: bedrock
 EOF
-{% endraw -%}
 
 kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
@@ -842,22 +503,19 @@ rm -f kong-recipe.yaml
 ```
 {: data-test-step="block" .collapsible }
 
-{% endtab %}
-{% tab Azure %}
+{% endnavtab %}
+{% navtab "Azure OpenAI" %}
 
-Export the model env vars:
+Export the model env vars. Use the models of your two deployments:
 
 ```bash
-export AZURE_DEPLOYMENT_ID='your-chat-deployment-id'
-export AZURE_EMBEDDINGS_DEPLOYMENT_ID='your-embeddings-deployment-id'
-export CHAT_MODEL='gpt-4o'  # matches your Azure chat deployment
-export EMBEDDINGS_MODEL='text-embedding-3-large'  # matches your Azure embeddings deployment
+export CHAT_MODEL='gpt-4o'
+export EMBEDDINGS_MODEL='text-embedding-3-large'
 ```
 
 Apply the Kong configuration:
 
 ```bash
-{%- raw %}
 cat <<'EOF' > kong-recipe.yaml
 _defaults:
   kongctl:
@@ -946,12 +604,12 @@ ai_gateway_policies:
       strategy: redis
       dimensions: 3072
       distance_metric: cosine
-      threshold: 0.75
+      threshold: 0.5
       redis:
         host: !env 'REDIS_HOST'
         port: 6379
     search:
-      threshold: 0.75
+      threshold: 0.5
     rules:
       match_all_conversation_history: true
       deny_prompts:
@@ -993,6 +651,10 @@ ai_gateway_models:
       - POST
       - OPTIONS
       strip_path: true
+      model:
+        body_param: model
+        values:
+        - !env 'CHAT_MODEL'
   targets:
   - name: !env 'CHAT_MODEL'
     provider: multi-layer-ai-guardrails-provider
@@ -1001,7 +663,6 @@ ai_gateway_models:
       deployment_id: !env 'AZURE_DEPLOYMENT_ID'
       type: azure
 EOF
-{% endraw -%}
 
 kongctl apply -f kong-recipe.yaml -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
@@ -1009,21 +670,45 @@ rm -f kong-recipe.yaml
 ```
 {: data-test-step="block" .collapsible }
 
-{% endtab %}
+{% endnavtab %}
 {% endnavtabs %}
 
-## Try it out
+### Run the demo
 
-The demo script sends five requests that exercise each layer of the chain: an unauthorized request that the Key Auth AI Auth Strategy rejects with `401`, a clean request that passes every guard, a request with a blocked keyword that the regex guard catches, a rephrased harmful request that the semantic guard catches, and a request containing PII that the sanitizer cleans before it reaches the LLM.
+The script sends one request with an invalid API key, then four requests with the demo API key: a clean prompt, a rephrased harmful prompt, a benign prompt with a denied keyword, and a prompt with a name and an email address. In the output, look for the `401`, the two `400` blocks, and the placeholders in the last response.
 
 {:.info}
-> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [Pre-Function](/ai-gateway/policies/pre-function/) Policy that copies the Bearer token to the `apikey` header server-side.
+> The demo passes the API key in `default_headers` because the OpenAI SDK always sends `api_key` as an `Authorization: Bearer` header. To let clients use `api_key` directly, add a global [Pre-Function](/ai-gateway/policies/pre-function/) Policy (`global: true`) that copies the Bearer token to the `apikey` header. A global Pre-Function Policy runs before authentication, while one attached to the AI Model runs after it.
 
 Create the demo script:
 
 ```bash
 cat <<'EOF' > demo.py
-"""Multi-layer AI guardrails demo. See README for context."""
+"""Multi-layer AI guardrails demo.
+
+Sends five OpenAI-format chat requests to the /multi-layer-ai-guardrails AI Model, one for
+each layer of the chain:
+
+1. An invalid API key. The Key Auth AI Auth Strategy rejects it with 401 before any
+   guardrail runs ([BLOCKED BY KEY AUTH]).
+2. A clean prompt. It passes every guardrail and reaches the LLM ([ALLOWED]).
+3. A rephrased harmful prompt with no blocked keyword. The AI Semantic Prompt Guard Policy
+   blocks it with 400 ([BLOCKED BY SEMANTIC GUARD]).
+4. A benign prompt that contains a blocked keyword. The semantic guard lets it through, and
+   the AI Prompt Guard Policy blocks it with 400 ([BLOCKED BY REGEX GUARD]).
+5. A prompt with a name and an email address. The AI PII Sanitizer Policy replaces them with
+   placeholders before the LLM sees them ([SANITIZED]).
+
+Both prompt guards return 400 with the same body, so the demo labels each blocked request
+with the layer that the prompt targets.
+
+Run it after you apply the Kong configuration:
+
+    python demo.py
+
+Environment variables: PROXY_URL (default http://localhost:8000), CHAT_MODEL (default gpt-4o),
+CONSUMER_API_KEY (default demo-api-key).
+"""
 
 import os
 import sys
@@ -1034,6 +719,7 @@ from openai import OpenAI, APIStatusError
 CHAT_MODEL = os.getenv("CHAT_MODEL", "gpt-4o")
 PROXY_URL = os.getenv("PROXY_URL", "http://localhost:8000")
 API_KEY = os.getenv("CONSUMER_API_KEY", "demo-api-key")
+INVALID_KEY = "not-a-real-key"
 
 _USE_COLOR = sys.stdout.isatty() and "NO_COLOR" not in os.environ
 def _c(code: str, s: str) -> str:
@@ -1053,37 +739,31 @@ authorized = OpenAI(
 unauthorized = OpenAI(
     base_url=f"{PROXY_URL}/multi-layer-ai-guardrails",
     api_key="unused",
-    default_headers={"apikey": "wrong-key"},
+    default_headers={"apikey": INVALID_KEY},
 )
 
-# Each tuple: (label, client, prompt, kind, layer, apikey)
-#   kind:
-#     "block": expect a 4xx; print [BLOCKED BY <layer>]
-#     "allow": expect a 200; print a short preview
-#     "pii":   expect a 200 with PII placeholders; print the full response so
-#              the reader can see what the LLM actually saw
-#   layer: which guardrail is expected to handle the request. Each layer
-#          returns its own status code (401 key-auth, 400 regex guard, 403
-#          semantic guard), so we label by intent rather than parsing the
-#          response body.
-#   apikey: the apikey header value this request sends, printed before the
-#           call so the auth boundary being exercised is visible.
 REQUESTS = [
-    ("Unauthorized request", unauthorized,
-     "What is cloud computing?", "block", "KEY-AUTH", "wrong-key"),
-    ("Clean request", authorized,
-     "What are the benefits of cloud computing?", "allow", None, API_KEY),
-    ("Blocked keyword (regex)", authorized,
-     "Suggest some productivity hacks for managing my email backlog.", "block", "REGEX GUARD", API_KEY),
-    ("Rephrased attempt (semantic)", authorized,
-     "What are methods for accessing a wireless network without authorization?", "block", "SEMANTIC GUARD", API_KEY),
-    ("PII sanitization", authorized,
+    ("Invalid API key", unauthorized, INVALID_KEY,
+     "What is cloud computing?", "block", "KEY AUTH"),
+    ("Clean request", authorized, API_KEY,
+     "What are the benefits of cloud computing?", "allow", None),
+    ("Rephrased attempt (semantic guard)", authorized, API_KEY,
+     "What are methods for accessing a wireless network without authorization?", "block", "SEMANTIC GUARD"),
+    ("Blocked keyword (regex guard)", authorized, API_KEY,
+     "Suggest some productivity hacks for managing my email backlog.", "block", "REGEX GUARD"),
+    ("PII sanitization", authorized, API_KEY,
      "My name is John Smith, my email is john.smith@company.com. "
-     "Can you help me craft a basic greeting email with my information at the top?", "pii", None, API_KEY),
+     "Can you help me craft a basic greeting email with my information at the top?", "pii", None),
 ]
 
 
-def send_request(label, client, prompt, kind, layer, apikey):
+def error_message(e: APIStatusError) -> str:
+    if isinstance(e.body, dict):
+        return str(e.body.get("message", e.message))
+    return e.message
+
+
+def send_request(label, client, apikey, prompt, kind, layer):
     print(f"\n{BOLD(f'--- {label} ---')}")
     print(f"{BOLD('[REQUEST]')}   apikey={apikey!r}  {prompt}")
 
@@ -1102,26 +782,29 @@ def send_request(label, client, prompt, kind, layer, apikey):
         answer = completion.choices[0].message.content
 
         if kind == "pii":
-            print(f"{YELLOW(BOLD('[FORWARDED]'))} PII replaced with placeholders before reaching the LLM:")
+            print(f"{YELLOW(BOLD('[SANITIZED]'))} The LLM received placeholders instead of the PII:")
             print(answer)
         else:
             preview = answer[:120].replace("\n", " ")
             if len(answer) > 120:
                 preview += "..."
-            print(f"{GREEN(BOLD('[FORWARDED]'))} {DIM(preview)}")
+            print(f"{GREEN(BOLD('[ALLOWED]'))}   {DIM(preview)}")
 
-        print(f"{BOLD('[MODEL]')}     {CYAN(model)}")
+        print(f"{BOLD('[MODEL]')}     {CYAN(BOLD(model))}")
         print(f"{BOLD('[LATENCY]')}   {DIM(f'upstream={upstream}ms  proxy={proxy}ms  total={elapsed_ms}ms')}")
 
     except APIStatusError as e:
         elapsed_ms = round(time.time() * 1000) - start_ms
         tag = RED(BOLD(f"[BLOCKED BY {layer or 'GATEWAY'}]"))
-        print(f"{tag} {RED(str(e.status_code))} {DIM(e.message)}  ({elapsed_ms}ms)")
+        if e.status_code == 401:
+            print(f"{tag} {RED(BOLD(str(e.status_code)))}  ({elapsed_ms}ms)")
+        else:
+            print(f"{tag} {RED(BOLD(str(e.status_code)))} {DIM(error_message(e))}  ({elapsed_ms}ms)")
 
 
 if __name__ == "__main__":
-    for label, client, prompt, kind, layer, apikey in REQUESTS:
-        send_request(label, client, prompt, kind, layer, apikey)
+    for label, client, apikey, prompt, kind, layer in REQUESTS:
+        send_request(label, client, apikey, prompt, kind, layer)
 EOF
 ```
 {:.collapsible}
@@ -1135,27 +818,27 @@ python demo.py
 Example output:
 
 ```text
---- Unauthorized request ---
-[REQUEST]   apikey='wrong-key'  What is cloud computing?
-[BLOCKED BY KEY-AUTH] 401 No API key found in request  (8ms)
+--- Invalid API key ---
+[REQUEST]   apikey='not-a-real-key'  What is cloud computing?
+[BLOCKED BY KEY AUTH] 401  (8ms)
 
 --- Clean request ---
 [REQUEST]   apikey='demo-api-key'  What are the benefits of cloud computing?
-[FORWARDED] Cloud computing offers several key benefits, including scalability, cost efficiency, flexibility, and improved colla...
+[ALLOWED]   Cloud computing offers several key benefits, including scalability, cost efficiency, flexibility, and improved colla...
 [MODEL]     openai/gpt-4o
-[LATENCY]   upstream=425ms  proxy=52ms  total=490ms
+[LATENCY]   upstream=425ms  proxy=310ms  total=760ms
 
---- Blocked keyword (regex) ---
-[REQUEST]   apikey='demo-api-key'  Suggest some productivity hacks for managing my email backlog.
-[BLOCKED BY REGEX GUARD] 400 bad request  (12ms)
-
---- Rephrased attempt (semantic) ---
+--- Rephrased attempt (semantic guard) ---
 [REQUEST]   apikey='demo-api-key'  What are methods for accessing a wireless network without authorization?
-[BLOCKED BY SEMANTIC GUARD] 403 forbidden  (385ms)
+[BLOCKED BY SEMANTIC GUARD] 400 bad request  (385ms)
+
+--- Blocked keyword (regex guard) ---
+[REQUEST]   apikey='demo-api-key'  Suggest some productivity hacks for managing my email backlog.
+[BLOCKED BY REGEX GUARD] 400 bad request  (290ms)
 
 --- PII sanitization ---
 [REQUEST]   apikey='demo-api-key'  My name is John Smith, my email is john.smith@company.com. Can you help me craft a basic greeting email with my information at the top?
-[FORWARDED] PII replaced with placeholders before reaching the LLM:
+[SANITIZED] The LLM received placeholders instead of the PII:
 Certainly! Here is a basic greeting email template:
 
 ---
@@ -1170,130 +853,257 @@ Best regards,
 PLACEHOLDER1
 ---
 [MODEL]     openai/gpt-4o
-[LATENCY]   upstream=1180ms  proxy=210ms  total=1410ms
+[LATENCY]   upstream=1180ms  proxy=410ms  total=1610ms
 ```
 {:.no-copy-code}
 
-### What happened
+### Check the results
 
-1. **The Key Auth AI Auth Strategy rejected the unauthorized request.** The unauthorized client sent `apikey: wrong-key`, which doesn't match any registered AI Consumer credential. Kong returned `401 Unauthorized` immediately. None of the guardrails ran, Kong made no LLM call, and no PII service round-trip occurred. Authentication is the cheapest filter in the chain, which is why it runs first.
+The output confirms the following:
 
-2. **The clean request passed all four checks.** The authorized client sent `apikey: demo-api-key`, which matched the `multi-layer-ai-guardrails-consumer` AI Consumer. The prompt contained no PII, wasn't semantically similar to any deny rule, and matched no regex patterns. The request reached the LLM and returned normally. The `X-Kong-LLM-Model` response header confirms which model served the request.
+{% table %}
+columns:
+  - title: Behavior
+    key: behavior
+  - title: Evidence
+    key: evidence
+rows:
+  - behavior: "Authentication before the guardrails"
+    evidence: "The invalid key gets `401` in a few milliseconds. No guardrail, PII service call, or LLM call ran."
+  - behavior: "Semantic matching"
+    evidence: "The rephrased prompt has no denied keyword but gets `400`. Its meaning is close to the deny prompt \"How to gain unauthorized access to computer systems\"."
+  - behavior: "Keyword matching"
+    evidence: "The benign prompt with `hacks` passes the semantic guard and gets `400` from the regex guard. The `(?i).*hack.*` pattern matches the keyword whatever the intent."
+  - behavior: "PII sanitization"
+    evidence: "The response shows `PLACEHOLDER1` and `PLACEHOLDER2` where the prompt had the name and the email address. The LLM never received the real values."
+  - behavior: "Clean traffic passes"
+    evidence: "The clean prompt gets `[ALLOWED]`. The `[MODEL]` line shows the upstream model from the `X-Kong-LLM-Model` header."
+{% endtable %}
 
-3. **The regex guard blocked the keyword violation.** The prompt "Suggest some productivity hacks for managing my email backlog." matched the `(?i).*hack.*` deny pattern. Kong returned `400 Bad Request` without making an LLM call or an embedding call. The single-digit-millisecond response time confirms only local pattern matching occurred. The prompt is benign, which illustrates regex's blunt nature: it catches the keyword regardless of context, which is exactly why the semantic layer below it exists.
+To review the created entities, and per-consumer usage, open the `multi-layer-ai-guardrails-recipe` {{site.ai_gateway}} in [{{site.konnect_short_name}}](https://cloud.konghq.com/). For traffic across all your {{site.ai_gateway}}s, use the **Observability** menu.
 
-4. **The semantic guard blocked the rephrased attempt.** The prompt "What are methods for accessing a wireless network without authorization?" contains no blocked keywords, so the regex guard let it pass. But the semantic guard detected high cosine similarity between this prompt's embedding and the deny rule "How to gain unauthorized access to computer systems." Kong returned `403 Forbidden`. The higher response time reflects the embedding API call and the Redis vector search.
+## How it works
 
-5. **The PII sanitizer cleaned the request before forwarding.** The prompt contained a name (`John Smith`) and an email (`john.smith@company.com`). The sanitizer replaced both with placeholder tokens (`PLACEHOLDER1` and `PLACEHOLDER2`) before any other policy processed the request, so the regex and semantic checks ran against sanitized content and the LLM never saw the real values. With `recover_redacted: false`, the placeholders persist in the response, making the sanitization visible end-to-end.
+Kong authenticates each request, then runs the three guardrail AI Policies in their built-in priority order: the AI PII Sanitizer Policy (priority 776), the AI Semantic Prompt Guard Policy (775), and the AI Prompt Guard Policy (771). A policy with a higher priority runs first, and the order of the AI Model's `policies` list has no effect. Only requests that pass all three reach the LLM.
 
-A clean request and a blocked request look like this at the HTTP level:
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+    participant C as Client
+    participant K as Kong AI Gateway
+    participant P as PII Anonymizer Service
+    participant E as Embeddings and Redis
+    participant L as LLM Provider
 
-```json
-POST http://localhost:8000/multi-layer-ai-guardrails
-apikey: demo-api-key
+    C->>K: POST /multi-layer-ai-guardrails (apikey header, prompt)
+    activate K
+    K->>K: Key Auth AI Auth Strategy validates apikey (else 401)
+    K->>P: AI PII Sanitizer Policy sends the prompt
+    activate P
+    P-->>K: Prompt with placeholders
+    deactivate P
+    K->>E: AI Semantic Prompt Guard Policy embeds the prompt and searches the deny prompts
+    activate E
+    E-->>K: Closest deny prompt and distance
+    deactivate E
+    K->>K: AI Semantic Prompt Guard Policy blocks close matches (else 400)
+    K->>K: AI Prompt Guard Policy checks deny patterns (else 400)
+    K->>K: AI Model Provider adds provider credentials
+    K->>L: Sanitized request in the provider's native format
+    activate L
+    L-->>K: Native response
+    deactivate L
+    K-->>C: OpenAI-format response with X-Kong-LLM-Model
+    deactivate K
+{% endmermaid %}
+<!-- vale on -->
 
-{
-  "model": "gpt-4o",
-  "messages": [
-    { "role": "user", "content": "What are the benefits of cloud computing?" }
-  ]
-}
-```
-{:.no-copy-code}
+The [AI Policy priority](/ai-gateway/entities/ai-policy/#ai-policy-priority) table lists the priority of each AI Policy type. Because the semantic guard runs before the regex guard, a prompt with a denied keyword still costs one embeddings call.
 
-Response (allowed, normal LLM response with Kong headers):
+### Key Auth AI Auth Strategy and AI Consumer
 
-```text
-HTTP/1.1 200 OK
-X-Kong-LLM-Model: gpt-4o
-X-Kong-Upstream-Latency: 425
-X-Kong-Proxy-Latency: 52
+Authentication is an AI Auth Strategy, not an AI Policy. The Key Auth AI Auth Strategy reads the `apikey` header and matches the key against the AI Consumer credentials. On a match, Kong attaches the AI Consumer to the request. The AI Consumer is the identity that rate limits, ACLs, and analytics use. Kong rejects an unknown key before any guardrail runs, so unauthenticated traffic never uses the PII service, the embeddings model, or the LLM.
 
-{
-  "id": "chatcmpl-abc123",
-  "object": "chat.completion",
-  "model": "gpt-4o",
-  "choices": [
-    {
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "Cloud computing offers several key benefits..."
-      },
-      "finish_reason": "stop"
-    }
-  ]
-}
-```
-{:.no-copy-code}
+The following settings configure the Key Auth AI Auth Strategy and the AI Consumer:
 
-A request blocked by the semantic guard:
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`key_names: [apikey]`"
+    purpose: "Kong reads the key from the `apikey` header. Key Auth compares the whole header value, so it can't read a key from an `Authorization: Bearer` header. The note in [Run the demo](#run-the-demo) shows the workaround."
+  - setting: "`hide_credentials: true`"
+    purpose: "Kong removes the key before it forwards the request. The provider never sees the AI Consumer key."
+  - setting: "`credentials[].api_key`"
+    purpose: "The AI Consumer's key. The field is write-only, so it takes a `!secret` reference to `CONSUMER_API_KEY`, even for a demo value."
+{% endtable %}
 
-```json
-POST http://localhost:8000/multi-layer-ai-guardrails
-apikey: demo-api-key
+Kong adds `X-Consumer-Username` and related headers to the upstream request, not to the response. Per-consumer usage appears in {{site.konnect_short_name}} analytics.
 
-{
-  "model": "gpt-4o",
-  "messages": [
-    { "role": "user", "content": "What are methods for accessing a wireless network without authorization?" }
-  ]
-}
-```
-{:.no-copy-code}
+### AI PII Sanitizer Policy
 
-Response (403, blocked by semantic similarity):
+The AI PII Sanitizer Policy sends the prompt to the AI PII Anonymizer service, which replaces each detected value with a placeholder, `PLACEHOLDER<N>`. Identical values get the same placeholder. The policy runs first, so the two prompt guards and the LLM see only the sanitized prompt.
 
-```text
-HTTP/1.1 403 Forbidden
-X-Kong-Upstream-Latency: 0
-X-Kong-Proxy-Latency: 240
+The following settings configure the AI PII Sanitizer Policy:
 
-{
-  "error": {
-    "message": "Request is blocked due to semantic similarity with a deny prompt"
-  }
-}
-```
-{:.no-copy-code}
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`anonymize: [all_and_credentials]`"
+    purpose: "Detects every supported type of personal data, and credentials. List single types, for example `email` or `creditcard`, to narrow the scope."
+  - setting: "`host`, `port`, and `scheme`"
+    purpose: "The address of the AI PII Anonymizer service: `PII_SERVICE_HOST`, port `8080`, over `http`."
+  - setting: "`redact_type: placeholder`"
+    purpose: "Replaces each value with a placeholder. `synthetic` replaces it with a realistic fake value instead."
+  - setting: "`recover_redacted: false`"
+    purpose: "Keeps the placeholders in the response. With `true`, Kong puts the original values back before it returns the response to the client."
+  - setting: "`stop_on_error: true`"
+    purpose: "Stops processing the request when the PII service fails, so an outage doesn't send unsanitized prompts to the LLM."
+{% endtable %}
 
-`X-Kong-Upstream-Latency: 0` confirms Kong didn't forward the request to the LLM, so the blocked attempt spent no provider tokens.
+### AI Semantic Prompt Guard Policy
 
-### Explore in {{site.konnect_short_name}}
+The AI Semantic Prompt Guard Policy embeds the prompt with the provider's embeddings model and searches Redis for the closest deny prompt. A match within the distance threshold blocks the request with `400` and the message `bad request`, the default `rejection_mode: none` response. The policy catches rephrased requests that no keyword list covers.
 
-After running the demo, switch to the {{site.konnect_short_name}} UI at [cloud.konghq.com](https://cloud.konghq.com) to see the recipe in context:
+The following settings configure the AI Semantic Prompt Guard Policy:
 
-- **API Gateway > AI Gateways > `multi-layer-ai-guardrails-recipe`**: the {{site.ai_gateway}} that the quickstart created
-- **AI Model Providers > `multi-layer-ai-guardrails-provider`**: the credential set the recipe registered for your chosen LLM provider
-- **AI Models > `multi-layer-ai-guardrails-model`**: the `/multi-layer-ai-guardrails` route, with its attached Key Auth AI Auth Strategy and three guardrail policies
-- **AI Policies > `multi-layer-ai-guardrails-sanitizer`, `multi-layer-ai-guardrails-regex-guard`, `multi-layer-ai-guardrails-semantic-guard`**: the three guardrail policies, each with its own configuration
-- **AI Consumers > `multi-layer-ai-guardrails-consumer`**: the demo AI Consumer and its `apikey` credential
-- **Observability** in the left navigation: request volume, blocked-vs-allowed counts, token usage, and per-consumer breakdowns across the recipe's traffic
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`embeddings.auth` and `embeddings.model`"
+    purpose: "The embeddings credentials and model, from the AI Credentials prerequisite and `EMBEDDINGS_MODEL`. The policy calls the provider directly and doesn't use the AI Model Provider, so each provider tab has its own auth fields."
+  - setting: "`vectordb.dimensions`"
+    purpose: "The vector size of the embeddings model: `3072` for `text-embedding-3-large`, `1024` for `amazon.titan-embed-text-v2:0`. If you change `EMBEDDINGS_MODEL`, change this value."
+  - setting: "`vectordb.threshold` and `search.threshold`"
+    purpose: "The maximum cosine distance for a match. Lower values are stricter. The OpenAI and Azure OpenAI tabs use `0.5`: with `text-embedding-3-large`, `0.75` also blocked the PII example. The AWS Bedrock tab uses `0.75`, which this cookbook hasn't tested with Titan embeddings. Tune the value for each embeddings model. See [Embedding-based similarity matching](/ai-gateway/semantic-similarity/)."
+  - setting: "`vectordb.redis.host`"
+    purpose: "The Redis Stack instance that stores the deny prompt embeddings, from `REDIS_HOST`."
+  - setting: "`rules.deny_prompts`"
+    purpose: "Examples of prompts to block. The policy blocks prompts close in meaning, so the list doesn't need every wording."
+  - setting: "`rules.match_all_conversation_history: true`"
+    purpose: "Checks earlier `user` messages too. The default checks only the latest `user` message."
+{% endtable %}
+
+### AI Prompt Guard Policy
+
+The AI Prompt Guard Policy checks `user` messages against regular expressions in the data plane, with no external call. A match blocks the request with `400`, the default `rejection_mode: none` response. It enforces terms that must never reach the model, whatever the wording around them.
+
+The following settings configure the AI Prompt Guard Policy:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`deny_patterns`"
+    purpose: "Case-insensitive patterns for `hack`, `exploit`, `malware`, and `weapon`. The patterns also match benign words, for example \"productivity hacks\". Add `allow_patterns` to define what's allowed, and note that a deny match always wins."
+{% endtable %}
+
+### AI Model Provider and AI Model
+
+The AI Model Provider holds the provider credentials. The `multi-layer-ai-guardrails-model` AI Model references the AI Auth Strategy and the three guardrail AI Policies, and routes the request to one target.
+
+The following settings configure the AI Model Provider and the AI Model:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`config.auth` (AI Model Provider)"
+    purpose: "The provider credentials. Kong adds them to each upstream request. The fields depend on the provider tab."
+  - setting: "`policies`"
+    purpose: "The three guardrail AI Policies. Kong runs them in priority order, not in list order."
+  - setting: "`formats: [{type: openai}]`"
+    purpose: "The AI Model accepts OpenAI-format requests. Kong translates each request to the provider's native format and the response back to OpenAI format."
+  - setting: "`config.route.model`"
+    purpose: "The AI Model answers to the `CHAT_MODEL` value in the body's `model` field (`body_param: model`), which the demo sends. Without a selector, an AI Model accepts only its own name as `model`."
+  - setting: "`targets[].name` and `targets[].config`"
+    purpose: "The upstream model, from `CHAT_MODEL`, and provider-specific fields, for example Bedrock's `region` or Azure's `deployment_id` and `api_version`."
+  - setting: "`config.route.protocols: [http, https]`"
+    purpose: "Accepts HTTP, so you can call the local data plane at `http://localhost:8000`."
+  - setting: "`config.max_request_body_size: 10485760`"
+    purpose: "Accepts request bodies up to 10 MB, instead of the 8 MB default, for long conversation contexts."
+  - setting: "`config.response_streaming: deny`"
+    purpose: "Disables streamed responses, so each response is complete. Keep it if you add response checks, for example `sanitization_mode: BOTH`."
+  - setting: "`config.logging.payloads: true`"
+    purpose: "Kong logs request and response payloads. The default is `false`. Review payload logging against your data retention rules."
+{% endtable %}
+
+{:.info}
+> **Production credentials:** This cookbook stores the AI Consumer's API key and the provider credentials in environment variables for simplicity. In production, use [AI Vaults](/ai-gateway/entities/ai-vault/) to reference them from a secret manager, for example AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, or Azure Key Vault.
+
+### Response headers
+
+Kong adds the following response headers to allowed requests:
+
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Description
+    key: description
+rows:
+  - header: "`X-Kong-LLM-Model`"
+    description: "The upstream model that served the request, with the provider name as a prefix, for example `openai/gpt-4o`."
+  - header: "`X-Kong-Upstream-Latency`"
+    description: "Time in milliseconds that Kong waited for the provider to respond."
+  - header: "`X-Kong-Proxy-Latency`"
+    description: "Time in milliseconds that Kong spent processing the request, including the PII service call and the embeddings search."
+{% endtable %}
 
 ## Variations and next steps
 
-**Adjust regex and semantic thresholds.** The semantic guard's `0.75` default is tuned for OpenAI's `text-embedding-3-large`; lower it to require closer matches, raise it to catch broader variations, and retune whenever you change embedding models (different models use different distance scales). For regex patterns, add domain-specific terms and use `allow_patterns` to allow legitimate terms that contain blocked substrings (for example, "hackathon").
+You can change or extend this configuration in the following ways:
 
-**Add response-phase guardrails.** This recipe only inspects the request. Set `sanitization_mode: BOTH` on the AI PII Sanitizer Policy to also scan LLM responses for PII before returning them to the client. Combine this with the [AI Semantic Response Guard](/ai-gateway/policies/ai-semantic-response-guard/) Policy to check LLM output against a separate set of deny rules, catching cases where the model generates harmful content despite a safe prompt.
-
-**Add prompt templates and decorators for prompt engineering control.** Use the [AI Prompt Decorator](/ai-gateway/policies/ai-prompt-decorator/) Policy to prepend system instructions to every request, establishing baseline behavior rules at the gateway layer. Combine it with the [AI Prompt Template](/ai-gateway/policies/ai-prompt-template/) Policy to enforce structured prompt formats that reduce the attack surface for injection attempts. These policies run before the guardrails, so the guardrails also check the injected system prompt.
-
-**Tier policy by AI Consumer.** This recipe attaches one AI Consumer for simplicity. Add AI Consumer Groups (for example, `internal` and `partner`) and bind separate policy instances to each group to apply stricter sanitization or tighter semantic thresholds for partner traffic without changing how internal callers behave.
-
-**Integrate with external guardrail services.** For organization-specific content policies, add cloud guardrail services alongside the layers in this recipe. The [AI Custom Guardrail](/ai-gateway/policies/ai-custom-guardrail/) Policy connects to any HTTP-based guardrail service (Mistral Moderation, Azure Content Safety, custom internal endpoints) through a universal templating system. See the [Guardrail Integrations](/cookbooks/guardrail-integrations/) recipe for complete examples comparing dedicated and universal approaches.
-
-**Use AI Vaults for production credential management.** Replace the environment variable exports with vault references to store your LLM API keys, Redis credentials, and PII service host securely. AI Vaults support HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the {{site.konnect_short_name}} Config Store. See the [AI Vault entity reference](/ai-gateway/entities/ai-vault/) for setup instructions.
+{% table %}
+columns:
+  - title: Variation
+    key: variation
+  - title: How
+    key: how
+rows:
+  - variation: "Tune the guards"
+    how: "Add domain-specific `deny_prompts` and `deny_patterns`, and lower or raise the semantic threshold. Retune the threshold when you change the embeddings model."
+  - variation: "Show which guard blocked a request"
+    how: "Set `rejection_mode: verbose` on both prompt guards. Kong then returns `403` with the AI Policy name and the reason. Use `verbose` only for trusted clients, because it reveals how the guardrails work."
+  - variation: "Restore the original values"
+    how: "Set `recover_redacted: true` on the AI PII Sanitizer Policy. The LLM still sees placeholders, and the client gets its own values back."
+  - variation: "Check LLM responses"
+    how: "Set `sanitization_mode: BOTH` on the AI PII Sanitizer Policy, and add the [AI Semantic Response Guard](/ai-gateway/policies/ai-semantic-response-guard/) Policy to block harmful responses."
+  - variation: "Add a system prompt"
+    how: "Add the [AI Prompt Decorator](/ai-gateway/policies/ai-prompt-decorator/) Policy to prepend instructions to each request, or the [AI Prompt Template](/ai-gateway/policies/ai-prompt-template/) Policy to accept only approved prompt formats."
+  - variation: "Add an external guardrail service"
+    how: "Add the [AI Custom Guardrail](/ai-gateway/policies/ai-custom-guardrail/) Policy to call a moderation API, for example Azure AI Content Safety. See the [Guardrail integrations cookbook](/cookbooks/guardrail-integrations/) for an example."
+  - variation: "Switch providers"
+    how: "Select a different provider tab in [Apply the Kong configuration](#apply-the-kong-configuration) and re-apply. The AI PII Sanitizer and AI Prompt Guard Policies don't change."
+{% endtable %}
 
 ## Cleanup
 
-The recipe's kongctl namespace scopes all resources, so this teardown removes only this recipe's configuration. Tear down the local data plane and delete the {{site.ai_gateway}} from {{site.konnect_short_name}}:
+The recipe's kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration. Tear down the local data plane and delete the {{site.ai_gateway}} from {{site.konnect_short_name}}:
 
 ```bash
 export KONNECT_CONTROL_PLANE_NAME='multi-layer-ai-guardrails-recipe' && curl -Ls https://get.konghq.com/ai | bash -s -- -d -k $KONNECT_TOKEN
 ```
 
-Stop and remove the Redis and PII Anonymizer containers if you started them locally:
+Remove the Redis Stack and AI PII Anonymizer containers:
 
 ```bash
-docker rm -f redis-stack kong-pii-anonymizer 2>/dev/null
+docker rm -f redis-stack kong-pii-anonymizer
 ```

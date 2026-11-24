@@ -65,9 +65,18 @@ You can add or override resource attributes by configuring the [`config.resource
 
 For all available metrics, see the [OpenTelemetry metrics reference](/ai-gateway/ai-otel-metrics/).
 
-### Add Principal attributes to metrics
+### Identifying requests in metrics
 
-Set [`config.metrics.enable_principal_attribute`](./reference/#schema--config-metrics-enable-principal-attribute) to `true` to attach the authenticated [Kong Identity Principal](/identity/principals/)'s ID and display name to the `http.server.request.count`, `http.server.request.size`, and `http.server.response.size` metrics. You can enable this at the same time as AI Consumer attributes.
+Token counts and costs are only useful for chargeback if you can tell whose traffic they describe. 
+{{site.ai_gateway}} can label each metric with the identity behind the request based on which identity type you use:
+
+* An [AI Consumer](/ai-gateway/entities/ai-consumer/) you created
+* A [Kong Identity Principal](/identity/principals/)
+* The credential the caller authenticated with
+
+Each source has its own setting and all of them are off by default. You can enable any combination of these. The labels only appear on metrics you've already turned on, so enable them alongside request count or bandwidth metrics.
+
+Set [`config.metrics.enable_principal_attribute`](./reference/#schema--config-metrics-enable-principal-attribute) to `true` to attach the authenticated Principal's ID and display name.
 
 In the following example:
 * [`config.metrics.enable_request_metrics`](./reference/#schema--config-metrics-enable-request-metrics) adds request count metrics. 
@@ -92,6 +101,14 @@ formats:
   - kongctl
 {% endentity_example %}
 
+#### Attributing usage without an AI Consumer
+
+If your users sign in through an identity provider, you most likely don't keep an AI Consumer for each one. That leaves per-user reporting with nothing to attribute usage to, short of mirroring every user into {{site.ai_gateway}} and keeping that list in sync.
+
+Set [`config.metrics.enable_credential_attribute`](./reference/#schema--config-metrics-enable-credential-attribute) to `true` to label metrics with the identity the caller authenticated as, read from the credential itself instead of a Consumer record. When you authenticate with [OpenID Connect](/ai-gateway/openid-connect/) and don't map Consumers, that identity is the token claim configured on the auth strategy, which defaults to the subject claim.
+
+This setting and the AI Consumer attribute both label the token usage and cost metrics, which is what chargeback reports run on. The Principal attribute only labels request count and bandwidth.
+
 These attributes are added to the enabled metrics:
 
 <!--vale off-->
@@ -104,16 +121,29 @@ columns:
   - title: Description
     key: description
 rows:
+  - attribute: "`kong.auth.consumer.name`"
+    config: "[`enable_consumer_attribute`](./reference/#schema--config-metrics-enable-consumer-attribute)"
+    description: Name of the authenticated AI Consumer.
   - attribute: "`kong.auth.principal.id`"
     config: "[`enable_principal_attribute`](./reference/#schema--config-metrics-enable-principal-attribute)"
     description: ID of the authenticated Principal managed by {{site.identity}}.
   - attribute: "`kong.auth.principal.display_name`"
     config: "[`enable_principal_attribute`](./reference/#schema--config-metrics-enable-principal-attribute)"
     description: Display name of the authenticated Principal managed by {{site.identity}}.
+  - attribute: "`kong.auth.credential.id`"
+    config: "[`enable_credential_attribute`](./reference/#schema--config-metrics-enable-credential-attribute)"
+    description: ID of the credential the request authenticated with.
 {% endtable %}
 <!--vale on-->
 
-If the request has no authenticated AI Consumer or Principal, the corresponding attribute isn't added to the exported metrics.
+If a request has no authenticated AI Consumer, Principal, or credential, the corresponding attribute is left empty on the exported metrics.
+
+{:.warning}
+> Each distinct identity creates a new metric series, and the data plane retains those series until it restarts. A large user base can overload your metrics backend.
+>
+> Each worker records up to 200 distinct credential identities by default.
+> After a worker reaches that limit, it still counts requests from new identities but omits their credential attributes.
+> To change the limit, set `opentelemetry_metrics_credential_attr_limit` in the [{{site.ai_gateway}} configuration](/ai-gateway/configuration/#opentelemetry-metrics-credential-attr-limit).
 
 
 ## Tracing

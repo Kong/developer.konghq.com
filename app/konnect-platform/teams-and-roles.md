@@ -36,8 +36,11 @@ faqs:
       {% include faqs/report-dashboard-sharing.md section='question' feature="report" %}
     a: |
       {% include faqs/report-dashboard-sharing.md section='answer' feature="report" %}
+  - q: Where are the Org Admin, Team Manager, and Individual User roles?
+    a: |
+      They're AI Management roles, not {{site.konnect_short_name}} roles you assign to a team. See [AI Management roles and permissions](/ai-management/roles-and-permissions/) for what each role can do and how users get it.
   - q: "Can the Organization Owner role be assigned to an SSO-controlled account?"
-    a: "Yes, an SSO-controlled account is just a {{site.konnect_short_name}} user. As long as the account is an Organization Admin, they can be assigned to the Organization Owner role."
+    a: "Yes, an SSO-controlled account is a {{site.konnect_short_name}} user. As long as the account is an Organization Admin, they can be assigned to the Organization Owner role."
 ---
 
 To help secure and govern your environment, {{site.konnect_short_name}} provides
@@ -256,9 +259,9 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-#### Access management
+#### AI Cost Management
 
-The following table describes the predefined roles for [AI access management](/ai-access-management/concepts/):
+The following table describes the predefined roles for [{{site.ai_cost_management}}](/ai-cost-management/):
 
 <!--vale off-->
 {% table %}
@@ -271,27 +274,19 @@ columns:
     key: permissions
 rows:
   - role: "`Admin`"
-    description: This role grants full access to users, groups, identity providers, Token Vault, and virtual keys.
+    description: Access to all read and write permissions related to {{site.ai_cost_management}}.
     permissions: |
-      * Create, import, edit, deactivate, and delete users
-      * View the org chart
-      * View all groups
-      * Create, edit, and delete groups
-      * Add or remove group members
-      * Add, edit, and delete identity providers
-      * Set up and manage Token Vault and its credential providers
-      * View all virtual keys
-      * Create virtual keys for any holder
-  - role: "`Team manager`"
-    description: This role grants read access to the groups a user belongs to or manages, and access to the virtual keys held by the members of the teams they manage.
+      * Read AI usage, and report AI usage.
+      * Create, read, edit, and delete budgets, notification channels, and export schedules.
+      * Read budget balances.
+      * Create, read, and delete exports.
+      * Read and edit the tag capture configuration.
+      * Install, update, and remove the attribution plugin on {{site.ai_gateway}}s, and read plugin installations.
+      * Read and edit the price catalog.
+  - role: "`Viewer`"
+    description: Access to read-only permissions for {{site.ai_cost_management}}.
     permissions: |
-      * View the groups they belong to or manage
-      * List, create, view, edit, and delete virtual keys held by members of their teams, including members of nested teams
-  - role: "`Individual user`"
-    description: This role grants read access to the groups a user belongs to, and access to the virtual keys they hold.
-    permissions: |
-      * View the groups they belong to
-      * List, create, view, edit, and delete their own virtual keys
+      * Read AI usage, budgets and their balances, notification channels, exports and their schedules, the tag capture configuration, attribution plugin installations, and the price catalog.
 {% endtable %}
 <!--vale on-->
 

@@ -1,6 +1,6 @@
 ---
 title: "AI Tool Integration: LibreChat"
-description: Point LibreChat OPENAI_REVERSE_PROXY at {{site.ai_gateway_name}} Chat Completions.
+description: Connect LibreChat to {{site.ai_gateway_name}} through a custom endpoint, so the chat server holds a revocable AI Consumer key and the OpenAI key stays in Kong.
 url: "/cookbooks/coding-agents-librechat/"
 content_type: cookbook
 layout: cookbook
@@ -8,27 +8,16 @@ products:
   - ai-gateway
 tools:
   - kongctl
-canonical: true
 works_on:
   - konnect
 min_version:
-  gateway: '3.14'
-  ai-gateway: '2.2'
+  ai-gateway: '2.0'
 categories:
   - agents
   - llm
   - access-control
 featured: false
 popular: false
-
-plugins:
-  - key-auth
-  - pre-function
-requires_embeddings: false
-providers:
-  - openai
-
-hint: "Requires Kong AI Gateway 2.2+, an OpenAI API key, Docker, and Docker Compose."
 prereqs:
   skip_product: true
   skip_tool: true
@@ -38,7 +27,7 @@ prereqs:
         This tutorial uses {{site.konnect_product_name}}. The {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) provisions a recipe-scoped {{site.ai_gateway}} and local data plane.
 
         1. Create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
-        1. Export your token. The same token is reused later for kongctl commands:
+        1. Export your token. You reuse the same token later for kongctl commands:
 
            ```bash
            export KONNECT_TOKEN='YOUR_KONNECT_PAT'
@@ -51,7 +40,7 @@ prereqs:
            curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN
            ```
 
-           This provisions an {{site.ai_gateway}} named `coding-agents-librechat-recipe`, a local data plane connected to it, and prints `export` lines (including `AI_GATEWAY_ID`). Paste those into your shell when prompted.
+           This provisions an {{site.ai_gateway}} named `coding-agents-librechat-recipe`, a local data plane connected to it, and prints `export` lines for the rest of the session vars, including `AI_GATEWAY_ID`. Paste those into your shell when prompted.
     - title: kongctl
       content: |
         This tutorial uses [kongctl](/kongctl/) to manage {{site.ai_gateway}} configuration.
@@ -64,245 +53,64 @@ prereqs:
            ```
     - title: AI Credentials
       content: |
-        Export an OpenAI API key for the AI Model Provider:
+        The AI Model Provider uses your organization's OpenAI API key.
 
-        ```bash
-        export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
-        ```
-    - title: AI Consumer API Key
-      content: |
-        Generate the API key that the demo AI Consumer sends to Kong. Client tools use this key instead of the provider key:
+        1. [Create an OpenAI account](https://auth.openai.com/create-account).
+        1. [Get an API key](https://platform.openai.com/api-keys).
+        1. Export the API key:
 
-        ```bash
-        export CONSUMER_API_KEY="coding-agents-demo-$(openssl rand -hex 8)"
-        echo "$CONSUMER_API_KEY"
-        ```
+           ```sh
+           export OPENAI_TOKEN='Bearer sk-YOUR-KEY'
+           ```
     - title: Docker
       content: |
-        Install Docker and Docker Compose. Export `CONSUMER_API_KEY` in the shell that starts Compose.
+        This tutorial runs LibreChat and its MongoDB database with Docker Compose.
+
+        1. Install [Docker](https://docs.docker.com/get-started/get-docker/) with the [Docker Compose](https://docs.docker.com/compose/install/) plugin.
+        1. Verify that both are installed:
+
+           ```bash
+           docker --version
+           docker compose version
+           ```
 overview: |
-  Use LibreChat when a browser chat UI should talk to the same OpenAI-compatible AI Model as the CLIs.
+  Put {{site.ai_gateway_name}} between LibreChat and OpenAI, so that the chat server holds an AI Consumer key that you can revoke and the organization's OpenAI key never leaves Kong. You'll set up:
+
+  * A `/coding-agents` endpoint that accepts OpenAI-format chat requests with an `Authorization: Bearer` key
+  * A LibreChat custom endpoint that sends its requests to Kong
+  * One model that both LibreChat and the AI Model allow
 ---
 
-## The problem
+## What this cookbook solves
 
-[LibreChat](https://www.librechat.ai/docs) is a self-hosted chat UI that many teams run as a shared internal assistant. Its OpenAI endpoint reads the provider key and model list from the server's environment. That works for a single deployment with one key, but an organization that runs LibreChat next to CLIs and coding agents on the same OpenAI account runs into several problems:
-
-* **The provider key lives in the chat server's environment.** The simplest setup puts the organization's OpenAI key in [`OPENAI_API_KEY`](https://www.librechat.ai/docs/configuration/dotenv#openai) in LibreChat's `.env` file or container environment. Anyone with access to that host, container, or deployment manifest can read a credential that bills the organization's account, and every other internal tool that calls OpenAI holds its own copy of the same key.
-* **Usage from the chat UI is mixed with everything else.** OpenAI bills LibreChat traffic and CLI or agent traffic to the same account. Without a shared point of attribution, you can't tell how much of the bill came from the chat UI and how much came from other tools.
-* **Model choice and policy are set per deployment.** [`OPENAI_MODELS`](https://www.librechat.ai/docs/configuration/dotenv#openai) controls which models LibreChat offers, and each deployment sets it independently. Rate limits, logging, and model restrictions have to be configured separately for each tool, or not at all.
-* **A gateway has to accept LibreChat's OpenAI client as-is.** LibreChat's OpenAI endpoint sends Chat Completions requests to the base URL in `OPENAI_REVERSE_PROXY` and sends `OPENAI_API_KEY` as an `Authorization: Bearer` header. A gateway that expects its client key in a different header rejects these requests unless LibreChat can change how it sends the key.
-
-The root issue is that the provider credential and the policy sit on each client deployment. Teams need one server-side point that holds the organization's OpenAI key, authenticates LibreChat with a credential it can revoke, and accepts LibreChat's OpenAI Chat Completions traffic without changes to LibreChat.
-
-## The solution
-
-This recipe puts {{site.ai_gateway}} between LibreChat and the OpenAI API:
-
-* **Server-side provider credential.** The organization's OpenAI API key lives on {{site.ai_gateway}}. LibreChat holds only an AI Consumer key, and rotating the OpenAI key is one configuration change.
-* **Revocable client credentials.** LibreChat sends an AI Consumer API key from Kong instead of an OpenAI key. Kong attributes every request to the matching AI Consumer, and revoking LibreChat's access means deleting one AI Consumer credential.
-* **Bearer token compatibility.** A global Pre-Function Policy copies the `Authorization: Bearer` token into the header that Key Auth reads, so LibreChat authenticates without any change to how it sends the key.
-* **One allowed model.** The AI Model accepts only requests that name the model in `CHAT_MODEL`, and the same value configures LibreChat's model list.
-* **One place for future policy.** After traffic flows through Kong, you can add logging, rate limiting, and other AI Policies without changing the LibreChat deployment.
-
-<!-- vale off -->
-{% mermaid %}
-sequenceDiagram
-    participant LC as LibreChat
-    participant K as AI Gateway
-    participant O as OpenAI API
-
-    LC->>K: POST /coding-agents/chat/completions (Authorization: Bearer AI Consumer key)
-    activate K
-    K->>K: Pre-Function Policy copies Bearer token into apikey header
-    K->>K: Key Auth AI Auth Strategy validates apikey (else 401)
-    K->>K: AI Model matches model field, AI Model Provider swaps in org OpenAI key
-    K->>O: POST /v1/chat/completions (Authorization: org key)
-    activate O
-    O-->>K: Chat Completions response (streamed)
-    deactivate O
-    K-->>LC: Chat Completions response
-    deactivate K
-{% endmermaid %}
-<!-- vale on -->
+[LibreChat](https://www.librechat.ai/docs) is a self-hosted chat UI, and most teams give it the organization's OpenAI key in the chat server's environment, which causes the following problems:
 
 {% table %}
 columns:
-  - title: Component
-    key: component
-  - title: Responsibility
-    key: responsibility
+  - title: Problem
+    key: problem
+  - title: Solution
+    key: solution
 rows:
-  - component: "LibreChat"
-    responsibility: "Sends OpenAI Chat Completions requests to `OPENAI_REVERSE_PROXY` with the AI Consumer key as `Authorization: Bearer`."
-  - component: "Pre-Function Policy"
-    responsibility: "Copies the Bearer token from `Authorization` into the `apikey` header before authentication."
-  - component: "Key Auth AI Auth Strategy"
-    responsibility: "Validates the AI Consumer key in `apikey`, attaches the request to the AI Consumer, and removes the key before the request goes upstream."
-  - component: "AI Consumer"
-    responsibility: "Represents the LibreChat deployment. Its API key credential is the only secret LibreChat holds."
-  - component: "AI Model"
-    responsibility: "Exposes `/coding-agents`, accepts OpenAI-format requests whose `model` field equals `CHAT_MODEL`, and routes them to the OpenAI target."
-  - component: "AI Model Provider"
-    responsibility: "Holds the organization's OpenAI API key and injects it into every upstream request."
-  - component: "OpenAI API"
-    responsibility: "Serves the model inference and bills the organization's account."
+  - problem: "Anyone with access to the chat server's host, container, or deployment manifest can read a key that bills the organization's account, and each other internal tool holds its own copy of the same key."
+    solution: "The AI Model Provider keeps the OpenAI key in Kong. LibreChat holds only an AI Consumer key, and deleting that credential removes LibreChat's access."
+  - problem: "OpenAI bills chat UI traffic and traffic from other tools to the same account, with no way to tell them apart."
+    solution: "The Key Auth AI Auth Strategy maps each key to an AI Consumer, so {{site.konnect_short_name}} analytics show usage for LibreChat separately from other tools."
+  - problem: "Each deployment chooses its own models, and rate limits and logging have to be configured for each tool."
+    solution: "The AI Model accepts only the model in `CHAT_MODEL`, and AI Policies on the {{site.ai_gateway}} apply to every tool that uses it."
+  - problem: "LibreChat's OpenAI-compatible client sends its key as `Authorization: Bearer`, while the gateway reads its client keys from another header."
+    solution: "A global Pre-Function Policy copies the Bearer token into the `apikey` header that the Key Auth AI Auth Strategy reads."
 {% endtable %}
 
-## How it works
+## Try it out
 
-When you send a message in LibreChat, the request goes through these steps:
+Apply the configuration, send requests with and without the AI Consumer key, then connect LibreChat to Kong and chat through it.
 
-1. **LibreChat sends the request to Kong.** With `OPENAI_REVERSE_PROXY` set to `http://host.docker.internal:8000/coding-agents`, LibreChat's OpenAI endpoint posts Chat Completions requests to `/coding-agents/chat/completions`. Because `OPENAI_API_KEY` holds the AI Consumer key, LibreChat sends that key as `Authorization: Bearer <key>`. The body's `model` field is the model you selected, which comes from `OPENAI_MODELS`.
-1. **Kong copies the Bearer token.** The global Pre-Function Policy runs Lua in the rewrite phase. It reads `Authorization`, and if the value starts with `Bearer `, it writes the token into the `apikey` header.
-1. **Kong authenticates the request.** The AI Model lists the Key Auth AI Auth Strategy in `access.auth_strategies`. The AI Auth Strategy reads `apikey`, matches it against the AI Consumer credentials, and attaches the request to `coding-agents-consumer`. A missing or unknown key returns `401`. With `hide_credentials` enabled, the AI Auth Strategy removes `apikey` before the request goes upstream.
-1. **The AI Model matches the requested model.** The AI Model's route accepts requests on `/coding-agents` whose `model` body field equals `CHAT_MODEL`. Kong strips the `/coding-agents` prefix and forwards the request through the target named `CHAT_MODEL`.
-1. **The AI Model Provider injects the organization's key.** The target references the AI Model Provider, which sets `Authorization` to the organization's OpenAI API key. The client's Bearer token never reaches OpenAI.
-1. **The response returns to LibreChat.** OpenAI's Chat Completions response flows back through Kong to LibreChat, streamed when LibreChat requests streaming. Kong logs the request against the AI Consumer.
+### Apply the Kong configuration
 
-### Pre-Function: Bearer token to apikey
+The configuration creates an AI Model Provider with your OpenAI key, a Key Auth AI Auth Strategy, an AI Consumer with an API key, a global [Pre-Function](/ai-gateway/policies/pre-function/) Policy that copies the Bearer token into the `apikey` header, and an AI Model at `/coding-agents`. A kongctl namespace scopes every resource, so you can remove this configuration without affecting anything else on the same {{site.ai_gateway}}. See the [kongctl documentation](/kongctl/) for more on namespaces.
 
-LibreChat sends its key the way every OpenAI client does, as `Authorization: Bearer <key>`. The Key Auth AI Auth Strategy reads the key from a header listed in `key_names` and doesn't strip a `Bearer ` prefix, so it can't use the `Authorization` value directly. The [Pre-Function](/ai-gateway/policies/pre-function/) Policy bridges that gap: it copies the token into `apikey` before authentication runs. This lets LibreChat authenticate with an AI Consumer key without any LibreChat-side change.
-
-#### Configuration details
-
-```yaml
-ai_gateway_policies:
-- ref: coding-agents-bearer-to-apikey
-  name: coding-agents-bearer-to-apikey
-  type: pre-function
-  global: true
-  config:
-    rewrite:
-    - |
-      local auth = kong.request.get_header("Authorization")
-      if auth and string.sub(string.lower(auth), 1, 7) == "bearer " then
-        ngx.req.set_header("apikey", string.sub(auth, 8))
-      end
-```
-{:.no-copy-code}
-
-**`config.rewrite`**: An array of Lua source strings that Kong runs in the rewrite phase, before the Key Auth AI Auth Strategy authenticates the request. Each function has access to the [Kong PDK](/gateway/pdk/reference/) and the `ngx` namespace.
-
-**`ngx.req.set_header("apikey", ...)`**: Sets the header on the incoming request, so the Key Auth AI Auth Strategy sees it. The scheme comparison is case-insensitive, and the Lua code leaves requests without a Bearer token unchanged, so they fail authentication with `401`.
-
-**`global: true`**: Applies the Policy globally to all resources in the {{site.ai_gateway}}. Any AI Model you add later that uses the same AI Auth Strategy also accepts Bearer tokens without its own Pre-Function Policy.
-
-### Key Auth: AI Consumer authentication
-
-The Key Auth AI Auth Strategy is what lets LibreChat hold a Kong credential instead of an OpenAI key. It reads the AI Consumer key from the `apikey` header that the Pre-Function Policy sets, attributes each request to the AI Consumer that owns the key, and rejects anything else with `401`. Deleting the credential revokes LibreChat's access without touching the organization's OpenAI key. Authentication in {{site.ai_gateway_name}} is an AI Auth Strategy that the AI Model references, not an AI Policy.
-
-#### Configuration details
-
-```yaml
-ai_gateway_auth_strategies:
-- ref: coding-agents-key-auth
-  name: coding-agents-key-auth
-  type: key-auth
-  config:
-    key_names:
-    - apikey
-    hide_credentials: true
-ai_gateway_consumers:
-- ref: coding-agents-consumer
-  name: coding-agents-consumer
-  type: api-key
-  credentials:
-  - ref: coding-agents-credential
-    name: coding-agents-credential
-    type: api-key
-    api_key: !secret {source: !env 'CONSUMER_API_KEY'}
-```
-{:.no-copy-code}
-
-**`key_names: [apikey]`**: The header Kong reads the AI Consumer key from. The Pre-Function Policy writes LibreChat's Bearer token into this header, so one name is enough.
-
-**`hide_credentials: true`**: Removes `apikey` from the request before Kong forwards it. The AI Model Provider then sets `Authorization` with the organization's key, so OpenAI only sees the provider credential.
-
-**`credentials[].api_key`**: The AI Consumer's key. The field is write-only, so it takes a `!secret` reference rather than a plain string.
-
-**Scaling AI Consumers**: LibreChat sends one server-side `OPENAI_API_KEY` for all of its users, so every LibreChat user maps to the same AI Consumer. Give each LibreChat deployment, or each other tool, its own AI Consumer to separate their usage.
-
-### AI Model and AI Model Provider: OpenAI routing with credential injection
-
-The AI Model gives LibreChat an OpenAI-compatible base URL, and the AI Model Provider supplies the credential OpenAI expects. The AI Model uses the `openai` format with a model selector, so it accepts only requests whose `model` field equals `CHAT_MODEL`. That addresses the per-deployment model problem: LibreChat's `OPENAI_MODELS` and the AI Model read the same value, and a request for any other model doesn't reach OpenAI. The AI Model Provider keeps the OpenAI key on the gateway, where LibreChat can't read it.
-
-#### Configuration details
-
-```yaml
-ai_gateway_model_providers:
-- ref: coding-agents-openai-provider
-  name: coding-agents-openai-provider
-  type: openai
-  config:
-    auth:
-      type: basic
-      headers:
-      - name: Authorization
-        value: !secret {source: !env 'OPENAI_TOKEN'}
-ai_gateway_models:
-- ref: coding-agents-openai
-  name: coding-agents-openai
-  type: model
-  formats:
-  - type: openai
-  capabilities:
-  - generate
-  access:
-    auth_strategies:
-    - coding-agents-key-auth
-  config:
-    max_request_body_size: 16777216
-    response_streaming: allow
-    logging:
-      payloads: true
-    route:
-      paths:
-      - /coding-agents
-      protocols:
-      - http
-      - https
-      methods:
-      - POST
-      - GET
-      - OPTIONS
-      strip_path: true
-      model:
-        body_param: model
-        values:
-        - !env 'CHAT_MODEL'
-  targets:
-  - name: !env 'CHAT_MODEL'
-    provider: coding-agents-openai-provider
-    config:
-      type: openai
-```
-{:.no-copy-code}
-
-**`config.auth.headers`** (AI Model Provider): The header Kong adds to every upstream request. OpenAI authenticates through `Authorization`, so `OPENAI_TOKEN` holds the full header value, including the `Bearer ` prefix.
-
-**`formats: [{type: openai}]`**: LibreChat's OpenAI endpoint speaks the OpenAI Chat Completions API, so the AI Model accepts OpenAI-format requests.
-
-**`route.paths` and `strip_path: true`**: LibreChat appends `/chat/completions` to `OPENAI_REVERSE_PROXY`. Kong matches the `/coding-agents` prefix, strips it, and forwards the rest of the request to OpenAI.
-
-**`route.methods`**: LibreChat sends `POST` for Chat Completions. The route also accepts `GET`, and `OPTIONS` for preflight requests from browser-based clients.
-
-**`route.model`**: Reads the `model` field from the request body (`body_param: model`) and matches it against `values`. The field accepts one value per AI Model, so LibreChat must send exactly the value of `CHAT_MODEL`. To offer a second model, add a second AI Model with its own selector value and list both models in `OPENAI_MODELS`.
-
-**`targets[].name`**: The model name Kong sends upstream. It equals the selector value in this recipe, so OpenAI receives the same model name LibreChat requested. Set them independently if you want LibreChat to show a different name from the upstream model.
-
-**`max_request_body_size: 16777216`**: Raises the request body limit to 16 MB from the 8 MB default. Each LibreChat request carries the conversation history, and long conversations with pasted content can exceed the default.
-
-**`response_streaming: allow`**: Lets OpenAI stream Server-Sent Events back to LibreChat, which renders tokens as they arrive.
-
-**`logging.payloads: true`**: Captures full request and response bodies. Chat conversations can include sensitive data, so payload logging can expose it in your logging destination. Set it to `false` if you only need usage metrics.
-
-{:.info}
-> In production, store credentials in [AI Vaults](/ai-gateway/entities/ai-vault/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. AI Vaults support HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the {{site.konnect_short_name}} Config Store.
-
-## Apply the Kong configuration
-
-Adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so the following apply command can manage it. The `coding-agents-librechat-recipe` namespace scopes every resource, so teardown removes only this recipe's configuration.
+Adopt the quickstart {{site.ai_gateway}} into a kongctl namespace so that kongctl can manage it. Adoption adds the `KONGCTL-namespace` label to the {{site.ai_gateway}}:
 
 ```bash
 kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
@@ -310,13 +118,14 @@ kongctl adopt ai-gateway "${KONNECT_CONTROL_PLANE_NAME}" \
   --pat "${KONNECT_TOKEN}"
 ```
 
-Export the model that LibreChat offers and the AI Model accepts:
+Export the AI Consumer's API key and the model. LibreChat sends this key instead of an OpenAI key. The credential's `api_key` field is write-only, so its value must come from an environment variable. `CHAT_MODEL` is the only model name that the AI Model accepts, and the upstream model that Kong sends to OpenAI:
 
 ```bash
+export CONSUMER_API_KEY="coding-agents-demo-$(openssl rand -hex 8)"
 export CHAT_MODEL='gpt-4o-mini'
 ```
 
-The following configuration creates the AI Model Provider with the organization's OpenAI key, the Key Auth AI Auth Strategy, the demo AI Consumer, the global Pre-Function Policy, and the OpenAI-format AI Model. `AI_GATEWAY_ID`, `OPENAI_TOKEN`, and `CONSUMER_API_KEY` are already exported from the prerequisites.
+Apply the Kong configuration. The OpenAI key comes from the prerequisites:
 
 ```bash
 cat <<'EOF' > kong-recipe.yaml
@@ -366,9 +175,11 @@ ai_gateway_policies:
   global: true
   config:
     rewrite:
-    - "local auth = kong.request.get_header(\"Authorization\")\nif auth and string.sub(string.lower(auth),\
-      \ 1, 7) == \"bearer \" then\n  ngx.req.set_header(\"apikey\", string.sub(auth,\
-      \ 8))\nend\n"
+    - |
+      local auth = kong.request.get_header("Authorization")
+      if auth and string.sub(string.lower(auth), 1, 7) == "bearer " then
+        ngx.req.set_header("apikey", string.sub(auth, 8))
+      end
 ai_gateway_models:
 - ref: coding-agents-openai
   ai_gateway: !lookup {id: !env 'AI_GATEWAY_ID'}
@@ -415,27 +226,20 @@ rm -f kong-recipe.yaml
 ```
 {: data-test-step="block" .collapsible }
 
-## Try it out
-
-Send a request directly to the AI Model to confirm the gateway path, send one without a key to see Key Auth reject it, and then start LibreChat in Docker and chat through Kong.
-
 ### Send a request through the AI Model
 
-Call the Chat Completions API through Kong with the AI Consumer key as a Bearer token, the same way LibreChat sends it:
+Call Chat Completions through Kong with the AI Consumer key as a Bearer token, the way LibreChat sends it:
 
 ```bash
 curl -sS -X POST "http://localhost:8000/coding-agents/chat/completions" \
-  -H "Content-Type: application/json" \
   -H "Authorization: Bearer ${CONSUMER_API_KEY}" \
-  -d "{
-    \"model\": \"${CHAT_MODEL}\",
-    \"messages\": [{\"role\": \"user\", \"content\": \"Reply with exactly: smoke-ok\"}]
-  }"
+  -H "Content-Type: application/json" \
+  -d "{\"model\": \"${CHAT_MODEL}\", \"messages\": [{\"role\": \"user\", \"content\": \"Reply with exactly: smoke-ok\"}]}"
 ```
 
-Kong returns OpenAI's Chat Completions response. The response looks similar to this, with different IDs and token counts:
+Kong returns OpenAI's Chat Completions response. Your IDs and token counts differ:
 
-```json
+```text
 {
   "id": "chatcmpl-...",
   "object": "chat.completion",
@@ -459,8 +263,6 @@ Kong returns OpenAI's Chat Completions response. The response looks similar to t
 ```
 {:.no-copy-code}
 
-### Send a request without the AI Consumer key
-
 Repeat the request without the `Authorization` header:
 
 ```bash
@@ -476,47 +278,50 @@ Kong rejects the request before it reaches OpenAI:
 ```
 {:.no-copy-code}
 
-### Configure and start LibreChat
+### Connect LibreChat to Kong
 
-LibreChat runs in Docker with a MongoDB container. Its container reaches the data plane on your machine through `host.docker.internal`, which the [`extra_hosts`](https://docs.docker.com/reference/compose-file/services/#extra_hosts) entry maps to the host.
+LibreChat connects to OpenAI-compatible APIs through a [custom endpoint](https://www.librechat.ai/docs/quick_start/custom_endpoints) in `librechat.yaml`. LibreChat recommends a custom endpoint over the `OPENAI_REVERSE_PROXY` variable, which its [environment reference](https://www.librechat.ai/docs/configuration/dotenv) marks as deprecated.
 
-Generate the secrets LibreChat requires. [LibreChat's environment reference](https://www.librechat.ai/docs/configuration/dotenv) requires a 32-byte `CREDS_KEY` (64 hexadecimal characters), a 16-byte `CREDS_IV` (32 hexadecimal characters), and unique JWT secrets of at least 32 bytes:
+Create the LibreChat configuration. The `models.default` value must equal `CHAT_MODEL`. If you exported another model, change it:
 
 ```bash
-export LIBRECHAT_JWT_SECRET="$(openssl rand -hex 32)"
-export LIBRECHAT_JWT_REFRESH_SECRET="$(openssl rand -hex 32)"
-export LIBRECHAT_CREDS_KEY="$(openssl rand -hex 32)"
-export LIBRECHAT_CREDS_IV="$(openssl rand -hex 16)"
+cat <<'EOF' > librechat.yaml
+version: 1.3.19
+endpoints:
+  custom:
+    - name: 'Kong'
+      apiKey: '${CONSUMER_API_KEY}'
+      baseURL: 'http://host.docker.internal:8000/coding-agents'
+      models:
+        default: ['gpt-4o-mini']
+        fetch: false
+EOF
 ```
 
-Write the Compose file. Compose fills in `CONSUMER_API_KEY`, `CHAT_MODEL`, and the secrets from your shell:
+Create the Compose file. It runs LibreChat and MongoDB, mounts `librechat.yaml` into the LibreChat container, and passes `CONSUMER_API_KEY` from your shell to LibreChat:
 
 ```bash
 cat <<'EOF' > librechat-compose.yaml
 services:
   librechat:
-    image: ghcr.io/danny-avila/librechat:latest
+    image: registry.librechat.ai/librechat-ai/librechat-dev:latest
     ports:
       - "3080:3080"
     environment:
       HOST: "0.0.0.0"
       PORT: "3080"
+      MONGO_URI: "mongodb://mongo:27017/LibreChat"
       ALLOW_EMAIL_LOGIN: "true"
       ALLOW_REGISTRATION: "true"
-      JWT_SECRET: "${LIBRECHAT_JWT_SECRET}"
-      JWT_REFRESH_SECRET: "${LIBRECHAT_JWT_REFRESH_SECRET}"
-      CREDS_KEY: "${LIBRECHAT_CREDS_KEY}"
-      CREDS_IV: "${LIBRECHAT_CREDS_IV}"
-      MONGO_URI: "mongodb://mongo:27017/LibreChat"
-      OPENAI_API_KEY: "${CONSUMER_API_KEY}"
-      OPENAI_REVERSE_PROXY: "http://host.docker.internal:8000/coding-agents"
-      OPENAI_MODELS: "${CHAT_MODEL}"
+      CONSUMER_API_KEY: "${CONSUMER_API_KEY}"
+    volumes:
+      - ./librechat.yaml:/app/librechat.yaml
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
       - mongo
   mongo:
-    image: mongo:7
+    image: mongo:8.0.20
     volumes:
       - librechat-mongo:/data/db
 volumes:
@@ -524,54 +329,218 @@ volumes:
 EOF
 ```
 
-The LibreChat settings that connect it to Kong:
-
-* **`OPENAI_API_KEY`**: The AI Consumer key. LibreChat sends it as `Authorization: Bearer`, and the Pre-Function Policy copies it into `apikey`.
-* **`OPENAI_REVERSE_PROXY`**: The AI Model's base URL. LibreChat appends `/chat/completions`.
-* **`OPENAI_MODELS`**: The comma-separated list of models LibreChat offers, where the first is the default. It's set to `CHAT_MODEL` so LibreChat only offers the model the AI Model accepts.
-
-Start LibreChat:
+Start LibreChat in the shell where you exported `CONSUMER_API_KEY`:
 
 ```bash
 docker compose -f librechat-compose.yaml up -d
 ```
 
+LibreChat generates its encryption and session secrets (`CREDS_KEY`, `CREDS_IV`, `JWT_SECRET`, and `JWT_REFRESH_SECRET`) when they're blank ([LibreChat environment reference](https://www.librechat.ai/docs/configuration/dotenv)). In production, set fixed values.
+
 ### Send a prompt from LibreChat
 
-Open `http://localhost:3080`, register an account, and sign in. Select the OpenAI endpoint and the `CHAT_MODEL` model, then send a short prompt. LibreChat shows the model's reply, and the data plane logs show `POST /coding-agents/chat/completions` from the `langchainjs-openai` user agent.
+Open `http://localhost:3080`, register an account, and sign in. Select the **Kong** endpoint and the `gpt-4o-mini` model, then send:
 
-### What happened
+```text
+Reply with exactly: librechat-ok
+```
+{:.no-copy-code}
 
-1. **The direct request** carried the AI Consumer key as `Authorization: Bearer`. The Pre-Function Policy copied it into `apikey`, the Key Auth AI Auth Strategy matched it to `coding-agents-consumer` and removed it, and the AI Model Provider replaced `Authorization` with the organization's OpenAI key. OpenAI answered with `smoke-ok`.
-1. **The request without a key** had no Bearer token for the Pre-Function Policy to copy, so it failed at the Key Auth AI Auth Strategy with `401`. Kong never contacted OpenAI, so the organization's key was never used.
-1. **The LibreChat prompt** followed the same path as the direct request. LibreChat appended `/chat/completions` to `OPENAI_REVERSE_PROXY`, sent the AI Consumer key as a Bearer token, and named `CHAT_MODEL` in the `model` field, which matched the AI Model's selector. LibreChat never had access to the organization's OpenAI key.
+LibreChat shows the reply `librechat-ok`.
 
-### Explore in {{site.konnect_short_name}}
+### Check the results
 
-Open [{{site.konnect_short_name}}](https://cloud.konghq.com/) and find the {{site.ai_gateway}} named `coding-agents-librechat-recipe`. The recipe created an AI Model Provider (`coding-agents-openai-provider`) holding the organization's OpenAI key, an AI Model (`coding-agents-openai`) at `/coding-agents`, a Key Auth AI Auth Strategy (`coding-agents-key-auth`), an AI Consumer (`coding-agents-consumer`) with an API key credential, and a global Pre-Function Policy (`coding-agents-bearer-to-apikey`), all scoped to this recipe by the kongctl namespace.
+The requests confirm the following:
 
-For request, token, and per-AI Consumer analysis across every {{site.ai_gateway}}, open the **Observability** L1 menu in {{site.konnect_short_name}}.
+{% table %}
+columns:
+  - title: Behavior
+    key: behavior
+  - title: Evidence
+    key: evidence
+rows:
+  - behavior: "AI Consumer authentication with a Bearer token"
+    evidence: "The request with `Authorization: Bearer` and the AI Consumer key succeeds. The Pre-Function Policy copied the key into `apikey`, where the Key Auth AI Auth Strategy reads it."
+  - behavior: "Authentication before any upstream call"
+    evidence: "The request without a key gets `401`. Kong never contacted OpenAI."
+  - behavior: "LibreChat chats through Kong"
+    evidence: "LibreChat answers through the **Kong** endpoint. The container has no OpenAI key, only `CONSUMER_API_KEY`."
+  - behavior: "The OpenAI key stays in Kong"
+    evidence: "The AI Model Provider added the OpenAI key to each upstream request."
+{% endtable %}
+
+To review the created entities, and per-consumer usage, open the `coding-agents-librechat-recipe` {{site.ai_gateway}} in [{{site.konnect_short_name}}](https://cloud.konghq.com/). For traffic across all your {{site.ai_gateway}}s, use the **Observability** menu.
+
+## How it works
+
+The LibreChat server sends each chat request to the custom endpoint's base URL on the data plane. Kong copies the Bearer token into `apikey`, authenticates the AI Consumer, checks the model name, and sends the request to OpenAI with the organization's key.
+
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+    participant U as Browser
+    participant LC as LibreChat server
+    participant K as Kong AI Gateway
+    participant O as OpenAI
+
+    U->>LC: Chat message
+    LC->>K: POST /coding-agents/chat/completions (Authorization: Bearer key)
+    activate K
+    K->>K: Global Pre-Function Policy copies the Bearer token to apikey
+    K->>K: Key Auth AI Auth Strategy validates apikey (else 401)
+    K->>K: AI Model matches the model name to CHAT_MODEL
+    K->>O: Request with the organization's OpenAI key
+    activate O
+    O-->>K: Chat Completions response
+    deactivate O
+    K-->>LC: Response
+    deactivate K
+    LC-->>U: Reply in the chat
+{% endmermaid %}
+<!-- vale on -->
+
+### LibreChat custom endpoint
+
+LibreChat sends chat requests from its server container, not from the browser. The custom endpoint points it at Kong and gives it the AI Consumer key.
+
+The following settings connect LibreChat to Kong:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`apiKey: '${CONSUMER_API_KEY}'`"
+    purpose: "LibreChat reads the AI Consumer key from the container's environment and sends it as an `Authorization: Bearer` header."
+  - setting: "`baseURL`"
+    purpose: "The AI Model's base URL. LibreChat appends `/chat/completions` to it."
+  - setting: "`models.default`"
+    purpose: "The models that LibreChat offers for the endpoint. It lists only `CHAT_MODEL`, the one model that the AI Model accepts."
+  - setting: "`models.fetch: false`"
+    purpose: "LibreChat uses the `default` list and doesn't request a model list from the API."
+  - setting: "`extra_hosts` (Compose)"
+    purpose: "Maps `host.docker.internal` to your machine, so the LibreChat container reaches the data plane on port `8000`."
+{% endtable %}
+
+### Pre-Function Policy
+
+The Key Auth AI Auth Strategy compares the whole value of the header that it reads, so it can't match a key that has a `Bearer ` prefix. The Pre-Function Policy runs Lua code that copies the token into the `apikey` header. A global Pre-Function Policy runs before authentication, while one attached to an AI Model runs after it.
+
+The following settings configure the Pre-Function Policy:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`global: true`"
+    purpose: "Applies the policy to every request on the {{site.ai_gateway}}, before the Key Auth AI Auth Strategy runs. Each AI Model that you add to this {{site.ai_gateway}} also accepts Bearer tokens."
+  - setting: "`config.rewrite`"
+    purpose: "Runs the Lua code in the rewrite phase. The code reads `Authorization`, checks for a `Bearer ` prefix in any letter case, and sets `apikey` to the rest of the value. Requests without a Bearer token stay unchanged and fail authentication with `401`."
+{% endtable %}
+
+### Key Auth AI Auth Strategy and AI Consumer
+
+Authentication is an AI Auth Strategy, not an AI Policy. The Key Auth AI Auth Strategy reads the `apikey` header and matches the key against the AI Consumer credentials. On a match, Kong attaches the AI Consumer to the request. The AI Consumer is the identity that rate limits, ACLs, and analytics use. LibreChat sends one key for all of its users, so each LibreChat user maps to the same AI Consumer.
+
+The following settings configure the Key Auth AI Auth Strategy and the AI Consumer:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`key_names: [apikey]`"
+    purpose: "Kong reads the key from the `apikey` header, which the Pre-Function Policy sets."
+  - setting: "`hide_credentials: true`"
+    purpose: "Kong removes the key before it forwards the request. The AI Model Provider also replaces `Authorization`, so OpenAI never sees the AI Consumer key."
+  - setting: "`credentials[].api_key`"
+    purpose: "The AI Consumer's key. The field is write-only, so it takes a `!secret` reference to `CONSUMER_API_KEY`."
+{% endtable %}
+
+Kong adds `X-Consumer-Username` and related headers to the upstream request, not to the response. Per-consumer usage appears in {{site.konnect_short_name}} analytics.
+
+### AI Model Provider and AI Model
+
+The AI Model Provider holds the organization's OpenAI key. The AI Model gives LibreChat an OpenAI-compatible base URL at `/coding-agents`, requires the Key Auth AI Auth Strategy, and has one target that uses the AI Model Provider.
+
+The following settings configure the AI Model Provider and the AI Model:
+
+{% table %}
+columns:
+  - title: Setting
+    key: setting
+  - title: Purpose
+    key: purpose
+rows:
+  - setting: "`config.auth` (AI Model Provider)"
+    purpose: "The `Authorization` header with the organization's OpenAI key, from `OPENAI_TOKEN`. Kong adds it to each upstream request, so `OPENAI_TOKEN` includes the `Bearer ` prefix."
+  - setting: "`formats: [{type: openai}]`"
+    purpose: "The AI Model accepts OpenAI-format requests, which LibreChat's custom endpoint sends."
+  - setting: "`capabilities: [generate]`"
+    purpose: "The AI Model serves chat completions."
+  - setting: "`access.auth_strategies`"
+    purpose: "Each request must have a valid AI Consumer key."
+  - setting: "`config.route.model`"
+    purpose: "Kong reads the `model` field of the request body (`body_param: model`) and selects this AI Model only if the value equals `CHAT_MODEL`. An AI Model accepts one value, so a second model needs a second AI Model."
+  - setting: "`targets[].name`"
+    purpose: "The upstream model that Kong sends to OpenAI, also `CHAT_MODEL`. Set it to another value to show a different name in LibreChat than the upstream model."
+  - setting: "`config.route.paths` and `strip_path: true`"
+    purpose: "Kong matches requests under `/coding-agents` and removes the prefix before it forwards the request."
+  - setting: "`config.route.methods`"
+    purpose: "The AI Model accepts `POST`, `GET`, and `OPTIONS`. Chat Completions requests use `POST`."
+  - setting: "`config.route.protocols: [http, https]`"
+    purpose: "Accepts HTTP, so LibreChat and `curl` can call the local data plane on port `8000`."
+  - setting: "`config.max_request_body_size: 16777216`"
+    purpose: "Accepts request bodies up to 16 MB, instead of the 8 MB default. Each request carries the conversation history."
+  - setting: "`config.response_streaming: allow`"
+    purpose: "Clients can request streamed responses."
+  - setting: "`config.logging.payloads: true`"
+    purpose: "Kong logs request and response payloads. Conversations can contain sensitive data, so set it to `false` if you only need usage metrics."
+{% endtable %}
+
+{:.info}
+> **Production credentials:** This cookbook stores the AI Consumer's API key and the OpenAI key in environment variables for simplicity. In production, use [AI Vaults](/ai-gateway/entities/ai-vault/) to reference them from a secret manager, for example AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, or Azure Key Vault.
 
 ## Variations and next steps
 
-* **Connect more tools to the same AI Model.** The `/coding-agents` AI Model accepts any OpenAI Chat Completions client that sends a Bearer token. The [Open WebUI recipe](/cookbooks/coding-agents-open-webui/) connects another browser chat UI the same way. For terminal coding agents on the same AI Model configuration, see the [OpenCode](/cookbooks/coding-agents-opencode/) and [Qwen Code](/cookbooks/coding-agents-qwen-code/) recipes.
-* **Let each LibreChat user enter their own AI Consumer key.** Set `OPENAI_API_KEY` to `user_provided` so [each user supplies their own key](https://www.librechat.ai/docs/configuration/dotenv#openai) in the LibreChat UI. Issue one AI Consumer per user, and Kong attributes usage and revocation per person instead of per deployment.
-* **Move to a LibreChat custom endpoint.** LibreChat marks `OPENAI_REVERSE_PROXY` as deprecated and recommends a [custom endpoint](https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/custom_endpoint) in `librechat.yaml`. Set its `baseURL` to `http://host.docker.internal:8000/coding-agents`, `apiKey` to the AI Consumer key, and `models.default` to `CHAT_MODEL`.
-* **Move credentials into a vault.** Use [AI Vaults](/ai-gateway/entities/ai-vault/) to source the OpenAI key and AI Consumer credentials from HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, or the {{site.konnect_short_name}} Config Store.
+You can change or extend this configuration in the following ways:
+
+{% table %}
+columns:
+  - title: Variation
+    key: variation
+  - title: How
+    key: how
+rows:
+  - variation: "Let each user enter their own AI Consumer key"
+    how: "Set `apiKey` to `user_provided` in `librechat.yaml`, so that [each user enters a key](https://www.librechat.ai/docs/quick_start/custom_endpoints) in the LibreChat UI. Issue one AI Consumer for each user, and Kong attributes usage and revocation to each person instead of the whole deployment."
+  - variation: "Offer a second model"
+    how: "Add a second AI Model with its own `config.route.model.values` and target, and list both models in `models.default`. The AI Model Provider and AI Auth Strategy don't change."
+  - variation: "Add per-consumer token budgets"
+    how: "Attach the [AI Rate Limiting Advanced](/ai-gateway/policies/ai-rate-limiting-advanced/) Policy to give each AI Consumer a token budget."
+  - variation: "Connect other tools"
+    how: "The [Open WebUI](/cookbooks/coding-agents-open-webui/), [OpenCode](/cookbooks/coding-agents-opencode/), and [Qwen Code](/cookbooks/coding-agents-qwen-code/) cookbooks use the same OpenAI-format AI Model and Pre-Function Policy."
+{% endtable %}
 
 ## Cleanup
 
-Stop LibreChat and MongoDB, remove their data volume, and delete the Compose file:
+The recipe's kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration.
+
+Stop LibreChat and MongoDB, remove their data volume, and delete the configuration files:
 
 ```bash
 docker compose -f librechat-compose.yaml down -v
+rm -f librechat-compose.yaml librechat.yaml
 ```
 
-```bash
-rm -f librechat-compose.yaml
-```
-
-The recipe's kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration. Tear down the local data plane and delete the {{site.ai_gateway}} from {{site.konnect_short_name}}:
+Tear down the local data plane and delete the {{site.ai_gateway}} from {{site.konnect_short_name}}:
 
 ```bash
 export KONNECT_CONTROL_PLANE_NAME='coding-agents-librechat-recipe' && curl -Ls https://get.konghq.com/ai | bash -s -- -d -k $KONNECT_TOKEN
