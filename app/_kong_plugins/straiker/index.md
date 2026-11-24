@@ -118,7 +118,7 @@ Before the request reaches the model:
 
 After the model responds:
 
-1. **Response capture**: The plugin captures the model's answer. It holds the answer inline in `buffered` mode and relays it after delivery in `streaming` mode.
+1. **Response capture**: The plugin captures the model's answer. It holds the answer inline in `buffered` mode and passes it through as the model produces it in `streaming` mode.
 1. **Response scan**: The plugin sends the answer to Straiker for evaluation.
 1. **Final delivery**: In `buffered` mode, {{site.base_gateway}} replaces the answer if the verdict is a block. In `streaming` mode, the client already has the bytes and the verdict is advisory.
 
@@ -171,6 +171,7 @@ Before installing the plugin, you need:
 - A Straiker account and integration key.
 - Network egress from {{site.base_gateway}} data planes to the Straiker detect endpoint.
 - `nginx_http_client_body_buffer_size` raised to `32m`. At the nginx default of 8 KB, a large request body spills to a temporary file, the plugin can't read it, and traffic proxies uninspected.
+- `max_body_bytes` raised to match. The plugin skips scoring for a body larger than this limit, which defaults to 10 MiB.
 
 ### Installation steps
 
@@ -238,7 +239,7 @@ curl -i -X POST \
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} Dedicated Cloud Gateways" %}
 
-Dedicated Cloud Gateways stream the plugin from the control plane, so nothing is installed on a data plane. The plugin is exactly one `handler.lua` and one `schema.lua`, with no sibling modules and no `require()` in the schema. This is the shape that streamed custom plugins accept.
+Dedicated Cloud Gateways stream the plugin from the control plane, so nothing is installed on a data plane. The plugin is exactly one `handler.lua` and one `schema.lua`. It doesn't ship sibling modules, and its schema doesn't call `require()`. This is the shape that streamed custom plugins accept.
 
 Set `KONG_UNTRUSTED_LUA=lax` when creating the gateway. The {{site.base_gateway}} default is `strict`, which permits no network module, and the plugin won't load.
 
