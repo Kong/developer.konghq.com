@@ -35,7 +35,9 @@ tools:
   - konnect-api
 
 prereqs:
-  skip_product: true
+  skip_konnect_token: true
+  konnect:
+    - name: TOKEN_VAULT_PRIVATE_KEY
   inline:
     - title: Kong Konnect
       position: before
@@ -53,28 +55,6 @@ prereqs:
       position: before
       include_content: prereqs/token-vault-encryption-key
       icon_url: /assets/icons/identity.svg
-    - title: "{{site.ai_gateway}} running"
-      position: before
-      content: |
-        Run the {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) to provision a control plane in {{site.konnect_product_name}} and a local data plane. The `-e` flag passes the vault private key to the data plane:
-
-        ```bash
-        curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN \
-           -e TOKEN_VAULT_PRIVATE_KEY
-        ```
-
-        This sets up an {{site.ai_gateway}} control plane named `ai-quickstart`, provisions a local data plane, and prints the following environment variable exports:
-
-        ```bash
-        export AI_GATEWAY_ID=your-gateway-id
-        export KONNECT_TOKEN=$KONNECT_TOKEN
-        export KONNECT_CONTROL_PLANE_NAME=ai-quickstart
-        export KONNECT_CONTROL_PLANE_URL=https://us.api.konghq.com
-        export KONNECT_PROXY_URL='http://localhost:8000'
-        ```
-
-        Copy and paste these into your terminal to configure your session.
-      icon_url: /assets/icons/ai.svg
     - title: Okta as the user IdP
       content: |
         You need admin access to an [Okta](https://login.okta.com/) org, with a custom authorization server and a native OIDC application that the agent uses to sign users in. This guide needs a custom authorization server because Token Vault only accepts JWT access tokens, and the tokens that the Okta org authorization server issues aren't meant to be validated by third parties.
