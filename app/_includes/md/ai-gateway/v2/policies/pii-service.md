@@ -41,7 +41,7 @@ The `name` must be unique for each pattern.
 
 #### How the score works
 
-The `score` sets how confident the service is in a custom pattern match.
+The `score` is the confidence value that a custom pattern assigns to its matches.
 The score only matters when a custom pattern and a built-in entity type, such as `email` or `nrp`, match the same text.
 In that case, the higher score is used, and the custom pattern takes precedence when scores are equal.
 Without an overlapping match, a custom pattern is redacted at any score above `0`.
