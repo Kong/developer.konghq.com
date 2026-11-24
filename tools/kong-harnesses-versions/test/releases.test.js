@@ -30,7 +30,7 @@ test('groups releases by major.minor series, keeping the highest patch and marki
   ]);
   const { writeFile, writes } = fakeWriter();
 
-  await syncReleases({ repo: 'example/tool', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
+  await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
 
   assert.deepEqual(
     writes.map((w) => w.content),
@@ -52,10 +52,10 @@ test('fetches releases from the GitHub API for the configured repo', async () =>
   const { fetchImpl, calls } = fakeFetch([stable]);
   const { writeFile } = fakeWriter();
 
-  await syncReleases({ repo: 'example/tool', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
+  await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
 
   assert.equal(calls.length, 1);
-  assert.equal(calls[0].url, 'https://api.github.com/repos/example/tool/releases?per_page=100&page=1');
+  assert.equal(calls[0].url, 'https://api.github.com/repos/Kong/kong-harnesses/releases?per_page=100&page=1');
 });
 
 test('sends an Authorization Bearer header built from GH_TOKEN when it is set', async () => {
@@ -63,7 +63,7 @@ test('sends an Authorization Bearer header built from GH_TOKEN when it is set', 
   const { writeFile } = fakeWriter();
 
   await syncReleases({
-    repo: 'example/tool',
+    repo: 'Kong/kong-harnesses',
     dataFile,
     name: 'kong-harnesses',
     fetch: fetchImpl,
@@ -78,7 +78,7 @@ test('sends no Authorization header when GH_TOKEN is not set', async () => {
   const { fetchImpl, calls } = fakeFetch([stable]);
   const { writeFile } = fakeWriter();
 
-  await syncReleases({ repo: 'example/tool', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile, env: {} });
+  await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile, env: {} });
 
   assert.equal(calls[0].options.headers.Authorization, undefined);
 });
@@ -89,7 +89,7 @@ test('throws an error naming the token requirement when the request fails', asyn
 
   await assert.rejects(
     syncReleases({
-      repo: 'example/tool',
+      repo: 'Kong/kong-harnesses',
       dataFile,
       name: 'kong-harnesses',
       tokenRequired: true,
@@ -112,7 +112,7 @@ test('ignores tags that the versions job refuses, so the data and the help name 
   ]);
   const { writeFile, writes } = fakeWriter();
 
-  await syncReleases({ repo: 'example/tool', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
+  await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
 
   assert.equal(
     writes[0].content,
@@ -133,8 +133,8 @@ test('fails without writing when no vX.Y.Z release is left', async () => {
   const { writeFile, writes } = fakeWriter();
 
   await assert.rejects(
-    syncReleases({ repo: 'example/tool', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile }),
-    /No vX\.Y\.Z release in example\/tool/,
+    syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile }),
+    /No vX\.Y\.Z release in Kong\/kong-harnesses/,
   );
   assert.equal(writes.length, 0);
 });
@@ -145,7 +145,7 @@ test('derives the released date from published_at', async () => {
   ]);
   const { writeFile, writes } = fakeWriter();
 
-  await syncReleases({ repo: 'example/tool', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
+  await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
 
   assert.equal(writes[0].content, 'name: kong-harnesses\n\nreleases:\n  - release: "0.4"\n    version: "0.4.1"\n    latest: true\n    released: 2026-10-01\n');
 });
@@ -165,11 +165,11 @@ test('reads every page, so a newer release on a later page is still the latest',
   };
   const { writeFile, writes } = fakeWriter();
 
-  await syncReleases({ repo: 'example/tool', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
+  await syncReleases({ repo: 'Kong/kong-harnesses', dataFile, name: 'kong-harnesses', fetch: fetchImpl, writeFile });
 
   assert.deepEqual(calls, [
-    'https://api.github.com/repos/example/tool/releases?per_page=100&page=1',
-    'https://api.github.com/repos/example/tool/releases?per_page=100&page=2',
+    'https://api.github.com/repos/Kong/kong-harnesses/releases?per_page=100&page=1',
+    'https://api.github.com/repos/Kong/kong-harnesses/releases?per_page=100&page=2',
   ]);
   assert.match(writes[0].content, /- release: "0\.2"\n {4}version: "0\.2\.0"\n {4}latest: true\n/);
 });
