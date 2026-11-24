@@ -1,0 +1,21 @@
+{
+  "0.19.0": {
+    "kong-harnesses": [
+      { "message": "**login:** refresh the token before it expires", "type": "feature" },
+      { "message": "stop the profile prompt from looping", "type": "bugfix" },
+      { "message": "the profile file format changes", "type": "Breaking Change" },
+      { "message": "bump a transitive package", "type": "dependencies" }
+    ]
+  },
+  "0.18.0": {
+    "kong-harnesses": [
+      { "message": "add the statusline command", "type": "feature" },
+      { "message": "cache the token lookup", "type": "performance" }
+    ]
+  },
+  "0.17.0": {
+    "kong-harnesses": [
+      { "message": "keep ${{ env.VAR }} and {% if true %}literal{% endif %}", "type": "bugfix" }
+    ]
+  }
+}
