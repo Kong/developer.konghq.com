@@ -54,6 +54,8 @@ rows:
     use: "Answer specific questions with custom queries."
   - page: "[**Alerts**](#alerts)"
     use: "Get notified about unusual error rates, latency, or traffic."
+  - page: "[**Sessions**](#sessions)"
+    use: "Follow a conversation across its requests."
   - page: "[**Logs**](#logs)"
     use: "Read and search logs."
 {% endtable %}
@@ -239,6 +241,7 @@ features:
 An alert rule watches one metric of your AI traffic, like error rates or latency from models, routes, or providers.
 When the metric breaks the rule, the rule triggers an alert for that model, route, or provider, for example `Model: gpt-4o`.
 An alert shows **Triggered** while it is active and **Resolved** after it ends.
+To see the requests that an alert affected, open its [sessions](#sessions).
 
 To open alerts, in the {{site.konnect_short_name}} sidebar, click **Observability**, then click **Alerts**.
 
@@ -317,6 +320,18 @@ A rule can notify by email, by webhook, or by both.
 For a webhook, select a saved webhook or click **New webhook**.
 When you create a webhook, you can select its provider.
 To get details about delivery problems, add a failure-notice email to the webhook. If a delivery fails, Kong sends the reason to that address.
+
+## Sessions
+
+A session is a single AI conversation, made up of all requests that share the same session ID.
+If a client doesn't send a session ID, {{site.ai_gateway}} generates one, and the session contains only that request.
+
+{{site.konnect_short_name}} totals the cost, tokens, and duration across all requests in a session.
+Each request in a session keeps the spans for its LLM calls, tool calls, and guardrails, including their inputs and outputs.
+
+When an [alert](#alerts) triggers, you can open the sessions that it affected during the alert's time window.
+
+{{site.ai_gateway}} sends session data to {{site.konnect_short_name}} automatically, without extra configuration.
 
 ## Logs
 
