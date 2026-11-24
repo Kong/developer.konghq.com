@@ -177,7 +177,7 @@ In this example:
 * `expressions.limit`: Gives `gold` callers 100 requests per minute and everyone else 5.
 * `config.custom_key` and `config.limit`: Static fallbacks that the plugin uses when an expression can't be evaluated.
   We recommend a low fallback limit, because a caller whose token doesn't have the expected claims is then restricted instead of unlimited.
-* `config.namespace`: Groups this plugin's counters. Required when you configure the plugin on-prem.
+* `config.namespace`: Groups this plugin's counters. Set it explicitly with decK or in DB-less mode, so the namespace isn't regenerated on every update.
 * `config.window_size`: Set in `config` only, because `window_size` isn't an [expressible field](/gateway/plugins/expressible-fields/#expressible-config-fields).
 
 ## Validate

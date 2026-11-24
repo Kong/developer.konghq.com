@@ -469,7 +469,7 @@ Keep the following in mind when you read claims:
 * Nested claims keep their structure.
   For example, read the `realm_access.roles` claim as `access_token.claims.realm_access.roles`.
 * `has()` only checks the last element of a path, so check each level that might be absent.
-  For example, use `has(access_token.claims.realm_access) && "editor" in access_token.claims.realm_access.roles`.
+  For example, use `has(access_token.claims.realm_access) && has(access_token.claims.realm_access.roles) && "editor" in access_token.claims.realm_access.roles`.
 * A claim name that contains a hyphen needs the index form, for example `access_token.claims["other-claim"]`.
 * If you set [`config.verify_signature`](/plugins/openid-connect/reference/#schema--config-verify-signature) to `false`, {{site.base_gateway}} still exposes the claims but doesn't verify that the token is genuine.
 
