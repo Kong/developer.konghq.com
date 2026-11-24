@@ -24,7 +24,7 @@ automated_tests: false
 tldr:
   q: How do I delete an invalid kong-harnesses user profile or leftover gateway MCP server keys?
   a: |
-    Delete an invalid user profile with `kong-harnesses profile delete PROFILE_NAME`, then sign out of OpenCode or Hermes Agent if needed and run `kong-harnesses profile cleanup`.
+    Delete an invalid user profile with `kong-harnesses profile delete PROFILE_NAME`, then {% comment %}sign out of OpenCode or Hermes Agent if needed and {% endcomment %}run `kong-harnesses profile cleanup`.
     If the `Login` field warns that a saved sign-in might remain, import a valid copy of the profile, run `kong-harnesses logout --profile PROFILE_NAME`, and delete it again.
     Remove any leftover gateway MCP server keys (`PROFILE_NAME.mcp-key.*`) from macOS Keychain, Linux Secret Service, or `%LOCALAPPDATA%\kong-harnesses\vault` on Windows.
 
@@ -77,7 +77,9 @@ For details on unreadable profile messages, see [Profile errors](/kong-harnesses
    If `profile delete` can't remove a key or can't read the server list from the document, the `Gateway MCP keys` field lists the items (`PROFILE_NAME.mcp-key.SERVER_NAME` or `PROFILE_NAME.mcp-key.*`) to delete from your system password store.
    When a saved sign-in might remain, `profile delete` warns you before asking you to confirm and again in the `Login` field.
 1. Type the profile name when prompted to confirm.
+{%- comment %}
 1. If you use OpenCode or Hermes Agent and haven't signed out through their plugins yet, sign out using [Sign out of each profile](/kong-harnesses/remove-kong-harnesses/#sign-out-of-each-profile) before running `profile cleanup`.
+{% endcomment %}
 1. Clean up each agent CLI that still uses the deleted profile:
 
    ```sh

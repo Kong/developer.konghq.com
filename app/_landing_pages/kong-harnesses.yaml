@@ -20,7 +20,7 @@ rows:
       - blocks:
         - type: text
           config: |
-            kong-harnesses obtains short-lived OIDC access tokens for coding agents such as Claude Code, Codex, OpenCode, and omp.
+            kong-harnesses obtains short-lived OIDC access tokens for {% comment %}coding agents such as {% endcomment %}Claude Code{% comment %}, Codex, OpenCode, and omp{% endcomment %}.
             It manages connection profiles, signs in to an OIDC identity provider, and configures the agent CLI to route its traffic through the gateway.
 
   - header:

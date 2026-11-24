@@ -24,7 +24,7 @@ automated_tests: false
 tldr:
   q: How do I remove kong-harnesses and undo its agent CLI setup?
   a: |
-    Run `kong-harnesses logout --profile PROFILE_NAME` for each profile, and sign out through the OpenCode or Hermes Agent plugin if you use either.
+    Run `kong-harnesses logout --profile PROFILE_NAME` for each profile{% comment %}, and sign out through the OpenCode or Hermes Agent plugin if you use either{% endcomment %}.
     Then run `kong-harnesses profile cleanup` to restore agent CLI settings, and run `kong-harnesses profile delete PROFILE_NAME` to delete each user profile.
     Finally, uninstall kong-harnesses with the package manager or installer that installed it.
 
@@ -73,6 +73,7 @@ Sign out of it before your administrator removes the {{ site.claude_code }} [fle
 
    When the profile has a saved sign-in or static key on this computer, `logout` asks you to type the profile name to confirm.
    For what `logout` revokes at the identity provider, see [Sign out](/kong-harnesses/sign-in/#sign-out).
+{%- comment %}
 1. If you use OpenCode or Hermes Agent, sign out through each plugin before you run `profile cleanup`, because they sign in through their own plugins and `kong-harnesses logout` doesn't sign out of them:
 
    * **OpenCode:** Run `opencode auth logout`, then select the provider named after the profile.
@@ -81,6 +82,7 @@ Sign out of it before your administrator removes the {{ site.claude_code }} [fle
      Don't use an index or a label in place of `ENTRY_ID`, because an index changes when an earlier entry is removed, and more than one entry can share a label.
 
    For the plugin commands, see [Sign in to a profile](/kong-harnesses/sign-in/#sign-in-to-a-profile).
+{% endcomment %}
 
 If `logout` fails, complete the step that its message names, then run `logout` again.
 For an invalid user profile or gateway MCP server keys that stay after `logout`, follow [Delete invalid profiles and leftover gateway MCP server keys](/kong-harnesses/delete-invalid-profiles-and-leftover-keys/).

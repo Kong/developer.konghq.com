@@ -67,6 +67,8 @@ columns:
   - title: "Details"
     key: c1
 rows:
+  - c0: "{{ site.ai_gateway }}"
+    c1: "A running [{{ site.ai_gateway }}](/ai-gateway/) deployment in {{ site.konnect_product_name }} configured to proxy requests from managed devices."
   - c0: "Intune permissions"
     c1: "**Read**, **Create**, **Assign**, **Update**, and **Delete** for **Mobile apps**. The built-in Application Manager role includes these permissions."
   - c0: "Managed devices"
