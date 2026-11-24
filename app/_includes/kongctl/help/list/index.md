@@ -21,6 +21,7 @@ Examples:
   kongctl list extensions
 
 Available Commands:
+  ai            Inspect Konnect AI resources
   ai-gateway    List or get Konnect AI Gateways
   api           List or get Konnect APIs
   auth-strategy List or get Konnect authentication strategies

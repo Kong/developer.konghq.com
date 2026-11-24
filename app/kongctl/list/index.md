@@ -35,6 +35,9 @@ columns:
     key: description
 rows:
   - command: |
+      [kongctl list ai](/kongctl/list/ai/)
+    description: "Inspect {{site.konnect_short_name}} AI resources."
+  - command: |
       [kongctl list ai-gateway](/kongctl/list/ai-gateway/)
     description: "List {{site.ai_gateway}}s."
   - command: |
