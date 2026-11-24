@@ -185,7 +185,7 @@ rows:
 
 If the request has no authenticated Consumer or Principal, the corresponding attribute is left empty on the exported metrics.
 
-#### Credential attribute and limit
+#### Credential attribute and limit {% new_in 3.17 %}
 
 The `kong.auth.credential.id` attribute holds the ID that the authentication plugin sets for the credential. For example:
 * [OpenID Connect](/plugins/openid-connect/) with `credential_claim` sets the value of that claim, for example `sub` or `email`.
@@ -210,7 +210,7 @@ To enable the attribute, see the [Add the credential attribute to metrics](./exa
 
 Custom plugins can register and record their own counter, gauge, and histogram metrics using the [Metrics PDK](/custom-plugins/metrics-pdk/) (`kong.metrics`). When the OpenTelemetry plugin is configured with metrics enabled, it exports these custom metrics through the same OTLP path as {{site.base_gateway}}'s built-in metrics.
 
-Custom metrics currently export through the OpenTelemetry plugin only. The Prometheus and StatsD plugins don't export them.
+Custom metrics export through the OpenTelemetry plugin only.
 
 ### Metrics with {{site.base_gateway}} 3.12 or earlier
 
@@ -361,28 +361,59 @@ Logs are recorded based on the [log level](/gateway/logs/#log-levels) that is co
 
 ### Runtime and error log entry
 
-Each log entry adheres to the [OpenTelemetry Logs Data Model](https://opentelemetry.io/docs/specs/otel/logs/data-model/). The available information depends on the log scope and on whether [**tracing**](#tracing) is enabled for this plugin.
+Every log entry follows the [OpenTelemetry Logs Data Model](https://opentelemetry.io/docs/specs/otel/logs/data-model/). The available information depends on the log scope and on whether [tracing](#tracing) is enabled for this plugin.
 
-Every log entry includes the following fields:
-- `Timestamp`: Time when the event occurred.
-- `ObservedTimestamp`: Time when the event was observed.
-- `SeverityText`: The severity text (log level).
-- `SeverityNumber`: Numerical value of the severity.
-- `Body`: The error log line.
-- `Resource`: Configurable resource attributes.
-- `InstrumentationScope`: Metadata that describes {{site.base_gateway}}'s data emitter.
-- `Attributes`: Additional information about the event.
-  - `introspection.source`: Full path of the file that emitted the log.
-  - `introspection.current.line`: Line number that emitted the log.
-
-In addition to the above, request-scoped logs include:
-- `Attributes`: Additional information about the event.
-  - `request.id`: {{site.base_gateway}}'s request ID.
-
-In addition to the above, when **tracing** is enabled, request-scoped logs include:
-- `TraceID`: Request trace ID.
-- `SpanID`: Request span ID.
-- `TraceFlags`: W3C trace flag.
+<!--vale off-->
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+  - title: Included in
+    key: included
+rows:
+  - field: "`Timestamp`"
+    description: Time when the event occurred.
+    included: All logs
+  - field: "`ObservedTimestamp`"
+    description: Time when the event was observed.
+    included: All logs
+  - field: "`SeverityText`"
+    description: The severity text (log level).
+    included: All logs
+  - field: "`SeverityNumber`"
+    description: Numerical value of the severity.
+    included: All logs
+  - field: "`Body`"
+    description: The error log line.
+    included: All logs
+  - field: "`Resource`"
+    description: Configurable resource attributes.
+    included: All logs
+  - field: "`InstrumentationScope`"
+    description: Metadata that describes {{site.base_gateway}}'s data emitter.
+    included: All logs
+  - field: "`Attributes`: `introspection.source`"
+    description: Full path of the file that emitted the log.
+    included: All logs
+  - field: "`Attributes`: `introspection.current.line`"
+    description: Line number that emitted the log.
+    included: All logs
+  - field: "`Attributes`: `request.id`"
+    description: "{{site.base_gateway}}'s request ID."
+    included: Request-scoped logs
+  - field: "`TraceID`"
+    description: Request trace ID.
+    included: Request-scoped logs when tracing is enabled
+  - field: "`SpanID`"
+    description: Request span ID.
+    included: Request-scoped logs when tracing is enabled
+  - field: "`TraceFlags`"
+    description: W3C trace flag.
+    included: Request-scoped logs when tracing is enabled
+{% endtable %}
+<!--vale on-->
 
 ### Logging for custom plugins
 
