@@ -122,6 +122,7 @@ After the model responds:
 1. **Response scan**: The plugin sends the answer to Straiker for evaluation.
 1. **Final delivery**: In `buffered` mode, {{site.base_gateway}} replaces the answer if the verdict is a block. In `streaming` mode, the client already has the bytes and the verdict is advisory.
 
+<!--vale off-->
 {% mermaid %}
 sequenceDiagram
     autonumber
@@ -150,6 +151,7 @@ sequenceDiagram
         end
     end
 {% endmermaid %}
+<!--vale on-->
 
 A block is returned as HTTP `200` carrying a completed assistant turn whose content is the policy text.
 It's deliberately not a `4xx` or `5xx` response, because coding agent clients treat `403` as an authentication failure and retry `5xx`.
@@ -328,7 +330,7 @@ Set up alerts on `degraded` and `unknown`. Both return a healthy-looking `200` w
 - Confirm `config.api_key` is valid for the environment `config.detect_url` points at, and that data planes can reach that endpoint.
 - Temporarily set `config.debug_preamble` to `true` and look for `[straiker]` entries in the {{site.base_gateway}} logs, then turn it off.
 
-### Verdict is `degraded` or `unknown`
+### Verdict is degraded or unknown
 
 **Symptoms:** Responses carry `x-straiker-verdict: degraded` or `unknown`.
 
