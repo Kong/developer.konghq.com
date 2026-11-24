@@ -17,7 +17,7 @@ breadcrumbs:
 min_version:
   gateway: '3.15'
 
-description: "Learn how {{site.identity}} groups let you manage access for a set of principals in one place, and how to create groups, add members, and authenticate as a group."
+description: "Named sets of principals in a directory. Use a group to apply one access rule, spend limit, or shared key to many principals."
 
 related_resources:
   - text: "{{site.identity}} principals"
@@ -36,11 +36,10 @@ related_resources:
 
 {% include sections/principals-and-directories.md %}
 
-## What are groups
+## What are groups?
 
 A group is a named list of [principals](/identity/principals/) in a directory that allows you to share a resource with all of them. Instead of writing a rule for each principal, you write a rule once and apply it to a group. The rule affects all members of the group.
 
-Groups save time and ease secret sharing. You add people to the group once, and from then on you manage them together instead of one by one.
 
 Use a group when you want to apply these actions to a set of principals:
 
@@ -56,15 +55,15 @@ Use a group when you want to apply these actions to a set of principals:
 Group membership works in the following ways:
 
 * **Manual membership:** You add and remove each member explicitly, and a principal must already exist in the directory before you can add it to a group.
-* **Automatic mapping from an IdP:** When you enable the [Token Vault](/identity/token-vault/) on a directory, {{site.identity}} can provision principals from a trusted IdP and add them to groups based on the group names your IdP sends in its tokens. If a group doesn't exist yet, {{site.identity}} creates it. Automatic mapping only adds principals to groups of type `group`.
+* **Automatic mapping from an IdP:** When you enable the [Token Vault](/identity/token-vault/) on a directory, {{site.identity}} can provision principals from a trusted IdP and add them to groups based on the group names your IdP sends in its tokens. If a group doesn't exist, {{site.identity}} creates it. Automatic mapping only adds principals to groups of type `group`.
 
-{{site.identity}} resolves group membership live and doesn't cache it. A membership change applies the next time the gateway authenticates the principal with {{site.identity}}.
+{{site.identity}} doesn't cache group membership. When membership changes, the new groups apply the next time the gateway authenticates the principal.
 
 Group names must be unique within a directory and can only contain letters, numbers, and hyphens, without spaces.
 
 ## Group types
 
-{{site.identity}} allows three types of groups:
+{{site.identity}} allows the following types of groups:
 
 * A default group, containing principals of any type.
 * A [project](#projects): a group that lets a set of users and agents work together on a specific effort.
@@ -76,7 +75,12 @@ Groups, teams, and projects all hold principals, but they define different struc
 * **A team defines where a user sits in the organization:** Use it to model your organization structure, such as a department, and to set spend limits that apply down the hierarchy.
 * **A project defines who is working on this effort together:** Use it to give a set of users and agents shared access for a specific effort.
 
-## Group features
+You set a group's type when you create it, and you can't change it afterwards.
+The `team` type is set automatically during org chart import.
+
+A group, team, and project in the same directory can't have the same name.
+
+See the following table for a comparison of the group types:
 
 You set a group's type when you create it, and you can't change it afterwards.
 A group, team, and project in the same directory can't have the same name.
@@ -94,10 +98,6 @@ columns:
   - title: Project
     key: project
 rows:
-  - feature: "API value"
-    group: "`group` (default)"
-    team: "`team`"
-    project: "`project`"
   - feature: "Purpose"
     group: "A set of principals that share a spend limit or a key."
     team: "A node in your organization structure, such as a department."
@@ -118,10 +118,6 @@ rows:
     group: "Yes"
     team: "No"
     project: "Yes"
-  - feature: "Basic auth, OIDC, Consumer, and auth server client credentials"
-    group: "No"
-    team: "No"
-    project: "No"
   - feature: "Automatic mapping from an IdP"
     group: "Yes"
     team: "No. {{site.identity}} ignores a team name in an IdP token and doesn't add the principal to the team."
@@ -142,7 +138,7 @@ To create a project, set `type` to `project` when you [create a group](#create-a
 
 ## Group API keys
 
-A group API key is a shared credential that belongs to the group, not to a single principal. It carries the group's permissions and budget limits. A request made with it authenticates as the group, and anything it spends counts against the group's spend limit. 
+A group API key is a shared credential that belongs to the group, not to a single principal. It carries the group's permissions and spend limit. A request made with it authenticates as the group, and anything it spends counts against the group's spend limit.
 
 Use a group key when the tool making requests doesn't belong to one person, for example a shared script or tool that a set of principals uses.
 
