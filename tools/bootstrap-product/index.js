@@ -53,6 +53,9 @@ if (!worksOn.every((v) => WORKS_ON.includes(v))) {
 if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) {
   fail('--slug must be lowercase letters, digits, and hyphens');
 }
+if (fs.existsSync(path.join(root, `app/${slug}`)) || fs.existsSync(path.join(root, `app/${slug}.md`))) {
+  fail(`/${slug}/ is already a page; choose another slug or rename the existing page`);
+}
 if (!COLORS.includes(color)) {
   fail(`--color must be one of: ${COLORS.join(', ')}`);
 }
@@ -103,7 +106,7 @@ const patches = {
     if (new RegExp(`^${snake}:`, 'm').test(s)) return null;
     const anchor = '\n\n# Company names';
     if (!s.includes(anchor)) throw new Error('anchor "# Company names" not found');
-    return s.replace(anchor, `\n${snake}: ${name}${anchor}`);
+    return s.replace(anchor, () => `\n${snake}: ${JSON.stringify(name)}${anchor}`);
   },
 
   'app/_data/schemas/frontmatter/base.json': (s) => {
@@ -142,10 +145,11 @@ const patches = {
     const objAnchor = 'const productIcons = {\n';
     if (!s.includes(objAnchor)) throw new Error('anchor "const productIcons = {" not found');
     const end = last.index + last[0].length;
+    const iconName = `productIcon_${snake}`;
     return (
       s.slice(0, end) +
-      `\nimport ${camel} from '@/icons/products/${slug}.svg'` +
-      s.slice(end).replace(objAnchor, `${objAnchor}  '${slug}': ${camel},\n`)
+      `\nimport ${iconName} from '@/icons/products/${slug}.svg'` +
+      s.slice(end).replace(objAnchor, `${objAnchor}  '${slug}': ${iconName},\n`)
     );
   },
 };
