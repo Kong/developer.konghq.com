@@ -69,11 +69,10 @@ Group names must be unique within a directory and can only contain letters, numb
 * A [project](#projects): a group that lets a set of users and agents work together on a specific effort.
 * A [team](#group-features): a type of group defined in an org chart file you import.
 
-Groups, teams, and projects all hold principals, but they define different structures:
-
-* **A group defines who shares a resource:** Use it to manage a set of principals together, give them a shared spend limit, or give them a shared key.
-* **A team defines where a user sits in the organization:** Use it to model your organization structure, such as a department, and to set spend limits that apply down the hierarchy.
-* **A project defines who is working on this effort together:** Use it to give a set of users and agents shared access for a specific effort.
+Groups, teams, and projects all contain principals, but each serves a different purpose:
+* **Group**: Shares resources across a set of principals. Use a group to manage principals together, or to give them a shared spend limit or key.
+* **Team**: Represents where a user sits in your organization, such as a department. It models your org structure and allows you to set spend limits that apply down the hierarchy.
+* **Project**: Represents a specific effort. Use a project to give a set of users and agents shared access to that work.
 
 You set a group's type when you create it, and you can't change it afterwards.
 The `team` type is set automatically during org chart import.
