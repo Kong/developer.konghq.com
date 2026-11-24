@@ -71,17 +71,23 @@ The managed settings of your organization can still set up that agent CLI, or ca
 
 The `doctor` command uses the network to check the gateway.
 Unless the profile uses a static key, `doctor` also checks the identity provider.
+{%- comment %}
 For OpenCode, `doctor` also checks the npm registry.
+{% endcomment %}
 To check the sign-in and the agent CLI setup without the network, run [`kong-harnesses status --profile PROFILE_NAME`](/kong-harnesses/status/).
 
 The `route`, `catalog`, `gateway-mcp`, and `inference` checks send their own requests.
 For an `https://` gateway, these requests go through the proxy when one applies.
 For {{ site.claude_code }}, the requests use the proxy rules of {{ site.claude_code }}.
+{%- comment %}
 For other agent CLIs, the requests use the standard proxy rules of Go.
+{% endcomment %}
 
 When managed settings keep {{ site.claude_code }} from starting and `doctor` checks {{ site.claude_code }}, `doctor` doesn't send network requests for any agent CLI in that run, and exits with `2`.
 In the {{ site.claude_code }} report, the `client` check and each network check fail and name the managed settings file.
+{%- comment %}
 In a report for another agent CLI, each network check warns that `doctor` skipped the check.
+{% endcomment %}
 Ask your administrator to correct the managed settings that the report names.
 
 ## Read the report
@@ -145,8 +151,10 @@ rows:
       Do the step on the `fix:` line, such as `kong-harnesses login --profile PROFILE_NAME`, the sign-in command of the agent CLI, or unlocking the system password store.
       These cases need more context:
 
+      {% comment %}
       * The `login` check reports `ok` and says that the agent CLI owns the sign-in: check the sign-in status in that agent CLI.
         OpenCode and Hermes can own the sign-in.
+      {% endcomment %}
       * A CI profile reads its key from the environment: set `KONG_HARNESSES_STATIC_KEY` to the key from your administrator.
         The `login` command refuses that profile.
       * On Linux, the session doesn't run a Secret Service: use a desktop session that runs a keyring, such as GNOME Keyring.
@@ -176,6 +184,7 @@ rows:
   - check: "`claude-code`"
     what: The installed {{ site.claude_code }} is a release that kong-harnesses supports.
     next: Update {{ site.claude_code }} to the release that the `fix:` line names, or to a newer release.
+  {%- comment %}
   - check: "`npm` and `plugin`"
     what: For OpenCode, npm can read the gateway plugin package from the registry, and a working plugin version is in the OpenCode cache.
     next: |
@@ -198,6 +207,7 @@ rows:
          If the `fix:` line names `OPENCODE_CONFIG_DIR` for the activation step, set the variable to a clean absolute folder or unset the variable.
       1. Run `kong-harnesses --client opencode profile activate PROFILE_NAME`.
       1. After you do all the steps on the `fix:` line, run `doctor` again.
+  {% endcomment %}
   - check: "`issuer`"
     what: |
       kong-harnesses can connect directly to the token endpoint of the identity provider.
@@ -218,7 +228,9 @@ rows:
       Check the network, VPN, and any proxy, then run `doctor` again.
       For a certificate error, ask your administrator to check the certificate of the gateway and the system trust store.
       An `http://` gateway must use a loopback host, such as `localhost`.
+      {%- comment %}
       Codex, OpenCode, and Hermes require an `https://` gateway.
+      {% endcomment %}
 
       For an `http://` gateway behind a proxy, do the steps on the `fix:` line.
       The steps can add the gateway host to a variable such as `NO_PROXY` in the shell that starts the agent CLI.
@@ -243,7 +255,7 @@ rows:
       * `doctor` sends your credential: an HTTP `401` or `403` response gives `fail`, because the gateway refuses your credential on that route.
       * The test request doesn't have an input that the agent CLI can send, such as a client certificate or custom headers: a refused credential or a missing route gives `warn` instead of `fail`.
         The agent CLI can get a different response with that input.
-      * `doctor` doesn't have a credential to send, such as when you aren't signed in or the agent CLI owns its sign-in: a `401` or `403` response gives `ok`.
+      * `doctor` doesn't have a credential to send, such as when you aren't signed in{% comment %} or the agent CLI owns its sign-in{% endcomment %}: a `401` or `403` response gives `ok`.
         That `ok` result confirms only that the route exists, and doesn't confirm that the gateway accepts your credential.
       * The profile is a Claude subscription profile: a `401` or `403` response gives `warn`.
         That `warn` result doesn't confirm that the route exists, because `doctor` can't send your subscription sign-in.
