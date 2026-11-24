@@ -137,6 +137,7 @@ rows:
                 items:
                   - "[Insomnia changelog](https://insomnia.rest/changelog)"
                   - "[kongctl changelog](https://github.com/kong/kongctl/releases)"
+                  - "[kong-harnesses changelog](/kong-harnesses/changelog/)"
                   - "[decK changelog](https://github.com/Kong/deck/blob/main/CHANGELOG.md)"
                   - "[Operator changelog](/operator/changelog/)"
                   - "[{{site.kic_product_name_short}} changelog](https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md)"

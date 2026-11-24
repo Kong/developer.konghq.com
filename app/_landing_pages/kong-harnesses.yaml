@@ -68,6 +68,14 @@ rows:
           cta:
             text: Read the install guide
             url: /kong-harnesses/install/
+    - blocks:
+      - type: card
+        config:
+          title: Changelog
+          description: See what changed in each kong-harnesses release.
+          cta:
+            text: Read the changelog
+            url: /kong-harnesses/changelog/
             align: end
 
   - header:
