@@ -343,6 +343,10 @@ Runtime logs from self-managed data planes do not appear on this page.
 * The default columns are **Timestamp**, **Log level**, **Log type**, **Dataplane ID**, **Control plane**, and **Message**.
 * Click an entry to open its details: a summary, its attributes, and the full message. Copy buttons allow you to copy raw logs or each element separately. 
 
+### {{site.ai_gateway}} logs
+
+{% include md/ai-gateway/ai-gateway-logs.md %}
+
 ## Explorer and {{site.ai_cost_management}}
 
 {{site.ai_cost_management}} has its own [Explorer](/ai-cost-management/analytics-and-debugging/#explorer), which shows spend, requests, or tokens over time for any combination of filters and group-by dimensions.
