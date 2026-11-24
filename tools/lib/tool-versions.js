@@ -282,6 +282,9 @@ export async function syncReleases({
 
   seriesList[0].latest = true;
 
+  const releaseDates = [...validReleases]
+    .sort((a, b) => compareVersions(b.version, a.version));
+
   let yamlContent = `name: ${name}\n\nreleases:\n`;
   for (const release of seriesList) {
     yamlContent += `  - release: "${release.release}"\n`;
@@ -290,6 +293,11 @@ export async function syncReleases({
       yamlContent += `    latest: true\n`;
     }
     yamlContent += `    released: ${release.released}\n`;
+  }
+
+  yamlContent += '\nrelease_dates:\n';
+  for (const release of releaseDates) {
+    yamlContent += `  '${release.version}': ${release.released.replace(/-/g, '/')}\n`;
   }
 
   writeFile(dataFile, yamlContent);

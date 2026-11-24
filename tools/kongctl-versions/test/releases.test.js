@@ -43,6 +43,28 @@ test('a failed request suggests GH_TOKEN for rate limits', async () => {
   assert.equal(writes.length, 0);
 });
 
+test('writes a release_dates entry per valid release, in YYYY/MM/DD, beyond the ten-series cap', async () => {
+  const releases = Array.from({ length: 12 }, (_, i) => ({
+    tag_name: `v1.${30 - i}.0`,
+    published_at: `2026-${String(12 - i).padStart(2, '0')}-15T10:00:00Z`,
+    draft: false,
+    prerelease: false,
+  }));
+  const { fetchImpl } = fakeFetch(releases);
+  const { writeFile, writes } = fakeWriter();
+
+  await syncReleases({ repo: 'Kong/kongctl', dataFile, name: 'kongctl', fetch: fetchImpl, writeFile });
+
+  const content = writes[0].content;
+  const releaseLines = content.split('\n').filter((line) => line.trim().startsWith('- release:'));
+  const dateLines = content.split('\n').filter((line) => /^  '1\.\d+\.0': \d{4}\/\d{2}\/\d{2}$/.test(line));
+
+  assert.equal(releaseLines.length, 10);
+  assert.equal(dateLines.length, 12);
+  assert.ok(content.includes("release_dates:\n  '1.30.0': 2026/12/15\n"));
+  assert.ok(content.includes("'1.19.0': 2026/01/15"));
+});
+
 test('keeps at most the 10 newest series, marking only the newest latest', async () => {
   const releases = Array.from({ length: 12 }, (_, i) => ({
     tag_name: `v1.${30 - i}.0`,
