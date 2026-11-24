@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.3.27
+  version: 2.3.33
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -14,12 +14,12 @@ info:
     A feature whose `x-min-runtime-version` is greater than
     `info.x-latest-public-runtime-version` is not generally available yet and
     will be excluded from publicly available deliverables, exactly as if it were
-    marked `x-internal` and `x-unstable`.
+    marked `x-internal`.
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@85fab607122ee83b5fef022112c636844daf25ee
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/85fab607122ee83b5fef022112c636844daf25ee'
+  x-oas-source: kong/platform-api@6fbb488bd90959df13d95287713477474bb44f12
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6fbb488bd90959df13d95287713477474bb44f12'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -4343,10 +4343,13 @@ components:
             - always
             - deny
         max_request_body_size:
-          description: Maximum size of request body to parse. Set to 0 for unlimited.
+          description: |
+            The maximum size, in bytes, of a request body that the gateway reads and sends to the model.
+            A request with a larger body fails. Set to 0 for no limit.        
+            If you do not set a value, the gateway uses the request size limit that the model's providers publish, 
+            with defaults to 8 MB.
+            If the targets use more than one provider, the gateway uses the highest of these limits.
           type: integer
-          default: 8388608
-          maximum: 2147483646
           minimum: 0
         model:
           type: object
@@ -4381,10 +4384,13 @@ components:
             - always
             - deny
         max_request_body_size:
-          description: Maximum size of request body to parse. Set to 0 for unlimited.
+          description: |
+            The maximum size, in bytes, of a request body that the gateway reads and sends to the model.
+            A request with a larger body fails. Set to 0 for no limit.        
+            If you do not set a value, the gateway uses the request size limit that the model's providers publish, 
+            with defaults to 8 MB.
+            If the targets use more than one provider, the gateway uses the highest of these limits.
           type: integer
-          default: 8388608
-          maximum: 2147483646
           minimum: 0
         balancer:
           $ref: '#/components/schemas/AIGatewayModelBalancerConfig'
@@ -11897,8 +11903,6 @@ components:
               format: uri
               example: 'https://mcp.internal.kongair.com'
               minLength: 1
-            upstream:
-              $ref: '#/components/schemas/AIGatewayUpstreamConfig'
             certificates:
               description: |
                 Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server,
@@ -13150,8 +13154,6 @@ components:
           format: uri
           example: 'https://mcp.internal.kongair.com'
           minLength: 1
-        upstream:
-          $ref: '#/components/schemas/AIGatewayUpstreamConfig'
         certificates:
           description: |
             Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server,
@@ -13269,8 +13271,6 @@ components:
           format: uri
           example: 'https://mcp.internal.kongair.com'
           minLength: 1
-        upstream:
-          $ref: '#/components/schemas/AIGatewayUpstreamConfig'
         certificates:
           description: |
             Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server,
@@ -13299,6 +13299,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AIGatewayCACertificateReference'
+        upstream:
+          $ref: '#/components/schemas/AIGatewayUpstreamConfig'
         proxy:
           $ref: '#/components/schemas/AIGatewayProxyConfig'
       additionalProperties: false
@@ -13366,8 +13368,6 @@ components:
           format: uri
           example: 'https://mcp.internal.kongair.com'
           minLength: 1
-        upstream:
-          $ref: '#/components/schemas/AIGatewayUpstreamConfig'
         certificates:
           description: |
             Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server,
@@ -13808,8 +13808,6 @@ components:
               format: uri
               example: 'https://mcp.internal.kongair.com'
               minLength: 1
-            upstream:
-              $ref: '#/components/schemas/AIGatewayUpstreamConfig'
             certificates:
               description: |
                 Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server,
