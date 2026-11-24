@@ -26,6 +26,12 @@ Get {{site.konnect_short_name}} resources.
 
 {% include_cached /kongctl/help/get/konnect/index.md %}
 
+### kongctl get konnect ai
+
+Inspect {{site.konnect_short_name}} AI resources.
+
+{% include_cached /kongctl/help/get/konnect/ai.md %}
+
 ### kongctl get konnect ai-gateway
 
 List or get {{site.konnect_short_name}} {{site.ai_gateway}}s.
