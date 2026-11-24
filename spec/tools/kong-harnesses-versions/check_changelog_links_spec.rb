@@ -63,7 +63,8 @@ RSpec.describe KongHarnessesChangelogLinks do
       ['a grapheme joiner in the repository', "run `github.com/example\u034f/sample-tool`"],
       ['a variation selector in a host', "see www\ufe0f.example.com"],
       ['a . segment in the repository', 'run `github.com/example/./sample-tool`'],
-      ['a .. segment in a GitHub address', 'run `github.com/x/../example/sample-tool`']
+      ['a .. segment in a GitHub address', 'run `github.com/x/../example/sample-tool`'],
+      ['a client that the docs do not cover yet', 'set up **Codex** too']
     ].each do |name, text|
       it "refuses #{name}" do
         expect { described_class.check(entry(text)) }.to raise_error(/in release 1\.0\.0, section Features, entry 1 on the page/)
@@ -94,7 +95,8 @@ RSpec.describe KongHarnessesChangelogLinks do
       ['the flag of a region', "go to \u{1f3f4}\u{e0067}\u{e0062}\u{e0073}\u{e0063}\u{e0074}\u{e007f} now"],
       ['a soft hyphen, a zero width joiner and a word joiner', "a\u00adb c\u200dd e\u2060f"],
       ['a strikethrough', 'a ~~gone~~ word'],
-      ['one variation selector right after an emoji', "a \u2764\ufe0f and 1\ufe0f\u20e3"]
+      ['one variation selector right after an emoji', "a \u2764\ufe0f and 1\ufe0f\u20e3"],
+      ['a word that only contains the name of such a client', 'read a pipe or an epic']
     ].each do |name, text|
       it "accepts #{name}" do
         expect { described_class.check(entry(text)) }.not_to raise_error

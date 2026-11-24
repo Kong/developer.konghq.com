@@ -1,0 +1,20 @@
+# Rewrites of the kong-harnesses changelog entries that name a client that the docs do
+# not cover yet (HIDDEN_CLIENTS in check-changelog-links.rb). The first docs release
+# covers Claude Code only, and the other clients follow.
+#
+# Each rewrite names a release, an entry as its first line in CHANGELOG.md without the
+# references that release-please writes at its end, and the entry to show in its place,
+# or null to leave the entry out. An entry with a hidden client as its scope, such as
+# **hermes:**, is left out with no rewrite. sync-changelog.rb refuses an entry that names
+# a hidden client with no rewrite, and a rewrite of a release on the page that matches no
+# entry, so a changed entry stops the sync. Delete this file's entries when the docs
+# cover the other clients.
+- release: 0.18.0
+  entry: "* **login:** recover refused sign-ins, check OpenCode"
+  text: "* **login:** recover refused sign-ins"
+- release: 0.15.0
+  entry: "* **profile:** a profile's `gateway_ca_bundle` is no longer used. kong-harnesses, Claude Code, Codex, OpenCode and Hermes Agent trust the gateway through the system trust store by default, so add the gateway's CA there, usually through MDM. Without the CA there, kong-harnesses reads `SSL_CERT_FILE` naming a file with every CA it needs, with `GODEBUG=x509sslcertoverrideplatform=1` also set on macOS and Windows, and a client's own CA setting, such as `NODE_EXTRA_CA_CERTS` for Claude Code or `CODEX_CA_CERTIFICATE` for Codex, still works. omp runs on Bun, and pi runs on Node, or on Bun from its release archives. Bun reads its own CA list and, on Linux, `/etc/ssl`, so on Debian and Ubuntu, where `update-ca-certificates` links the CA into `/etc/ssl/certs`, omp and pi on Bun trust the gateway with no variable. Elsewhere, and for pi on Node, set `NODE_USE_SYSTEM_CA=1` where the client starts, which adds the system trust store, or `NODE_EXTRA_CA_CERTS` naming a file with the CA. pi on Bun adds the `NODE_EXTRA_CA_CERTS` file to the CAs it trusts and keeps `/etc/ssl`. omp uses its own CA list and the file, so for omp the file replaces `/etc/ssl` and the system trust store and must hold every CA that omp needs, such as a proxy's. After the upgrade, run `profile activate` again, which removes the bundle file that an earlier release wrote for Claude Code and names the CA to install by its SHA-256 fingerprint."
+  text: "* **profile:** a profile's `gateway_ca_bundle` is no longer used. kong-harnesses and Claude Code trust the gateway through the system trust store by default, so add the gateway's CA there, usually through MDM. Without the CA there, kong-harnesses reads `SSL_CERT_FILE` naming a file with every CA it needs, with `GODEBUG=x509sslcertoverrideplatform=1` also set on macOS and Windows, and the CA setting of Claude Code, `NODE_EXTRA_CA_CERTS`, still works. After the upgrade, run `profile activate` again, which removes the bundle file that an earlier release wrote for Claude Code and names the CA to install by its SHA-256 fingerprint."
+- release: 0.14.0
+  entry: "* **clients:** configure pi through a command-resolved provider"
+  text:

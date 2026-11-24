@@ -138,6 +138,10 @@ Run the steps in this order:
    The script filters the releases and sections first and reads the links only in the text it keeps, so a section that is left out cannot stop the sync.
    It keeps only the sections for users (**⚠ BREAKING CHANGES**, **Features**, **Bug Fixes** and **Performance**) and gives them sentence case titles (**Breaking changes**, **Features**, **Bug fixes** and **Performance**), as the style guide asks for headings, so the steps an upgrade needs stay under **Breaking changes**.
    It drops every other section, the changes to the repository's own tooling and dependency pins (the tooling scopes in `TOOLING_SCOPES` of `sync-changelog.rb`) outside **⚠ BREAKING CHANGES**, and a release with nothing left.
+   The docs cover only Claude Code for now, so the page doesn't name the other clients (`HIDDEN_CLIENTS` in `check-changelog-links.rb`).
+   The script drops an entry with such a client as its scope and writes the rewrite from `changelog-rewrites.yml` in place of an entry that names one, or drops the entry when the rewrite has no text.
+   It refuses an entry that names such a client and has no rewrite, and a rewrite for a release on the page that matches no entry, so a changed entry stops the sync, and `check-changelog-links.rb` refuses a page that names such a client.
+   When the docs cover a client, remove it from `HIDDEN_CLIENTS` and remove its rewrites.
 
 Commit the generated `app/_data/tools/kong-harnesses.yml`, `app/_includes/kong-harnesses/help/**` and `app/_data/kong-harnesses/changelog.json` files with any page changes from pruning.
 

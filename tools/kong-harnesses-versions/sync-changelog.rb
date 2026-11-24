@@ -20,6 +20,7 @@ module KongHarnessesChangelog
 
   ROOT = File.expand_path('../..', __dir__)
   DATA_FILE = File.join(ROOT, 'app/_data/kong-harnesses/changelog.json')
+  REWRITES_FILE = File.join(__dir__, 'changelog-rewrites.yml')
 
   def repo
     KongHarnessesChangelogLinks.repo
@@ -44,6 +45,10 @@ module KongHarnessesChangelog
   # The release notes of the kong-harnesses releases use the same scopes; change both
   # together.
   TOOLING_SCOPES = %w[ci deps ksai threat-model].freeze
+  HIDDEN_CLIENTS = KongHarnessesChangelogLinks::HIDDEN_CLIENTS
+  # The end of an entry's line that release-please writes: the subject's own `(#N)`, the
+  # commit and the issues it closes. A rewrite names an entry by its line without them.
+  LINE_TAIL = %r{(?: \(\[\#\d+\]\(https://github\.com/[^)\s]*\)\))?(?: \(\[[0-9a-f]{7}\]\(https://github\.com/[^)\s]*\)\))?(?:, closes .*)?\z}
 
   # The elements that the export knows how to write back. It refuses any other, such
   # as a footnote, math, raw HTML or an HTML comment, rather than guess. A strikethrough
@@ -570,7 +575,35 @@ module KongHarnessesChangelog
   # no text of it: GitHub masks only the exact text of a secret, so the job log would
   # show the repository in another letter case. The numbers count the source, also the
   # tooling entries that the page drops, because a person fixes the entry there.
-  def public_section(title, content, lines, release)
+  # The rewrites of changelog-rewrites.yml: each names a release, an entry as its first
+  # line without the references at its end, and the entry to show in its place, or none.
+  def rewrites_from(file)
+    YAML.safe_load_file(file).map { |rewrite| rewrite.slice('release', 'entry', 'text') }
+  end
+
+  # An entry that names a client that the docs do not cover yet, with the rewrite that
+  # changelog-rewrites.yml gives for it in place of its children, or nil to leave it out.
+  # The export refuses such an entry with no rewrite, so a new one cannot reach the page.
+  def without_hidden_clients(item, lines, release, entry, rewrites)
+    return if HIDDEN_CLIENTS.include?(scope(item))
+
+    line = lines[item.options[:location] - 1].to_s.chomp.sub(LINE_TAIL, '')
+    rewrite = rewrites.find { |candidate| "release #{candidate['release']}" == release && candidate['entry'] == line }
+    if rewrite
+      rewrite['used'] = true
+      return if rewrite['text'].nil?
+
+      list = parse(rewrite['text']).children.find { |element| %i[ul ol].include?(element.type) }
+      raise "The rewrite of #{entry} in #{REWRITES_FILE} is not one list entry." unless list&.children&.length == 1
+
+      item.children = list.children.first.children
+    end
+    raise "#{entry.sub(/\A./, &:upcase)} names a client that the docs do not cover yet. Add a rewrite for it to #{REWRITES_FILE}." if text_of(item).match?(KongHarnessesChangelogLinks::HIDDEN_CLIENT)
+
+    item
+  end
+
+  def public_section(title, content, lines, release, rewrites = [])
     name = text_of(title).strip
     return [[], []] unless USER_SECTIONS.include?(name)
 
@@ -587,6 +620,7 @@ module KongHarnessesChangelog
         entries += element.children.length
         # An upgrade step stays whatever its scope, because a user must still do it.
         element.children = element.children.reject { |item| name != BREAKING_CHANGES && TOOLING_SCOPES.include?(scope(item)) }
+        element.children = element.children.filter_map { |item| without_hidden_clients(item, lines, release, "#{where}, entry #{numbers.fetch(item)}", rewrites) }
         next [] if element.children.empty?
 
         sources << copy(element)
@@ -638,7 +672,7 @@ module KongHarnessesChangelog
   # or no heading for `highest`, the highest final release, stops the sync, so a
   # changelog that lost its sections cannot empty the page. So does a changelog with no
   # entries for users left.
-  def export(markdown, published:, highest:, finals: published.select { |version| "v#{version}".match?(STABLE_TAG) }, log: $stderr)
+  def export(markdown, published:, highest:, finals: published.select { |version| "v#{version}".match?(STABLE_TAG) }, log: $stderr, rewrites: [])
     releases = []
     # The lines as kramdown counts them, which also ends a line at a lone CR.
     lines = markdown.scan(/[^\r\n]*(?:\r\n?|\n)|[^\r\n]+\z/)
@@ -680,7 +714,7 @@ module KongHarnessesChangelog
                elsif !published.include?(core(version)) then "is a pre-release, and no #{core(version)} release is published"
                elsif !finals.include?(core(version)) then "is a pre-release, and the #{core(version)} release #{not_final(core(version))}"
                end
-      sections = reason ? [] : release[:sections].map { |section| public_section(section[:title], section[:content], lines, "release #{version}") }
+      sections = reason ? [] : release[:sections].map { |section| public_section(section[:title], section[:content], lines, "release #{version}", rewrites) }
       reason ||= 'has no entries for users' if sections.all? { |kept, _| kept.empty? }
       next log.puts("Left out the changelog section for #{version}, which #{reason}.") if reason
 
@@ -690,6 +724,11 @@ module KongHarnessesChangelog
       kept << version
     end
     raise 'The changelog has no entries for users in its published releases.' if root.children.empty?
+
+    # A rewrite of a release on the page that names no entry would let a changed entry
+    # through unread, so the export refuses it.
+    stale = rewrites.find { |rewrite| !rewrite['used'] && kept.include?(rewrite['release'].to_s) }
+    raise "#{REWRITES_FILE} has a rewrite for release #{stale['release']} that matches no entry, so the export refuses the changelog." if stale
 
     (finals - versions).sort_by { |version| Gem::Version.new(version) }.reverse_each do |version|
       log.puts("The changelog has no section for #{version}, a published final release.")
@@ -1074,7 +1113,7 @@ module KongHarnessesChangelog
     status, changelog = get.call("/repos/#{repo}/contents/CHANGELOG.md?ref=main", 'application/vnd.github.raw')
     raise "GitHub API request for #{repo} CHANGELOG.md on main failed (#{status})." unless status == 200
 
-    ["v#{highest}", export(changelog.force_encoding('UTF-8'), published: published, finals: finals, highest: highest)]
+    ["v#{highest}", export(changelog.force_encoding('UTF-8'), published: published, finals: finals, highest: highest, rewrites: rewrites_from(REWRITES_FILE))]
   end
 
   def github(token)

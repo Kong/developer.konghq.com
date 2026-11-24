@@ -188,6 +188,7 @@ module KongHarnessesChangelogLinks
       found << "an address in #{place(node)} (a value such as `go@1.21` can go in backticks)" if address?(visible(node, code: false))
       found << "the releases repository in #{place(node)}" if normalize(seen).match?(repository)
       found << "a dot segment in a GitHub address in #{place(node)}" if normalize(seen).match?(DOT_SEGMENT)
+      found << "a client that the docs do not cover yet in #{place(node)}" if seen.match?(HIDDEN_CLIENT)
     end
     shown = fragment.element_children.select { |node| node.name == 'h2' }.map { |heading| shown_version(heading) }
     shown.each_with_index do |version, index|
@@ -195,6 +196,14 @@ module KongHarnessesChangelogLinks
     end
     found.uniq
   end
+
+  # The clients that the docs do not cover yet: the first docs release covers Claude Code
+  # only, and the other clients follow. sync-changelog.rb leaves out an entry with one of
+  # them as its scope and rewrites each other entry that names one, as
+  # changelog-rewrites.yml says, and the page check refuses a page that names one. Empty
+  # the list and the file when the docs cover these clients.
+  HIDDEN_CLIENTS = %w[codex opencode hermes omp oh-my-pi pi].freeze
+  HIDDEN_CLIENT = /\b(?:#{Regexp.union(HIDDEN_CLIENTS).source})\b/i
 
   # The sections that sync-changelog.rb keeps, as release-please names them, and the
   # sentence case title that the page gives each, as the site's style guide asks for

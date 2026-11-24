@@ -15,9 +15,9 @@ RSpec.describe KongHarnessesChangelog do
     end
   end
 
-  def exported(markdown, published = ['1.0.0'], log: StringIO.new)
+  def exported(markdown, published = ['1.0.0'], log: StringIO.new, rewrites: [])
     highest = published.select { |version| "v#{version}".match?(described_class::STABLE_TAG) }.max_by { |version| Gem::Version.new(version) }
-    described_class.export(markdown, published: published, highest: highest, log: log)
+    described_class.export(markdown, published: published, highest: highest, log: log, rewrites: rewrites)
   end
 
   # A tree of the source and its lines, as the export gives them to `written`.
@@ -486,6 +486,43 @@ RSpec.describe KongHarnessesChangelog do
       .to eq("## 1.0.0\n\n### Bug fixes\n\n* **cli(help):** fix\n")
     expect(exported("## 1.0.0\n\n### ⚠ BREAKING CHANGES\n\n* **deps:** install Go 1.30 first\n\n### Bug Fixes\n\n* **deps:** update Go\n"))
       .to eq("## 1.0.0\n\n### Breaking changes\n\n* **deps:** install Go 1.30 first\n")
+  end
+
+  describe 'clients that the docs do not cover yet' do
+    def rewrite(entry, text)
+      [{ 'release' => '1.0.0', 'entry' => entry, 'text' => text }]
+    end
+
+    it 'leaves out an entry with the scope of such a client, but keeps a word that only contains its name' do
+      expect(exported("## 1.0.0\n\n### Features\n\n* **hermes:** route\n* **cli:** read a pipe\n"))
+        .to eq("## 1.0.0\n\n### Features\n\n* **cli:** read a pipe\n")
+    end
+
+    it 'refuses an entry that names such a client and has no rewrite' do
+      expect { exported("## 1.0.0\n\n### Features\n\n* **login:** check OpenCode\n") }
+        .to raise_error(/Release 1\.0\.0, section Features, entry 1 names a client/)
+    end
+
+    it 'writes the rewrite in place of the entry, also when the entry has issue and commit links' do
+      source = "## 1.0.0\n\n### Features\n\n* **login:** check OpenCode ([#1](https://github.com/o/r/issues/1)) ([abcdef0](https://github.com/o/r/commit/abcdef0))\n"
+      expect(exported(source, rewrites: rewrite('* **login:** check OpenCode', '* **login:** check the sign-in')))
+        .to eq("## 1.0.0\n\n### Features\n\n* **login:** check the sign-in\n")
+    end
+
+    it 'leaves out the entry when the rewrite has no text' do
+      expect(exported("## 1.0.0\n\n### Features\n\n* **cli:** add\n* **clients:** configure pi\n", rewrites: rewrite('* **clients:** configure pi', nil)))
+        .to eq("## 1.0.0\n\n### Features\n\n* **cli:** add\n")
+    end
+
+    it 'refuses a rewrite that still names such a client' do
+      expect { exported("## 1.0.0\n\n### Features\n\n* **login:** check OpenCode\n", rewrites: rewrite('* **login:** check OpenCode', '* **login:** check Codex')) }
+        .to raise_error(/names a client/)
+    end
+
+    it 'refuses a rewrite for a published release that matches no entry' do
+      expect { exported("## 1.0.0\n\n### Features\n\n* **cli:** add\n", rewrites: rewrite('* **cli:** remove', nil)) }
+        .to raise_error(/rewrite for release 1\.0\.0 that matches no entry/)
+    end
   end
 
   it 'drops a section with no entry left' do
