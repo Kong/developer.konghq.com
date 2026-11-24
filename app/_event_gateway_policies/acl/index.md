@@ -38,6 +38,8 @@ related_resources:
     url: /how-to/event-gateway/kong-identity-oauth/
   - text: "How-to: Productize Kafka topics with namespaces and ACLs"
     url: /event-gateway/productize-kafka-topics/
+  - text: "How-to: Fail over to a standby Kafka cluster"
+    url: /event-gateway/fail-over-kafka-clusters/
   - text: Expressions reference
     url: /event-gateway/expressions/
 ---
@@ -68,6 +70,9 @@ rows:
   - use_case: "[How-to: Secure Kafka traffic in {{site.event_gateway_short}} with {{site.identity}} and ACLs](/how-to/event-gateway/kong-identity-oauth/)"
     description: |
       Using [{{site.identity}}](/identity/) as an auth server, verify client OAuth tokens through a virtual cluster, and apply an ACL policy to restrict access to a specific client.
+  - use_case: "[How-to: Fail over to a standby Kafka cluster](/event-gateway/fail-over-kafka-clusters/)"
+    description: |
+      Pre-stage a disabled ACL policy that denies writes, and enable it to pause producers while you move a virtual cluster to a standby Kafka cluster.
 {% endtable %}
 <!--vale on-->
 
