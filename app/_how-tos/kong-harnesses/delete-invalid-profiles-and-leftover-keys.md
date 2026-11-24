@@ -47,6 +47,7 @@ prereqs:
       content: |
         A user profile that `doctor`, `logout`, `profile get`, or `profile list` reports as invalid or unreadable, and whose message names `kong-harnesses profile delete`.
         If the message names a different fix, follow it instead. For details, see [Profile errors](/kong-harnesses/errors/#profile-errors).
+        Keep kong-harnesses installed until you finish these steps.
 ---
 
 When a user profile is invalid or unreadable, `kong-harnesses logout` can't read it to revoke your sign-in.
@@ -103,7 +104,7 @@ macOS can ask for the keychain password, normally your login password, to allow 
    IFS= read -r KEYCHAIN_PATH
    ```
 
-   Paste the path without the double quotes that `security list-keychains` prints around it, then press Enter.
+   Paste the path without the double quotes that `security list-keychains` prints around it, or the path of a former default keychain that isn't in that output, then press Enter.
    For example: `/Users/USER/Library/Keychains/login.keychain-db`.
 1. In the same terminal, unlock the keychain:
 
