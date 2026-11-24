@@ -51,7 +51,7 @@ rows:
 1. Click **Save**.  
 
 #### Set up keys and credentials
-1. In your client, open the **Credentials** tab.
+1. In your client, click the **Credentials** tab.
 1. Set **Client Authenticator** to **Client ID and Secret**.
 1. Copy the **Client Secret**.
 

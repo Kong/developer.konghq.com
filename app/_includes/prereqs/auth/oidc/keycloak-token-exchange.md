@@ -72,7 +72,7 @@ rows:
 Find the credentials for the first client:
 
 1. In the sidebar, open **Clients**, and select `client-1`.
-1. Open the **Credentials** tab.
+1. Click the **Credentials** tab.
 1. Set **Client Authenticator** to **Client ID and Secret**.
 1. Copy the **Client Secret**.
 1. Export the client ID and secret to environment variables:
@@ -113,7 +113,7 @@ rows:
 Find the credentials for the second client:
 
 1. In the sidebar, open **Clients**, and select `client-2`.
-1. Open the **Credentials** tab.
+1. Click the **Credentials** tab.
 1. Set **Client Authenticator** to **Client ID and Secret**.
 1. Copy the **Client Secret**.
 1. Export the client ID and secret to environment variables:
@@ -162,7 +162,7 @@ rows:
    
    In this guide, we're going to use an example user named `alex`.
 
-1. Open the user's **Credentials** tab and add a password. 
+1. Click the user's **Credentials** tab and add a password. 
 
    In this guide, we're going to use the example password `doe`.
 
