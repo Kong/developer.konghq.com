@@ -120,6 +120,10 @@
 /plugins/traceableai/  /plugins/harness-waap/
 /plugins/traceableai/reference/  /plugins/harness-waap/reference/
 /plugins/traceableai/examples/enable-traceable/  /plugins/harness-waap/examples/enable-harness-waap/
+/plugins/straiker-coding-agent-buffered/ /plugins/straiker/
+/plugins/straiker-coding-agent-buffered/* /plugins/straiker/
+/plugins/straiker-coding-agent-streaming/ /plugins/straiker/
+/plugins/straiker-coding-agent-streaming/* /plugins/straiker/
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
 /gateway/plugin-development/  /custom-plugins/
 /gateway/plugin-development/*  /custom-plugins/

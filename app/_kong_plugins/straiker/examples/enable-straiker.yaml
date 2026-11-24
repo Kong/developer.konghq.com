@@ -1,30 +1,36 @@
-description: 'Enable the Straiker plugin on a chat completion route.'
+description: 'Enable the Straiker plugin on an LLM route.'
 
 extended_description: |
-  Enable the Straiker plugin on a Route or Service that already has AI Proxy or AI Proxy Advanced configured.
+  Enable the Straiker plugin on a Route that carries LLM traffic, such as Anthropic Messages or OpenAI chat requests.
 
-  This configuration enforces blocking decisions and fails open if the Straiker Defend pre-call webhook is unreachable, so chat traffic keeps flowing during a Straiker outage.
-  Post-call (response) evaluation always fails open, regardless of `fail_open`, so a real model answer is never withheld because the webhook was down.
-  Set `block` to `false` to evaluate and log traffic without blocking it.
+  This configuration scores prompts and responses, and injects the upstream model credential at the gateway so clients never carry a platform key.
+  Traffic passes uninspected, stamped `degraded`, if Straiker can't be reached. Set `fail_closed` to `true` to reject it instead.
+
+  The delivery mode is controlled by the `STRAIKER_KONG_MODE` environment variable on the {{site.base_gateway}} node.
+  See [Delivery mode](/plugins/straiker/#delivery-mode) in the plugin documentation.
 
 title: 'Enable Straiker'
 
 weight: 900
 
 requirements:
-  - "The Straiker plugin is [installed](/plugins/straiker/#install-the-straiker-plugin)."
-  - "[AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) is configured on the same Service or Route."
-  - "A Straiker Defend API key. Contact your Straiker team for enterprise API keys and sandbox access."
+  - "The Straiker plugin is [installed](/plugins/straiker/#install-the-straiker-plugin), with `nginx_http_client_body_buffer_size` raised to `32m`."
+  - "A Straiker account and integration key."
+  - "A Service pointing at the model provider, for example `https://api.anthropic.com`. Set a generous `read_timeout`, for example `600000`."
+  - "A Route with `protocols` set explicitly, for example `http` and `https`."
 
 variables:
   api-key:
     value: $STRAIKER_API_KEY
-    description: Your Straiker Defend API key.
+    description: Your Straiker integration key.
+  upstream-api-key:
+    value: $UPSTREAM_API_KEY
+    description: The model provider credential the gateway injects.
 
 config:
+  detect_url: https://api.prod.straiker.ai/api/v3/detect
   api_key: ${api-key}
-  block: true
-  fail_open: true
+  upstream_api_key: ${upstream-api-key}
 
 tools:
   - deck
