@@ -1,0 +1,4 @@
+<div class="agent-instructions hidden">
+{% capture agent_instructions_body %}{% include components/konnect_mcp_agent_instructions.md %}{% endcapture %}
+{{ agent_instructions_body | markdownify | no_toc_headings }}
+</div>
