@@ -78,6 +78,8 @@ prereqs:
         Replace `work` with your profile name in each command.
 
         `fleet build` refuses `http://` origins and Claude subscription profiles.
+        It also refuses a gateway on a host of a Claude provider, such as an Amazon Bedrock runtime host.
+        {{ site.claude_code }} names such a session after the provider, so the `allowedProviders` lock of the build stops it.
         If the profile uses the Anthropic API provider, the build computer must reach the gateway and trust any private gateway CA.
     - title: "{{ site.claude_code }} and test access"
       content: |

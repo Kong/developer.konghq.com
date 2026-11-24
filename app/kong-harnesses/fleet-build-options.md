@@ -294,7 +294,6 @@ A `serverName` entry is an exception: it matches the name as written, before the
   If `--policy` sets the minimum, set `requiredMinimumVersion` and `minimumVersion` to `2.1.219` or later instead.
 * The server or an entry names a variable that {{ site.claude_code }} can read as an empty credential, even when the `env` of the policy sets it.
   A remote server that takes its host from such a variable then doesn't have a host to reach.
-  A gateway MCP URL that names the same such variable more than once can also leave the server undecided.
   Write the value as a literal.
 
 `fleet build` refuses a blocked or undecided server.
@@ -310,6 +309,8 @@ When a deny entry is sure to match one of your own `--mcp-config` servers, `flee
 ### More MCP rules
 
 * **Provided servers at a gateway address (every mode):** `fleet build` refuses a `managedMcpServers` entry that points, or may point, to the address of a gateway MCP server, even under another name.
+  An entry may point to that address when a variable in its URL can give that address.
+  An entry also may point to that address when its URL is too complex for `fleet build` to check, for example when the URL repeats a credential or variable name, or has a `..` default in many credential references.
   Remove each entry that `fleet build` refuses.
   Such an entry causes a conflict in every mode:
   * In the `allowlist` and `any` modes, {{ site.claude_code }} loads the provided server instead of the gateway server at the same URL.
@@ -341,6 +342,7 @@ When a deny entry is sure to match one of your own `--mcp-config` servers, `flee
 
   The new `managed-mcp.json` holds the current gateway servers of the profile and each `--mcp-config` server that `fleet build` didn't take out.
 * **Servers at a gateway address (`exclusive`):** `fleet build` refuses an `--mcp-config` server with another name that points, or may point, to the address of a gateway MCP server.
+  A server may point to that address in the same cases as a provided server.
   Remove each refused server.
   `fleet build` doesn't refuse a server at that address in these cases:
   * The denylist of the policy always blocks the server.
