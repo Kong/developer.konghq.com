@@ -20,7 +20,7 @@ tags:
   - cost-management
 
 min_version:
-  ai-gateway: '2.5'
+  ai-gateway: '2.4'
 
 description: "Conversation capture records the prompts and responses that pass through {{site.ai_gateway}}, so you can find out why costs rise, tool calls fail, or agents misbehave."
 
@@ -40,13 +40,13 @@ related_resources:
 ---
 
 <!-- TODO confirm before publishing:
-- Release: confirm 2.5 versus 2.4. Jira AG-2227 is tagged aigw-2.4.0, but the gateway team said payload export won't make 2.4 (affects `min_version` and `published: false`).
-- `sampling_rate` is intentionally not documented: the ERD says it stays hidden from users for now, but the kong-ee schema (PR 23705) defaults it to 1 (range 0 to 1). Confirm with the PM whether it is public, then document it.
-- `max_payload_size_bytes` default (2,000,000 in PR 23705) differs from the ERD (1,000,000). Confirm the final default and upper bound against the Konnect spec.
-- Trace export isn't in kong-ee PR 23705 (access logs only, "Milestone 1"). Re-add traces content when a PR ships it.
-- Whether payload capture gets its own toggle or a per-exporter `export_ai_payloads` switch (PRD AG-2227) is still open.
+- Release: min_version is 2.4 (Aha AI-240 and Jira AG-2227 target 2.4 GA, and Koko sends the settings to 2.4 or later data planes). It depends on kong-ee PR 23705 merging before the 2.4 cut. Otherwise move to 2.5 and set `published: false`.
+- Sampling rule variables: Koko validates `sampling_rule` against the ACL expression variables (for example `consumer.username`), but the data plane evaluates access log attribute names (for example `kong.auth.consumer.username`). Confirm with a live PATCH which names work end to end before publishing the examples.
+- Maximum payload size: Koko hard-codes `max_payload_size_bytes` to 2400 for every data plane (koko-private `internal/ai-gateway/settings/settings.go`), while the data plane default is 2,000,000. Confirm the intended value with the Koko and AI Gateway teams, then document the limit.
+- The spec marks the settings endpoints `x-internal` and `x-unstable`. Confirm with the PM that they are public.
+- Trace export isn't in kong-ee PR 23705 (access logs only). Koko strips `traces` for 2.4 data planes. Re-add traces content when a release ships it.
+- `sampling_rate` for payload capture isn't exposed by the API, so it isn't documented.
 - Agent debugging, prompt review, and audit use cases (not in the PRD).
-- Settings endpoints are public (marked internal and unstable in the spec).
 -->
 
 Conversation capture records the prompts and responses that pass through {{site.ai_gateway}} and exports them to {{site.konnect_short_name}}, so you can read the conversation behind a metric.
@@ -129,7 +129,7 @@ Requests that the gateway handles internally aren't exported.
 ## Capture controls
 
 Conversation capture settings apply to all traffic through {{site.ai_gateway}}.
-All of them are off by default, so nothing is traced, exported, or captured until you turn it on.
+Access log export and payload capture are off by default, so nothing is exported or captured until you turn it on.
 
 {% table %}
 columns:
@@ -140,16 +140,10 @@ columns:
 rows:
   - setting: "`observability.access_logs.enabled`"
     controls: "Whether access logs are exported."
-  - setting: "`observability.access_logs.compression_enabled`"
-    controls: "Whether exported access logs are gzip-compressed. Defaults to `true`."
   - setting: "`observability.payload_capture.enabled`"
     controls: "Whether exported access logs keep the request and response bodies."
   - setting: "`observability.payload_capture.sampling_rule`"
     controls: "A CEL expression that limits payload capture to matching requests."
-  - setting: "`observability.payload_capture.max_payload_size_bytes`"
-    controls: |
-      The maximum size of a captured body, in bytes. Defaults to 2,000,000.
-      A larger body isn't exported.
 {% endtable %}
 
 Payloads are part of the access log, so payload capture has an effect only when access log export is on.
@@ -161,8 +155,10 @@ It's off by default, because payloads can be large and can contain sensitive dat
 
 Payloads only exist in the access log when the [AI Model](/ai-gateway/entities/ai-model/), [AI Agent](/ai-gateway/entities/ai-agent/), or [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) that serves the request logs payloads.
 Payload capture then decides whether they are exported.
+
+<!-- TODO confirm against an RC: the spec describes payload capture as additive ("a payload is captured when the entity that serves the request logs payloads, or when payload capture is enabled and the request matches `sampling_rule`"), but the data plane code (kong-ee PR 23705) drops payloads from the exported access log unless capture is enabled and the rule matches, and needs the entity to log payloads first. This page follows the data plane code. kong-ee PR 25066 later removes the entity requirement. -->
 {{site.ai_gateway}} exports a payload only when payload capture is enabled and the request matches the sampling rule, if you set one.
-A body larger than `max_payload_size_bytes` is left out of the export, not truncated.
+A body above the maximum payload size is left out of the export, not truncated.
 
 Unlike payload capture in Debugger sessions, conversation capture doesn't require a Data Processing Addendum or an organization-level entitlement.
 Because payloads can contain sensitive data, review your own data handling requirements before you turn it on.
@@ -171,29 +167,29 @@ Because payloads can contain sensitive data, review your own data handling requi
 
 To limit payload capture to the requests you care about, set a sampling rule.
 A sampling rule is a [Common Expression Language (CEL)](/ai-gateway/conditions/) boolean expression of up to 1,024 characters.
-The expression reads access log attributes by their full names, for example `kong.auth.consumer.username`.
-An attribute that is missing from the request is null, and a rule that fails to evaluate counts as no match.
+The expression is evaluated against the request context and can use the same variables as the `allow_when` and `deny_when` access rules, for example `consumer.username`.
+A variable that is missing from the request is null, and a rule that fails to evaluate counts as no match.
+
+<!-- TODO confirm against an RC: the spec example and Koko validation use ACL variables such as `consumer.username`, but the kong-ee data plane code (PR 23705) evaluates the rule over access log attribute names such as `kong.auth.consumer.username` and `url.path`. If both are true, a rule written with ACL variables never matches on the data plane. Fix whichever side is wrong, then align this section and the examples. -->
+
 Only requests that match the rule have their payloads captured.
 If you enable payload capture without a sampling rule, {{site.ai_gateway}} captures every request.
 If the rule is invalid, {{site.ai_gateway}} captures no payloads.
 
-For example, the rule `kong.auth.consumer.username == 'support-bot'` captures conversations only for the `support-bot` consumer.
+For example, the rule `consumer.username == 'support-bot'` captures conversations only for the `support-bot` consumer.
 
 ## PII scrubbing
 
-{{site.ai_gateway}} scrubs PII from captured data in the data plane before export, using a fixed set of rules:
+{{site.ai_gateway}} redacts the values of the `authorization`, `apikey`, and `cookie` request headers in the data plane before export, and replaces each with `REDACTED`.
+Other headers are exported as they are.
+{{site.ai_gateway}} doesn't inspect the contents of prompts and responses, so it doesn't redact card numbers, personal data, or other sensitive values inside them.
 
-- Values that pass the Luhn check, such as credit card numbers, are redacted.
-- A predefined set of authentication headers is removed.
+You can't configure what is redacted, and custom sanitization rules aren't supported.
 
-You can't configure these rules, and custom sanitization rules aren't supported.
-
-<!-- TODO confirm: the PM brief mentions "local and data plane regex" scrubbing, but the ERD lists only the fixed Luhn and auth header rules and puts custom rules out of scope. Don't mention regex until the PM confirms. -->
-
-<!-- TODO confirm: whether API key headers used by coding agents are in the scrubbed header list. -->
+<!-- TODO confirm: the PM brief mentions "local and data plane regex" scrubbing and the ERD mentions Luhn card redaction, but neither is in kong-ee PR 23705 (only the three headers). Don't document either until it ships. Also confirm whether API key headers used by coding agents are redacted. -->
 
 {:.warning}
-> The fixed scrubbing rules can't detect all sensitive data in prompts and responses.
+> Header redaction doesn't cover the sensitive data that prompts and responses can contain.
 > For traffic that carries sensitive data, keep payload capture off or limit it with a sampling rule.
 
 ## Enable conversation capture
@@ -215,7 +211,7 @@ body:
       enabled: true
     payload_capture:
       enabled: true
-      sampling_rule: "kong.auth.consumer.username == 'support-bot'"
+      sampling_rule: "consumer.username == 'support-bot'"
 {% endkonnect_api_request %}
 <!--vale on-->
 

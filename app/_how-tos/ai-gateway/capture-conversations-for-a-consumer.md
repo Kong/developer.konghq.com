@@ -16,7 +16,7 @@ tools:
   - konnect-api
 
 min_version:
-  ai-gateway: '2.5'
+  ai-gateway: '2.4'
 
 entities:
   - ai-model-provider
@@ -34,7 +34,7 @@ tldr:
   q: How do I capture the prompts and responses for a specific consumer in {{site.ai_gateway}}?
   a: |
     Turn on payload logging on the [AI Model](/ai-gateway/entities/ai-model/), then enable access log export and payload capture in the {{site.ai_gateway}} settings.
-    Add a sampling rule such as `kong.auth.consumer.username == 'support-bot'` to capture conversations only for that consumer.
+    Add a sampling rule such as `consumer.username == 'support-bot'` to capture conversations only for that consumer.
 
 prereqs:
   inline:
@@ -61,9 +61,10 @@ related_resources:
 ---
 
 <!-- TODO before publishing (speculative draft, nothing here is tested):
-- Confirm min_version (2.4 or 2.5) and add a prereq for a data plane build that includes conversation capture.
-- Confirm the settings endpoint and PATCH semantics (not in the Konnect spec in this repo). Field names come from kong-ee PR 23705.
-- Confirm that kong.auth.consumer.username comes from the AI Consumer name, and that the consumers endpoint accepts a name in the path.
+- min_version is 2.4 (see the release note in the reference page). Add a prereq for a data plane build that includes conversation capture.
+- No RC exists yet, so none of this is tested. Sampling rule variable names: the examples use the ACL variable `consumer.username` from the spec, but the data plane code evaluates access log attributes (`kong.auth.consumer.username`). Run the PATCH and the validation against an RC and fix the rule.
+- The settings endpoint is `x-internal` and `x-unstable` in the Konnect spec (platform-api PR 4020). Confirm it is public.
+- Confirm that `consumer.username` is the AI Consumer name, and that the consumers endpoint accepts a name in the path.
 - Replace the last sentence of Validate with the real check once the Konnect view of captured conversations is known, and state the expected delay.
   UI status as of 2026-11-20: no capture toggle or conversation view exists yet. KM-3635 (UI part, To Do) is blocked on KOKO-4869 (control plane API, In Progress) and AG-2227 (data plane, In Progress), with no design linked.
   Observability > Sessions exists in Konnect but is probably the separate Sessions feature (planned for the "Nov 26" release, docs issue #8115), not conversation capture. It has no consumer filter (only Status, Model, Gateway ID, User).
@@ -218,7 +219,7 @@ body:
       enabled: true
     payload_capture:
       enabled: true
-      sampling_rule: "kong.auth.consumer.username == 'support-bot'"
+      sampling_rule: "consumer.username == 'support-bot'"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -255,5 +256,5 @@ Captured conversations can take some time to appear.
 
 - **No payload for `support-bot`:** Check that the AI Model has `config.logging.payloads: true`, that `observability.payload_capture.enabled` is `true`, and that the sampling rule matches the consumer. A missing attribute evaluates to null and counts as no match.
 - **No payloads at all after adding a rule:** If the sampling rule is invalid, the data plane captures no payloads. Check the data plane logs for `invalid payload capture sampling rule`.
-- **Some conversations have no payload:** {{site.ai_gateway}} leaves out any body larger than `max_payload_size_bytes` (2,000,000 bytes by default) instead of truncating it.
+- **Some conversations have no payload:** {{site.ai_gateway}} leaves out any body above the maximum payload size instead of truncating it.
 - **Nothing is exported:** Conversation capture works with {{site.konnect_short_name}} data planes only, and the data plane needs `cluster_telemetry_endpoint` and its cluster certificate. Check the data plane logs for `[continuous-telemetry] exporter disabled`.

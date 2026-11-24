@@ -28,6 +28,8 @@ tags:
 related_resources:
   - text: Debugger spans
     url: /observability/debugger-spans/
+  - text: Conversation capture in {{site.konnect_short_name}}
+    url: /observability/conversation-capture/
   - text: Configure CMEK in {{site.konnect_short_name}}
     url: /konnect-platform/cmek/
   - text: "{{site.base_gateway}} tracing reference"

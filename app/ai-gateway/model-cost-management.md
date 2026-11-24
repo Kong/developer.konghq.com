@@ -29,6 +29,8 @@ related_resources:
     url: /ai-gateway/
   - text: AI Model entity
     url: /ai-gateway/entities/ai-model/
+  - text: Conversation capture in {{site.konnect_short_name}}
+    url: /observability/conversation-capture/
   - text: AI Rate Limiting Advanced policy
     url: /ai-gateway/policies/ai-rate-limiting-advanced/
   - text: Price catalog and overrides
