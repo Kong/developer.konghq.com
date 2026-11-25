@@ -1,0 +1,84 @@
+name: Generate kong-harnesses Changelog
+
+on:
+  workflow_dispatch:
+    inputs:
+      min_version:
+        description: 'Lowest version to include (for example 0.18.0).'
+        required: true
+        default: '0.18.0'
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate-changelog:
+    name: Generate kong-harnesses Changelog
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+
+      - name: Checkout developer.konghq.com
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Checkout kong-harnesses repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: 'Kong/kong-harnesses'
+          token: ${{ steps.app-token.outputs.token }}
+          path: 'kong-harnesses'
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '26'
+
+      - name: Generate the changelog JSON
+        run: |
+          node tools/kong-harnesses-changelog/generate.js --input=kong-harnesses/CHANGELOG.md --min-version='${{ inputs.min_version }}'
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create pull request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
+        with:
+          title: Generate kong-harnesses changelog
+          commit-message: Generate kong-harnesses changelog
+          body: |
+            **Changes:**
+            - Regenerated `app/_changelogs/kong-harnesses.json` from the private `Kong/kong-harnesses` changelog
+            ${{ format('- Included versions at or above {0}', inputs.min_version) }}
+
+          labels: skip-changelog,review:general
+          token: ${{ steps.app-token.outputs.token }}
+          branch: auto/generate-kong-harnesses-changelog-${{ github.run_number }}
+          add-paths: |
+            app/_changelogs/kong-harnesses.json
+
+      - name: No changes detected
+        if: steps.changes.outputs.changed == 'false'
+        run: |
+          echo "No changes detected in the changelog file. No pull request will be created."

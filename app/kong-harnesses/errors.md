@@ -415,7 +415,6 @@ Run `doctor` without `--inference`, or select a profile with a `claude-code` blo
 ## Sign-in errors
 
 `login` and `logout` print their own errors, and [When the login or logout command fails](/kong-harnesses/sign-in/errors/#when-the-login-or-logout-command-fails) lists them with their fixes.
-When `logout` exits with `4`, see [Sign out](/kong-harnesses/sign-in/#sign-out).
 [When kong-harnesses can't give an access token](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token) lists the errors that `credential` and `token` print, with their fixes.
 Examples are an expired sign-in, a locked system password store, or a proxy in front of an `http://` gateway.
 This section lists the `login` result that leaves a client check open, and the errors that {{ site.claude_code }} gets for a gateway MCP server.
@@ -605,7 +604,6 @@ Give `setup` a profile file, an HTTPS URL, or `--profile PROFILE_NAME`, or run i
 The message names the step that failed and the reason, and the lines before it can give more detail.
 Fix the cause, using the entry for that message on this page.
 Then run the command that the message names, which resumes after the finished steps.
-For which command that is, and what it keeps, see [Resume after a step fails](/kong-harnesses/setup/#resume-after-a-step-fails).
 
 When the gateway or this computer refuses an agent CLI, the line before the message names the fix.
 The message then says what `setup` did:
@@ -621,8 +619,7 @@ Until you make the fix for a refused agent CLI, `setup` leaves it out each time,
 ## Fleet build errors
 
 Most `fleet build` and `fleet remove` errors name the flag to add or remove.
-[Fleet build options](/kong-harnesses/fleet-build-options/) describes `--policy`, `--no-policy`, `--mcp-servers`, `--mcp-config`, `--record`, and `fleet remove`.
-[Keep a {{ site.claude_code }} fleet on tested versions](/kong-harnesses/maintain-a-claude-code-fleet/) walks through a new build with `--record`, which needs the record of the build that the computers run.
+[Pin a {{ site.claude_code }} fleet to a tested version range](/kong-harnesses/pin-a-claude-code-fleet/) walks through a new build with `--record`, which needs the record of the build that the computers run.
 
 ### "fleet build needs an https:// gateway"
 

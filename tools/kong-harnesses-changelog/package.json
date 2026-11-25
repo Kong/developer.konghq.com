@@ -1,0 +1,12 @@
+{
+  "name": "kong-harnesses-changelog",
+  "version": "1.0.0",
+  "description": "Generate the kong-harnesses changelog for developer.konghq.com from the release-please CHANGELOG.md",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

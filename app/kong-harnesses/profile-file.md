@@ -234,7 +234,7 @@ rows:
       PEM certificate authorities for the gateway certificate, up to 32 KB.
       {{site.kong_harnesses}} reads this field so that older profiles still import.
       Neither {{site.kong_harnesses}} nor the agent CLIs use it, and `profile get` and `profile activate` say so.
-      Add the certificate authority to the system trust store of each computer instead, as [Private certificate authorities](/kong-harnesses/private-certificate-authorities/) describes.
+      Add the certificate authority to the system trust store of each computer instead.
   - field: "`sign_in`"
     description: >-
       Version 12 and later.
@@ -281,7 +281,7 @@ Requests to an `http://` gateway aren't encrypted, so a proxy could read the cre
   `profile activate` doesn't change any client settings when a pre-write check fails.
 * When a proxy variable in the command environment applies to the gateway host, `profile activate` doesn't set up any client.
   `credential` and `token` also don't return a credential.
-  Exclude the gateway host with `NO_PROXY` as the `gateway` check in [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/#next-step-for-each-check) describes.
+  Add the gateway host to `NO_PROXY` in the command environment.
   `profile activate` also writes `NO_PROXY` and `no_proxy` in {{ site.claude_code }} user settings.
   A proxy variable or `NO_PROXY` in project settings takes precedence over these values.
   `profile activate` refuses when managed settings could send the requests through a proxy.

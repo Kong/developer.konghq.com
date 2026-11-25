@@ -7,8 +7,8 @@ shows the list and asks once before it changes anything, because you may want
 to keep an installed agent CLI off the gateway. If one agent CLI on the list
 cannot use the profile, activate changes nothing.
 
-With --client, activate sets up only that agent CLI (claude-code, codex,
-opencode, omp, hermes, or pi), and does not ask about the list.
+With --client, activate sets up only that agent CLI (claude-code),
+and does not ask about the list.
 
 --auto-approve answers yes in advance, for runs without a terminal.
 --dry-run shows the changes without making them, so it asks nothing. With
@@ -20,7 +20,7 @@ not install them.
 
 Before it changes anything, activate sends an empty test request to the
 gateway route of each agent CLI. It sends your sign-in with it, except with
---dry-run or for OpenCode. If the gateway has no route, or refuses the
+--dry-run. If the gateway has no route, or refuses the
 sign-in, every request of that agent CLI would fail. With --client, activate
 stops. Without --client, it leaves that agent CLI out and sets up the rest.
 
@@ -31,10 +31,6 @@ again with those headers. The test request also cannot copy what only the
 agent CLI sends, such as its User-Agent. If your gateway routes on such
 values, use --skip-route-check. It sends no test requests, also not in the
 doctor checks at the end, and leaves no agent CLI out.
-
-For OpenCode, activate asks the npm registry with your own npm token whether
-OpenCode can install the gateway plugin, also with --dry-run. It warns you
-before opencode auth login would fail.
 
 At the end, activate runs the doctor checks for each agent CLI it set up, and
 shows each problem with its fix. Like doctor, these checks use the network.
@@ -48,8 +44,8 @@ Examples:
   kong-harnesses profile activate work --dry-run
   # Set up every installed agent CLI that profile work lists
   kong-harnesses profile activate work
-  # Set up only Codex
-  kong-harnesses profile activate work --client codex
+  # Set up only Claude Code
+  kong-harnesses profile activate work --client claude-code
 
 Flags:
       --auto-approve       set up the listed agent CLIs without asking
@@ -58,7 +54,7 @@ Flags:
       --skip-route-check   do not send test requests to the gateway's routes
 
 Global Flags:
-      --client client     the one agent client to work on: claude-code, codex, opencode, omp, hermes, or pi
+      --client client     the one agent client to work on: claude-code
       --log-file path     write the debug log to this path instead of stderr
       --log-level level   the log level: trace, debug, info, warn, error; debug and trace also write the debug log (default error)
 ```

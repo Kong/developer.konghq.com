@@ -18,8 +18,7 @@ setup uses that installed profile and starts at the sign-in.
 Without --client, setup sets up every installed agent CLI that the profile
 lists, as profile activate does. --auto-approve answers yes to the import and
 to the agent CLI list, and prints the import summary to stderr. With a
-<source>, only the sign-in is then left. OpenCode and Hermes have their own
-sign-in, so setup skips the sign-in when they are the only agent CLIs. With
+<source>, only the sign-in is then left. With
 --no-browser, open the printed URL in a browser on this computer.
 
 You can run setup again safely. It does not import a profile file that is
@@ -32,8 +31,10 @@ profile, that command is setup --profile <name>, so the questions are not
 asked again. If the gateway or this computer refuses an agent CLI, setup names
 it with the fix.
 
-After setup, use login to fix a sign-in, profile activate to switch profiles,
-and profile cleanup to undo the setup.
+After setup, use login to fix a sign-in and profile activate to switch
+profiles. To undo the setup, run kong-harnesses --client <client> profile
+cleanup for each agent CLI whose setup you want to remove. Without --client,
+profile cleanup cleans up every agent CLI.
 
 Usage:
   kong-harnesses setup [source] [flags]
@@ -54,7 +55,7 @@ Flags:
       --skip-route-check   do not send test requests to the gateway's routes
 
 Global Flags:
-      --client client     the one agent client to work on: claude-code, codex, opencode, omp, hermes, or pi
+      --client client     the one agent client to work on: claude-code
       --log-file path     write the debug log to this path instead of stderr
       --log-level level   the log level: trace, debug, info, warn, error; debug and trace also write the debug log (default error)
 ```

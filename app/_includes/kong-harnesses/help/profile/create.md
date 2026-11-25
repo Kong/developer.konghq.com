@@ -4,8 +4,7 @@ of your identity provider from its OIDC discovery document.
 
 Run it without flags to answer the questions in three steps.
 
-The profile sets up Claude Code, Codex, OpenCode, omp and pi, and Hermes when
---audience-parameter is audience. A --client that the profile does not set up
+The profile sets up Claude Code. A --client that the profile does not set up
 is refused before anything is saved.
 
 --mcp-server, --mcp-oauth-server and --mcp-key-server add MCP servers that
@@ -56,7 +55,7 @@ Flags:
       --tool-reference on|off                Claude Code tool references: on|off, on when given alone (default on)
 
 Global Flags:
-      --client client     the one agent client to work on: claude-code, codex, opencode, omp, hermes, or pi
+      --client client     the one agent client to work on: claude-code
       --log-file path     write the debug log to this path instead of stderr
       --log-level level   the log level: trace, debug, info, warn, error; debug and trace also write the debug log (default error)
 ```
