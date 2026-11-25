@@ -103,6 +103,10 @@ To use post-quantum TLS in {{site.base_gateway}}, your Gateway node must meet th
 * OpenSSL 3.5.0 or later. The {{site.base_gateway}} builds include a version that meets this requirement.
 * A non-FIPS build of {{site.base_gateway}} with FIPS mode off ([`fips = off`](/gateway/configuration/#fips)). See [FIPS mode](#fips-mode).
 
+{:.info}
+> **Note**: If you configure a post-quantum setting and the OpenSSL that {{site.base_gateway}} uses can't generate an ML-KEM key, {{site.base_gateway}} will refuse to start.
+It won't fall back to classical cryptography.
+
 To check whether a node meets these requirements, see [Check the state of a node](#check-the-state-of-a-node).
 
 ## Key exchange
@@ -165,6 +169,11 @@ config:
   - name: ssl_require_pqc
 {% endkong_config_table %}
 <!--vale on-->
+
+{:.info}
+> **Note**:
+> * The `ssl_curves` parameter applies to every TLS listener on the node, not only the proxy listener. This includes the Admin API, Status API, Debug API, cluster, Kong Manager, and Dev Portal listeners.
+> * The `pqc` value of `ssl_cipher_suite` limits the Admin API, Status API, Debug API, and cluster listeners to TLS 1.3.
 
 Choose how {{site.base_gateway}} sets the key exchange groups for client connections:
 
