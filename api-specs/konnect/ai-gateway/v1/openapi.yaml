@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.3.34
+  version: 2.3.35
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@d79d65cbd07f34392966c47113ff470245ea0a08
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d79d65cbd07f34392966c47113ff470245ea0a08'
+  x-oas-source: kong/platform-api@d74d11d49d65fba76a78cb031802436114473c36
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d74d11d49d65fba76a78cb031802436114473c36'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -3100,6 +3100,8 @@ components:
 
         Data planes older than this version still connect for topology visibility.
 
+        Can only be set when deployment_type is `hybrid`. For `managed` and `serverless` deployments, Konnect manages this value and it is read-only.
+
         When not specified, the latest generally available runtime version is used.
 
         When runtime_auto_upgrade is enabled (the default), this value is raised automatically to track the minimum runtime version reported across connected data planes, so any value set here may be superseded as the fleet upgrades.
@@ -3112,6 +3114,8 @@ components:
 
         It may be lowered only when no configuration already stored uses a feature that requires a runtime version above the requested one. Otherwise the request is rejected, naming the entities and fields that stand in the way so that they can be removed or downgraded first.
 
+        Can only be set when the AI Gateway's deployment_type is `hybrid`. For `managed` and `serverless` deployments, Konnect manages this value and requests that include it are rejected.
+
         When not specified, the minimum runtime version is left unchanged.
 
         When runtime_auto_upgrade is enabled (the default), this value is raised automatically to track the minimum runtime version reported across connected data planes, so any value set here may be superseded as the fleet upgrades.
@@ -3119,7 +3123,10 @@ components:
       example: '2.0'
       pattern: ^\d+\.\d+$
     AIGatewayRuntimeAutoUpgrade:
-      description: Whether the control plane should automatically raise min_runtime_version to match the DP fleet's minimum runtime version (the lowest AI Gateway runtime version reported across all connected data planes) as that value increases.
+      description: |-
+        Whether the control plane should automatically raise min_runtime_version to match the DP fleet's minimum runtime version (the lowest AI Gateway runtime version reported across all connected data planes) as that value increases.
+
+        Can only be set when deployment_type is `hybrid`. For `managed` and `serverless` deployments, Konnect manages runtime upgrades and this value is read-only.
       type: boolean
       default: true
     CreateAIGatewayRequest:
@@ -4345,8 +4352,8 @@ components:
         max_request_body_size:
           description: |
             The maximum size, in bytes, of a request body that the gateway reads and sends to the model.
-            A request with a larger body fails. Set to 0 for no limit.        
-            If you do not set a value, the gateway uses the request size limit that the model's providers publish, 
+            A request with a larger body fails. Set to 0 for no limit.
+            If you do not set a value, the gateway uses the request size limit that the model's providers publish,
             with defaults to 8 MB.
             If the targets use more than one provider, the gateway uses the highest of these limits.
           type: integer
@@ -4386,8 +4393,8 @@ components:
         max_request_body_size:
           description: |
             The maximum size, in bytes, of a request body that the gateway reads and sends to the model.
-            A request with a larger body fails. Set to 0 for no limit.        
-            If you do not set a value, the gateway uses the request size limit that the model's providers publish, 
+            A request with a larger body fails. Set to 0 for no limit.
+            If you do not set a value, the gateway uses the request size limit that the model's providers publish,
             with defaults to 8 MB.
             If the targets use more than one provider, the gateway uses the highest of these limits.
           type: integer
