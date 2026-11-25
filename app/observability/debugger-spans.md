@@ -76,7 +76,11 @@ rows:
     description: HTTP request method
   - name: "`proxy.kong.request.id`"
     description: |
-      Unique ID created by {{site.base_gateway}} for each request. [Useful for debugging](/gateway/debug-requests/#x-kong-request-id-header).
+      Unique ID of each request. {{site.base_gateway}} generates it by default. 
+      <br><br>
+      {% new_in 3.17 %} To use the value of an inbound header instead, set [`request_id_header`](/gateway/configuration/#request-id-header). 
+      <br><br>
+      [Useful for debugging](/gateway/debug-requests/#x-kong-request-id-header).
   - name: "`proxy.kong.request.time`"
     description: Time taken to process this request as measured from reading the first byte from the client, to writing the last byte to the client. Logging handler time is not part of this calculation.
   - name: "`proxy.kong.http.request.body.size`"

@@ -55,6 +55,8 @@ This header is always added in calls to your upstream services, and optionally e
 
 If a header with the same name is already present in the client request, the plugin honors it and does **not** tamper with it.
 
+{% new_in 3.17 %} To use an ID that a load balancer or another proxy already sets as the `X-Kong-Request-Id` value, set the [`request_id_header`](/gateway/configuration/#request-id-header) configuration option.
+
 ## Generators
 
 Correlation ID uses a generator (`config.generator`) to create different headers for requests processed by {{site.base_gateway}}.

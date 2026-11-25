@@ -264,6 +264,20 @@ config:
 {% endkong_config_table %}
 <!--vale on-->
 
+{% new_in 3.17 %} If a load balancer or another proxy already assigns an ID to each request, {{site.base_gateway}} can use that ID as the request ID instead of generating one.
+Set [`request_id_header`](/gateway/configuration/#request-id-header) to the name of the header that carries the ID.
+The logs of {{site.base_gateway}} and of the other system then share the same ID for each request.
+
+{{site.base_gateway}} uses the header only for clients in [`trusted_ips`](/gateway/configuration/#trusted-ips), so add the addresses of the proxies that set it.
+In hybrid mode, set `request_id_header` and `trusted_ips` on each data plane.
+
+<!--vale off-->
+{% kong_config_table %}
+config:
+  - name: request_id_header
+{% endkong_config_table %}
+<!--vale on-->
+
 ## Customize what {{site.base_gateway}} logs
 
 You may need to customize what {{site.base_gateway}} logs. For instance, you may want to:
