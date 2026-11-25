@@ -10,6 +10,7 @@ const COMPONENT = 'kong-harnesses';
 
 const SECTION_TYPES = {
   '⚠ BREAKING CHANGES': 'Breaking Change',
+  Dependencies: 'dependency',
   Features: 'feature',
   'Bug Fixes': 'bugfix',
   Performance: 'performance',

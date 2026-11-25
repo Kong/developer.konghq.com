@@ -32,12 +32,14 @@ RSpec.describe Jekyll::Drops::ToolChangelog do
     describe '#entries_by_type' do
       it 'groups entries by type' do
         expect(populated_version.entries_by_type.keys).to contain_exactly(
-          'feature', 'bugfix', 'Breaking Change', 'dependencies'
+          'feature', 'bugfix', 'Breaking Change', 'dependency', 'refactors'
         )
       end
 
       it 'orders the known types by config.yaml, and the unknown type last' do
-        expect(populated_version.entries_by_type.keys).to eq(['Breaking Change', 'feature', 'bugfix', 'dependencies'])
+        expect(populated_version.entries_by_type.keys).to eq(
+          ['Breaking Change', 'feature', 'bugfix', 'dependency', 'refactors']
+        )
       end
 
       it 'includes only the types a version has' do

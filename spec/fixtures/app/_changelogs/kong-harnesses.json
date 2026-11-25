@@ -4,7 +4,8 @@
       { "message": "**login:** refresh the token before it expires", "type": "feature" },
       { "message": "stop the profile prompt from looping", "type": "bugfix" },
       { "message": "the profile file format changes", "type": "Breaking Change" },
-      { "message": "bump a transitive package", "type": "dependencies" }
+      { "message": "bump a transitive package", "type": "dependency" },
+      { "message": "rework the profile loader", "type": "refactors" }
     ]
   },
   "0.18.0": {
