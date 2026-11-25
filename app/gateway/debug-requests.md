@@ -90,7 +90,7 @@ The `X-Kong-Request-Id` header contains a unique identifier for each client requ
 
 The log line produced by the debug header as well as the debug response header contains the request ID. You can use this to search for the debug header output using a log viewer UI. This is especially useful when the debug output is too long to fit in the response header. You can see an example log line that includes the request ID in the [Truncation for large debugging output](#truncation-for-large-debugging-output) debug request example.
 
-{% new_in 3.17 %} If a load balancer or another proxy already assigns an ID to each request, set [`request_id_header`](/gateway/configuration/#request-id-header) to the name of the header that carries it.
+{% new_in 3.17 %} If a load balancer or another proxy already assigns an ID to each request, set [`request_id_header`](/gateway/configuration/#request-id-header) to the name of the header that contains the ID.
 {{site.base_gateway}} then uses the header value as the request ID instead of generating one, but only for clients in [`trusted_ips`](/gateway/configuration/#trusted-ips).
 For details, see [Find specific client requests in logs](/gateway/logs/#find-specific-client-requests-in-logs).
 

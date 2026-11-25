@@ -265,10 +265,10 @@ config:
 <!--vale on-->
 
 {% new_in 3.17 %} If a load balancer or another proxy already assigns an ID to each request, {{site.base_gateway}} can use that ID as the request ID instead of generating one.
-Set [`request_id_header`](/gateway/configuration/#request-id-header) to the name of the header that carries the ID.
+Set [`request_id_header`](/gateway/configuration/#request-id-header) to the name of the header that contains the ID.
 The logs of {{site.base_gateway}} and of the other system then share the same ID for each request.
 
-{{site.base_gateway}} uses the header only for clients in [`trusted_ips`](/gateway/configuration/#trusted-ips), so add the addresses of the proxies that set it.
+{{site.base_gateway}} uses the header only for clients in [`trusted_ips`](/gateway/configuration/#trusted-ips), so add the addresses of the proxies that set the header.
 In hybrid mode, set `request_id_header` and `trusted_ips` on each data plane.
 
 <!--vale off-->

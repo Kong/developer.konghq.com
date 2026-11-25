@@ -175,7 +175,7 @@ span:finish() -- ends the span
 
 ### Get or set the active span
 
-The active span is the span that is being executed.
+The active span is the span that is in progress.
 
 To avoid overheads, the active span is manually set by calling the `set_active_span` method.
 When you finish a span, the active span becomes the parent of the finished span.

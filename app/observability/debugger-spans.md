@@ -76,7 +76,8 @@ rows:
     description: HTTP request method
   - name: "`proxy.kong.request.id`"
     description: |
-      Unique ID of each request. {{site.base_gateway}} generates it by default. 
+      Unique ID of each request.
+      {{site.base_gateway}} generates it by default.
       <br><br>
       {% new_in 3.17 %} To use the value of an inbound header instead, set [`request_id_header`](/gateway/configuration/#request-id-header). 
       <br><br>
