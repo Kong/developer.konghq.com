@@ -24,8 +24,7 @@ prereqs:
   inline:
     - title: A webhook URL
       content: |
-        * {% include prereqs/webhook-site.md %}
-        * Set that URL as an environment variable `export WEBHOOK_URL=YOUR_URL`.
+        {% include prereqs/webhook-site.md %}
     - title: cURL
       include_content: prereqs/tools/curl
     - title: Reload {{site.base_gateway}}
