@@ -39,6 +39,24 @@ Only regex patterns are supported, and all fields are required: `name`, `regex`,
 
 The `name` must be unique for each pattern.
 
+#### How the score works
+
+The `score` is the confidence value that a custom pattern assigns to its matches.
+The score matters when a custom pattern and a built-in entity type (like `email` or `nrp`), match the same text. In that case:
+
+* The plugin uses the higher score.
+* If scores are equal, the custom pattern takes precedence over the built-in entity. 
+
+If no built-in entity matches the same text, the plugin redacts a custom pattern's matches at any score above `0`.
+
+If the built-in type has the higher score and isn't in `anonymize`, the text isn't sanitized.
+To prevent this, set `score` to `1` or add the built-in type to `anonymize`.
+
+For example, the pattern `TCK-[0-9]{5}` with `anonymize: [custom]` matches `My ticket is TCK-12345 please help`, and the built-in `nrp` type also matches `TCK-12345`:
+
+* With `score: 0.5`, `TCK-12345` isn't redacted, because `nrp` has the higher score.
+* With `score: 1`, `TCK-12345` is redacted as a custom pattern.
+
 ### Fields that can be anonymized
 
 You can use the following fields in the `anonymize` array:
