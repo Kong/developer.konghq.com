@@ -232,8 +232,7 @@ app/_how-tos/ai-gateway/v1/use-ai-rag-injector-acls.md:
   status: pending
   canonical_url: /ai-gateway/policies/ai-rag-injector/
 app/_how-tos/ai-gateway/v1/use-ai-rag-injector-plugin.md:
-  status: pending
-  canonical_url: /ai-gateway/policies/ai-rag-injector/
+  canonical_url: /ai-gateway/use-ai-rag-injector-policy/
 app/_how-tos/ai-gateway/v1/use-ai-semantic-prompt-guard-plugin.md:
   status: pending
   canonical_url: /ai-gateway/policies/ai-semantic-prompt-guard/
