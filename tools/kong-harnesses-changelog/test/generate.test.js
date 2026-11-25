@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { generateChangelog, renderChangelog, compareVersions } from '../generate.js';
 
 const changelog = `# Changelog
@@ -59,6 +60,19 @@ test('maps the known sections to their type keys', () => {
 test('passes an unknown section through lowercased', () => {
   const markdown = `## [0.20.0](url) (2026-11-26)
 
+### Refactors
+
+* rework the profile loader
+`;
+
+  const json = generateChangelog(markdown, { minVersion: '0.18.0' });
+
+  assert.equal(entryFor(json, '0.20.0', 'rework the profile loader').type, 'refactors');
+});
+
+test('maps the Dependencies section to the dependency type key', () => {
+  const markdown = `## [0.20.0](url) (2026-11-26)
+
 ### Dependencies
 
 * bump a transitive package
@@ -66,7 +80,7 @@ test('passes an unknown section through lowercased', () => {
 
   const json = generateChangelog(markdown, { minVersion: '0.18.0' });
 
-  assert.equal(entryFor(json, '0.20.0', 'bump a transitive package').type, 'dependencies');
+  assert.equal(entryFor(json, '0.20.0', 'bump a transitive package').type, 'dependency');
 });
 
 test('strips a PR and commit reference chain from a bullet', () => {
@@ -136,8 +150,10 @@ test('collapses a duplicate message within a version and type', () => {
   assert.equal(json['0.20.0']['kong-harnesses'].length, 1);
 });
 
-test('writes byte-identical output when run again on unchanged input', () => {
-  assert.equal(renderChangelog(changelog), renderChangelog(changelog));
+test('matches the checked-in snapshot of the rendered output', () => {
+  const snapshot = fs.readFileSync(new URL('./fixtures/changelog.snapshot.json', import.meta.url), 'utf8');
+
+  assert.equal(renderChangelog(changelog), snapshot);
 });
 
 test('defaults the floor to 0.18.0', () => {
