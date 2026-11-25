@@ -34,14 +34,14 @@ columns:
     key: source
 rows:
   - client: "{{ site.claude_code }}"
-    source: The `env` block of the [user settings](/kong-harnesses/developer-computer-changes/#claude-code-settings) when that block sets the variable, or else the environment.
+    source: The `env` block of the [user settings](/kong-harnesses/profiles-for-administrators/#claude-code-settings) when that block sets the variable, or else the environment.
 {% comment %}
   - client: OpenCode
     source: The environment, or the environment of the service when OpenCode runs as a background service.
   - client: omp
     source: |
       The environment.
-      When the environment doesn't set the variable, the first value that isn't empty in the [`.env` files that omp reads](/kong-harnesses/private-certificate-authorities/#omp-and-pi).
+      When the environment doesn't set the variable, the first value that isn't empty in the [`.env` files that omp reads](/kong-harnesses/profiles-for-administrators/#omp-and-pi).
       `doctor` uses the directory where you run `doctor` as the directory where omp starts.
   - client: pi
     source: The environment.
