@@ -121,9 +121,7 @@ AI Agents can be created and managed through:
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/agents`
 * [kongctl](/kongctl/)
 
-To get the kongctl YAML for an existing AI Agent, open it in the {{site.konnect_short_name}} UI and select **Actions** > **View declarative config**.
-You can copy or download the YAML, along with the kongctl commands to run with it.
-If you created the resource in the UI, run the `kongctl adopt` command from the panel once, so that kongctl can manage it.
+{% include md/ai-gateway/v2/view-declarative-config.md entity="AI Agent" %}
 
 For configuration examples and step-by-step setup instructions, see the following [Set up an AI Agent](#set-up-an-ai-agent) section.
 
