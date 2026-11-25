@@ -51,3 +51,4 @@ groups:
       - title: Diagnose Problems
         items:
           - path: /kong-harnesses/doctor/
+          - path: /kong-harnesses/troubleshooting/
