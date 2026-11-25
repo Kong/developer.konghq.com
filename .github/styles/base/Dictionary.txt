@@ -649,6 +649,7 @@ Pgmoon
 Postgres
 PostgreSQL
 PowerShell
+pqc
 preferred_name
 premade
 prepend
