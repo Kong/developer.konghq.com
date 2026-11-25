@@ -13,6 +13,7 @@ breadcrumbs:
 ---
 
 The `doctor` command checks one profile end to end: the profile, the sign-in, the client, and both endpoints. It reaches the network, reports each finding beside its fix, and can write the report as JSON.
+For the next step after each finding, see [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/).
 
 ## Command usage
 

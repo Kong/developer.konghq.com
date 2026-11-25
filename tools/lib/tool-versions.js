@@ -197,43 +197,73 @@ export async function buildCobraCommandTree({
   }
 }
 
+const RELEASES_PER_PAGE = 100;
+
+// The same rule as the versions job in the sync workflow, so the release data
+// names the release whose help the pages show.
+const STABLE_TAG = /^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
+
+// The same rule as the sync workflow and the changelog scripts. An owner can't
+// hold a dot, and a name of . or .. would point the API request at another path.
+const REPO = /^([A-Za-z0-9-]+)\/([A-Za-z0-9._-]+)$/;
+
+export function parseRepo(value) {
+  const match = REPO.exec(value ?? '');
+  if (!match || match[2] === '.' || match[2] === '..') {
+    throw new Error('The releases repository must have the form <owner>/<name>');
+  }
+  return { owner: match[1], name: match[2] };
+}
+
 export async function syncReleases({
   repo,
   dataFile,
   name,
-  internalRepo = false,
+  tokenRequired = false,
   fetch = globalThis.fetch,
   writeFile = (filePath, content) => fs.writeFileSync(filePath, content, 'utf8'),
   env = process.env,
 }) {
+  parseRepo(repo);
   const headers = { Accept: 'application/vnd.github+json' };
   if (env.GH_TOKEN) {
     headers.Authorization = `Bearer ${env.GH_TOKEN}`;
   }
 
-  const response = await fetch(`https://api.github.com/repos/${repo}/releases`, { headers });
-
-  if (!response.ok) {
-    const tokenHint = internalRepo
-      ? `${repo} is an internal repository: set GH_TOKEN to a GitHub token with read access to it.`
-      : `If the request was rate-limited, set GH_TOKEN to a GitHub token to raise the limit.`;
-    throw new Error(
-      `GitHub API request for ${repo} releases failed (${response.status} ${response.statusText}). ${tokenHint}`,
+  const releases = [];
+  for (let page = 1; ; page += 1) {
+    const response = await fetch(
+      `https://api.github.com/repos/${repo}/releases?per_page=${RELEASES_PER_PAGE}&page=${page}`,
+      { headers },
     );
+
+    if (!response.ok) {
+      const tokenHint = tokenRequired
+        ? `Set GH_TOKEN to a GitHub token, then run the script again.`
+        : `If the request was rate-limited, set GH_TOKEN to a GitHub token to raise the limit.`;
+      throw new Error(
+        `GitHub API request for ${repo} releases failed (${response.status} ${response.statusText}). ${tokenHint}`,
+      );
+    }
+
+    const batch = await response.json();
+    releases.push(...batch);
+    if (batch.length < RELEASES_PER_PAGE) {
+      break;
+    }
   }
 
-  const releases = await response.json();
-
   const validReleases = releases
-    .filter((release) => !release.draft && !release.prerelease)
+    .filter((release) => !release.draft && !release.prerelease && STABLE_TAG.test(release.tag_name))
     .map((release) => ({
       version: release.tag_name.replace(/^v/, ''),
       released: release.published_at.split('T')[0],
     }));
 
+  // The sync runs extract-help.js first, so an empty list must stop it rather
+  // than keep the old release data beside the new help.
   if (validReleases.length === 0) {
-    console.warn('No valid releases found');
-    return [];
+    throw new Error(`No vX.Y.Z release in ${repo}`);
   }
 
   const releasesBySeries = {};
@@ -266,13 +296,15 @@ export async function syncReleases({
   return seriesList;
 }
 
-function compareVersions(a, b) {
-  const aParts = a.split('.').map(Number);
-  const bParts = b.split('.').map(Number);
+// BigInt, because a Number loses digits above 2^53 and would then pick another
+// latest release than the changelog sync and `sort -V` in the workflow.
+export function compareVersions(a, b) {
+  const aParts = a.split('.').map(BigInt);
+  const bParts = b.split('.').map(BigInt);
 
   for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
-    const aNum = aParts[i] || 0;
-    const bNum = bParts[i] || 0;
+    const aNum = aParts[i] ?? 0n;
+    const bNum = bParts[i] ?? 0n;
 
     if (aNum > bNum) return 1;
     if (aNum < bNum) return -1;
