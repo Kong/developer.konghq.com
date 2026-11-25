@@ -19,9 +19,12 @@ rows:
     columns:
       - blocks:
         - type: text
+          # config: |
+          #   kong-harnesses obtains short-lived OIDC access tokens for coding agents such as {{site.claude_code}}, Codex, OpenCode, Hermes Agent, omp, and pi.
+          #   It manages connection profiles, signs in to an OIDC identity provider, and configures the agent CLI to route its traffic through the gateway.
           config: |
-            kong-harnesses obtains short-lived OIDC access tokens for coding agents such as Claude Code, Codex, OpenCode, and omp.
-            It manages connection profiles, signs in to an OIDC identity provider, and configures the agent CLI to route its traffic through the gateway.
+            kong-harnesses obtains short-lived OIDC access tokens for {{site.claude_code}}.
+            It manages connection profiles, signs in to an OIDC identity provider, and configures {{site.claude_code}} to route its traffic through the gateway.
 
   - header:
       type: h2
@@ -57,3 +60,91 @@ rows:
             text: Read the reference
             url: /kong-harnesses/example-reference/
             align: end
+    - blocks:
+      - type: card
+        config:
+          title: Install for every user
+          description: Install kong-harnesses for every user of a computer, or deploy it with an MDM tool.
+          cta:
+            text: Read the install guide
+            url: /kong-harnesses/install/
+            align: end
+
+  - header:
+      type: h2
+      text: "Sign in to your agent CLI"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: "Sign in with kong-harnesses"
+            # description: "Learn how kong-harnesses signs you in to {{site.ai_gateway}}, validates the result, and signs you out, for every supported agent CLI."
+            description: "Learn how kong-harnesses signs you in to {{site.ai_gateway}}, validates the result, and signs you out."
+            cta:
+              text: Read the overview
+              url: /kong-harnesses/sign-in/
+              align: end
+
+  - columns:
+    - blocks:
+      - type: card
+        config:
+          title: "{{site.claude_code}}"
+          icon: /assets/icons/third-party/claude.svg
+          description: "Sign in to {{site.ai_gateway}} for {{site.claude_code}} and start a session."
+          cta:
+            text: "Sign in to {{site.claude_code}}"
+            url: /kong-harnesses/sign-in/claude-code/
+            align: end
+    # - blocks:
+    #   - type: card
+    #     config:
+    #       title: "Codex"
+    #       icon: /assets/icons/openai.svg
+    #       description: "Sign in to {{site.ai_gateway}} for Codex through an HTTPS Responses route."
+    #       cta:
+    #         text: "Sign in to Codex"
+    #         url: /kong-harnesses/sign-in/codex/
+    #         align: end
+    # - blocks:
+    #   - type: card
+    #     config:
+    #       title: "OpenCode"
+    #       icon: /assets/icons/opencode.svg
+    #       description: "Install the {{site.ai_gateway}} plugin in OpenCode and sign in through OpenCode."
+    #       cta:
+    #         text: "Sign in to OpenCode"
+    #         url: /kong-harnesses/sign-in/opencode/
+    #         align: end
+
+  # - columns:
+  #   - blocks:
+  #     - type: card
+  #       config:
+  #         title: "Hermes Agent"
+  #         icon: /assets/icons/hermes-agent.png
+  #         description: "Sign in to {{site.ai_gateway}} for Hermes Agent through its gateway plugin."
+  #         cta:
+  #           text: "Sign in to Hermes Agent"
+  #           url: /kong-harnesses/sign-in/hermes/
+  #           align: end
+  #   - blocks:
+  #     - type: card
+  #       config:
+  #         title: "omp"
+  #         icon: /assets/icons/omp.svg
+  #         description: "Sign in to {{site.ai_gateway}} for omp and start a session."
+  #         cta:
+  #           text: "Sign in to omp"
+  #           url: /kong-harnesses/sign-in/omp/
+  #           align: end
+  #   - blocks:
+  #     - type: card
+  #       config:
+  #         title: "pi"
+  #         icon: /assets/icons/pi.svg
+  #         description: "Sign in to {{site.ai_gateway}} for pi and start a session."
+  #         cta:
+  #           text: "Sign in to pi"
+  #           url: /kong-harnesses/sign-in/pi/
+  #           align: end
