@@ -22,6 +22,7 @@ tldr:
   q: How do I send organization events to an HTTP endpoint?
   a: Create an HTTP destination, save its signing secret, then create an organization subscription for an event and destination.
 prereqs:
+  skip_product: true
   inline:
     - title: Organization administrator access
       content: You need an organization administrator role to manage notification destinations and subscriptions.
