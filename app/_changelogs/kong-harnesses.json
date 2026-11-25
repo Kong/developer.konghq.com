@@ -1,4 +1,1736 @@
 {
+  "0.20.0": {
+    "kong-harnesses": [
+      {
+        "message": "**settings:** fleet build writes the Claude Code choices of a profile as profile activate now writes them, such as enableArtifact for a profile that sets artifact. Run fleet build again into a new or empty output folder, with every flag of the earlier build that you keep, its record and the MDM policy or managed settings that the computers have now, and, for a --mcp-servers exclusive build, the managed-mcp.json that the computers have now with --mcp-config, then deliver the new build.",
+        "type": "Breaking Change"
+      },
+      {
+        "message": "**cli:** fleet build writes a Claude Code choice that a profile leaves out as off on a route that does not serve it, ENABLE_TOOL_SEARCH=false for tool search and CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1 for the advisor, and writes both DISABLE_BUG_COMMAND and DISABLE_FEEDBACK_COMMAND for a profile that sets only one of bug_command and feedback_command. Run fleet build again into a new or empty output folder, with every flag of the earlier build that you keep, its record and the MDM policy or managed settings that the computers have now, and, for a --mcp-servers exclusive build, the managed-mcp.json that the computers have now with --mcp-config, then deliver the new build.",
+        "type": "Breaking Change"
+      },
+      {
+        "message": "**cli:** set up only Claude Code in release builds",
+        "type": "feature"
+      },
+      {
+        "message": "**claudesettings:** apply the MCP denylist to managed-mcp.json",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** blank a list entry like its server",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** check a managed-mcp.json server that expands",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** compare only http and https URLs Go parses",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** count an MCP url in UTF-16 units",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** count skills/ that storage cannot list",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** deny by the mcp_url query too",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** drop plugin file entries the schema refuses",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** expand a variable set to empty text",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** find variables in decoded MCP values",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** hold a plugin open on inline entries",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** judge a WebSocket MCP server by its url",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** judge MCP entries at unknown addresses",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** judge MCP lists as proven or undecided",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** judge the allowlist before a possible deny",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** keep a denied own entry as the block",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** key trailing slashes as Claude Code",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** leave a credential host undecided",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** leave servers open behind an unread plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** let a literal part prove an MCP miss",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** let a literal URL path prove a miss",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** let a null plugin lock lock nothing",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** load nothing of a plugin with a bad entry",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** load same-name MCP entries in order",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** load skills plugins only by manifest",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** lock plugins only for a known surface",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** match a plugin server by its real name",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** match a serverUrl query as Claude Code",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** match MCP addresses as Claude Code keys them",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** merge a plugin's MCP servers by name",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** name a skills plugin by its manifest",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** name skipped entries from every source of a key",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** name the file of a refused key with a dot",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** name the URL scope limit as a cause",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** port Claude Code's credential names",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** prove a deny miss only where Claude Code misses",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** prove nothing by a URL form Go reads apart",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read a certificate value of any type as text",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read a credential value as empty",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read a list of plugin MCP server forms",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read a null env value as not set",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read a null env value as the text null",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read a plugin MCP file entry by entry",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read a set credential in a stdio command",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read an MCP entry's transport fields",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read another origin from the origin only",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read Claude Code settings keys with exact case",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read dot segments in a URL path",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read each developer MCP server alone",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read host auth selector at launch only",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read managedMcpServers per entry",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read marketplace lists entry by entry",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read MCP allow and deny lists entry by entry",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read more allowlist values as unsafe",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read only the last value of a duplicate key",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read plugin mcpServers as the schema does",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read plugin names as Claude Code does",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read the host auth selector as open",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read the mcp_url query as Claude Code",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read white space as JavaScript does",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** refuse a claudeai-proxy entry without an id",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** refuse a null gatewayInternalNetworks",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** refuse a provided server at a gateway URL",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** refuse an MCP server with an empty type",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** refuse an MCP URL port past 65535",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** refuse MCP servers of a wrong type",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** reject a denylist name with outer space",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** report servers that the mcp surface lock drops",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** skip a kept-out entry as a replacement",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** skip an entry at another fixed origin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** skip sdk servers as Claude Code does",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** treat a plugin lock that is not a boolean or a list as locked",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** check merged helper payloads once",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** close the gaps that the traffic fixes review found",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** count only what auto-updates off alone turns off",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** give Claude Code's certain answers on every surface",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** give logout the vault fix line that status gives",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** give omp and pi the CA hint that Bun needs",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** give the no-client message a next step",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** judge project files by the session Claude Code reads",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** judge the MCP policy that fleet build deploys",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** keep an own server only on a proven deny",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** keep the merged payload verdict whole",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** list the Windows install check in the doctor help",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** make the setup resume hint one shell command",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** model each Claude Code input of the project check",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name a headersHelper variable as its own cause",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name both OpenCode sign-in forms when --client opencode refuses",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name each setting that cleanup left as edited",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name logout again when logout reports sign-in needs attention",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name profile delete for an unreadable profile everywhere",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name the byte order of a UTF-16 profile without a mark and how to convert it",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name the client in cleanup steps",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name the policy minimum for a later list entry",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name the step that adds a client to a profile",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name undecided MCP servers at session start",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** quote the Windows resume hint for PowerShell",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** rank a start refusal first in every command",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** rank a start refusal in one place",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** rank Claude Code's start refusal first on every surface",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** rank the start refusal at one boundary",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** read each settings value as Claude Code parses it",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** read managed policy as Claude Code starts with it",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** read settings files with the full Claude Code schema",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** read settings the way Claude Code applies them",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** read settings values as the recorded Claude Code does",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** read sign-in states before the final refusal read",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** read SSL_CERT_FILE and SSL_CERT_DIR on macOS and Windows without GODEBUG; doctor names a set variable when it does not trust a certificate",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** refuse a policy with an invalid MCP list",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** refuse a version flag that replaces the policy's",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** refuse an MCP server that Claude Code cannot read",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** refuse managedMcpServers entries Claude Code drops",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** report a cancel in mcp-headers as a cancel",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** report a failed removal of a usable sign-in as local only",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** say logout did not check a login it cannot read",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** say plainly on Linux which pi build needs no CA variable",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** say to leave a null MCP key out of the policy",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** say to leave out a minimum the policy splits",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** say where the password store keeps MCP keys",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** show bool flags in help as --flag",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** show the clients that cleanup finished when another one fails",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** tell pi users the CA variable that works on Bun",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** treat list variables as unknown before 2.1.219",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** trust no setup that Claude Code may not apply",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** word the static-key sign-in help clearly",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** write no credential after a cancel",
+        "type": "bugfix"
+      },
+      {
+        "message": "**credential:** report a profile it cannot read as any command does",
+        "type": "bugfix"
+      },
+      {
+        "message": "**deps:** tidy go.sum after the lipgloss merge",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** check every setting that the Claude Code choices write",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** exit with the class of what a finding reports",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** fail a Claude Code session that a host platform routes",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** fail a project file that routes Claude Code elsewhere",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** fail the login row for a ceiling that no token passes",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** give one fix for an entry a variable decides",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** judge each entry before it replaces a server",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** name each NO_PROXY spelling that must exclude the gateway",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** name plugin lock entries that lock nothing",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** name relay status for an unreadable relay profile",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** name the variable that decides an MCP entry",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** report an unknown route for an unreadable project file",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** say to update for a profile from a newer release",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** tell Claude Code to activate again after the proxy fix",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** test the gateway connection when inference sends nothing",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** fix sign-in, packaging and source checks",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** name the allowlist key Claude Code does not read",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** read a build key that names no build as no build name",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** say why fleet build refuses a profile",
+        "type": "bugfix"
+      },
+      {
+        "message": "**gatewaycatalog:** reuse the cached token",
+        "type": "bugfix"
+      },
+      {
+        "message": "**login:** accept Entra ID scope forms and name an unrequested scope",
+        "type": "bugfix"
+      },
+      {
+        "message": "**login:** keep a saved sign-in when login is cancelled after the save",
+        "type": "bugfix"
+      },
+      {
+        "message": "**login:** name the IPv6 reserved port list on Windows too",
+        "type": "bugfix"
+      },
+      {
+        "message": "**login:** refuse a token lifetime at sign-in that renewal refuses",
+        "type": "bugfix"
+      },
+      {
+        "message": "**login:** report a setup check that did not finish",
+        "type": "bugfix"
+      },
+      {
+        "message": "**login:** report a Windows callback port refusal as a port conflict",
+        "type": "bugfix"
+      },
+      {
+        "message": "**login:** say that login --diagnostics can sign in",
+        "type": "bugfix"
+      },
+      {
+        "message": "**management:** recheck machine-wide after the delete prompt",
+        "type": "bugfix"
+      },
+      {
+        "message": "**management:** say an invalid delete removes MCP keys",
+        "type": "bugfix"
+      },
+      {
+        "message": "**management:** skip MCP keys in a relay invalid delete",
+        "type": "bugfix"
+      },
+      {
+        "message": "**oidc:** ignore unknown callback parameters and check any iss",
+        "type": "bugfix"
+      },
+      {
+        "message": "**oidc:** keep waiting past stray callback connections",
+        "type": "bugfix"
+      },
+      {
+        "message": "**oidc:** require TLS 1.2 on every request",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** accept http issuer on loopback",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** ask to remove a machine-wide file with a bad name",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** call only a newer schema version unsupported",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** check the schema version before unknown fields",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profilecreate:** name the evidence flag when discovery lacks none",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profilecreate:** stop saying that error reports reach Anthropic",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** give a PowerShell fix that converts the profile file",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** give the machine-wide cause to import",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** keep each disabled feature reason next to its switch",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** keep stored profiles readable and check new ones",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** keep unknown field names out of parse errors",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** let profile delete remove an invalid profile",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** let setup resume past a machine-wide profile it installed",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** name Keycloak and PingFederate beside their audience parameter",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** name MCP keys an invalid profile may keep",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** name XDG_CONFIG_HOME first when profile storage is unavailable",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** read a profile file saved with a byte-order mark",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** refuse a machine-wide delete before any prompt",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** refuse bug and feedback commands that differ",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** refuse error reports or the feedback survey with Anthropic telemetry off",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** refuse the advisor on the Anthropic API with feature flags off",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** refuse the advisor where Claude Code cannot start it",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** refuse the Artifact tool with auto-updates off in a new profile before schema 18",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** remove the gateway MCP keys of an invalid profile",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** say to update for a newer machine-wide profile in listings",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** say to update kong-harnesses for a profile from a newer release",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** say to update when the imported profile is newer",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** say to update when the installed profile is newer",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** say what the audience and the evidence flag are",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** say why profile storage is unavailable and what to set",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** send an invalid machine-wide profile to the administrator",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** stop saying a CA file replaces pi's trust on Bun",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** name no sign-out step for an invalid relay profile",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** name relay commands for a relay profile that is absent or invalid",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** name relay commands in activate and doctor hints",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** name relay delete for an invalid relay profile",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** name relay delete when relay delete fails",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** name relay import for a rejected or failed relay import",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** name relay import when relay import fails",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** name the relay command in import and activate argument errors",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** say to update for a newer profile in relay token",
+        "type": "bugfix"
+      },
+      {
+        "message": "**release:** qualify GoReleaser 2.20.1",
+        "type": "bugfix"
+      },
+      {
+        "message": "**settings:** write enableArtifact for the Claude Code artifact member",
+        "type": "bugfix"
+      },
+      {
+        "message": "**setup:** ask for the key before the model when the gateway lists models only with a key",
+        "type": "bugfix"
+      },
+      {
+        "message": "**setup:** name --profile when no terminal can ask",
+        "type": "bugfix"
+      },
+      {
+        "message": "**setup:** resume from a profile the wizard saved",
+        "type": "bugfix"
+      },
+      {
+        "message": "**setup:** resume past profile create with the saved profile",
+        "type": "bugfix"
+      },
+      {
+        "message": "**setup:** resume past the import of an unchanged HTTPS source",
+        "type": "bugfix"
+      },
+      {
+        "message": "**setup:** say a rerun can update a configured CLI",
+        "type": "bugfix"
+      },
+      {
+        "message": "**token:** name a missing static key",
+        "type": "bugfix"
+      },
+      {
+        "message": "**token:** report a cancel after a verified renewal as a cancel",
+        "type": "bugfix"
+      },
+      {
+        "message": "**token:** report a cancel while the token output is prepared",
+        "type": "bugfix"
+      },
+      {
+        "message": "**vault:** start a Secret Service that the bus lists but no one runs",
+        "type": "bugfix"
+      }
+    ]
+  },
+  "0.19.0": {
+    "kong-harnesses": [
+      {
+        "message": "**cli:** fleet build writes a Claude Code choice that a profile leaves out as off on a route that does not serve it, ENABLE_TOOL_SEARCH=false for tool search and CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1 for the advisor, and writes both DISABLE_BUG_COMMAND and DISABLE_FEEDBACK_COMMAND for a profile that sets only one of bug_command and feedback_command. Run fleet build again into a new or empty output folder, with every flag of the earlier build that you keep, its record and the MDM policy or managed settings that the computers have now, and, for a --mcp-servers exclusive build, the managed-mcp.json that the computers have now with --mcp-config, then deliver the new build.",
+        "type": "Breaking Change"
+      },
+      {
+        "message": "**settings:** fleet build writes the Claude Code choices of a profile as profile activate now writes them, such as enableArtifact for a profile that sets artifact. Run fleet build again into a new or empty output folder, with every flag of the earlier build that you keep, its record and the MDM policy or managed settings that the computers have now, and, for a --mcp-servers exclusive build, the managed-mcp.json that the computers have now with --mcp-config, then deliver the new build.",
+        "type": "Breaking Change"
+      },
+      {
+        "message": "**cli:** set up only Claude Code in release builds",
+        "type": "feature"
+      },
+      {
+        "message": "**claudesettings:** apply the MCP denylist to managed-mcp.json",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** blank a list entry like its server",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** check a managed-mcp.json server that expands",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** compare only http and https URLs Go parses",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** count an MCP url in UTF-16 units",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** count skills/ that storage cannot list",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** deny by the mcp_url query too",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** drop plugin file entries the schema refuses",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** expand a variable set to empty text",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** find variables in decoded MCP values",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** hold a plugin open on inline entries",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** judge a WebSocket MCP server by its url",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** judge MCP entries at unknown addresses",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** judge MCP lists as proven or undecided",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** judge the allowlist before a possible deny",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** keep a denied own entry as the block",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** key trailing slashes as Claude Code",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** leave a credential host undecided",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** leave servers open behind an unread plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** let a literal part prove an MCP miss",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** let a literal URL path prove a miss",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** let a null plugin lock lock nothing",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** load nothing of a plugin with a bad entry",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** load same-name MCP entries in order",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** load skills plugins only by manifest",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** lock plugins only for a known surface",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** match a plugin server by its real name",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** match a serverUrl query as Claude Code",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** match MCP addresses as Claude Code keys them",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** merge a plugin's MCP servers by name",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** name a skills plugin by its manifest",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** name skipped entries from every source of a key",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** name the file of a refused key with a dot",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** name the URL scope limit as a cause",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** port Claude Code's credential names",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** prove a deny miss only where Claude Code misses",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** prove nothing by a URL form Go reads apart",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read a certificate value of any type as text",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read a credential value as empty",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read a list of plugin MCP server forms",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read a null env value as not set",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read a null env value as the text null",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read a plugin MCP file entry by entry",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read a set credential in a stdio command",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read an MCP entry's transport fields",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read another origin from the origin only",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read Claude Code settings keys with exact case",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read dot segments in a URL path",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read each developer MCP server alone",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read host auth selector at launch only",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read managedMcpServers per entry",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read marketplace lists entry by entry",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read MCP allow and deny lists entry by entry",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read more allowlist values as unsafe",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read only the last value of a duplicate key",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read plugin mcpServers as the schema does",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read plugin names as Claude Code does",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read the host auth selector as open",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read the mcp_url query as Claude Code",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** read white space as JavaScript does",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** refuse a claudeai-proxy entry without an id",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** refuse a null gatewayInternalNetworks",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** refuse a provided server at a gateway URL",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** refuse an MCP server with an empty type",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** refuse an MCP URL port past 65535",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** refuse MCP servers of a wrong type",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** reject a denylist name with outer space",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** report servers that the mcp surface lock drops",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** skip a kept-out entry as a replacement",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** skip an entry at another fixed origin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** skip sdk servers as Claude Code does",
+        "type": "bugfix"
+      },
+      {
+        "message": "**claudesettings:** treat a plugin lock that is not a boolean or a list as locked",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** check merged helper payloads once",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** close the gaps that the traffic fixes review found",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** count only what auto-updates off alone turns off",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** give Claude Code's certain answers on every surface",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** give logout the vault fix line that status gives",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** give omp and pi the CA hint that Bun needs",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** give the no-client message a next step",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** judge project files by the session Claude Code reads",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** judge the MCP policy that fleet build deploys",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** keep an own server only on a proven deny",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** keep the merged payload verdict whole",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** list the Windows install check in the doctor help",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** make the setup resume hint one shell command",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** model each Claude Code input of the project check",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name a headersHelper variable as its own cause",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name both OpenCode sign-in forms when --client opencode refuses",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name each setting that cleanup left as edited",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name logout again when logout reports sign-in needs attention",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name profile delete for an unreadable profile everywhere",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name the byte order of a UTF-16 profile without a mark and how to convert it",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name the client in cleanup steps",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name the policy minimum for a later list entry",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name the step that adds a client to a profile",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** name undecided MCP servers at session start",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** quote the Windows resume hint for PowerShell",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** rank a start refusal first in every command",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** rank a start refusal in one place",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** rank Claude Code's start refusal first on every surface",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** rank the start refusal at one boundary",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** read each settings value as Claude Code parses it",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** read managed policy as Claude Code starts with it",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** read settings files with the full Claude Code schema",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** read settings the way Claude Code applies them",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** read settings values as the recorded Claude Code does",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** read sign-in states before the final refusal read",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** read SSL_CERT_FILE and SSL_CERT_DIR on macOS and Windows without GODEBUG; doctor names a set variable when it does not trust a certificate",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** refuse a policy with an invalid MCP list",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** refuse a version flag that replaces the policy's",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** refuse an MCP server that Claude Code cannot read",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** refuse managedMcpServers entries Claude Code drops",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** report a cancel in mcp-headers as a cancel",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** report a failed removal of a usable sign-in as local only",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** say logout did not check a login it cannot read",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** say plainly on Linux which pi build needs no CA variable",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** say to leave a null MCP key out of the policy",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** say to leave out a minimum the policy splits",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** say where the password store keeps MCP keys",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** show bool flags in help as --flag",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** show the clients that cleanup finished when another one fails",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** tell pi users the CA variable that works on Bun",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** treat list variables as unknown before 2.1.219",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** trust no setup that Claude Code may not apply",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** word the static-key sign-in help clearly",
+        "type": "bugfix"
+      },
+      {
+        "message": "**cli:** write no credential after a cancel",
+        "type": "bugfix"
+      },
+      {
+        "message": "**credential:** report a profile it cannot read as any command does",
+        "type": "bugfix"
+      },
+      {
+        "message": "**deps:** tidy go.sum after the lipgloss merge",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** check every setting that the Claude Code choices write",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** exit with the class of what a finding reports",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** fail a Claude Code session that a host platform routes",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** fail a project file that routes Claude Code elsewhere",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** fail the login row for a ceiling that no token passes",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** give one fix for an entry a variable decides",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** judge each entry before it replaces a server",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** name each NO_PROXY spelling that must exclude the gateway",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** name plugin lock entries that lock nothing",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** name relay status for an unreadable relay profile",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** name the variable that decides an MCP entry",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** report an unknown route for an unreadable project file",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** say to update for a profile from a newer release",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** tell Claude Code to activate again after the proxy fix",
+        "type": "bugfix"
+      },
+      {
+        "message": "**doctor:** test the gateway connection when inference sends nothing",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** fix sign-in, packaging and source checks",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** name the allowlist key Claude Code does not read",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** read a build key that names no build as no build name",
+        "type": "bugfix"
+      },
+      {
+        "message": "**fleet:** say why fleet build refuses a profile",
+        "type": "bugfix"
+      },
+      {
+        "message": "**login:** accept Entra ID scope forms and name an unrequested scope",
+        "type": "bugfix"
+      },
+      {
+        "message": "**login:** keep a saved sign-in when login is cancelled after the save",
+        "type": "bugfix"
+      },
+      {
+        "message": "**login:** name the IPv6 reserved port list on Windows too",
+        "type": "bugfix"
+      },
+      {
+        "message": "**login:** refuse a token lifetime at sign-in that renewal refuses",
+        "type": "bugfix"
+      },
+      {
+        "message": "**login:** report a setup check that did not finish",
+        "type": "bugfix"
+      },
+      {
+        "message": "**login:** report a Windows callback port refusal as a port conflict",
+        "type": "bugfix"
+      },
+      {
+        "message": "**login:** say that login --diagnostics can sign in",
+        "type": "bugfix"
+      },
+      {
+        "message": "**management:** recheck machine-wide after the delete prompt",
+        "type": "bugfix"
+      },
+      {
+        "message": "**management:** say an invalid delete removes MCP keys",
+        "type": "bugfix"
+      },
+      {
+        "message": "**management:** skip MCP keys in a relay invalid delete",
+        "type": "bugfix"
+      },
+      {
+        "message": "**oidc:** ignore unknown callback parameters and check any iss",
+        "type": "bugfix"
+      },
+      {
+        "message": "**oidc:** keep waiting past stray callback connections",
+        "type": "bugfix"
+      },
+      {
+        "message": "**oidc:** require TLS 1.2 on every request",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** ask to remove a machine-wide file with a bad name",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** call only a newer schema version unsupported",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** check the schema version before unknown fields",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profilecreate:** name the evidence flag when discovery lacks none",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profilecreate:** stop saying that error reports reach Anthropic",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** give a PowerShell fix that converts the profile file",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** give the machine-wide cause to import",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** keep each disabled feature reason next to its switch",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** keep stored profiles readable and check new ones",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** keep unknown field names out of parse errors",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** let profile delete remove an invalid profile",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** let setup resume past a machine-wide profile it installed",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** name Keycloak and PingFederate beside their audience parameter",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** name MCP keys an invalid profile may keep",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** name XDG_CONFIG_HOME first when profile storage is unavailable",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** read a profile file saved with a byte-order mark",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** refuse a machine-wide delete before any prompt",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** refuse bug and feedback commands that differ",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** refuse error reports or the feedback survey with Anthropic telemetry off",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** refuse the advisor on the Anthropic API with feature flags off",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** refuse the advisor where Claude Code cannot start it",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** refuse the Artifact tool with auto-updates off in a new profile before schema 18",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** remove the gateway MCP keys of an invalid profile",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** say to update for a newer machine-wide profile in listings",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** say to update kong-harnesses for a profile from a newer release",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** say to update when the imported profile is newer",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** say to update when the installed profile is newer",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** say what the audience and the evidence flag are",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** say why profile storage is unavailable and what to set",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** send an invalid machine-wide profile to the administrator",
+        "type": "bugfix"
+      },
+      {
+        "message": "**profile:** stop saying a CA file replaces pi's trust on Bun",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** name no sign-out step for an invalid relay profile",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** name relay commands for a relay profile that is absent or invalid",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** name relay commands in activate and doctor hints",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** name relay delete for an invalid relay profile",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** name relay delete when relay delete fails",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** name relay import for a rejected or failed relay import",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** name relay import when relay import fails",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** name the relay command in import and activate argument errors",
+        "type": "bugfix"
+      },
+      {
+        "message": "**relay:** say to update for a newer profile in relay token",
+        "type": "bugfix"
+      },
+      {
+        "message": "**settings:** write enableArtifact for the Claude Code artifact member",
+        "type": "bugfix"
+      },
+      {
+        "message": "**setup:** ask for the key before the model when the gateway lists models only with a key",
+        "type": "bugfix"
+      },
+      {
+        "message": "**setup:** name --profile when no terminal can ask",
+        "type": "bugfix"
+      },
+      {
+        "message": "**setup:** resume from a profile the wizard saved",
+        "type": "bugfix"
+      },
+      {
+        "message": "**setup:** resume past profile create with the saved profile",
+        "type": "bugfix"
+      },
+      {
+        "message": "**setup:** resume past the import of an unchanged HTTPS source",
+        "type": "bugfix"
+      },
+      {
+        "message": "**setup:** say a rerun can update a configured CLI",
+        "type": "bugfix"
+      },
+      {
+        "message": "**token:** name a missing static key",
+        "type": "bugfix"
+      },
+      {
+        "message": "**token:** report a cancel after a verified renewal as a cancel",
+        "type": "bugfix"
+      },
+      {
+        "message": "**token:** report a cancel while the token output is prepared",
+        "type": "bugfix"
+      },
+      {
+        "message": "**vault:** start a Secret Service that the bus lists but no one runs",
+        "type": "bugfix"
+      }
+    ]
+  },
   "0.18.0": {
     "kong-harnesses": [
       {
