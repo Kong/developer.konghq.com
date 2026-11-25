@@ -75,7 +75,8 @@ faqs:
   - q: Can the HMAC Signature Validator plugin verify a chunked request?
     a: |
       Yes. Nginx buffers the whole body of a chunked request before the HMAC Signature Validator plugin runs.
-      To limit what Nginx buffers, set [`nginx_http_client_max_body_size`](/gateway/configuration/#nginx-http-client-max-body-size), because {{site.base_gateway}} doesn't limit it by default.
+      Nginx checks [`nginx_http_client_max_body_size`](/gateway/configuration/#nginx-http-client-max-body-size) against the `Content-Length` header only, so it doesn't limit a chunked request.
+      To cap the body that this plugin accepts, set [`max_body_size`](/plugins/hmac-signature-validator/reference/#schema--config-max-body-size).
   - q: Why does a base64 signature fail with the hex signature format in the HMAC Signature Validator plugin?
     a: |
       The plugin decodes the signature header with the encoding that [`signature_format`](/plugins/hmac-signature-validator/reference/#schema--config-signature-format) sets, and rejects the request when decoding fails.
@@ -219,7 +220,7 @@ When the secret is empty or is a Vault reference that doesn't resolve, the plugi
 This keeps a sender from signing with an empty key.
 
 To rotate the secret, update the plugin configuration.
-The plugin holds one secret, so requests that the provider signed with the old secret fail until the provider uses the new one.
+The plugin uses one secret, so requests that the provider signed with the old secret fail until the provider uses the new one.
 
 ## Request body size
 
