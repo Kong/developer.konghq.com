@@ -93,6 +93,18 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
+## Enable the File Log plugin
+
+To see which group each session negotiates, enable the [File Log plugin](/plugins/file-log/), which writes each request to the container's standard output, including the TLS fields:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: file-log
+      config:
+        path: /dev/stdout
+{% endentity_examples %}
+
 ## Check the post-quantum status
 
 Query the [`/pqc-status` endpoint](/gateway/post-quantum-tls/#check-the-state-of-a-node) of the Admin API to confirm that the node can do post-quantum TLS and see which groups it offers to clients:
@@ -111,31 +123,33 @@ If the {{site.base_gateway}} node was launched with `KONG_SSL_CIPHER_SUITE=pqc`,
 {
   "available": true,
   "reason": null,
+  "openssl_version": "OpenSSL 3.5.9 29 Sep 2026",
   "require_pqc": false,
-  "client": {
-    "source": "ssl_curves",
-    "key_exchange": "post-quantum",
-    "curves": "X25519MLKEM768:SecP256r1MLKEM768:X25519:P-256:P-384"
-  }
+  "ssl_cipher_suite": "pqc",
+  "ssl_ciphers": null,
+  "http": {
+    "protocols": "TLSv1.3",
+    "protocols_source": "ssl_cipher_suite",
+    "client": {
+      "curves": "X25519MLKEM768:SecP256r1MLKEM768:X25519:P-256:P-384",
+      "source": "ssl_curves",
+      "key_exchange": "post-quantum"
+    },
+    "upstream": {
+      "curves": null,
+      "source": "openssl-default",
+      "key_exchange": "openssl-default"
+    }
+  },
+  "stream": { "...": "Same structure as http" }
 }
 ```
 {:.no-copy-code}
 
-* The `key_exchange` value `post-quantum` means that the group list contains a post-quantum group.
-* The `ssl_curves` source shows that the `pqc` suite wrote the list.
+* The `http.client.key_exchange` value `post-quantum` means that the group list contains a post-quantum group.
+* The `http.client.source` value `ssl_curves` shows that the `pqc` suite wrote the list.
 
-## Enable the File Log plugin
-
-The `/pqc-status` endpoint shows only what the node offers.
-To see what each session negotiates, enable the [File Log plugin](/plugins/file-log/), which writes each request to the container's standard output, including the TLS fields:
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: file-log
-      config:
-        path: /dev/stdout
-{% endentity_examples %}
+The `/pqc-status` endpoint shows only what the node offers, not what each session negotiates.
 
 ## Validate hybrid key exchange
 
@@ -144,8 +158,8 @@ Test the handshake with two clients: one that offers a post-quantum group, and o
 1. Connect with a client that offers the `X25519MLKEM768` group:
 
    ```sh
-   echo | openssl s_client -brief -connect localhost:8443 -tls1_3 \
-     -groups X25519MLKEM768:X25519 2>&1 \
+   openssl s_client -brief -connect localhost:8443 -tls1_3 \
+     -groups X25519MLKEM768:X25519 </dev/null 2>&1 \
      | grep -E "Negotiated TLS1.3 group|Peer Temp Key"
    ```
    {:data-test-step="block"}
@@ -160,8 +174,8 @@ Test the handshake with two clients: one that offers a post-quantum group, and o
 1. Connect with a client that offers only the classical `X25519` group:
 
    ```sh
-   echo | openssl s_client -brief -connect localhost:8443 -tls1_3 \
-     -groups X25519 2>&1 \
+   openssl s_client -brief -connect localhost:8443 -tls1_3 \
+     -groups X25519 </dev/null 2>&1 \
      | grep -E "Negotiated TLS1.3 group|Peer Temp Key"
    ```
    {:data-test-step="block"}
@@ -239,8 +253,8 @@ status_code: 200
 1. Connect with the client that offers a post-quantum group:
 
    ```sh
-   echo | openssl s_client -brief -connect localhost:8443 -tls1_3 \
-     -groups X25519MLKEM768:X25519 2>&1 \
+   openssl s_client -brief -connect localhost:8443 -tls1_3 \
+     -groups X25519MLKEM768:X25519 </dev/null 2>&1 \
      | grep -E "Negotiated TLS1.3 group|alert"
    ```
    {:data-test-step="block"}
@@ -255,8 +269,8 @@ status_code: 200
 1. Connect with the client that offers only a classical group:
 
    ```sh
-   echo | openssl s_client -brief -connect localhost:8443 -tls1_3 \
-     -groups X25519 2>&1 \
+   openssl s_client -brief -connect localhost:8443 -tls1_3 \
+     -groups X25519 </dev/null 2>&1 \
      | grep -E "Negotiated TLS1.3 group|alert"
    ```
    {:data-test-step="block"}
