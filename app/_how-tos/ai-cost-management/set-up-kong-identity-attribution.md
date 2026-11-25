@@ -34,7 +34,7 @@ breadcrumbs:
 
 tldr:
   q: How do I attribute AI usage to a {{site.identity}} principal?
-  a: Upload your organization's structure, then create an `openid-connect` AI Auth Strategy with `principals.enabled` set to `true` and attach it to the model. The first authenticated request creates a matching principal automatically, and the usage event's subject is recorded as `principal/PRINCIPAL_UUID`.
+  a: Upload your organization's structure, then create an `openid-connect` AI Auth Strategy with `principals.enabled` set to `true` and attach it to the AI Model. The first authenticated request creates a matching principal automatically, and the usage event's subject is recorded as `principal/PRINCIPAL_UUID`.
 
 prereqs:
   inline:
@@ -103,7 +103,20 @@ This guide covers subject attribution only. See [Tags and headers](/ai-cost-mana
 
 ## Add a trusted IdP
 
-{% include /ai-cost-management/add-trusted-idp.md %}
+A trusted IdP is the OIDC issuer {{site.konnect_short_name}} verifies tokens against, and the place you turn on automatic user provisioning for that issuer.
+{{site.identity}}'s own auth server is a valid issuer, so add it as a trusted IdP:
+
+1. In the {{site.konnect_short_name}} sidebar, click **Access Management**.
+1. Click **Identity Providers**.
+1. Click **Add trusted IdP**.
+1. In the **Name** field, enter a label for this IdP, for example `Kong Identity`.
+1. In the **Issuer URL** field, enter your issuer URL (run `echo $ISSUER_URL` to print the value you exported earlier).
+1. Enable **Automatic user provisioning**.
+1. Click **Add IdP**.
+
+{:.info}
+> A client credentials token includes only a `sub` claim, so this guide skips claim mapping.
+> For an interactive sign-in flow, your provider's token can include richer claims.
 
 ## Upload an org structure (Optional)
 
@@ -179,7 +192,7 @@ ai_gateway_models:
 {% endentity_examples %}
 <!--vale on-->
 
-The target has no `input_cost` or `output_cost` set, so {{site.ai_cost_management}} falls back to the model's list price from the [price catalog](/ai-cost-management/price-catalog/).
+The target doesn't set `input_cost` or `output_cost`, so {{site.ai_cost_management}} falls back to the model's list price from the [price catalog](/ai-cost-management/price-catalog/).
 
 ## Send a request
 

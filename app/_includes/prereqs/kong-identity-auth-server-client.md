@@ -6,7 +6,7 @@ Look up your existing auth server:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/auth-servers
+url: /v1/auth-servers?filter[name][eq]=ai-cost-management-auth-server
 status_code: 200
 method: GET
 extract_body:
