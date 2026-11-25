@@ -172,12 +172,12 @@ See the [breakdown of each affected entity](/gateway/breaking-changes/#tls-certi
 
 When certificate verification is enforced:
 
-* **Traditional deployments** will fail to start if {{site.base_gateway}} detects insecure configurations. This happens when an upstream is configured to use a secure protocol (such as HTTPS) but certificate verification is disabled.
+* **Traditional deployments** will fail to start if {{site.base_gateway}} detects insecure configurations. This happens when an upstream is configured to use a secure protocol (for example, HTTPS) but certificate verification is disabled.
 * **Hybrid deployments** will fail to push such insecure configurations to Data Planes that start with this option enabled.
 
 This feature is designed primarily for **highly federated environments**, where platform operators need to guarantee that all teams and users deploying configuration through {{site.base_gateway}} adhere to certificate-verification requirements.
 
-Keep in mind that enabling certificate verification does not change how {{site.base_gateway}} validates certificates themselves. If you configure Services or system components (such as Postgres or Redis) with certificates that are invalid or self-signed without an appropriate trusted CA, {{site.base_gateway}} will be unable to establish those connections. This behavior is not new. However, enabling global enforcement may surface misconfigurations that were previously unnoticed.
+Keep in mind that enabling certificate verification does not change how {{site.base_gateway}} validates certificates themselves. If you configure Services or system components (for example, PostgreSQL or Redis) with certificates that are invalid or self-signed without an appropriate trusted CA, {{site.base_gateway}} will be unable to establish those connections. This behavior is not new. However, enabling global enforcement may surface misconfigurations that were previously unnoticed.
 
 ## When certificates are loaded and reloaded
 
