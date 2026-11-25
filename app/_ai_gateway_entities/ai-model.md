@@ -103,6 +103,10 @@ AI Models can be created and managed through:
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/models`
 * [kongctl](/kongctl/)
 
+To get the kongctl YAML for an existing AI Model, open it in the {{site.konnect_short_name}} UI and select **Actions** > **View declarative config**.
+You can copy or download the YAML, along with the kongctl commands to run with it.
+If you created the resource in the UI, run the `kongctl adopt` command from the panel once, so that kongctl can manage it.
+
 For configuration examples and step-by-step setup instructions, see [Set up an AI Model](#set-up-an-ai-model).
 
 ## How it works
