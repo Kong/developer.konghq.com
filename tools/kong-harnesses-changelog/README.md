@@ -1,8 +1,8 @@
 # kong-harnesses changelog
 
-Generates `app/_changelogs/kong-harnesses.json`, the data behind the [kong-harnesses changelog page](../../app/kong-harnesses/changelog.md), from the release-please `CHANGELOG.md` of the private `Kong/kong-harnesses` repository.
+Generates `app/_changelogs/kong-harnesses.json`, the data behind the [kong-harnesses changelog page](../../app/kong-harnesses/changelog.md), from the release-please `CHANGELOG.md` of the `Kong/kong-harnesses` repository.
 
-The [`generate-kong-harnesses-changelog`](../../.github/workflows/generate-kong-harnesses-changelog.yml) workflow runs the script on manual dispatch. It checks out the private repository with the Kong docs GitHub App token (`GH_APP_KONG_DOCS_ID`), regenerates the JSON, and opens a pull request.
+The [`generate-kong-harnesses-changelog`](../../.github/workflows/generate-kong-harnesses-changelog.yml) workflow runs the script on manual dispatch. It checks out the repository with the Kong docs GitHub App token (`GH_APP_KONG_DOCS_ID`), regenerates the JSON, and opens a pull request.
 
 You can also run the script by hand.
 
@@ -35,24 +35,19 @@ The JSON holds no release dates. The [drop](../../app/_plugins/drops/tool_change
 
 ## How to run it
 
-The repository is private, so you need a token with read access.
+Requires the `kong-harnesses` repo to be available locally - the instructions assume that it's cloned in `../../../kong-harnesses`.
+From the root of your clone of the dev site repo:
 
 ```sh
 cd tools/kong-harnesses-changelog
 
-# Fetch the private repository. gh auth token supplies a token for a logged-in
-# gh session.
-git clone --depth 1 \
-  "https://x-access-token:$(gh auth token)@github.com/Kong/kong-harnesses.git" \
-  /tmp/kong-harnesses
-
-node generate.js --input=/tmp/kong-harnesses/CHANGELOG.md
+node generate.js --input=../../../kong-harnesses/CHANGELOG.md
 
 # Override the floor (default 0.18.0):
-node generate.js --input=/tmp/kong-harnesses/CHANGELOG.md --min-version=0.19.0
+node generate.js --input=../../../kong-harnesses/CHANGELOG.md --min-version=0.19.0
 
 # Write somewhere other than app/_changelogs/kong-harnesses.json:
-node generate.js --input=/tmp/kong-harnesses/CHANGELOG.md --output=/tmp/kong-harnesses.json
+node generate.js --input=../../../kong-harnesses/CHANGELOG.md --output=/tmp/kong-harnesses.json
 ```
 
 Options:
