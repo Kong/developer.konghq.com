@@ -60,12 +60,6 @@ rows:
             text: Read the reference
             url: /kong-harnesses/example-reference/
             align: end
-<<<<<<< HEAD
-
-  - header:
-      type: h2
-      text: "Roll out Claude Code to managed computers"
-=======
     - blocks:
       - type: card
         config:
@@ -79,37 +73,10 @@ rows:
   - header:
       type: h2
       text: "Sign in to your agent CLI"
->>>>>>> upstream/release/kong-harnesses
     columns:
       - blocks:
         - type: card
           config:
-<<<<<<< HEAD
-            title: Roll out through MDM
-            description: Build the Claude Code managed settings for a profile and deploy them to every managed computer.
-            cta:
-              text: Roll out through MDM
-              url: /kong-harnesses/roll-out-claude-code-through-mdm/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Pin a version range
-            description: Limit managed computers to the Claude Code versions that you tested through AI Gateway.
-            cta:
-              text: Pin a version range
-              url: /kong-harnesses/pin-a-claude-code-fleet/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Move to a new model
-            description: Move managed computers to a new Claude model without interrupting active sessions.
-            cta:
-              text: Move to a new model
-              url: /kong-harnesses/move-a-claude-code-fleet-to-a-new-model/
-              align: end
-=======
             title: "Sign in with kong-harnesses"
             # description: "Learn how kong-harnesses signs you in to {{site.ai_gateway}}, validates the result, and signs you out, for every supported agent CLI."
             description: "Learn how kong-harnesses signs you in to {{site.ai_gateway}}, validates the result, and signs you out."
@@ -181,4 +148,35 @@ rows:
   #           text: "Sign in to pi"
   #           url: /kong-harnesses/sign-in/pi/
   #           align: end
->>>>>>> upstream/release/kong-harnesses
+
+  - header:
+      type: h2
+      text: "Roll out Claude Code to managed computers"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Roll out through MDM
+            description: Build the Claude Code managed settings for a profile and deploy them to every managed computer.
+            cta:
+              text: Roll out through MDM
+              url: /kong-harnesses/roll-out-claude-code-through-mdm/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Pin a version range
+            description: Limit managed computers to the Claude Code versions that you tested through AI Gateway.
+            cta:
+              text: Pin a version range
+              url: /kong-harnesses/pin-a-claude-code-fleet/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Move to a new model
+            description: Move managed computers to a new Claude model without interrupting active sessions.
+            cta:
+              text: Move to a new model
+              url: /kong-harnesses/move-a-claude-code-fleet-to-a-new-model/
+              align: end
