@@ -26,6 +26,7 @@ The script reads one release-please Markdown file and writes one JSON file. Ther
 | `### Bug Fixes` | `bugfix` |
 | `### Performance` | `performance` |
 | `### ⚠ BREAKING CHANGES` | `Breaking Change` |
+| `### Dependencies` | `dependency` |
 
 An unknown section passes through in lower case, so the drop sorts it last under `app/_changelogs/config.yaml`.
 
@@ -68,4 +69,4 @@ The floor is a constant in `generate.js` and the default of the `min_version` wo
 npm test
 ```
 
-The tests in `test/generate.test.js` cover the heading parse, the section map, the reference strip, the floor, version compare, prerelease skip, dedupe, unknown-section pass-through, and idempotent output, without the network.
+The tests in `test/generate.test.js` cover the heading parse, the section map, the reference strip, the floor, version compare, prerelease skip, dedupe, unknown-section pass-through, and a byte-for-byte comparison against `test/fixtures/changelog.snapshot.json`, without the network. Update that snapshot whenever the output format changes on purpose.
