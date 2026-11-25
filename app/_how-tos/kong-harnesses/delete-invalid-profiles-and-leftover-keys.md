@@ -30,8 +30,6 @@ tldr:
 related_resources:
   - text: Remove kong-harnesses
     url: /kong-harnesses/remove-kong-harnesses/
-  - text: Profile errors
-    url: /kong-harnesses/errors/#profile-errors
   - text: kong-harnesses profile delete
     url: /kong-harnesses/profile/delete/
   - text: kong-harnesses profile cleanup
@@ -46,7 +44,7 @@ prereqs:
     - title: An invalid user profile
       content: |
         A user profile that `doctor`, `logout`, `profile get`, or `profile list` reports as invalid or unreadable, and whose message names `kong-harnesses profile delete`.
-        If the message names a different fix, follow it instead. For details, see [Profile errors](/kong-harnesses/errors/#profile-errors).
+        If the message names a different fix, follow it instead.
         Keep kong-harnesses installed until you finish these steps.
 ---
 

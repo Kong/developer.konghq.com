@@ -62,7 +62,7 @@ Sign out of each installed profile before you clean up agent CLI settings or del
 Run `kong-harnesses profile list` to see your installed profile names, and replace `PROFILE_NAME` with each name.
 
 A profile marked `installed for every user by your administrator` is machine-wide.
-Sign out of it before your administrator removes the {{ site.claude_code }} [fleet build](/kong-harnesses/remove-a-claude-code-fleet-build/), so that `logout` can still read the profile.
+Sign out of it before your administrator removes the {{ site.claude_code }} fleet build, so that `logout` can still read the profile.
 
 1. Sign out of the profile and remove its saved sign-in and gateway MCP server keys:
 
@@ -85,7 +85,6 @@ Sign out of it before your administrator removes the {{ site.claude_code }} [fle
 
 If `logout` fails, complete the step that its message names, then run `logout` again.
 For an invalid user profile or gateway MCP server keys that stay after `logout`, follow [Delete invalid profiles and leftover gateway MCP server keys](/kong-harnesses/delete-invalid-profiles-and-leftover-keys/).
-For other unreadable profiles, see [Profile errors](/kong-harnesses/errors/#profile-errors).
 
 ## Clean up agent CLI settings
 
@@ -95,7 +94,7 @@ For other unreadable profiles, see [Profile errors](/kong-harnesses/errors/#prof
 
 Without `--client`, `profile cleanup` works on every supported agent CLI.
 To clean up one agent CLI, add `--client CLIENT_NAME`, for example `--client claude-code`.
-On a computer with a [{{ site.claude_code }} fleet build](/kong-harnesses/remove-a-claude-code-fleet-build/), activating a profile at the user level also changes user-level settings.
+On a computer with a {{ site.claude_code }} fleet build, activating a profile at the user level also changes user-level settings.
 Run `profile cleanup` to clear them, because managed fleet settings don't.
 
 1. Preview the changes that `profile cleanup` would make:
@@ -114,13 +113,12 @@ Run `profile cleanup` to clear them, because managed fleet settings don't.
 Its output names the settings that hold your edits.
 
 If `profile cleanup` can't finish, complete the step that its message names, then run `profile cleanup` again.
-For what each exit code means, see [Exit codes](/kong-harnesses/errors/#exit-codes).
 
 ## Delete each profile
 
 Delete each user profile after `logout` and `profile cleanup` finish, because the profile holds what `logout` needs to revoke the sign-in.
 [`kong-harnesses profile delete`](/kong-harnesses/profile/delete/) removes only user profiles that you installed.
-Only an administrator can remove a machine-wide profile, by following [Remove a {{ site.claude_code }} fleet build](/kong-harnesses/remove-a-claude-code-fleet-build/).
+Only an administrator can remove a machine-wide profile.
 
 1. Delete the stored profile document:
 
