@@ -39,7 +39,9 @@ related_resources:
     url: /gateway/network/dns-config-reference/
   - text: ACL plugin
     url: /plugins/acl/
-    
+  - text: HMAC Signature Validator plugin
+    url: /plugins/hmac-signature-validator/
+
 min_version:
   gateway: '1.0'
 ---
@@ -155,6 +157,10 @@ body of 0 length.
 
 {:.info}
 > **Note:** To create the digest of a request body, the plugin needs to retain it in memory, which may cause pressure on the worker's Lua VM when dealing with large bodies (several MB) or during high request concurrency.
+
+The `Digest` comparison uses a hash that is computed without a key, so it doesn't prove that the sender knows a secret.
+
+{% new_in 3.17 %} To verify a keyed HMAC of the request body, such as a webhook signature, use the [HMAC Signature Validator plugin](/plugins/hmac-signature-validator/).
 
 ## Enforcing headers
 

@@ -1,0 +1,33 @@
+description: 'Verify an HMAC-SHA256 signature that the sender encodes as base64 in the X-Shopify-Hmac-SHA256 header.'
+
+extended_description: |
+  Verify an HMAC-SHA256 signature that the sender encodes as base64 in the `X-Shopify-Hmac-SHA256` header, as Shopify webhooks send it.
+  The plugin computes the HMAC of the request body with the shared secret, and rejects the request with a `403` response when the result doesn't match the signature.
+
+  Set `signature_format` to the encoding that the provider uses.
+  A base64 signature fails verification when the format is `hex`.
+
+title: 'Verify a base64-encoded signature'
+
+weight: 800
+
+variables:
+  shared-secret:
+    value: $WEBHOOK_SHARED_SECRET
+    description: The shared secret that the sender uses to sign the request body.
+
+config:
+  signature_header: X-Shopify-Hmac-SHA256
+  signature_format: base64
+  algorithm: hmac-sha256
+  shared_secret: ${shared-secret}
+
+min_version:
+  gateway: '3.17'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
