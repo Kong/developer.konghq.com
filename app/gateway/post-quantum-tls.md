@@ -50,7 +50,7 @@ faqs:
       A reason that names `cannot perform ML-KEM` means the loaded OpenSSL providers don't offer ML-KEM, so check whether something overrides the `OPENSSL_CONF` environment variable.
   - q: Why does {{site.base_gateway}} refuse to start when I set both `ssl_curves` and `ssl_cipher_suite`?
     a: |
-      {{site.base_gateway}} refuses to start when `ssl_cipher_suite` is `pqc` and `ssl_curves` names a different group list, because the two settings would disagree about which groups {{site.base_gateway}} passes to OpenSSL.
+      {{site.base_gateway}} refuses to start when `ssl_cipher_suite` is `pqc` and `ssl_curves` names a different group list, because the two settings disagree about which groups {{site.base_gateway}} passes to OpenSSL.
       Keep one of the two settings.
       To write your own group list, set `ssl_cipher_suite = custom` and set `ssl_curves`.
   - q: Why do all of my clients negotiate a classical group when {{site.base_gateway}} offers a post-quantum group?
@@ -243,7 +243,8 @@ The [`ssl_require_pqc`](/gateway/configuration/#ssl-require-pqc) parameter chang
 The `ssl_require_pqc` parameter applies to client connections on proxy listeners.
 It doesn't apply to connections to upstreams.
 
-{{site.base_gateway}} refuses to start when `ssl_require_pqc` is on and the configuration can't satisfy it, for example when `ssl_curves` lists only classical groups or TLS 1.3 isn't allowed.
+{{site.base_gateway}} refuses to start when `ssl_require_pqc` is on and the configuration can't satisfy it.
+For example, `ssl_curves` lists only classical groups, or TLS 1.3 isn't allowed.
 
 A rejected client sees a TLS-level error.
 For example, `openssl s_client` reports `tlsv1 alert internal error`.
@@ -277,13 +278,15 @@ Enable upstream connections when your backends support it.
 ### Conflicting settings
 
 Use only one setting to decide the key exchange groups for a connection on a proxy listener.
-{{site.base_gateway}} refuses to start or reload when two settings set different groups for the same connection, or when a raw Nginx directive would override the Kong setting.
+{{site.base_gateway}} refuses to start or reload when two settings set different groups for the same connection.
+It also refuses when a raw Nginx directive overrides the Kong setting.
 
 {{site.base_gateway}} rejects the following combinations:
 * `ssl_cipher_suite = pqc` and an `ssl_curves` value that differs from the suite's group list.
 * `ssl_curves` or `proxy_ssl_curves` and a raw Nginx directive that sets a different list for the same connection.
 * A raw group directive set to `auto`, which ignores the Kong setting.
 * `proxy_ssl_curves` and another raw conf command on a nested Nginx block, which drops the group list.
+* An `ssl_curves` value with a post-quantum group and an `ssl_protocols` value without `TLSv1.3`, even when `ssl_require_pqc` is off.
 
 {{site.base_gateway}} accepts a raw directive that repeats the same value as the Kong setting.
 
@@ -342,7 +345,8 @@ The [CA Certificate](/gateway/entities/ca-certificate/) entity accepts an ML-DSA
 ### Check the state of a node
 
 The `/pqc-status` endpoint reports the post-quantum state of a node.
-Both the [Admin API](/api/gateway/admin-ee/) and the [Status API](/api/gateway/status/) serve it with the same content, because a data plane in hybrid mode doesn't run an Admin API.
+Both the [Admin API](/api/gateway/admin-ee/) and the [Status API](/api/gateway/status/) serve it with the same content.
+The Status API is there because a data plane in hybrid mode doesn't run an Admin API.
 
 ```sh
 curl -s http://localhost:8001/pqc-status | jq
@@ -475,7 +479,8 @@ Keep the following points in mind when you filter logs:
 
 FIPS mode and post-quantum TLS are mutually exclusive, because FIPS 140-3 validated OpenSSL providers don't include ML-KEM or ML-DSA.
 
-When [`fips`](/gateway/configuration/#fips) is on, {{site.base_gateway}} refuses to start if the configuration enables post-quantum cryptography, such as `ssl_cipher_suite = pqc`, `ssl_require_pqc = on`, or a post-quantum certificate.
+When [`fips`](/gateway/configuration/#fips) is on, {{site.base_gateway}} refuses to start if the configuration enables post-quantum cryptography.
+For example, `ssl_cipher_suite = pqc`, `ssl_require_pqc = on`, or a post-quantum certificate stops the node from starting.
 It also rejects a post-quantum certificate in a Certificate or CA Certificate entity, a declarative configuration file, or a `POST /config` request.
 
 A data plane in FIPS mode applies a configuration synced from a control plane even when it contains a post-quantum certificate, and logs a warning.
