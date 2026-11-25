@@ -814,7 +814,6 @@ rows:
 `model_metadata` maps a gateway model ID to how the {{ site.claude_code }} `/model` picker describes it.
 It has 1 to 64 entries.
 Each model ID is 1 to 128 bytes of visible ASCII, and each entry sets at least one field.
-A value here takes precedence over the value from the gateway model list.
 
 {% table %}
 columns:
@@ -849,14 +848,13 @@ columns:
 rows:
   - field: "`multiplier`"
     description: >-
-      A number greater than 0 and up to 10 that multiplies every price, both here and in the gateway model list.
+      A number greater than 0 and up to 10 that multiplies every price in `models`.
       The default is 1.
   - field: "`models`"
     description: >-
       Maps a gateway model ID to its `input`, `output`, `cache_read`, and `cache_write` prices, in USD for each million tokens.
       Each model sets all four prices, from 0 to 10000.
       Each model ID is 1 to 128 bytes of visible ASCII, is unique without regard to case, and can't end with `[1m]`.
-      A price here takes precedence over the price from the gateway model list.
 {% endtable %}
 
 #### Telemetry
