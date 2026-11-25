@@ -471,6 +471,7 @@ konnect
 KPI
 KPIs
 KRaft
+KWallet
 kscheme
 ksearch
 kubeconfig
