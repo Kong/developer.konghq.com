@@ -34,6 +34,8 @@ related_resources:
     url: /gateway/entities/consumer-group/
   - text: Enforce tiered AI budgets on AI Models with {{site.identity}}
     url: /ai-gateway/enforce-tiered-ai-budgets-with-kong-identity/
+  - text: Migrate {{site.ai_gateway}} Consumers to users
+    url: /ai-gateway/consumer-to-user-migration/
 faqs:
   - q: How is an AI Consumer Group different from a {{site.base_gateway}} Consumer Group?
     a: |

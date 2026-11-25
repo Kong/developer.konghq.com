@@ -173,3 +173,13 @@ rows:
             cta:
               url: /identity/principals/
               align: end
+      - blocks:
+        - type: card
+          config:
+            title: Migrate AI Consumers to users
+            description: |
+              Migrate callers that authenticate as AI Consumers to users and agents without changing their API keys.
+            icon: /assets/icons/ai-gateway.svg
+            cta:
+              url: /ai-gateway/consumer-to-user-migration/
+              align: end

@@ -37,6 +37,8 @@ related_resources:
     url: /ai-cost-management/org-chart/
   - text: "AI Management roles and permissions"
     url: /ai-management/roles-and-permissions/#access-management
+  - text: "Migrate {{site.ai_gateway}} Consumers to users"
+    url: /ai-gateway/consumer-to-user-migration/
 
 faqs:
  
@@ -90,6 +92,8 @@ Users imported from an org structure file are managed by that file:
 You can view all users in one searchable table. Search matches on the user's name. You can filter the table by team and status, and show or hide columns such as metadata and labels.
 
 Open a user to see their details. The **Provisioned by** field shows how the user was added, for example **Imported** for users from an [org structure import](#import-an-org-structure).
+
+To migrate AI Consumers to users and agents without changing their API keys, see [Migrate {{site.ai_gateway}} Consumers to users](/ai-gateway/consumer-to-user-migration/).
 
 ### Teams
 
