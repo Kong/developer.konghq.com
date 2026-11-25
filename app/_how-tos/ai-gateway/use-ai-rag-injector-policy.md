@@ -37,7 +37,7 @@ tldr:
   a: |
     Create an AI Model with an AI RAG Injector Policy that points to a Redis vector database.
     {{site.ai_gateway}} doesn't expose an ingestion endpoint, so split your documents into chunks, generate embeddings, and write them to Redis with a script.
-    The Policy's `vectordb_namespace` ties the stored chunks to the Policy.
+    Set the same `vectordb_namespace` in the Policy and in the script.
 
 tools:
   - kongctl
@@ -142,17 +142,19 @@ ai_gateway_models:
 
 In this example, the Policy uses the following settings:
 
-* `vectordb_namespace`: The name that identifies the knowledge base in Redis. The Policy searches the Redis index named `idx:vss_compliance_policies` and the keys that start with `compliance_policies:`.
-* `inject_template`: The prompt that {{site.ai_gateway}} sends to OpenAI. `<CONTEXT>` is replaced with the retrieved chunks, and `<PROMPT>` is replaced with the user's question.
-* `embeddings`: The model that converts each user prompt into a vector before the search.
-* `vectordb.dimensions`: The size of the vectors. It must match the embedding model. `text-embedding-3-large` produces 3072 dimensions by default.
+* `vectordb_namespace`: The name of the knowledge base in Redis.
+  The Policy searches the Redis index `idx:vss_compliance_policies` and the keys that start with `compliance_policies:`.
+* `inject_template`: The prompt that {{site.ai_gateway}} sends to OpenAI.
+  {{site.ai_gateway}} replaces `<CONTEXT>` with the retrieved chunks and `<PROMPT>` with the user's question.
+* `vectordb.dimensions`: The size of the vectors.
+  The value must match the embedding model, and `text-embedding-3-large` produces 3072 dimensions by default.
 
 ## Understand how content gets into Redis
 
 The AI RAG Injector Policy reads from the vector database at request time, and it doesn't write to it.
 {{site.ai_gateway}} doesn't expose an endpoint for ingesting content, so you write chunks to Redis yourself.
 
-The Policy finds your content when the following values on the ingestion side match the Policy configuration:
+The Policy retrieves your chunks only when the following values on the ingestion side match the Policy configuration:
 
 <!-- vale off -->
 {% table %}
@@ -175,11 +177,12 @@ rows:
 
 The Policy doesn't create the Redis index, so the ingestion script creates it before it writes the first chunk.
 
-Each chunk is stored as a JSON document with the following fields:
+The script stores each chunk as a JSON document with the following fields:
 
 * `payload.text`: The chunk text that the Policy injects into the prompt.
 * `vector`: The embedding of the chunk.
-* `metadata.collection`: The [collection](/ai-gateway/policies/ai-rag-injector/#collections) the chunk belongs to. The default collection is named `default`.
+* `metadata.collection`: The [collection](/ai-gateway/policies/ai-rag-injector/#collections) the chunk belongs to.
+  The default collection is named `default`.
 
 ## Ingest content into Redis
 
@@ -260,7 +263,7 @@ render_output: false
 {% endvalidation %}
 <!-- vale on -->
 
-Run the script:
+Run the script to create the index and write the chunks to Redis:
 
 {% validation custom-command %}
 command: python3 ./ingest_policy.py
@@ -277,7 +280,8 @@ Ingested 3 chunks
 {:.no-copy-code}
 
 To add content to the knowledge base later, run the script again with the new text.
-The script keeps the existing index and adds new chunks to it.
+The script keeps the existing index.
+Running it again with text that you already ingested adds duplicate chunks, so ingest only new content.
 
 ## Validate
 
