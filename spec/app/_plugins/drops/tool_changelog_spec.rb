@@ -31,8 +31,9 @@ RSpec.describe Jekyll::Drops::ToolChangelog do
 
     describe '#entries_by_type' do
       it 'groups entries by type' do
-        expect(populated_version.entries_by_type.keys).to contain_exactly('feature', 'bugfix', 'Breaking Change',
-                                                                    'dependencies')
+        expect(populated_version.entries_by_type.keys).to contain_exactly(
+          'feature', 'bugfix', 'Breaking Change', 'dependencies'
+        )
       end
 
       it 'orders the known types by config.yaml, and the unknown type last' do
@@ -44,7 +45,9 @@ RSpec.describe Jekyll::Drops::ToolChangelog do
       end
 
       it 'lists the messages under their type' do
-        expect(partial_version.entries_by_type['feature'].map { |e| e['message'] }).to eq(['add the statusline command'])
+        expect(partial_version.entries_by_type['feature'].map do |e|
+          e['message']
+        end).to eq(['add the statusline command'])
       end
     end
   end
