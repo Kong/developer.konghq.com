@@ -31,14 +31,16 @@ Examples:
 
 Flags:
       --advisor on|off                       Claude Code's advisor tool: on|off, on when given alone (default off)
-      --audience uri                         audience of the access token, as a uri
+      --anthropic-telemetry on|off           Claude Code usage metrics and feature-flag requests sent to Anthropic (it sends error reports only on a direct Anthropic API connection, so a profile sends none): on|off, on when given alone (default off)
+      --audience uri                         resource identifier of the gateway, as an absolute uri; the sign-in request sends it unless --audience-parameter is none, and the token's aud can differ, as with Entra ID
       --audience-parameter resource          how the sign-in request sends the audience: resource, audience or none (default resource)
+      --auto-mode-gateway-check on|off       Claude Code runs auto mode's check through the gateway: on|off, on when given alone (default off)
       --auto-updates on|off                  Claude Code auto-updates: on|off, on when given alone (default off)
       --client-id id                         OIDC client id (a public client, with no secret)
-      --gateway-origin origin                HTTPS address of the gateway (its origin)
+      --gateway-origin origin                HTTPS address of the gateway (its origin), or http:// on localhost
   -h, --help                                 help for create
       --issuer url                           OIDC issuer url
-      --max-token-lifetime-seconds seconds   longest token lifetime to accept, in seconds, from 360 to 86400 (default 3600)
+      --max-token-lifetime-seconds seconds   longest token lifetime to accept, in seconds, from 365 to 86400; a renewed token must still have 360 seconds left when a client gets it (default 3600)
       --mcp-key-header name=header           header that a --mcp-key-server server reads its key from, as name=header (default apikey); repeat for each
       --mcp-key-server name=/path            gateway MCP server that takes a key your administrator gives each developer, as name=/path; login asks for the key; repeat for each
       --mcp-oauth-server name=/path          gateway MCP server with its own OAuth sign-in, as name=/path; repeat for each
@@ -47,10 +49,10 @@ Flags:
       --name name                            name of the new profile
       --prompt-cache lifetime                prompt cache lifetime: off, 5m or 1h (default 1h)
       --provider provider                    model provider: anthropic, mantle, foundry (default anthropic)
-      --public-client-evidence deployment    why the OIDC client may have no secret: deployment
+      --public-client-evidence deployment    accept a provider whose discovery does not list none as a token endpoint auth method: deployment; it skips only that check, so first show on a test deployment that sign-in and renewal work without a client secret
       --redirect-uri url                     local redirect url that the sign-in returns to (default http://localhost:9876/callback)
       --scope scope                          OIDC scope to request; repeat for each, at most 16 (default openid profile email offline_access)
-      --sign-in kind                         kind of sign-in when not only an identity provider: static-key, a key from the administrator, with no identity provider; or environment-key, the same key read from KONG_HARNESSES_STATIC_KEY on every call, for a CI job
+      --sign-in kind                         kind of sign-in when it is not only an identity provider: static-key, a key from the administrator in place of an identity provider; or environment-key, the same key read from KONG_HARNESSES_STATIC_KEY on every call, for a CI job; or subscription, each developer's own Claude subscription, with --issuer, --client-id and --audience too
       --tool-reference on|off                Claude Code tool references: on|off, on when given alone (default on)
 
 Global Flags:

@@ -13,10 +13,14 @@ not change any settings. It also checks that:
   - the gateway has a route for each agent CLI that is set up, and accepts
     your sign-in there (doctor sends an empty request to find out)
   - for OpenCode, npm can install the gateway plugin (doctor asks the npm
-    registry with your own npm token), and the plugin is in OpenCode's cache
+    registry with your own npm token), the plugin is in OpenCode's cache,
+    and no OpenCode settings that OpenCode reads here put their own
+    provider or another URL in place of the plugin's
   - for Claude Code, /model offers only the models that the gateway serves,
     the selected model is one of them, and no setting still sends Claude
     Code to Anthropic
+  - on Windows, when kong-harnesses runs from Program Files, only
+    administrators can change it and the folders above it
 
 -o json prints the report as one JSON document with a schema_version and one
 entry for each agent CLI. -o yaml prints the same document as YAML.
