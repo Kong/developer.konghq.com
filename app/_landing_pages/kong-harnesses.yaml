@@ -14,17 +14,28 @@ rows:
         Kong's OIDC credential helper for coding agents
 
   - header:
-      type: h2
-      text: What is kong-harnesses?
     columns:
-      - blocks:
+      - header:
+          type: h2
+          text: What is kong-harnesses?
+        blocks:
         - type: text
-          # config: |
-          #   kong-harnesses obtains short-lived OIDC access tokens for coding agents such as {{site.claude_code}}, Codex, OpenCode, Hermes Agent, omp, and pi.
-          #   It manages connection profiles, signs in to an OIDC identity provider, and configures the agent CLI to route its traffic through the gateway.
           config: |
-            kong-harnesses obtains short-lived OIDC access tokens for {{site.claude_code}}.
-            It manages connection profiles, signs in to an OIDC identity provider, and configures {{site.claude_code}} to route its traffic through the gateway.
+            kong-harnesses obtains short-lived OIDC access tokens for coding agents.
+            It signs developers in to your identity provider in the browser, manages connection profiles, and configures the agent CLI to route its traffic through {{site.ai_gateway}}.
+            It keeps the sign-in in the secret store of the computer, and doesn't write a long-lived key to the agent CLI settings.
+
+      - header:
+          type: h2
+          text: When should I use kong-harnesses?
+        blocks:
+        - type: text
+          config: |
+            You should use kong-harnesses if one or more of the following is true:
+            - You want your coding agent to send every model request through {{site.ai_gateway}} with your company sign-in
+            - You're an administrator who sets up the sign-in once for all developers
+            - You manage many computers and want them to use a tested agent version and model
+            - You want checks that show why a sign-in or a setup fails
 
   - header:
       type: h2
@@ -41,6 +52,36 @@ rows:
             - title: Windows
               include_content: tools/kong-harnesses/install/windows
 
+  - header:
+    columns:
+      - header:
+          type: h2
+          text: "What can kong-harnesses do?"
+        blocks:
+        - type: text
+          config: |
+            **Browser sign-in**: Sign developers in to your OIDC identity provider, and renew their short-lived access tokens with a refresh token.
+
+            **Profiles**: A profile names the gateway, the identity provider, and the model. An administrator creates it once, and developers install it.
+
+            **Agent configuration**: Configure the agent CLI to send its requests through {{site.ai_gateway}}.
+
+            **Diagnostics**: Check the sign-in, the gateway, and the settings, with a fix for each problem.
+
+            **Fleet management**: Limit managed computers to a tested version range, and move them to a new model. This is available for {{site.claude_code}}.
+
+      - header:
+          type: h2
+          text: Related guides
+        blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                    - "**[Set up {{site.claude_code}} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/)**: Protect an AI Model with Okta and start a session"
+                    - "**[Proxy AI CLI tools through {{site.ai_gateway}}](/ai-gateway/ai-clis/)**: Route AI CLI traffic through the gateway"
+
   - columns:
     - blocks:
       - type: card
@@ -54,44 +95,34 @@ rows:
     - blocks:
       - type: card
         config:
-          title: Reference
-          description: Look up kong-harnesses commands and options.
+          title: Sign in
+          description: "Learn how kong-harnesses signs you in to {{site.ai_gateway}}, validates the result, and signs you out."
           cta:
-            text: Read the reference
-            url: /kong-harnesses/example-reference/
+            text: Read the overview
+            url: /kong-harnesses/sign-in/
             align: end
     - blocks:
       - type: card
         config:
-          title: Install for every user
-          description: Install kong-harnesses for every user of a computer, or deploy it with an MDM tool.
+          title: Identity provider
+          description: "Register the sign-in client in Okta, Auth0, Keycloak, Microsoft Entra ID or PingFederate."
           cta:
-            text: Read the install guide
-            url: /kong-harnesses/install/
+            text: Register the client
+            url: /kong-harnesses/identity-provider/
+            align: end
     - blocks:
       - type: card
         config:
-          title: Changelog
-          description: See what changed in each kong-harnesses release.
+          title: CLI reference
+          description: Look up kong-harnesses commands, options, and identity provider settings.
           cta:
-            text: Read the changelog
-            url: /kong-harnesses/changelog/
+            text: Read the CLI reference
+            url: /index/kong-harnesses/#cli-references
             align: end
 
   - header:
       type: h2
       text: "Sign in to your agent CLI"
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: "Sign in with kong-harnesses"
-            # description: "Learn how kong-harnesses signs you in to {{site.ai_gateway}}, validates the result, and signs you out, for every supported agent CLI."
-            description: "Learn how kong-harnesses signs you in to {{site.ai_gateway}}, validates the result, and signs you out."
-            cta:
-              text: Read the overview
-              url: /kong-harnesses/sign-in/
-              align: end
 
   - columns:
     - blocks:
@@ -159,23 +190,66 @@ rows:
 
   - header:
       type: h2
-      text: "Keep a Claude Code fleet current"
+      text: "Manage {{site.claude_code}} on many computers"
     columns:
       - blocks:
-        - type: card
-          config:
-            title: Pin a version range
-            description: Limit managed computers to the Claude Code versions that you tested through AI Gateway.
-            cta:
-              text: Pin a version range
-              url: /kong-harnesses/pin-a-claude-code-fleet/
-              align: end
+        - type: text
+          config: |
+            If your organization manages its computers with an MDM tool, a _fleet build_ packages the kong-harnesses settings once and deploys them to every managed computer, so developers don't configure anything.
+            After the first rollout, use these guides to change which {{site.claude_code}} versions or which model the fleet uses.
+
+  - columns:
+    - blocks:
+      - type: card
+        config:
+          title: Install for every user
+          description: Install kong-harnesses for every user of a computer, or deploy it with an MDM tool.
+          cta:
+            text: Read the install guide
+            url: /kong-harnesses/install/
+            align: end
+    - blocks:
+      - type: card
+        config:
+          title: Pin a version range
+          description: Limit managed computers to the {{site.claude_code}} versions that you tested through {{site.ai_gateway}}.
+          cta:
+            text: Pin a version range
+            url: /kong-harnesses/pin-a-claude-code-fleet/
+            align: end
+    - blocks:
+      - type: card
+        config:
+          title: Move to a new model
+          description: Move managed computers to a new Claude model without interrupting active sessions.
+          cta:
+            text: Move to a new model
+            url: /kong-harnesses/move-a-claude-code-fleet-to-a-new-model/
+            align: end
+
+  - header:
+      type: h2
+      text: References
+    columns:
       - blocks:
-        - type: card
+          - type: reference_list
+            config:
+              pages:
+                - /kong-harnesses/identity-provider/
+                - /kong-harnesses/profile/
+                - /kong-harnesses/install/
+                - /kong-harnesses/troubleshooting/
+                - /kong-harnesses/sign-in/errors/
+                - /kong-harnesses/support/
+              tools:
+                - kong-harnesses
+
+  - header:
+      type: h2
+      text: "Related resources"
+    columns:
+      - blocks:
+        - type: related_resources
           config:
-            title: Move to a new model
-            description: Move managed computers to a new Claude model without interrupting active sessions.
-            cta:
-              text: Move to a new model
-              url: /kong-harnesses/move-a-claude-code-fleet-to-a-new-model/
-              align: end
+            - text: kong-harnesses changelog
+              url: /kong-harnesses/changelog/

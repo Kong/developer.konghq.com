@@ -31,172 +31,134 @@ related_resources:
     url: /kong-harnesses/identity-provider/providers/
 ---
 
-Use these checks to find why {{site.kong_harnesses}} refuses a value or a response of your identity provider at profile creation, at sign-in or at renewal.
-[`kong-harnesses profile create`](/kong-harnesses/profile/create/) checks the profile values and the discovery document, and [`kong-harnesses profile import`](/kong-harnesses/profile/import/) checks the profile values.
-[`kong-harnesses login`](/kong-harnesses/login/) and [`kong-harnesses setup`](/kong-harnesses/setup/) check the discovery document again, and also the callback, the signing keys, the token response and the ID token.
-A renewal checks the token response.
-For the client settings, the scopes and the access token lifetime, see [Register {{site.kong_harnesses}} in your identity provider](/kong-harnesses/identity-provider/).
+When `profile create` or `kong-harnesses login` fails, the error names the setting of your identity provider to change.
+Find your message in the following table, change the setting, and run the command again.
+For the client settings, see [Register {{site.kong_harnesses}} in your identity provider](/kong-harnesses/identity-provider/).
 
-{{site.kong_harnesses}} also refuses a response that breaks the encoding rules of [OAuth 2.0](https://www.rfc-editor.org/rfc/rfc6749), [OpenID Connect](https://openid.net/specs/openid-connect-core-1_0.html), [JWS](https://www.rfc-editor.org/rfc/rfc7515), [JWK](https://www.rfc-editor.org/rfc/rfc7517), [JWA](https://www.rfc-editor.org/rfc/rfc7518) or [JWT](https://www.rfc-editor.org/rfc/rfc7519), such as a value that isn't in Base64url.
-It also refuses a response with more than 16,384 bytes of headers, or a body that it can't read completely.
+## Fix a sign-in error
 
-## Profile values
+The error text is lowercase, and some messages start with `OIDC login:`.
 
-For the rules of the identity provider values in a profile, such as `--client-id`, `--audience`, `--scope` and `discovery_url`, see [Sign-in fields](/kong-harnesses/profile-file/#sign-in-fields).
-For `--redirect-uri`, see [Callback](/kong-harnesses/identity-provider/#callback).
+{% table %}
+columns:
+  - title: What you see
+    key: message
+  - title: What to change
+    key: fix
+rows:
+  - message: "`the identity provider denied access; the account may not be assigned to the provider client or allowed by its access policy`"
+    fix: "Assign the user to the client in the identity provider, and check its access policy."
+  - message: "`the identity provider rejected the requested scopes`"
+    fix: "Allow the scopes of the profile for the client, by default `openid`, `profile`, `email` and `offline_access`."
+  - message: "`the provider client is not allowed to use the authorization-code flow`"
+    fix: "Turn on the authorization code grant for the client."
+  - message: "`the identity provider required a sign-in or consent step that was not completed`"
+    fix: "Complete the sign-in or consent step in the browser."
+  - message: "`another program on this computer, such as another sign-in, is using the sign-in callback address`"
+    fix: "Give each profile a different port. See [Port conflicts](#port-conflicts)."
+  - message: "`the token endpoint did not return a usable refresh token`"
+    fix: "Turn on the refresh token grant for the client, and allow the `offline_access` scope."
+  - message: "`the token endpoint did not return a bearer token`"
+    fix: "Issue `Bearer` access tokens. A type such as `DPoP` fails the sign-in."
+  - message: "`the granted scopes do not satisfy the selected profile`"
+    fix: "Allow every scope that the profile requests for the client."
+  - message: "`the identity provider granted a scope that the profile did not request`"
+    fix: "Remove that scope from the client. On Keycloak, put the Audience mapper on the dedicated scope of the client, or turn off **Include in token scope**."
+  - message: "`the identity provider issued an access token that lives less than 365 seconds`"
+    fix: "Set the access token lifespan in the identity provider to at least 365 seconds."
+  - message: "`the identity provider issued an access token that lives longer than the profile's max_access_token_lifetime_seconds`"
+    fix: "Raise it with `profile create --max-token-lifetime-seconds`, or shorten the lifespan in the identity provider."
+  - message: "`the identity provider's discovery does not list none in token_endpoint_auth_methods_supported`"
+    fix: "For a client without a secret, test the client, then create the profile with `--public-client-evidence deployment`. See [Discovery document](#discovery-document)."
+  - message: "`the ID token failed validation`"
+    fix: "See [What kong-harnesses validates](#what-kong-harnesses-validates)."
+  - message: "`issuer metadata incompatible`"
+    fix: "Compare the discovery document with [Discovery document](#discovery-document)."
+  - message: "`issuer discovery unavailable`"
+    fix: "Check that the identity provider answers at the issuer URL, and that its certificate is trusted. See [HTTP responses](#http-responses)."
+  - message: "`browser launch failed`"
+    fix: "Run `kong-harnesses login --no-browser`, and open the printed address in a browser on the same computer."
+{% endtable %}
 
-## URLs
+If your message isn't in the table, run [`kong-harnesses doctor`](/kong-harnesses/doctor/).
 
-The issuer, `discovery_url`, `authorization_endpoint`, `token_endpoint`, `jwks_uri` and `revocation_endpoint` must each be a canonical `https` URL:
+## Port conflicts
 
-* At most 2,048 bytes of visible ASCII characters, without `\`.
-* A host without percent encoding that is a lowercase DNS name, an IPv4 address in canonical dotted decimal form, such as `192.0.2.1`, or an IPv6 address in brackets in its canonical short form, without a zone.
-  Each label of a DNS name has 1 to 63 letters, digits or `-`, and doesn't start or end with `-`.
-  The name has at most 253 characters, and doesn't end with `.`.
-  A host of only digits and dots must be an IPv4 address in that form, so `192.0.02.1` and `3221225985` fail.
-* No port, or a port from 1 to 65535 other than `443`, without a zero at the start.
-* No user information, fragment, or `.` or `..` path segment.
-* Percent encoding with uppercase hexadecimal digits only, and without an encoded letter, digit, `-`, `.`, `_`, `~`, `\` or control character.
-* The same text after a URL parser reads the URL and writes it again.
+When another program listens on the callback address and port, the sign-in stops with an `AUTH_TEMPORARY` error that says that the callback address is in use.
+On Windows, the error also appears when Windows reserved the port, for example for Hyper-V, even if no program listens on it.
+Two sign-ins conflict when they need the same address and port, also with different paths, and a `localhost` callback conflicts with a `127.0.0.1` callback on the same port.
+To fix it, give each profile that signs in at the same time a different port in `--redirect-uri`.
 
-The issuer can't have a query.
-The query of `authorization_endpoint` can't have a parameter that {{site.kong_harnesses}} sets: `response_type`, `client_id`, `redirect_uri`, `scope`, `state`, `nonce`, `code_challenge`, `code_challenge_method`, `resource`, `audience` or `prompt`.
+To list the TCP ports that Windows reserved, run these commands in PowerShell:
 
-## Callback
-
-During a sign-in, {{site.kong_harnesses}} accepts one request on the callback: a request to the callback path with the `state` of that sign-in.
-It ignores other requests and keeps waiting.
-The accepted request must meet these checks:
-
-* It is a `GET` request without a body, with a `Host` header that has the exact host and port of the callback in the profile, such as `localhost:9876`.
-* Its path is the callback path, without percent encoding.
-* Each of `state`, `code`, `error`, `error_description`, `error_uri`, `iss` and `session_state` occurs at most once, with a value that isn't empty.
-* It has `code` or `error`, but not both.
-  When it has `error`, the sign-in fails with a fixed message for the `error` code, and {{site.kong_harnesses}} doesn't show the text of the identity provider.
-  When it has `code`, it doesn't have `error_description` or `error_uri`.
-* `code` has 1 to 8,192 visible ASCII characters.
-* When the request has `iss`, the value is the issuer of the profile.
-  When the discovery document sets `authorization_response_iss_parameter_supported` to `true`, the request must have `iss`.
-
-{{site.kong_harnesses}} ignores other parameters.
-
-## HTTP responses
-
-{{site.kong_harnesses}} reads the discovery document from `discovery_url` and the signing keys from `jwks_uri`, with one `GET` request each.
-It doesn't follow redirects, and it uses TLS 1.2 or later for all requests to the identity provider.
-The TLS certificate of the identity provider must chain to the system trust store of each developer computer, because the gateway CA bundle of a profile doesn't apply to the identity provider.
-If the identity provider uses a certificate from a private CA, add the CA to that trust store.
-
-A response with a status other than `2xx` fails the request.
-At renewal, when the token endpoint answers with a `4xx` status other than `429` and a complete JSON body of at most 65,536 bytes with an `error` member of `invalid_grant`, {{site.kong_harnesses}} also tries to remove the saved refresh token, and the developer must sign in again.
-For other error responses, the renewal fails and {{site.kong_harnesses}} keeps the refresh token for the next renewal.
-
-A `2xx` response from the discovery document, the signing keys and the token endpoint must have:
-
-* One `Content-Type` header with the value `application/json`, and without a parameter other than `charset=utf-8`, with any letter case.
-* No `Content-Encoding` header, or one with the value `identity`.
-* A body of at most 65,536 bytes, with the same length as its `Content-Length` header when the response has one.
-* One JSON object in UTF-8, with only whitespace after it.
-  In a renewal response, a top-level member that {{site.kong_harnesses}} reads can't occur twice.
-  In the other responses, a top-level member name can't be empty or occur twice.
-
-The identity provider must answer within these times:
-
-* The discovery document and the signing keys: 10 seconds each.
-* The token endpoint at sign-in: 15 seconds.
-* The token endpoint at renewal: 4 seconds.
-  When no proxy applies to the token endpoint, {{site.kong_harnesses}} must also open a TLS connection to it within 2 seconds, before it sends the refresh token.
+```powershell
+netsh interface ipv4 show excludedportrange protocol=tcp
+netsh interface ipv6 show excludedportrange protocol=tcp
+```
 
 ## Discovery document
 
-The discovery document must have `issuer`, `authorization_endpoint`, `token_endpoint` and `jwks_uri` as strings, and `issuer` must match the issuer of the profile character by character, including a trailing slash.
-Each of these URLs, and `revocation_endpoint` when the document lists it, must meet the rules in [URLs](#urls).
+The discovery document is a JSON file that your identity provider publishes at the issuer URL plus `/.well-known/openid-configuration`.
+It tells {{site.kong_harnesses}} where to send the sign-in and the token requests, and which features the provider supports.
+{{site.kong_harnesses}} reads it when you run `profile create`, and again at each sign-in.
 
-* The document has `response_types_supported` and `id_token_signing_alg_values_supported`, and each is a nonempty JSON array of unique strings.
-  `grant_types_supported`, `token_endpoint_auth_methods_supported` and `code_challenge_methods_supported` follow the same rule when the document lists them.
-* `response_types_supported` lists the `code` response type.
-* `id_token_signing_alg_values_supported` lists at least one of `RS256`, `RS384`, `RS512`, `PS256`, `PS384`, `PS512`, `ES256`, `ES384` or `ES512`.
-  Configure the client to sign ID tokens with one of these algorithms that the discovery document also lists.
-* When the document lists `authorization_response_iss_parameter_supported`, it is `true` or `false`.
-* When the document lists one of these fields, the field has the value that {{site.kong_harnesses}} needs:
-  * `code_challenge_methods_supported` lists the `S256` PKCE method.
-  * `grant_types_supported` lists the `authorization_code` and `refresh_token` grant types.
-  * `token_endpoint_auth_methods_supported` lists the `none` method, for a public client.
-    `--public-client-evidence deployment` skips this check.
+To check yours, open that address in a browser.
+The sign-in is refused unless the document has the following members:
 
-At each sign-in, {{site.kong_harnesses}} reads the discovery document again and runs these checks again.
-`authorization_endpoint`, `token_endpoint` and `jwks_uri` must also be the same as the values that `profile create` saved in the profile, and so must `revocation_endpoint` when the profile has one.
-When one of them changes, sign-in fails until you create the profile again and give the new profile to developers.
+{% table %}
+columns:
+  - title: Member
+    key: member
+  - title: Must be
+    key: value
+  - title: Checked
+    key: checked
+rows:
+  - member: "`issuer`"
+    value: "The issuer of the profile, character by character, including a trailing slash."
+    checked: Always
+  - member: "`authorization_endpoint`, `token_endpoint`, `jwks_uri`"
+    value: "A URL."
+    checked: Always
+  - member: "`response_types_supported`"
+    value: "A list that includes `code`."
+    checked: Always
+  - member: "`id_token_signing_alg_values_supported`"
+    value: "A list that includes at least one of `RS256`, `RS384`, `RS512`, `PS256`, `PS384`, `PS512`, `ES256`, `ES384` or `ES512`."
+    checked: Always
+  - member: "`code_challenge_methods_supported`"
+    value: "A list that includes `S256`."
+    checked: Only when the document has it
+  - member: "`grant_types_supported`"
+    value: "A list that includes `authorization_code` and `refresh_token`."
+    checked: Only when the document has it
+  - member: "`token_endpoint_auth_methods_supported`"
+    value: "A list that includes `none`. `--public-client-evidence deployment` skips this check."
+    checked: Only when the document has it
+{% endtable %}
 
-{{site.kong_harnesses}} accepts a discovery document that leaves out `code_challenge_methods_supported`, `grant_types_supported` or `token_endpoint_auth_methods_supported`, but a missing field doesn't prove the capability.
-For example, without `code_challenge_methods_supported`, check that the token endpoint refuses a code exchange without a valid `S256` code verifier.
+At each sign-in, {{site.kong_harnesses}} reads the document again.
+If `authorization_endpoint`, `token_endpoint`, `jwks_uri` or `revocation_endpoint` no longer matches the value in the profile, the sign-in fails until you create the profile again and give it to developers.
 
-## Signing keys
+A document without the optional members is accepted, but then {{site.kong_harnesses}} can't tell that the identity provider supports the feature.
+For example, without `code_challenge_methods_supported`, check yourself that the token endpoint refuses a code exchange without a valid `S256` code verifier.
 
-The document at `jwks_uri` must have a `keys` array of 1 to 64 keys, and at least one key must be usable.
-A key can leave out `alg`, `use` and `key_ops`.
-Each key must meet these rules, or the sign-in fails, even when another key in the document can verify the ID token:
+## HTTP responses
 
-* `kty` is a string.
-* `kid`, when the key has one, has 1 to 256 visible ASCII characters.
+{{site.kong_harnesses}} sends requests to the identity provider over TLS 1.2 or later, and doesn't follow redirects.
+The TLS certificate must chain to the system trust store of each developer computer, because the gateway CA bundle of a profile doesn't apply to the identity provider.
+If the identity provider uses a private CA, add the CA to that trust store.
 
-Then {{site.kong_harnesses}} reads the other members of the key in this order, and stops at the first one that makes it skip the key:
+At renewal, when the token endpoint answers with the error `invalid_grant`, {{site.kong_harnesses}} removes the saved refresh token, and the developer must sign in again.
+For other errors, the renewal fails and the refresh token stays for the next renewal.
 
-1. When the key has `alg` with a value that isn't a string, or that isn't `RS256`, `RS384`, `RS512`, `PS256`, `PS384`, `PS512`, `ES256`, `ES384` or `ES512`, it skips the key.
-2. When the key has `use` with a value that isn't a string, the sign-in fails.
-   When `use` is a string other than `sig`, it skips the key.
-3. When the key has `key_ops` with a value that isn't a nonempty array of unique strings, the sign-in fails.
-   When `key_ops` doesn't have `verify`, it skips the key.
-4. When `kty` is other than `RSA` or `EC`, it skips the key.
-5. When an `RSA` key doesn't have a modulus of 2,048 to 8,192 bits and a public exponent that is an odd number from 3 to 2,147,483,647, the sign-in fails.
-   When an `EC` key doesn't have a `crv` string of `P-256`, `P-384` or `P-521`, with `x` and `y` values that are a point on that curve, the sign-in fails.
+## What {{site.kong_harnesses}} validates
 
-Two usable keys can't have the same nonempty `kid`.
+At sign-in, {{site.kong_harnesses}} checks:
 
-## Token responses
+* **The authorization response:** it comes back to the callback with the `state` of the sign-in. When it has `iss`, the value is the issuer of the profile.
+* **The token response:** it has an access token, a `Bearer` token type, a refresh token and `expires_in`. When it has `scope`, it keeps every custom scope that the profile requests, and names no scope that the profile didn't request. The standard scopes are `openid`, `profile`, `email`, `address`, `phone`, `offline_access`, `groups` and `device_sso`.
+* **The ID token:** it is signed with an algorithm from the discovery document, with a key from `jwks_uri`. `iss` is the issuer of the profile, `aud` is only the client ID, `nonce` is the nonce of the sign-in request, and the token hasn't expired. {{site.kong_harnesses}} doesn't tolerate clock differences, so keep the clock of the computer correct.
 
-At sign-in, the token response must have `access_token`, `token_type`, `id_token`, `refresh_token` and `expires_in`.
-At renewal, it must have `access_token`, `token_type` and `expires_in`, and it can leave out `refresh_token`, but it can't send an empty one.
-In both responses:
-
-* `access_token` has 1 to 16,384 characters, from letters, digits, `-`, `.`, `_`, `~`, `+` and `/`, with optional `=` characters at the end.
-* `refresh_token` has 1 to 16,384 visible ASCII characters.
-* `token_type` is `Bearer`, with any letter case.
-* `expires_in` is a JSON number with digits only.
-* `scope`, when present, is a nonempty string with single spaces between scopes, without a space at the start or the end.
-  Each scope in it has 1 to 128 visible ASCII characters, without `"` or `\`, occurs only once, and must match a different allowed scope.
-
-At sign-in, the allowed scopes are the requested scopes.
-At renewal, they are the last accepted list.
-A response with `scope` sets the accepted list to its matched scopes, and a response without `scope` keeps the allowed list.
-
-{{site.kong_harnesses}} matches each returned scope against the allowed scopes in order:
-
-1. Match an equal allowed scope.
-2. Match an allowed scope equal to the percent-decoded value.
-3. Match when exactly one allowed scope is a URI with a scheme and a host whose last path segment equals the returned scope, such as `api://API_ID/access_as_user` for `access_as_user`.
-
-When `scope` is present, it must keep every scope that the profile requests other than `openid`, `profile`, `email`, `address`, `phone`, `offline_access`, `groups` or `device_sso`.
-
-A successful sign-in response can't have an `error` member.
-At renewal, {{site.kong_harnesses}} ignores an `id_token`.
-
-## ID token
-
-The ID token from the sign-in must meet these rules:
-
-* It has at most 32,768 visible ASCII characters, in three parts separated by `.`.
-* Its `alg` header is one of the supported algorithms, and the discovery document lists it.
-* It doesn't have a `crit` header.
-  A `typ` header, when the token has one, is `JWT`, and a `kid` header, when the token has one, has 1 to 256 visible ASCII characters.
-* Exactly one usable key matches the `alg` of the token, and its `kid` when the header has one.
-  An `RS` or `PS` algorithm needs an `RSA` key, and `ES256`, `ES384` and `ES512` need an `EC` key on `P-256`, `P-384` and `P-521`.
-  So two usable keys for the same algorithm without a `kid` in the header fail the sign-in, even when one of them can verify the token.
-* The signature passes verification with that key.
-* `iss` is the issuer of the profile, and `sub` has 1 to 255 visible ASCII characters.
-* `aud` is the client ID, as a string or as an array with only the client ID.
-* `azp`, when the token has one, is the client ID.
-* `nonce` is the nonce of the sign-in request.
-* `exp` is in the future, without a tolerance for clock difference, and `iat` isn't after `exp` or more than 1 minute in the future.
-  Both are JSON numbers with digits only that fit in a signed 64-bit integer, so `1.5` and `1.7e9` fail.
-* `at_hash`, when the token has one, matches the access token.
+A renewal checks the token response again.
+For the limits of each profile value, see [Sign-in fields](/kong-harnesses/profile-file/#sign-in-fields).

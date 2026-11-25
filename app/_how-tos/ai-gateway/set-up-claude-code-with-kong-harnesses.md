@@ -39,6 +39,8 @@ related_resources:
     url: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
   - text: kong-harnesses setup
     url: /kong-harnesses/setup/
+  - text: Register kong-harnesses in your identity provider
+    url: /kong-harnesses/identity-provider/
 
 prereqs:
   inline:
