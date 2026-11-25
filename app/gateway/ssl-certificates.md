@@ -62,7 +62,6 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-
 ## CA certificates
 
 The following table shows how to configure CA certificates in {{site.base_gateway}}:
@@ -124,6 +123,13 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+## Post-quantum certificates {% new_in 3.17 %}
+
+{{site.base_gateway}} can serve an ML-DSA certificate and a classical certificate on the same port. 
+For each client, it presents the certificate that the client supports.
+
+To serve both, list both certificates in `ssl_cert` and `ssl_cert_key`, or add the ML-DSA key pair to a [Certificate entity](/gateway/entities/certificate/).
+See [post-quantum TLS](/gateway/post-quantum-tls/#post-quantum-certificates) for details.
 
 ## Configuring SSL connections through kong.conf
 

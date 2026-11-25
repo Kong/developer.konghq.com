@@ -1,0 +1,7 @@
+name: example-secure-route
+paths:
+  - /anything
+service: 
+  name: example-service
+protocols:
+  - https

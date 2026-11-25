@@ -60,6 +60,9 @@ To verify server certificates, you can define your CA Certificate:
 
 To verify client certificates, you can use the [Mutual TLS Authentication plugin](/plugins/mtls-auth/) or the [Header Cert Authentication plugin](/plugins/header-cert-auth/).
 
+{% new_in 3.17 %} A CA Certificate can hold an ML-DSA trust anchor, so {{site.base_gateway}} can verify a server that presents an ML-DSA certificate.
+See [post-quantum certificates](/gateway/post-quantum-tls/#post-quantum-certificates).
+
 ## Set up a CA Certificate
 
 {% entity_example %}

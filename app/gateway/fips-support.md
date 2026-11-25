@@ -33,6 +33,14 @@ min_version:
   gateway: '3.14'
 
 toc_depth: 4
+
+faqs:
+  - q: "Can I use post-quantum TLS with FIPS mode in {{site.base_gateway}}?"
+    a: |
+      No. Post-quantum TLS and FIPS mode are mutually exclusive.
+
+      When `fips` is on, {{site.base_gateway}} refuses to start if a post-quantum setting or certificate is configured.
+      For the full list of conflicting settings and how each configuration path handles post-quantum certificates, see [Post-quantum TLS and FIPS mode](/gateway/post-quantum-tls/#fips-mode).
 ---
 
 The Federal Information Processing Standard (FIPS) 140-3 is a federal standard defined by the National Institute of Standards and Technology. It specifies the security requirements that must be satisfied by a cryptographic module.
