@@ -19,10 +19,6 @@ breadcrumbs:
 related_resources:
   - text: kong-harnesses doctor
     url: /kong-harnesses/doctor/
-  - text: kong-harnesses errors and exit codes
-    url: /kong-harnesses/errors/
-  - text: Troubleshoot a {{ site.claude_code }} fleet
-    url: /kong-harnesses/troubleshooting/claude-code-fleet/
   - text: Remove kong-harnesses
     url: /kong-harnesses/remove-kong-harnesses/
   - text: Sign in with kong-harnesses
@@ -178,5 +174,4 @@ rows:
 {% endtable %}
 
 When managed settings of your organization set a value, ask your administrator to change the settings.
-For exit codes, see [Exit codes](/kong-harnesses/errors/#exit-codes).
 To report a problem that `doctor` doesn't solve, see [kong-harnesses support](/kong-harnesses/support/).
