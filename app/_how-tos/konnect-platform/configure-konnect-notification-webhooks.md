@@ -20,7 +20,7 @@ related_resources:
     url: /api/konnect/notification-hub/
 tldr:
   q: How do I send organization events to an HTTP endpoint?
-  a: Create an HTTP destination, save its signing secret, then create an organization subscription for an event and destination.
+  a: Create an HTTP destination, save its signing secret, then create an organization subscription for an event and destination. This tutorial shows how to create a webhook to receive notifications when a new user registers in your {{site.dev_portal}}.
 prereqs:
   skip_product: true
   inline:
@@ -57,6 +57,8 @@ status_code: 200
 region: global
 {% endkonnect_api_request %}
 <!--vale on-->
+
+This tutorial uses the `devportal_developer.registration_pending` event.
 
 ## Create an HTTP destination
 
