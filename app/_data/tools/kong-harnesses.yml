@@ -1,9 +1,12 @@
 name: kong-harnesses
 
 releases:
+  - release: "0.20"
+    version: "0.20.0"
+    latest: true
+    released: 2026-11-25
   - release: "0.18"
     version: "0.18.0"
-    latest: true
     released: 2026-11-22
   - release: "0.17"
     version: "0.17.1"
@@ -29,11 +32,9 @@ releases:
   - release: "0.10"
     version: "0.10.0"
     released: 2026-11-09
-  - release: "0.9"
-    version: "0.9.0"
-    released: 2026-11-06
 
 release_dates:
+  '0.20.0': 2026/11/25
   '0.18.0': 2026/11/22
   '0.17.1': 2026/11/19
   '0.17.0': 2026/11/19
