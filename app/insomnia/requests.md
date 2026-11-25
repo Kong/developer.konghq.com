@@ -36,7 +36,7 @@ faqs:
 
   - q: How can I check the actual request URL that {{ site.insomnia }} sends?
     a: |
-      After sending a request, open the **Timeline** tab on the right-side panel. This shows the exact encoded request that was transmitted, allowing you to verify how special characters were handled.
+      After sending a request, click the **Timeline** tab in the right-side panel. This shows the exact encoded request that was transmitted, allowing you to verify how special characters were handled.
 
   - q: What can I do if auto-encoding is causing problems in my request?
     a: |
