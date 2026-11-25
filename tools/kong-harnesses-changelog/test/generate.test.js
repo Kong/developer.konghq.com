@@ -146,3 +146,64 @@ test('defaults the floor to 0.18.0', () => {
   assert.equal(json['0.9.0'], undefined);
   assert.deepEqual(Object.keys(json), ['0.19.0', '0.18.0']);
 });
+
+test('does not leak bullets of an unrecognized level-2 heading into the previous version', () => {
+  const markdown = `## [0.18.0](url) (2026-11-21)
+
+### Features
+
+* a released thing
+
+## Unreleased
+
+### Features
+
+* an unreleased thing
+`;
+
+  const json = generateChangelog(markdown, { minVersion: '0.18.0' });
+
+  assert.deepEqual(Object.keys(json), ['0.18.0']);
+  assert.equal(json['0.18.0']['kong-harnesses'].length, 1);
+  assert.equal(entryFor(json, '0.18.0', 'a released thing').type, 'feature');
+});
+
+test('skips a non-numeric version heading instead of emitting a key that cannot be sorted', () => {
+  const markdown = `## [Unreleased](url)
+
+### Features
+
+* an unreleased thing
+`;
+
+  const json = generateChangelog(markdown, { minVersion: '0.0.0' });
+
+  assert.deepEqual(Object.keys(json), []);
+});
+
+test('rejects a floor that is not a numeric version', () => {
+  assert.throws(
+    () => generateChangelog(changelog, { minVersion: 'latest' }),
+    /Invalid --min-version "latest"/,
+  );
+});
+
+test('merges entries when the same version heading appears twice', () => {
+  const markdown = `## [0.18.0](url) (2026-11-21)
+
+### Features
+
+* a feature
+
+## [0.18.0](url) (2026-11-21)
+
+### Bug Fixes
+
+* a bugfix
+`;
+
+  const json = generateChangelog(markdown, { minVersion: '0.18.0' });
+
+  assert.equal(entryFor(json, '0.18.0', 'a feature').type, 'feature');
+  assert.equal(entryFor(json, '0.18.0', 'a bugfix').type, 'bugfix');
+});

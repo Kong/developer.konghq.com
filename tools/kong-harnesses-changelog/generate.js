@@ -32,6 +32,8 @@ export function compareVersions(a, b) {
 }
 
 const VERSION_HEADING = /^##\s*\[([^\]]+)\]\([^)]*\)/;
+const LEVEL2_HEADING = /^##(?=\s|\[)/;
+const NUMERIC_VERSION = /^\d+(\.\d+)*$/;
 const SECTION_HEADING = /^###\s+(.+?)\s*$/;
 const BULLET = /^[*-]\s+(.*)$/;
 const REFERENCE_CHAIN = /\s*\(\[[^\]]+\]\([^)]+\)\)$/;
@@ -48,7 +50,15 @@ function sectionType(section) {
   return SECTION_TYPES[section] ?? section.toLowerCase();
 }
 
+function assertValidFloor(minVersion) {
+  if (typeof minVersion !== 'string' || !NUMERIC_VERSION.test(minVersion)) {
+    throw new Error(`Invalid --min-version "${minVersion}": expected a numeric version such as 0.18.0`);
+  }
+}
+
 export function generateChangelog(markdown, { minVersion = MIN_VERSION } = {}) {
+  assertValidFloor(minVersion);
+
   const versions = {};
   let currentVersion = null;
   let currentType = null;
@@ -56,18 +66,24 @@ export function generateChangelog(markdown, { minVersion = MIN_VERSION } = {}) {
   for (const rawLine of markdown.split('\n')) {
     const line = rawLine.replace(/\s+$/, '');
 
-    const versionMatch = line.match(VERSION_HEADING);
-    if (versionMatch) {
-      const version = versionMatch[1];
-      if (version.includes('-')) {
-        currentVersion = null;
-      } else if (compareVersions(version, minVersion) < 0) {
-        currentVersion = null;
-      } else {
-        currentVersion = version;
-        versions[version] = { [COMPONENT]: [] };
-      }
+    if (LEVEL2_HEADING.test(line)) {
+      currentVersion = null;
       currentType = null;
+
+      const version = line.match(VERSION_HEADING)?.[1];
+      if (version === undefined) {
+        console.warn(`Skipping unrecognized version heading: ${line}`);
+        continue;
+      }
+      if (version.includes('-')) continue;
+      if (!NUMERIC_VERSION.test(version)) {
+        console.warn(`Skipping non-numeric version heading: ${line}`);
+        continue;
+      }
+      if (compareVersions(version, minVersion) < 0) continue;
+
+      currentVersion = version;
+      versions[version] ??= { [COMPONENT]: [] };
       continue;
     }
 
@@ -105,10 +121,18 @@ export function renderChangelog(markdown, options = {}) {
 
 function parseArgs(argv) {
   const args = {};
-  for (const arg of argv) {
-    const match = arg.match(/^--([^=]+)(?:=(.*))?$/);
-    if (match) {
-      args[match[1]] = match[2] ?? true;
+  for (let i = 0; i < argv.length; i += 1) {
+    const match = argv[i].match(/^--([^=]+)(?:=(.*))?$/);
+    if (!match) continue;
+
+    const [, key, value] = match;
+    if (value !== undefined) {
+      args[key] = value;
+    } else if (argv[i + 1] !== undefined && !argv[i + 1].startsWith('--')) {
+      args[key] = argv[i + 1];
+      i += 1;
+    } else {
+      args[key] = true;
     }
   }
   return args;
