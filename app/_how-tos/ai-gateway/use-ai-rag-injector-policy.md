@@ -63,7 +63,7 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
     - title: Destroy the Redis Stack container
-      include_content: cleanup/products/redis-stack
+      include_content: cleanup/third-party/redis-stack
       icon_url: /assets/icons/redis.svg
 
 ---
@@ -111,7 +111,7 @@ ai_gateway_policies:
       vectordb:
         strategy: redis
         redis:
-          host: host.docker.internal
+          host: !env REDIS_HOST
           port: 6379
         distance_metric: cosine
         dimensions: 3072

@@ -1,18 +1,13 @@
-Run Redis Stack in a Docker container.
-The AI RAG Injector Policy requires the RediSearch and RedisJSON modules, which Redis Stack includes.
+{% include /prereqs/third-party/redis-stack.md %}
+
+Export the Redis host as a variable.
+The Policy configuration reads it, and the {{site.ai_gateway}} data plane must be able to reach this host:
 
 ```sh
-docker run -d --name redis-stack -p 6379:6379 redis/redis-stack-server:latest
+export REDIS_HOST='host.docker.internal'
 ```
-
-Verify that Redis is reachable:
-
-```sh
-docker exec redis-stack redis-cli ping
-```
-
-The command returns `PONG`.
 
 {:.info}
-> If your {{site.ai_gateway}} data plane runs in Docker, it reaches Redis at `host.docker.internal:6379`.
-> Use that host in the Policy configuration. Scripts that you run on your machine use `localhost:6379`.
+> The example uses `host.docker.internal` because the {{site.ai_gateway}} data plane runs in Docker.
+> If your data plane runs elsewhere, set `REDIS_HOST` to the address where it reaches Redis.
+> Scripts that you run on your machine connect to Redis at `localhost:6379`.
