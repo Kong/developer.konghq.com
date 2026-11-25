@@ -97,6 +97,13 @@ headers:
    cluster_telemetry_server_name = us.svc.konghq.com
    ```
 
+## Restrict {{site.konnect_short_name}} access to specific endpoints
+
+PrivateLink endpoints aren't bound to a specific {{site.konnect_short_name}} organization. 
+To only allow specific endpoints to connect to your organization, add the ID of each endpoint you created in [AWS configuration for PrivateLink](#aws-configuration-for-privatelink) (`vpce-` followed by a hexadecimal string) to a VPCE ID allowlist. 
+Include the ID of an endpoint for the global geo, so you can still reach the {{site.konnect_short_name}} API to change or disable the allowlist.
+For more information about how to configure this, see [Specify AWS VPC endpoints that can connect to {{site.konnect_short_name}}](/konnect-platform/network/#specify-aws-vpc-endpoints-that-can-connect-to-konnect).
+
 ## Regional PrivateLink service names
 
 The following tables show the PrivateLink service name and DNS name for each supported AWS region and {{site.konnect_short_name}} geo.
