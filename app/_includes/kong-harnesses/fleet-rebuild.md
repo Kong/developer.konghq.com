@@ -99,4 +99,3 @@ kong-harnesses fleet build `
 If the build refuses to run, it names the flag to add.
 The earlier build can have used options that you keep, such as `--mcp-servers`, `--mcp-url`, `--host-settings`, or `--wsl`.
 Add the flag from the error to the command, and run it again with a new or empty `NEW_FOLDER`.
-To drop an option of the earlier build instead, see [Keep or revert recorded flags](/kong-harnesses/fleet-build-options/#keep-or-revert-recorded-flags).

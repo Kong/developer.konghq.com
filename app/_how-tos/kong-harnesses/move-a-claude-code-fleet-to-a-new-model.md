@@ -30,14 +30,8 @@ tags:
   - anthropic
 
 related_resources:
-  - text: Roll out {{ site.claude_code }} through MDM
-    url: /kong-harnesses/roll-out-claude-code-through-mdm/
   - text: Pin a {{ site.claude_code }} fleet to a tested version range
     url: /kong-harnesses/pin-a-claude-code-fleet/
-  - text: "{{ site.claude_code }} fleet build options"
-    url: /kong-harnesses/fleet-build-options/
-  - text: Troubleshoot a {{ site.claude_code }} fleet
-    url: /kong-harnesses/troubleshooting/claude-code-fleet/
   - text: "{{ site.claude_code }} model configuration"
     url: https://code.claude.com/docs/en/model-config
 
@@ -45,7 +39,7 @@ prereqs:
   inline:
     - title: A fleet build
       content: |
-        Roll out {{ site.claude_code }} with `kong-harnesses fleet build`, as described in [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/).
+        Roll out {{ site.claude_code }} with `kong-harnesses fleet build`.
         Keep the record file of that build (`kong-harnesses-fleet-BUILD_ID.json`) and the policy that your computers get now.
     - title: Okta
       icon_url: /assets/icons/okta.svg
@@ -134,7 +128,7 @@ Test the build on one managed computer in each policy group:
 
 1. Start a session with `claude -n TEST_SESSION`, run `/model FAMILY`, and run `/status` to confirm that it shows the earlier model.
    Send a prompt, and leave the session open.
-1. In another terminal, deploy only the build in `NEW_FOLDER` to the test computer, as described in [Deploy to managed computers](/kong-harnesses/roll-out-claude-code-through-mdm/#deploy-to-managed-computers).
+1. In another terminal, deploy only the build in `NEW_FOLDER` to the test computer.
    For an MDM build, assign the new MDM policy only to the test computer.
 1. Run `kong-harnesses doctor --profile PROFILE_NAME --client claude-code` and confirm the new build ID.
 1. Send another prompt in the open session to confirm that {{ site.claude_code }} replies.
@@ -142,7 +136,7 @@ Test the build on one managed computer in each policy group:
 1. Start a new session with `claude`, run `/model FAMILY`, and run `/status` to confirm that it shows `NEW_MODEL_ID`.
    Send a prompt, and confirm in the [Events debugger](/ai-cost-management/analytics-and-debugging/#events-debugger) that the new model served the request.
 
-If a test fails, put the test computer back on the earlier build and see [Troubleshoot a {{ site.claude_code }} fleet](/kong-harnesses/troubleshooting/claude-code-fleet/).
+If a test fails, put the test computer back on the earlier build.
 
 ## Deploy the build to the other computers
 

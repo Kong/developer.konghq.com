@@ -26,22 +26,14 @@ tags:
   - anthropic
 
 related_resources:
-  - text: Roll out {{ site.claude_code }} through MDM
-    url: /kong-harnesses/roll-out-claude-code-through-mdm/
   - text: Move a {{ site.claude_code }} fleet to a new model
     url: /kong-harnesses/move-a-claude-code-fleet-to-a-new-model/
-  - text: "{{ site.claude_code }} fleet build options"
-    url: /kong-harnesses/fleet-build-options/
-  - text: Troubleshoot a {{ site.claude_code }} fleet
-    url: /kong-harnesses/troubleshooting/claude-code-fleet/
-  - text: Remove a {{ site.claude_code }} fleet build
-    url: /kong-harnesses/remove-a-claude-code-fleet-build/
 
 prereqs:
   inline:
     - title: A fleet build
       content: |
-        Roll out {{ site.claude_code }} with `kong-harnesses fleet build`, as described in [Roll out {{ site.claude_code }} through MDM](/kong-harnesses/roll-out-claude-code-through-mdm/).
+        Roll out {{ site.claude_code }} with `kong-harnesses fleet build`.
         Keep the record file of that build (`kong-harnesses-fleet-BUILD_ID.json`) and the policy that your computers get now.
     - title: Okta
       icon_url: /assets/icons/okta.svg
@@ -84,7 +76,6 @@ rows:
 {% endtable %}
 
 To limit the fleet to one release, use the same version for both bounds.
-For how each install method updates inside the range, and the extra steps for Homebrew and Claude Desktop, see [How version bounds behave](/kong-harnesses/fleet-build-options/#how-version-bounds-behave).
 
 {:.warning}
 > **Check the current range before you install a release:** {{ site.claude_code }} refuses to start when its release is outside the range that applies.
@@ -94,20 +85,18 @@ For how each install method updates inside the range, and the extra steps for Ho
 
 {% include kong-harnesses/fleet-rebuild.md change="--claude-code-minimum OLDEST_VERSION --claude-code-maximum NEWEST_VERSION" %}
 
-If `fleet build` refuses the version range, see [Version range checks](/kong-harnesses/fleet-build-options/#version-range-checks).
-
 ## Test the build on one computer
 
 Test the build on one managed computer in each policy group:
 
 1. Run `claude --version` to note the current release, so you can put it back if a test fails.
    If that release is outside the new range, install a release from `OLDEST_VERSION` to `NEWEST_VERSION`.
-1. Deploy only the build in `NEW_FOLDER` to the test computer, as described in [Deploy to managed computers](/kong-harnesses/roll-out-claude-code-through-mdm/#deploy-to-managed-computers).
+1. Deploy only the build in `NEW_FOLDER` to the test computer.
    For an MDM build, assign the new MDM policy only to the test computer.
 1. Run `kong-harnesses doctor --profile PROFILE_NAME --client claude-code` and confirm the new build ID.
 1. Start {{ site.claude_code }} with `claude`, send a prompt, and confirm that it replies.
 
-If a test fails, put the test computer back on the earlier build and see [Troubleshoot a {{ site.claude_code }} fleet](/kong-harnesses/troubleshooting/claude-code-fleet/).
+If a test fails, put the test computer back on the earlier build.
 
 ## Deploy the build to the other computers
 
