@@ -74,7 +74,7 @@ Minor versions contain features and bug fixes and are usually backwards compatib
 
 To support both rapid innovation and stability, {{site.ai_gateway_name}} offers two support tracks:
 
-* **Rolling releases** are supported for **1 month**.
+* **Rolling releases** are supported for **1 month** or until the next rolling release is available, whichever is later.
 * **Stable releases** are supported for **6 months**. Kong aims to designate a new stable release once per quarter, which means **2 stable releases** are generally maintained at any point in time.
 
 Kong may require that the customer upgrade to the most current released minor or stable version to receive a technical fix.
