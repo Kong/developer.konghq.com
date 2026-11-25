@@ -129,7 +129,7 @@ A credential moves through the following stages, depending on the action a user 
 1. **Enrollment**: When no credentials exist yet, the first-time flow returns an enrollment URL instead of a token.
 1. **Creation**: At creation, {{site.identity}} stores the credential in Token Vault. For `static_secret` providers, you generate the secret in the third-party service and store it in Token Vault yourself. For OAuth-based providers, the OAuth consent flow creates the credential and stores it automatically.
 1. **Refresh**: For OAuth-based providers, Token Vault refreshes credentials automatically before they expire (see the provider's `refresh_buffer_seconds`), with locking, to prevent concurrent requests from consuming a refresh token. If a refresh fails while the stored token is still valid, Token Vault keeps releasing the stored token.
-1. **Deletion/Revocation**: You can revoke credentials independently of the provider itself. Admins can list and delete a user's credentials with the [`listVaultCredentials`](/api/konnect/kong-identity-principals/v2/#/operations/listVaultCredentials) and [`deleteVaultCredential`](/api/konnect/kong-identity-principals/v2/#/operations/deleteVaultCredential) endpoints. Deleting a credential doesn't delete the provider, but the user must re-enroll before an agent can call that provider on their behalf again.
+1. **Deletion/Revocation**: You can revoke credentials independently of the provider itself. Admins can list a user's credentials by sending a `GET` request to the [`/v2/directories/{directoryId}/principals/{principalId}/vault-credentials` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/listVaultCredentials), and delete one by sending a `DELETE` request to the [`/v2/directories/{directoryId}/principals/{principalId}/vault-credentials/{vaultCredentialId}` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/deleteVaultCredential). Deleting a credential doesn't delete the provider, but the user must re-enroll before an agent can call that provider on their behalf again.
 
 ## Credential enrollment
 
@@ -152,18 +152,28 @@ For providers that support dynamic client registration (DCR), such as `atlassian
 
 A shared credential means one credential for the whole directory, managed by an admin instead of per user. To do so, you add an OAuth provider with `credential_type` set to `shared`. Otherwise, authorization code providers default to `user` when you [add the provider](/how-to/get-started-with-token-vault/#add-a-provider).
 
-Then, enroll the shared credential:
+An admin enrolls the shared credential once on behalf of the directory, with a `POST` request to the [`/v2/directories/{directoryId}/vault/providers/{providerId}/credentials` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProviderCredential). The request has no `secret`, and fails if you send one. For the variables, see [Manage credentials](#manage-credentials).
 
-1. An admin enrolls once on behalf of the directory: send a `POST` request to the [`createVaultProviderCredential` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProviderCredential) without a `secret`. The request fails if you send one.
-1. Token Vault creates a `pending` credential and returns an `enrollment_url`.
-1. The admin opens that URL and completes the provider's OAuth consent.
-1. The credential becomes `active` and Token Vault releases it to any authorized principal.
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/vault/providers/$PROVIDER_ID/credentials
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body_cmd: '{}'
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Token Vault creates a `pending` credential and returns an `enrollment_url`. Once the admin opens that URL and completes the provider's OAuth consent, the credential becomes `active` and Token Vault releases it to any authorized principal.
 
 To release it only to some principals, include a `selector` and `priority` in the request (see [Limit credentials to specific groups](#limit-credentials-to-specific-groups)).
 
-To re-enroll the shared account at any time, send a `GET` request to the [`getVaultProviderCredential` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/getVaultProviderCredential). Each `GET` by credential ID returns a fresh `enrollment_url`, whether the credential is `pending` or `active`. The list endpoint never returns the `enrollment_url`.
+Use the `/v2/directories/{directoryId}/vault/providers/{providerId}/credentials/{credentialId}` endpoint for operations like:
 
-To remove the shared credential, send a `DELETE` request to the [`deleteVaultProviderCredential` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/deleteVaultProviderCredential). The provider stays in place, but Token Vault has nothing to release until an admin enrolls again.
+* **Re-enrollment:** Each `GET` by credential ID returns a fresh `enrollment_url`, whether the credential is `pending` or `active`. The list endpoint never returns the `enrollment_url`.
+* **Deletions:** Each `DELETE` by credential ID deletes the targeted credential. The provider stays in place, but Token Vault has nothing to release until an admin enrolls again.
+
 
 ## Static secret
 
@@ -226,7 +236,7 @@ In the following examples, replace the following values:
 * `$CLIENT_ID` and `$CLIENT_SECRET`: The client ID and client secret of the OAuth app you created in the third-party service.
 * `$STATIC_SECRET`: The API key or token you generated in the third-party service.
 * `$NEW_STATIC_SECRET`: The replacement value when you rotate a secret.
-* `$GROUP_ID`: The ID of a group in your directory, for example `7b0c9e1a-3f4d-4e2b-9a56-8d1c2f6e4b73`. You can get it from the [`listGroups` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/listGroups).
+* `$GROUP_ID`: The ID of a group in your directory, for example `7b0c9e1a-3f4d-4e2b-9a56-8d1c2f6e4b73`. To get it, send a `GET` request to the [`/v2/directories/{directoryId}/groups` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/listGroups).
 
 ### Store a credential
 
@@ -235,7 +245,7 @@ To store a credential, create a provider, then store the credential on it. The s
 {% navtabs "store credential" %}
 {% navtab "Static secret" %}
 
-Create the provider by sending a `POST` request to the [`createVaultProvider` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProvider). {{site.identity}} rejects `client_id` and `client_secret` with a `400` for this template:
+Create the provider by sending a `POST` request to the [`/v2/directories/{directoryId}/vault/providers` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProvider). {{site.identity}} rejects `client_id` and `client_secret` with a `400` for this template:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -255,7 +265,7 @@ capture:
 <!--vale on-->
 
 
-Store the credential on that provider by sending a `POST` request to the [`createVaultProviderCredential` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProviderCredential). {{site.identity}} encrypts the value at rest and never returns it from any read endpoint:
+Store the credential on that provider by sending a `POST` request to the [`/v2/directories/{directoryId}/vault/providers/{providerId}/credentials` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProviderCredential). {{site.identity}} encrypts the value at rest and never returns it from any read endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -275,7 +285,7 @@ capture:
 {% endnavtab %}
 {% navtab "OAuth credential" %}
 
-Create a provider from an OAuth template, with `credential_type` set to `shared`, by sending a `POST` request to the [`createVaultProvider` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProvider). For example, to create a GitHub provider shared across the directory:
+Create a provider from an OAuth template, with `credential_type` set to `shared`, by sending a `POST` request to the [`/v2/directories/{directoryId}/vault/providers` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProvider). For example, to create a GitHub provider shared across the directory:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -305,7 +315,7 @@ An admin then enrolls the credential once for the whole directory, as described 
 
 ### Add a selector to a credential
 
-To limit a credential to specific groups, send a `POST` request to the [`createVaultProviderCredential` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProviderCredential) with a `selector` and a `priority`:
+To limit a credential to specific groups, send a `POST` request to the [`/v2/directories/{directoryId}/vault/providers/{providerId}/credentials` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProviderCredential) with a `selector` and a `priority`:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -325,7 +335,7 @@ For a shared OAuth credential, omit the `secret`. Token Vault creates a `pending
 
 ### List stored credentials
 
-To list the credential metadata for a provider, send a `GET` request to the [`listVaultProviderCredentials` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/listVaultProviderCredentials). The response contains the credential metadata (ID, `selector`, `priority`, `status`, and timestamps), never the value:
+To list the credential metadata for a provider, send a `GET` request to the [`/v2/directories/{directoryId}/vault/providers/{providerId}/credentials` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/listVaultProviderCredentials). The response contains the credential metadata (ID, `selector`, `priority`, `status`, and timestamps), never the value:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -337,7 +347,7 @@ method: GET
 
 ### Rotate a secret
 
-To replace the stored value, send a `PUT` request to the [`updateVaultProviderCredential` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/updateVaultProviderCredential). This operation only updates an existing credential, and returns a `404` when the credential doesn't exist for this provider. The response contains the updated credential metadata, never the value:
+To replace the stored value, send a `PUT` request to the [`/v2/directories/{directoryId}/vault/providers/{providerId}/credentials/{credentialId}` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/updateVaultProviderCredential). This operation only updates an existing credential, and returns a `404` when the credential doesn't exist for this provider. The response contains the updated credential metadata, never the value:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -359,7 +369,7 @@ For a shared OAuth credential, don't send a `secret`: the request fails if you d
 
 ### Update a selector or priority
 
-To change the `selector` or `priority` of a shared credential without re-sending its secret, send a `PATCH` request to the [`patchVaultProviderCredential` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/patchVaultProviderCredential). The request only changes the fields you send, and doesn't re-enroll a shared OAuth credential:
+To change the `selector` or `priority` of a shared credential without re-sending its secret, send a `PATCH` request to the [`/v2/directories/{directoryId}/vault/providers/{providerId}/credentials/{credentialId}` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/patchVaultProviderCredential). The request only changes the fields you send, and doesn't re-enroll a shared OAuth credential:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -380,7 +390,7 @@ body:
 
 ### Delete a credential
 
-To remove the stored credential, send a `DELETE` request to the [`deleteVaultProviderCredential` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/deleteVaultProviderCredential):
+To remove the stored credential, send a `DELETE` request to the [`/v2/directories/{directoryId}/vault/providers/{providerId}/credentials/{credentialId}` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/deleteVaultProviderCredential):
 
 <!--vale off-->
 {% konnect_api_request %}
