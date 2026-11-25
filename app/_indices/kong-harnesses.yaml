@@ -4,6 +4,11 @@ groups:
     sections:
       - items:
           - path: /kong-harnesses/
+          - path: /kong-harnesses/install/
+          - path: /kong-harnesses/deploy-with-intune/
+          - path: /kong-harnesses/upgrade-with-intune/
+          - path: /kong-harnesses/remove-kong-harnesses/
+          - path: /kong-harnesses/delete-invalid-profiles-and-leftover-keys/
           - path: /kong-harnesses/support/
 
   - title: Sign In Guides

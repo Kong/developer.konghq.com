@@ -60,6 +60,15 @@ rows:
             text: Read the reference
             url: /kong-harnesses/example-reference/
             align: end
+    - blocks:
+      - type: card
+        config:
+          title: Install for every user
+          description: Install kong-harnesses for every user of a computer, or deploy it with an MDM tool.
+          cta:
+            text: Read the install guide
+            url: /kong-harnesses/install/
+            align: end
 
   - header:
       type: h2
