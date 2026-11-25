@@ -92,7 +92,7 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
              -H "Accept: application/json"\
              -H "Content-Type: application/json"\
              -H "Authorization: Bearer $OPENAI_API_KEY" \
-             --json '{
+             --data-binary '{
                "messages": [
                  {
                    "role": "user",
@@ -225,7 +225,7 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
              --no-progress-meter --fail-with-body  \
              -H "Content-Type: application/json"\
              -H "Accept: application/json, text/event-stream" \
-             --json '{
+             --data-binary '{
                "jsonrpc": "2.0",
                "id": 1,
                "method": "initialize",
@@ -274,7 +274,8 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
         curl -X POST "https://konnect.example.com/a2a/" \
              --no-progress-meter --fail-with-body  \
              -H "Content-Type: application/json" \
-             --json '{
+             -H "Accept: application/json" \
+             --data-binary '{
                "jsonrpc": "2.0",
                "id": "1",
                "method": "message/send",
@@ -398,12 +399,66 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
         curl -k -X POST "https://localhost:8443/anything/oauth2/token" \
              --no-progress-meter --fail-with-body  \
              -H "Content-Type: application/json" \
-             --json '{
+             -H "Accept: application/json" \
+             --data-binary '{
                "client_id": "'$CLIENT_ID'",
                "client_secret": "'$CLIENT_SECRET'",
                "grant_type": "client_credentials"
              }'
       BASH
+    end
+  end
+
+  # curl 7.81 (Ubuntu 22.04) has no --json, so the snippet sends the body with
+  # --data-binary and adds the two headers that --json would have set.
+  context 'a JSON body without headers (synthetic)' do
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /anything
+        method: POST
+        body:
+          name: Jason
+        {% endvalidation %}
+      LIQUID
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'adds the JSON Content-Type and Accept headers' do
+      expect(code).to eq(<<~'BASH'.chomp)
+        curl -X POST "https://konnect.example.com/anything" \
+             --no-progress-meter --fail-with-body  \
+             -H "Content-Type: application/json" \
+             -H "Accept: application/json" \
+             --data-binary '{
+               "name": "Jason"
+             }'
+      BASH
+    end
+  end
+
+  context 'a JSON body with its own content-type and accept headers (synthetic)' do
+    let(:template) do
+      <<~'LIQUID'
+        {% validation request-check %}
+        url: /anything
+        method: PATCH
+        headers:
+          - 'content-type: application/merge-patch+json'
+          - 'accept: */*'
+        body:
+          name: Jason
+        {% endvalidation %}
+      LIQUID
+    end
+
+    include_examples 'a valid curl command'
+
+    it 'keeps the page headers and adds no others' do
+      expect(code).not_to include('application/json')
+      expect(code).to include('-H "content-type: application/merge-patch+json"')
+      expect(code).to include('-H "accept: */*"')
     end
   end
 
@@ -434,7 +489,8 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
         curl -i -X POST "https://konnect.example.com/anything" \
              --no-progress-meter --fail-with-body  \
              -H "Content-Type: application/json" \
-             --json '{
+             -H "Accept: application/json" \
+             --data-binary '{
                "name": "Jason",
                "age": 20,
                "gender": "male",
@@ -497,7 +553,8 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
         ACCESS_TOKEN=$(curl -k -X POST "https://localhost:8443/anything/oauth2/token" \
              --no-progress-meter --fail-with-body  \
              -H "Content-Type: application/json" \
-             --json '{
+             -H "Accept: application/json" \
+             --data-binary '{
                "client_id": "client",
                "client_secret": "secret",
                "grant_type": "client_credentials"
@@ -607,7 +664,8 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
         _response=$(curl -X POST "https://konnect.example.com/oauth/token" \
              --no-progress-meter --fail-with-body  \
              -H "Content-Type: application/json" \
-             --json '{
+             -H "Accept: application/json" \
+             --data-binary '{
                "client_id": "client",
                "client_secret": "secret",
                "grant_type": "client_credentials"
@@ -689,7 +747,8 @@ RSpec.describe 'how-tos/validations/request-check/snippet.md' do
         curl -X POST "https://konnect.example.com/anything" \
              --no-progress-meter --fail-with-body  \
              -H "Content-Type: application/json" \
-             --json "$(cat payload.json)"
+             -H "Accept: application/json" \
+             --data-binary "$(cat payload.json)"
       BASH
     end
   end

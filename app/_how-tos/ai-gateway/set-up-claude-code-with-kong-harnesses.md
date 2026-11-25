@@ -39,6 +39,8 @@ related_resources:
     url: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
   - text: kong-harnesses setup
     url: /kong-harnesses/setup/
+  - text: Set up {{ site.claude_code }} with a static key and kong-harnesses
+    url: /ai-gateway/set-up-claude-code-with-a-static-key/
 
 prereqs:
   inline:
@@ -55,23 +57,7 @@ prereqs:
       include_content: prereqs/auth/oidc/okta-kong-harnesses
     - title: "{{ site.claude_code }}"
       icon_url: /assets/icons/third-party/claude.svg
-      content: |
-        Install {{ site.claude_code }} 2.1.278 or later.
-        On macOS and Linux:
-
-        ```sh
-        curl -fsSL https://claude.ai/install.sh | bash
-        ```
-
-        On Windows, in PowerShell:
-
-        ```powershell
-        irm https://claude.ai/install.ps1 | iex
-        ```
-
-        Run `claude --version` to check the install.
-        If the terminal can't find `claude`, do the `PATH` step that the installer prints.
-        On macOS and Linux, if you open a new terminal for it, export the variables from the other prerequisites again.
+      include_content: md/ai-gateway/v2/prereqs/kong-harnesses-claude-code
 
 tldr:
   q: How do I connect {{ site.claude_code }} to {{site.ai_gateway}} with kong-harnesses?
@@ -102,9 +88,8 @@ cleanup:
       include_content: cleanup/products/ai-gateway
 ---
 
-[kong-harnesses](/kong-harnesses/) signs developers in to {{site.ai_gateway}} through their browser and gives {{ site.claude_code }} a short-lived access token when it needs one.
-It keeps the sign-in in the computer's own secret store: the macOS Keychain, Windows DPAPI, or Secret Service on Linux.
-kong-harnesses doesn't write a long-lived key to the {{ site.claude_code }} settings.
+[kong-harnesses](/kong-harnesses/) signs developers in to {{site.ai_gateway}} through their browser and gives {{ site.claude_code }} a short-lived access token when needed.
+It stores the sign-in in the [secret store of the operating system](/kong-harnesses/sign-in/) rather than writing a long-lived key to {{ site.claude_code }} settings.
 
 In this guide, you configure {{site.ai_gateway}} and create the kong-harnesses profile as an administrator does.
 Then you set up {{ site.claude_code }} as a developer does.
@@ -196,7 +181,7 @@ Use `127.0.0.1` instead of `localhost`, because `localhost` depends on the syste
 > They send the sign-in through proxy settings that kong-harnesses can't check, so kong-harnesses leaves them out on an `http://` gateway.
 
 {:.warning}
-> On a shared computer, protect a local gateway with a static key or a separate audience, not with the sign-in that production uses.
+> On a shared computer, protect a local gateway with a [static key](/ai-gateway/set-up-claude-code-with-a-static-key/) or a separate audience, not with the sign-in that production uses.
 > Any program on this computer can listen on the gateway port and get the access token that {{ site.claude_code }} sends.
 
 If you set a proxy with `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY` or their lowercase forms, add the host of this `http://` gateway to `NO_PROXY` before you continue.
@@ -376,6 +361,4 @@ Send a prompt to check that you get a reply.
 {{ site.claude_code }} now sends every model request to {{site.ai_gateway}}.
 kong-harnesses renews your access token by itself.
 Run `kong-harnesses login --profile quickstart` when your sign-in expires or your company revokes it.
-
-On macOS, run `kong-harnesses login --profile quickstart` once after each upgrade of kong-harnesses.
-Each time the Keychain asks whether kong-harnesses can use its sign-in, click **Always Allow**.
+When kong-harnesses can't read your sign-in, follow the fix in [Sign-in errors](/kong-harnesses/sign-in/errors/#when-kong-harnesses-can-t-give-an-access-token).
