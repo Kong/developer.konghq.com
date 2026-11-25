@@ -45,7 +45,8 @@ faqs:
   - q: "Why does the post-quantum status report `available: false` in {{site.base_gateway}}?"
     a: |
       The `reason` field in the `/pqc-status` response names the cause.
-      A reason that names FIPS mode means `fips` is on, so set `fips = off`.
+      A reason that names FIPS mode means `fips` is on.
+      Post-quantum TLS needs `fips = off` on a non-FIPS build, because a FIPS build can't do post-quantum TLS even when `fips` is off.
       A reason that names `OpenSSL 3.5.0 or newer` means the node runs a build with an older OpenSSL, so upgrade the build.
       A reason that names `cannot perform ML-KEM` means the loaded OpenSSL providers don't offer ML-KEM, so check whether something overrides the `OPENSSL_CONF` environment variable.
   - q: Why does {{site.base_gateway}} refuse to start when I set both `ssl_curves` and `ssl_cipher_suite`?
@@ -100,7 +101,7 @@ Add stricter enforcement only after your logs show that every client negotiates 
 To use post-quantum TLS in {{site.base_gateway}}, your Gateway node must meet the following requirements:
 * {{site.base_gateway}} 3.17 or later.
 * OpenSSL 3.5.0 or later. The {{site.base_gateway}} builds include a version that meets this requirement.
-* FIPS mode off ([`fips = off`](/gateway/configuration/#fips)). See [FIPS mode](#fips-mode).
+* A non-FIPS build of {{site.base_gateway}} with FIPS mode off ([`fips = off`](/gateway/configuration/#fips)). See [FIPS mode](#fips-mode).
 
 To check whether a node meets these requirements, see [Check the state of a node](#check-the-state-of-a-node).
 
@@ -485,7 +486,10 @@ It also rejects a post-quantum certificate in a Certificate or CA Certificate en
 
 A data plane in FIPS mode applies a configuration synced from a control plane even when it contains a post-quantum certificate, and logs a warning.
 
-A FIPS build of {{site.base_gateway}} can serve post-quantum TLS when `fips` is off.
+A FIPS build of {{site.base_gateway}} can't serve post-quantum TLS, even when `fips` is off.
+The build loads the FIPS provider from its OpenSSL configuration whatever `fips` says, and that provider can't generate an ML-KEM key.
+If post-quantum TLS is configured, {{site.base_gateway}} refuses to start.
+Use a non-FIPS build for post-quantum TLS.
 
 ## Roll out post-quantum TLS
 
