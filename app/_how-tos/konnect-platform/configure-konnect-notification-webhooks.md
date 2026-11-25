@@ -43,7 +43,7 @@ cleanup:
 
 Organization webhooks send selected {{site.konnect_short_name}} events to an HTTP endpoint. Destinations and subscriptions are managed at the organization level and are separate from user email and in-app notification preferences.
 
-Organization webhooks aren't limited to events in the `organization` namespace. Organization administrators can subscribe to events from other {{site.konnect_short_name}} areas, such as {{site.dev_portal}}, Gateway Manager, and Plan and Usage. This guide uses a {{site.dev_portal}} event because you can trigger it on demand.
+Organization webhooks aren't limited to events in the `organization` namespace. Organization administrators can subscribe to events from other {{site.konnect_short_name}} areas, such as {{site.dev_portal}}, {{site.base_gateway}}, and Plan and Usage. This guide uses a {{site.dev_portal}} event because you can trigger it on demand.
 
 ## List available events
 
@@ -102,7 +102,7 @@ body:
 
 ## Subscribe a destination to an event
 
-Create a subscription using an `event_type` from the available events response and the destination ID. Use `*` to receive the event for all regions and entities when those filters apply. You can also limit a subscription to specific regions or entity IDs.
+Create a subscription using an `event_type` from the available events response and the destination ID:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -125,7 +125,11 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-To subscribe to a different event, replace `devportal_developer.registration_pending` with an event type returned for your organization. Some event types might not use region or entity filters; follow the API response and validation errors for the event you select.
+To subscribe to a different event, replace `devportal_developer.registration_pending` with an event type returned for your organization.
+
+Use `*` to receive the event for all regions and entities when those filters apply. You can also limit a subscription to specific regions or entity IDs.
+
+Some event types might not use region or entity filters; follow the API response and validation errors for the event you select.
 
 ## Trigger an event
 
