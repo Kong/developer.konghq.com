@@ -275,7 +275,7 @@ Org Admins can restrict which AWS VPC endpoints are allowed to connect to their 
 When the allowlist is enabled, {{site.konnect_short_name}} rejects any request from an endpoint that isn't on the list with an HTTP `403` response.
 
 Unlike the [IP allowlist](#specify-ip-addresses-that-can-connect-to-konnect), which applies only to the `.api.` domain and doesn't apply to data planes, the VPCE ID allowlist applies to all connections to your organization through PrivateLink. 
-This includes the {{site.konnect_short_name}} APIs, communication between {{site.base_gateway}} control planes and data planes, and {{site.mesh_product_name}} zone sync traffic.
+This includes the {{site.konnect_short_name}} APIs, communication between {{site.base_gateway}} control planes and data planes, and {{site.mesh_product_name}} zone sync traffic. Any data planes that are already connected to the control plane will remain connected. If the data plane tries to reconnect and is not using an allowed VPCE the connection will be denied.
 You cannot enable both IP and VPCE allowlists.
 
 Before you configure the allowlist, [create a PrivateLink endpoint](/gateway/aws-private-link/#aws-configuration-for-privatelink) and note its endpoint ID (for example, `vpce-0123456789abcdef0`).
