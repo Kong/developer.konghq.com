@@ -74,9 +74,18 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Maintain a fleet
-            description: Pin managed computers to tested Claude Code versions or move them to a new model.
+            title: Pin a version range
+            description: Limit managed computers to the Claude Code versions that you tested through AI Gateway.
             cta:
-              text: Maintain a fleet
-              url: /kong-harnesses/maintain-a-claude-code-fleet/
+              text: Pin a version range
+              url: /kong-harnesses/pin-a-claude-code-fleet/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Move to a new model
+            description: Move managed computers to a new Claude model without interrupting active sessions.
+            cta:
+              text: Move to a new model
+              url: /kong-harnesses/move-a-claude-code-fleet-to-a-new-model/
               align: end
