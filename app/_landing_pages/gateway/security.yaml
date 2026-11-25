@@ -65,6 +65,17 @@ rows:
             cta:
               text: See reference 
               url: "/gateway/network/"
+      - blocks:
+        - type: card
+          config:
+            title: Post-quantum TLS
+            description: |
+              Protect traffic against harvest now, decrypt later attacks with hybrid post-quantum key exchange.
+              
+            icon: /assets/icons/lock.svg
+            cta:
+              text: See reference 
+              url: "/gateway/post-quantum-tls/"
 
   - header:
       type: h2

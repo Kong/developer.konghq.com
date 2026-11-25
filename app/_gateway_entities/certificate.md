@@ -60,6 +60,9 @@ A Certificate entity represents a public certificate, which is used to validate 
 * Handle SSL/TLS termination for one or more hostnames using the associated [SNI object](/gateway/entities/sni/)
 * Use as a trusted CA store when validating the peer certificate of a client or Service 
 
+{% new_in 3.17 %} A Certificate can hold an ML-DSA key pair, which {{site.base_gateway}} can serve together with a classical certificate on the same port.
+See [post-quantum certificates](/gateway/post-quantum-tls/#post-quantum-certificates).
+
 ## SNI association
 
 Certificates can be associated with an SNI to handle SSL/TLS termination for one or more hostnames. Then, an SNI can be used when configuring a [Service](/gateway/entities/service/) or a [Route](/gateway/entities/route/) to assign Certificates to a Route.
