@@ -29,12 +29,12 @@ related_resources:
     url: /identity/directories/
 ---
 
-A credential is a secret that grants access to a **third-party service**, such as GitHub or Atlassian. {{site.identity}} [Token Vault](/identity/token-vault/) stores it for a [provider](/identity/token-vault/#providers) and releases it to {site.ai_gateway}}, so a principal (a user, an agent, or an application) can call that service without ever seeing the secret.
+A credential is a secret that grants access to a **third-party service**, such as GitHub or Atlassian. {{site.identity}} [Token Vault](/identity/token-vault/) stores it for a [provider](/identity/token-vault/#providers) and releases it to {{site.ai_gateway}}, so a principal (a user, an agent, or an application) can call that service without ever seeing the secret.
 
 Token Vault stores the following credentials:
 
 * **OAuth access and refresh tokens**: Issued by a third-party service after a user approves access. For example, the token that lets an agent open pull requests in a user's GitHub account.
-* **Personal access tokens**: A static token generated in a third-party service. For example, a GitHub personal access token that an admin stores for the whole directory.
+* **Static access tokens**: Generated once by a third-party service, and stored by an admin for the whole directory. For example, a single GitHub personal access token used by a team.
 
 This page covers how Token Vault encrypts, enrolls, releases, and manages these credentials.
 
@@ -42,34 +42,47 @@ This page covers how Token Vault encrypts, enrolls, releases, and manages these 
 
 The credentials can be personal or shared across the directory:
 
-* Personal credentials are created by each user.
-* Shared credentials are shared across the directory and managed by an admin.
+* Personal credentials: created by each user on enrollment when using a [provider OAuth template](/identity/token-vault/#providers). 
+* Shared credentials: shared across the directory and managed by an admin. Can be a static value that an admin stores, or an OAuth enrollment that an admin completes once for the whole directory.
 
-The allowed values and default depend on the provider's secret type:
+How a principal authenticates to the {{site.ai_gateway}} doesn't affect which credential type you can use. Choose the type based on the identity the authenticated actor (user or agent) should have in the third-party service:
 
 <!--vale off-->
 {% table %}
 columns:
-  - title: Secret type
-    key: type
-  - title: Default `credential_type`
-    key: default
-  - title: Allowed values
-    key: allowed
+  - title: Credential
+    key: credential
+  - title: Use it when
+    key: when
+  - title: Value
+    key: value
+  - title: Example
+    key: example
 rows:
-  - type: "`authorization_code`"
-    default: "`user`"
-    allowed: "`user`, `shared` (an admin enrolls the shared credential)"
-  - type: "`static_secret`"
-    default: "`shared`"
-    allowed: "`shared` only"
+  - credential: "Personal OAuth"
+    when: |
+      The actor should act as the user, with that user's own permissions in the third-party service. This is the recommended option for OAuth providers.
+    value: "`user`"
+    example: |
+      A user signed in through Okta or Microsoft Entra ID uses Claude Code to open pull requests in GitHub. Each user enrolls once, and the agent only sees the repositories that user can access.
+  - credential: "Shared OAuth"
+    when: |
+      The third-party service only supports OAuth, with no API key or personal access token, but every caller should use the same service identity.
+    value: "`shared`"
+    example: |
+      An admin signs in to a dedicated Slack service account once, and every agent in the directory posts messages as that account.
+  - credential: "Shared static secret<br>(`static_secret`)"
+    when: |
+      The third-party service accepts an API key or personal access token, and every caller, or every caller in a group, should act as the same service account.
+    value: "`shared`"
+    example: |
+      * An internal bot calls the Datadog MCP server with a Datadog API key.
+      * The Finance group gets one API key and the Engineering group gets another, using [selectors](#limit-credentials-to-specific-groups).
 {% endtable %}
 <!--vale on-->
 
-A shared credential is either:
-
-* A static value that an admin stores.
-* An OAuth enrollment that an admin completes once for the whole directory.
+{:.warning}
+> When an admin enrolls a shared OAuth credential, every caller inherits the permissions of the account the admin signs in with. Always enroll with a dedicated service account, never with a personal account. Otherwise, callers can reach that person's private data, such as Slack direct messages or GitHub organization admin rights.
 
 ## Credential storage and encryption
 
