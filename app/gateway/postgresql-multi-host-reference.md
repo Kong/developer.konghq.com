@@ -67,7 +67,7 @@ faqs:
 ---
 
 {{site.base_gateway}} accepts a list of PostgreSQL nodes in [`pg_host`](/gateway/configuration/#pg-host).
-With a list, {{site.base_gateway}} connects to the first node that accepts writes, and finds the new primary when the primary moves.
+With a list, {{site.base_gateway}} connects to a node that accepts writes, and finds the new primary when the primary moves.
 This works without a virtual IP (VIP), a load balancer, or a reload.
 
 Multi-host failover applies to [traditional mode](/gateway/traditional-mode/) and to the control plane in [hybrid mode](/gateway/hybrid-mode/).
@@ -108,7 +108,7 @@ A node that an operator set to read-only with `default_transaction_read_only` al
 
 While everything is working, {{site.base_gateway}} doesn't check connections that it reuses from the pool.
 After a node fails, or after a query on the read-write connection fails, {{site.base_gateway}} checks pooled connections until one connection succeeds.
-Each node has its own connection pool, so [`pg_pool_size`](/gateway/configuration/#pg-pool-size) and [`pg_backlog`](/gateway/configuration/#pg-backlog) keep their limits.
+Each node has its own connection pool, and [`pg_pool_size`](/gateway/configuration/#pg-pool-size) and [`pg_backlog`](/gateway/configuration/#pg-backlog) apply to each pool.
 
 ## Timeouts
 
@@ -174,7 +174,7 @@ columns:
     key: behavior
 rows:
   - situation: A query is in progress during a switchover.
-    behavior: PostgreSQL closes the sessions on the old primary, so the query on that connection fails once. {{site.base_gateway}} doesn't retry it, because a retry can run a write two times. The next query connects to the new primary. An Admin API client can retry the request.
+    behavior: PostgreSQL closes the sessions on the old primary, so the queries in progress on those sessions fail. {{site.base_gateway}} doesn't retry them, because a retry can run a write two times. The next query connects to the new primary. An Admin API client can retry the request.
   - situation: Two nodes accept writes at the same time (split brain).
     behavior: "{{site.base_gateway}} can't detect split brain. It uses the first primary that it finds. The database cluster manager must prevent split brain."
   - situation: The cluster uses asynchronous replication.

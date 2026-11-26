@@ -239,7 +239,7 @@ status_code: 201
 
 The request can take longer than usual, because {{site.base_gateway}} first has to find the new primary.
 
-If a request is in progress while the primary moves, the request can fail once, because {{site.base_gateway}} doesn't retry queries that could write to the database.
+If a request is in progress while the primary moves, the request can fail, because {{site.base_gateway}} doesn't retry queries that could write to the database.
 If you get an error right after the promotion, send the request again.
 
 {:.info}
