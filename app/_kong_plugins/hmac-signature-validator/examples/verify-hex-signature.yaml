@@ -4,7 +4,8 @@ extended_description: |
   Verify an HMAC-SHA256 signature that the sender encodes as hex in the `X-Signature-SHA256` header.
   The plugin computes the HMAC of the request body with the shared secret, and rejects the request with a `403` response when the result doesn't match the signature.
 
-  The plugin verifies the request body only. It doesn't authenticate a client or set a Consumer.
+  The plugin verifies the request body only.
+  It doesn't authenticate a client or set a Consumer.
 
 title: 'Verify a hex-encoded signature'
 

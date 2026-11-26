@@ -6,7 +6,7 @@ content_type: plugin
 tier: enterprise
 
 publisher: kong-inc
-description: 'Verify an HMAC signature of the request body, such as a webhook signature in a custom header, without authenticating a client.'
+description: 'The HMAC Signature Validator plugin verifies the HMAC signature of a request body, such as a webhook signature in a custom header, without authenticating a client.'
 
 
 products:
@@ -74,17 +74,17 @@ faqs:
       No. The HMAC Signature Validator plugin reads the whole header value as the signature, so a prefix makes the signature invalid and {{site.base_gateway}} returns a `403` response.
   - q: Can the HMAC Signature Validator plugin verify a chunked request?
     a: |
-      Yes. Nginx buffers the whole body of a chunked request before the HMAC Signature Validator plugin runs.
-      Nginx checks [`nginx_http_client_max_body_size`](/gateway/configuration/#nginx-http-client-max-body-size) against the `Content-Length` header only, so it doesn't limit a chunked request.
-      To cap the body that this plugin accepts, set [`max_body_size`](/plugins/hmac-signature-validator/reference/#schema--config-max-body-size).
+      Nginx buffers the whole body of a chunked request before the HMAC Signature Validator plugin runs.
+      Nginx applies [`nginx_http_client_max_body_size`](/gateway/configuration/#nginx-http-client-max-body-size) to a chunked request while it reads the body, and returns a `413` response when the body exceeds the limit.
+      To also cap the body that the HMAC Signature Validator plugin accepts, set [`max_body_size`](/plugins/hmac-signature-validator/reference/#schema--config-max-body-size).
   - q: Why does a base64 signature fail with the hex signature format in the HMAC Signature Validator plugin?
     a: |
-      The plugin decodes the signature header with the encoding that [`signature_format`](/plugins/hmac-signature-validator/reference/#schema--config-signature-format) sets, and rejects the request when decoding fails.
+      The HMAC Signature Validator plugin decodes the signature header with the encoding that [`signature_format`](/plugins/hmac-signature-validator/reference/#schema--config-signature-format) sets, and rejects the request when decoding fails.
       Set the format to the encoding that the provider uses, `hex` or `base64`.
   - q: How does the HMAC Signature Validator plugin know which HMAC algorithm to use?
     a: |
       The signature doesn't name its algorithm, so you must set [`algorithm`](/plugins/hmac-signature-validator/reference/#schema--config-algorithm) to the digest that the provider uses.
-      The plugin rejects a signature with a different decoded length than that digest, before it reads the body.
+      The plugin rejects a signature whose decoded length differs from the digest length, before it reads the body.
   - q: How is the HMAC Signature Validator plugin different from `validate_request_body` in the HMAC Auth plugin?
     a: |
       The `validate_request_body` option of the [HMAC Auth plugin](/plugins/hmac-auth/) compares a SHA-256 hash of the body, computed without a key, with the `Digest` header.
@@ -94,7 +94,7 @@ faqs:
 
 The HMAC Signature Validator plugin verifies the HMAC signature of a request body, such as the signature that a webhook provider sends in a custom header.
 The plugin computes the HMAC of the exact body with a shared secret, and compares it with the signature in the header.
-{{site.base_gateway}} rejects a request with a missing or invalid signature with a `403` response, so the request never reaches the upstream.
+{{site.base_gateway}} rejects a request that has a missing or invalid signature and returns a `403` response, so the request never reaches the upstream.
 
 The plugin verifies the body only.
 It doesn't authenticate a client or set a Consumer.
@@ -118,8 +118,8 @@ rows:
     description: "Verify an HMAC-SHA256 signature in a custom header, encoded as hex."
   - use_case: "[Verify a base64-encoded signature](/plugins/hmac-signature-validator/examples/verify-base64-signature/)"
     description: "Verify an HMAC-SHA256 signature in the `X-Shopify-Hmac-SHA256` header, encoded as base64, as Shopify webhooks send it."
-  - use_case: "[Store the shared secret in a vault](/plugins/hmac-signature-validator/examples/use-vault-reference-for-secret/)"
-    description: "Reference the shared secret from a vault instead of entering it in the plugin configuration."
+  - use_case: "[Store the shared secret in a Vault](/plugins/hmac-signature-validator/examples/use-vault-reference-for-secret/)"
+    description: "Reference the shared secret from a Vault instead of entering it in the plugin configuration."
 {% endtable %}
 <!--vale on-->
 
@@ -133,7 +133,8 @@ For each request, the plugin:
 1. Reads the request body, up to [`max_body_size`](/plugins/hmac-signature-validator/reference/#schema--config-max-body-size).
 1. Computes the HMAC of the body with the shared secret, and compares it with the signature in constant time.
 1. Rejects the request when the two values differ.
-1. When the values match, removes the signature header, unless you set [`hide_signature_header`](/plugins/hmac-signature-validator/reference/#schema--config-hide-signature-header) to `false`, and proxies the request.
+1. When the values match, removes the signature header, unless you set [`hide_signature_header`](/plugins/hmac-signature-validator/reference/#schema--config-hide-signature-header) to `false`.
+1. Proxies the request.
 
 The following diagram shows the checks in order, and the status that each failed check returns:
 
@@ -168,8 +169,6 @@ sequenceDiagram
     end
 {% endmermaid %}
 <!--vale on-->
-
-You must set `algorithm`, because the signature doesn't name the algorithm that produced it.
 
 ### Requests without a body
 
@@ -227,19 +226,20 @@ The plugin uses one secret, so requests that the provider signed with the old se
 The plugin reads the whole request body to compute the HMAC.
 A body larger than `max_body_size` gets a `413` response, whether or not its signature is valid.
 
-Nginx buffers the whole body, in memory or in a temporary file, before the plugin runs.
+Nginx buffers the whole body before the plugin runs.
 This includes chunked requests and HTTP/2 requests without a `Content-Length` header, so the plugin can't reject an oversized body before Nginx buffers it.
 To limit what Nginx buffers, set [`nginx_http_client_max_body_size`](/gateway/configuration/#nginx-http-client-max-body-size).
 {{site.base_gateway}} doesn't limit the body size by default.
 
 Nginx writes a body larger than [`nginx_http_client_body_buffer_size`](/gateway/configuration/#nginx-http-client-body-buffer-size) to a temporary file, and the plugin reads that file when the body is no larger than `max_body_size`.
 
-While it computes the HMAC, the plugin holds the body in memory, so memory use for each concurrent request is up to `max_body_size`.
+While it computes the HMAC, the plugin holds the body in memory, so each concurrent request uses up to `max_body_size` of memory.
 
 ## Response codes
 
 The plugin returns `403` because a `401` response needs a `WWW-Authenticate` header, and the plugin doesn't have an authentication challenge.
-A missing and an invalid signature get the same status, and only the message differs.
+Missing and invalid signatures return the same status.
+Only the message differs.
 
 <!--vale off-->
 {% table %}
