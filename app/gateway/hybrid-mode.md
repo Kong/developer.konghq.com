@@ -34,6 +34,8 @@ related_resources:
     url: /gateway/traditional-mode/
   - text: Serverless gateway
     url: /serverless-gateways/
+  - text: PostgreSQL multi-host reference
+    url: /gateway/postgresql-multi-host-reference/
 
 faqs:
   - q: What types of data travel between the {{site.konnect_saas}} Control Plane and the Data Plane nodes, and how?

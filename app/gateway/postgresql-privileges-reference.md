@@ -29,6 +29,8 @@ related_resources:
     url: /gateway/postgresql-tls-reference/
   - text: "{{site.base_gateway}} PostgreSQL OAuth2 authentication"
     url: /gateway/postgresql-oauth/
+  - text: PostgreSQL multi-host reference
+    url: /gateway/postgresql-multi-host-reference/
 
 faqs:
   - q: Does the {{site.base_gateway}} database user need superuser privileges?
