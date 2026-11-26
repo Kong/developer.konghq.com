@@ -175,7 +175,9 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-The Policy doesn't create the Redis index, so the ingestion script creates it before it writes the first chunk.
+The Policy creates the Redis index the first time it searches, and it indexes any chunks that are already in Redis under the namespace prefix.
+If an existing index doesn't match the Policy configuration, for example because the dimensions differ, the Policy drops and recreates it.
+The following ingestion script also creates the index, so the index is in place before the first request.
 
 The script stores each chunk as a JSON document with the following fields:
 

@@ -74,6 +74,14 @@ faqs:
       It depends on the Memorystore offering. Memorystore for Redis Cluster (version 8.0 or later) and Memorystore for Valkey (version 8.0 or later) include the JSON data type automatically, so they work with the AI RAG Injector Policy.
 
       Standard (non-cluster) Memorystore for Redis instances, including the Basic tier, are frozen at Redis 7.2 and don't support the JSON module required for vector operations, so they can't be used with this Policy. See [Redis version and module requirements](#vector-databases) for supported versions across all cloud providers.
+  - q: Can I ingest data into the vector database from outside {{site.ai_gateway}}?
+    a: |
+      Yes. The AI RAG Injector Policy only reads from the vector database at request time, and {{site.ai_gateway}} doesn't expose an endpoint for ingesting content, so you write chunks to the database yourself. See [Ingest content into Redis](/ai-gateway/use-ai-rag-injector-policy/#ingest-content-into-redis) for an example script.
+
+      The values on the ingestion side must match the Policy configuration: the database connection, `vectordb_namespace`, the embedding model, `vectordb.dimensions`, and `vectordb.distance_metric`.
+  - q: Why do I get the error `Embedding dimensions do not match the configured vector database`?
+    a: |
+      The embedding model returns vectors with a different length than the `vectordb.dimensions` value. Set [`vectordb.dimensions`](/ai-gateway/policies/ai-rag-injector/reference/#schema--config-vectordb-dimensions) to the output size of the model configured in `embeddings.model`. If you change the embedding model or its dimensions, re-ingest your content so that the stored vectors match.
 ---
 
 ## What is Retrieval Augmented Generation (RAG)?
