@@ -15,6 +15,8 @@ tags:
 related_resources:
   - text: PostgreSQL privileges reference
     url: /gateway/postgresql-privileges-reference/
+  - text: PostgreSQL multi-host reference
+    url: /gateway/postgresql-multi-host-reference/
 faqs:
   - q: "What should I do if I see `could not accept SSL connection: wrong version number`?"
     a: |

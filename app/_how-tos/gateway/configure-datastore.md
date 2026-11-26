@@ -50,6 +50,17 @@ prereqs:
         export KONG_PG_DATABASE=kong
         ```
 
+faqs:
+  - q: Can I run a multi-node PostgreSQL cluster for failover with {{site.base_gateway}}?
+    a: |
+      {% new_in 3.17 %} Yes. Set `pg_host` to a comma-separated list of every node in the cluster, and {{site.base_gateway}} connects to the node that accepts writes.
+      When the primary moves, {{site.base_gateway}} finds the new primary without a reload.
+
+      This works in traditional mode and for the control plane in hybrid mode, without a virtual IP (VIP) or load balancer in front of the cluster.
+      It doesn't apply to DB-less mode, data planes, or {{site.konnect_short_name}}.
+
+      All nodes must belong to the same cluster and share the same database and credentials.
+      See [Use {{site.base_gateway}} with a PostgreSQL cluster without a VIP](/how-to/use-kong-with-a-postgres-cluster-without-a-vip/) and the [PostgreSQL multi-host reference](/gateway/postgresql-multi-host-reference/).
 
 min_version:
     gateway: '3.4'
@@ -57,6 +68,8 @@ min_version:
 next_steps:
   - text: Harden the datastore with minimal PostgreSQL privileges
     url: /gateway/postgresql-privileges-reference/
+  - text: Use {{site.base_gateway}} with a PostgreSQL cluster without a VIP
+    url: /how-to/use-kong-with-a-postgres-cluster-without-a-vip/
   - text: Learn about {{site.base_gateway}} entities
     url: /gateway/entities/
   - text: Learn about {{site.base_gateway}} plugins

@@ -31,6 +31,8 @@ related_resources:
     url: /gateway/hybrid-mode/
   - text: DB-less mode
     url: /gateway/db-less-mode/
+  - text: PostgreSQL multi-host reference
+    url: /gateway/postgresql-multi-host-reference/
 ---
 
 In a traditional deployment, you run {{site.base_gateway}} nodes in clusters. A {{site.base_gateway}} cluster allows you to scale the system horizontally by adding more
@@ -112,6 +114,12 @@ queries are no longer sent to it.
 To learn more about how to configure this feature, refer to the
 [Datastore section](/gateway/configuration/#datastore-section)
 of the {{site.base_gateway}} configuration reference.
+
+## Using a PostgreSQL cluster without a VIP {% new_in 3.17 %}
+
+If your PostgreSQL nodes have no virtual IP (VIP) or load balancer in front of them, you can list every node in [`pg_host`](/gateway/configuration/#pg-host).
+{{site.base_gateway}} connects to the node that accepts writes, and finds the new primary when the primary moves.
+See the [PostgreSQL multi-host reference](/gateway/postgresql-multi-host-reference/) and [Use {{site.base_gateway}} with a PostgreSQL cluster without a VIP](/how-to/use-kong-with-a-postgres-cluster-without-a-vip/).
 
 ## What information is cached?
 
