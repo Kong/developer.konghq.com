@@ -30,6 +30,8 @@ related_resources:
     url: /ai-gateway/entities/ai-policy/
   - text: AI Auth Strategy entity
     url: /ai-gateway/entities/ai-auth-strategy/
+  - text: Authenticate to a GitHub MCP server with Token Vault and Okta
+    url: /ai-gateway/use-token-vault-with-github-mcp-server/
   - text: OpenID Connect authentication with {{site.ai_gateway}} 2.0
     url: /ai-gateway/openid-connect/
   - text: AI Consumer Group entity

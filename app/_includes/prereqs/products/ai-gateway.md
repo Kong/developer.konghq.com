@@ -1,3 +1,4 @@
+<!--vale off-->
 {% assign summary='{{site.ai_gateway}} running' %}
 {% assign env_variables = include.prereqs['konnect'] %}
 {% capture details_content %}
@@ -7,6 +8,22 @@ curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN {% if env_vari
    -e {{variable.name}}{% if variable.value %}={{variable.value}}{% endif %}{% unless forloop.last %} \{% endunless %}{% endfor %}
 ```
 {% endcapture %}
+{% capture run_snippet %}
+{% if page.output_format == 'markdown' %}
+{{vanilla_snippet | liquify}}
+{% else %}
+<div data-test-setup='{ "ai-gateway": "{{page.min_version.ai-gateway}}"{% for variable in include.env_variables %}{% if variable.value %}, "{{variable.name}}": "{{variable.value}}"{% else %}{% assign parts = variable.name | split: "=" %}, "{{parts[0]}}": "{{parts[1]}}"{% endif %}{% endfor %} }' markdown="1">
+{{vanilla_snippet}}
+</div>
+{% endif %}
+{% endcapture %}
+{% assign run_step = 'Run the {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) to automatically provision a control plane and data plane in {{site.konnect_product_name}}, and configure your environment:' | liquify %}
+{% if include.prereqs['skip_konnect_token'] %}
+{{ run_step }}
+
+{{ run_snippet }}
+{% else %}
+<!--vale on-->
 
 This is a {{site.konnect_short_name}} tutorial and requires a {{site.konnect_short_name}} personal access token.
 
@@ -18,15 +35,12 @@ This is a {{site.konnect_short_name}} tutorial and requires a {{site.konnect_sho
    export KONNECT_TOKEN='YOUR_KONNECT_PAT'
    ```
 
-3. Run the {{site.ai_gateway}} [quickstart script](https://get.konghq.com/ai) to automatically provision a control plane and data plane in {{site.konnect_product_name}}, and configure your environment:
+<!--vale off-->
+3. {{ run_step }}
 
-   {% if page.output_format == 'markdown' %}
-   {{vanilla_snippet | liquify | indent: 3}}
-   {% else %}
-      <div data-test-setup='{ "ai-gateway": "{{page.min_version.ai-gateway}}"{% for variable in include.env_variables %}{% if variable.value %}, "{{variable.name}}": "{{variable.value}}"{% else %}{% assign parts = variable.name | split: "=" %}, "{{parts[0]}}": "{{parts[1]}}"{% endif %}{% endfor %} }' markdown="1">
-{{vanilla_snippet | indent: 3}}
-   </div>
-   {% endif %}
+{{ run_snippet | indent: 3 }}
+{% endif %}
+!--vale on-->
 This sets up a {{site.ai_gateway}} control plane named `ai-quickstart`, provisions a local data plane, and prints out the following environment variables export:
 
 ```bash
