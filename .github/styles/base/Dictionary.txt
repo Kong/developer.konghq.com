@@ -31,6 +31,7 @@ apikey
 APIm
 APIOps
 apis
+apk
 apiVersion
 appendPolicies
 AppRole
@@ -229,6 +230,7 @@ digitalocean
 discovery_support
 distroless
 dlp
+dnf
 DN
 dns
 dockerfile

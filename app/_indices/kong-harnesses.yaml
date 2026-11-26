@@ -10,6 +10,7 @@ groups:
           - path: /kong-harnesses/remove-kong-harnesses/
           - path: /kong-harnesses/delete-invalid-profiles-and-leftover-keys/
           - path: /kong-harnesses/support/
+          - path: /kong-harnesses/profiles-for-administrators/
           - path: /kong-harnesses/changelog/
 
   - title: Sign In Guides
