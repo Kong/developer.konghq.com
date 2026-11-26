@@ -175,6 +175,19 @@ rows:
               icon: /assets/icons/dashscope.svg
               cta:
                 url: /ai-gateway/use-qwen-code-with-ai-gateway-qwen/
+  - header:
+      type: h2
+      text: References
+    columns:
+      - blocks:
+        - type: reference_list
+          config:
+            pages:
+              - /ai-gateway/claude-code-compatibility/
+              - /ai-gateway/claude-code-known-issues/
+              - /kong-harnesses/
+              - /kong-harnesses/setup/
+              - /kong-harnesses/doctor/
   # - header:
   #     type: h3
   #     text: "Gemini CLI"

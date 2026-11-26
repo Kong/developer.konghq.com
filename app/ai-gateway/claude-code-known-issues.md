@@ -36,7 +36,7 @@ related_resources:
     url: https://code.claude.com/docs/en/setup
 ---
 
-Kong tests each new {{ site.claude_code }} release through {{site.ai_gateway}} in four [provider modes](/ai-gateway/claude-code-compatibility/#provider-modes).
+Kong tests each new {{ site.claude_code }} release through {{site.ai_gateway}} in the [provider modes](/ai-gateway/claude-code-compatibility/#provider-modes) that Kong tests.
 When a release fails in a tested mode, this page lists the affected release, what breaks, and how to avoid it.
 
 Choose an approach based on your situation:
@@ -81,8 +81,8 @@ Add `"DISABLE_AUTOUPDATER": "1"` inside the `env` block of `~/.claude/settings.j
 
 You can also export `DISABLE_AUTOUPDATER=1` in your shell environment.
 
-Activating a {{site.kong_harnesses}} profile that enables or omits auto-updates keeps a `DISABLE_AUTOUPDATER` value that you set.
-Activation removes or restores only a value that an earlier activation wrote and that you didn't change.
+A {{site.kong_harnesses}} profile that leaves auto-updates on keeps a `DISABLE_AUTOUPDATER` value that you set.
+Profile activation changes only a value that a previous activation wrote, and only if you haven't edited it.
 
 `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` also turns off auto-updates, but some profile choices make activation write that variable blank.
 Set `DISABLE_AUTOUPDATER` instead.
@@ -208,7 +208,11 @@ Rolling back {{ site.claude_code }} installs a native build at a release that wo
 
 ## Check which executable runs
 
-When `claude --version` shows a different release than the one you installed, the native build is on another release, a custom launcher points at another release, or another `claude` binary comes first on your `PATH`.
+`claude --version` can show a different release than the one you installed for three reasons:
+
+* The native build is on another release.
+* A custom launcher points at another release.
+* Another `claude` binary comes first on your `PATH`.
 
 {% navtabs "check-claude-executable" %}
 {% navtab "macOS and Linux" %}
@@ -220,7 +224,7 @@ When `claude --version` shows a different release than the one you installed, th
    ```
 
    If the output shows a different release, run `claude install VERSION` again.
-   If you replaced the `~/.local/bin/claude` launcher with your own launcher, point it at the release you installed, as [Auto-updates](https://code.claude.com/docs/en/setup#auto-updates) describes.
+   If you replaced the `~/.local/bin/claude` launcher with your own launcher, point it at the release you installed, as described in [Auto-updates](https://code.claude.com/docs/en/setup#auto-updates).
 
 1. If the native build shows the release you installed, list every `claude` executable on your `PATH`:
 
@@ -264,8 +268,8 @@ When `claude --version` shows a different release than the one you installed, th
 
 Resolve any `PATH` or installation conflict:
 
-* If the native build's folder isn't on your `PATH` or your shell can't find `claude`, add the folder as [Verify your PATH](https://code.claude.com/docs/en/troubleshoot-install#verify-your-path) shows.
-* If another `claude` install still comes before the native build, remove that install as [Check for conflicting installations](https://code.claude.com/docs/en/troubleshoot-install#check-for-conflicting-installations) shows.
+* If the native build's folder isn't on your `PATH` or your shell can't find `claude`, add the folder as described in [Verify your PATH](https://code.claude.com/docs/en/troubleshoot-install#verify-your-path).
+* If another `claude` install still comes before the native build, remove that install as described in [Check for conflicting installations](https://code.claude.com/docs/en/troubleshoot-install#check-for-conflicting-installations).
 
 Confirm that `claude --version` shows the release you installed:
 
@@ -361,8 +365,8 @@ Switching casks can install an older release than your current one.
 An install from the `apt`, `dnf`, or `apk` repositories gets its channel from the repository instead of the `autoUpdatesChannel` setting.
 To switch to the stable channel, follow [Install with Linux package managers](https://code.claude.com/docs/en/setup#install-with-linux-package-managers).
 
-On Alpine Linux, the `apk` steps add the `stable` repository line to `/etc/apk/repositories` and keep any `latest` line.
-As root, replace the `latest` line with the `stable` line and update the package:
+On Alpine Linux, Anthropic's `apk` instructions add the `stable` repository line to `/etc/apk/repositories` and keep any `latest` line, which leaves both channels active.
+To switch fully to the `stable` channel, replace the `latest` line with the `stable` line and update the package as root:
 
 1. Remove the `latest` repository line from `/etc/apk/repositories`:
 

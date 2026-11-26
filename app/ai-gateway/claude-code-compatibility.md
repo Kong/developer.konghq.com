@@ -70,6 +70,6 @@ In each tested provider mode, the tests verify the following behaviors:
 * **Header forwarding**: {{site.ai_gateway}} forwards the `anthropic-version` and `anthropic-beta` request headers unchanged.
   In the Claude Platform on AWS mode, the tests also verify that {{site.ai_gateway}} forwards the `anthropic-workspace-id` header unchanged.
 * **Request body forwarding**: {{site.ai_gateway}} forwards the `system`, `messages`, `tools`, `thinking`, `context_management`, and `output_config` request body fields unchanged.
-  The comparison checks field values, so it accepts changes to JSON key order, whitespace, or encoding.
+  {{site.ai_gateway}} can reorder JSON keys or change whitespace or encoding, because the tests compare field values.
 * **Token counting (Anthropic API mode)**: A separate test sends a token count request to `/v1/messages/count_tokens` through {{site.ai_gateway}}.
   The test verifies that the model provider receives the same `messages` field and that {{site.ai_gateway}} returns the model provider's count unchanged.
