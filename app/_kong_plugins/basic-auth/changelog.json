@@ -25,6 +25,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.9": [
+    {
+      "message": "Fixed `brute_force_protection` so that it is enforced for principal-based\n(Kong Identity) authentication, matching the existing behavior for local\ncredentials.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed `brute_force_protection` so that it rate-limits each `Proxy-Authorization` and `Authorization` credential independently.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Uses SHA256 by default even in non-FIPS mode instead of SHA1.\n",

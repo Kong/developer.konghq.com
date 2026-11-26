@@ -96,6 +96,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.9": [
+    {
+      "message": "Fixed an issue where elements converted by the `xml_to_json` node switched between array and object shape depending on how many times they occurred. Added the `force_array_paths` option (default `[]`), which keeps the listed paths as arrays.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed high memory use and long `configure()` times in the Datakit plugin. Each rebuild of the plugins iterator compiled the jq filter again for every `jq` node of every plugin instance. Now all `jq` nodes in a worker share one compiled jq state for each filter text.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added more implicit node outputs:\n    * `request.path`\n    * `request.raw_path`\n    * `request.port`\n    * `request.method`\n    * `request.scheme`\n    * `request.version`\n    * `service_response.status`\n    * service_response.raw_body\n    * call.raw_body\n",
