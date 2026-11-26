@@ -105,7 +105,9 @@ If the user settings file exists but `doctor` can't read or parse it, the report
 The report still lists the settings sources and shell variables, and records the failure under `unavailable`.
 The report doesn't include settings that {{ site.claude_code }} gets from a server, or Windows managed settings when {{ site.claude_code }} runs in Windows Subsystem for Linux (WSL).
 
+{% comment %} Hidden until the other agent CLIs ship (December fast follow).
 For other supported agent CLIs (`codex`, `opencode`, `omp`, `hermes`, and `pi`), the report records whether the configuration file exists and includes its path when `doctor` can determine the path.
+{% endcomment %}
 
 ### Redaction rules
 

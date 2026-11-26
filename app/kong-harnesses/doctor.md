@@ -14,6 +14,7 @@ breadcrumbs:
 
 The `doctor` command checks one profile end to end: the profile, the sign-in, the client, the gateway and, for a profile that signs in through an identity provider, the identity provider.
 `doctor` reaches the network, reports each finding beside its fix, and can write the report as JSON.
+For the next step after each finding, see [Troubleshoot kong-harnesses](/kong-harnesses/troubleshooting/).
 
 ## CA bundle checks
 

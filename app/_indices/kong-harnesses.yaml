@@ -4,8 +4,25 @@ groups:
     sections:
       - items:
           - path: /kong-harnesses/
+          - path: /kong-harnesses/install/
+          - path: /kong-harnesses/deploy-with-intune/
+          - path: /kong-harnesses/upgrade-with-intune/
+          - path: /kong-harnesses/remove-kong-harnesses/
+          - path: /kong-harnesses/delete-invalid-profiles-and-leftover-keys/
           - path: /kong-harnesses/support/
           - path: /kong-harnesses/profiles-for-administrators/
+          - path: /kong-harnesses/changelog/
+
+  - title: Sign In Guides
+    sections:
+      - items:
+          - path: /kong-harnesses/sign-in/
+          - path: /kong-harnesses/sign-in/claude-code/
+          # - path: /kong-harnesses/sign-in/codex/
+          # - path: /kong-harnesses/sign-in/opencode/
+          # - path: /kong-harnesses/sign-in/hermes/
+          # - path: /kong-harnesses/sign-in/omp/
+          # - path: /kong-harnesses/sign-in/pi/
 
   - title: CLI References
     sections:
@@ -14,12 +31,14 @@ groups:
           - path: /kong-harnesses/setup/
       - title: Sign In and Out
         items:
+          - path: /kong-harnesses/sign-in/errors/
           - path: /kong-harnesses/login/
           - path: /kong-harnesses/logout/
       - title: Manage Profiles
         items:
           - path: /kong-harnesses/profile/
           - path: /kong-harnesses/profile/*/**
+          - path: /kong-harnesses/profile-file/
       - title: Get Access Tokens
         items:
           - path: /kong-harnesses/credential/
@@ -35,3 +54,5 @@ groups:
       - title: Diagnose Problems
         items:
           - path: /kong-harnesses/doctor/
+          - path: /kong-harnesses/troubleshooting/
+          - path: /kong-harnesses/errors/

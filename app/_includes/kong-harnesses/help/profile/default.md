@@ -18,7 +18,7 @@ Flags:
   -h, --help   help for default
 
 Global Flags:
-      --client client     the one agent client to work on: claude-code, codex, opencode, omp, hermes, or pi
+      --client client     the one agent client to work on: claude-code
       --log-file path     write the debug log to this path instead of stderr
       --log-level level   the log level: trace, debug, info, warn, error; debug and trace also write the debug log (default error)
 ```

@@ -12,10 +12,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
       dataFile: path.resolve(__dirname, '../../app/_data/tools/kongctl.yml'),
     });
 
-    if (series.length > 0) {
-      console.log(`Updated kongctl versions (${series.length} releases)`);
-      console.log(`Latest version: ${series[0].version}`);
-    }
+    console.log(`Updated kongctl versions (${series.length} releases)`);
+    console.log(`Latest version: ${series[0].version}`);
   } catch (error) {
     console.error(`Error: ${error.message}`);
     process.exit(1);
