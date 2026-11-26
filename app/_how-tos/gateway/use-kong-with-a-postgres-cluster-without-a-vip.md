@@ -22,9 +22,9 @@ tags:
   - database
 
 search_aliases:
-  - postgresql failover
-  - postgresql high availability
-  - multi-host postgresql
+  - database failover
+  - database high availability
+  - multi-host datastore
 
 tldr:
   q: How do I run {{site.base_gateway}} against a PostgreSQL cluster that has no virtual IP (VIP) or load balancer?
@@ -70,9 +70,7 @@ If your PostgreSQL nodes run in different data centers without a virtual IP (VIP
 When you list every node in [`pg_host`](/gateway/configuration/#pg-host), {{site.base_gateway}} connects to the node that accepts writes, and follows the primary when it moves.
 You don't need to edit `pg_host` or reload {{site.base_gateway}}.
 
-{:.info}
-> This feature applies to traditional mode and to the control plane in hybrid mode.
-> It doesn't apply to DB-less mode or to {{site.konnect_short_name}}, because those deployments don't connect to a database that you manage.
+{% include_cached gateway/postgresql-multi-host-scope.md %}
 
 ## Create a PostgreSQL cluster
 
@@ -259,6 +257,10 @@ docker logs kong-gateway 2>&1 | grep "connected to PostgreSQL host"
 
 The output includes a notice for each worker that moved to the new primary, with the node that it used before:
 
+```
+[notice] ... connected to PostgreSQL host pg-standby1:5432 (previous host: pg-primary:5432)
+```
+{:.wrap}
 
 While the primary is down, the error log can also list the cause for each node that {{site.base_gateway}} tried, for example `pg-primary:5432: connection refused` and `pg-standby2:5432: server is read-only (not the primary)`.
 This is expected until one node accepts writes.

@@ -56,8 +56,7 @@ faqs:
       {% new_in 3.17 %} Yes. Set `pg_host` to a comma-separated list of every node in the cluster, and {{site.base_gateway}} connects to the node that accepts writes.
       When the primary moves, {{site.base_gateway}} finds the new primary without a reload.
 
-      This works in traditional mode and for the control plane in hybrid mode, without a virtual IP (VIP) or load balancer in front of the cluster.
-      It doesn't apply to DB-less mode, data planes, or {{site.konnect_short_name}}.
+      {% include gateway/postgresql-multi-host-scope.md %}
 
       All nodes must belong to the same cluster and share the same database and credentials.
       See [Use {{site.base_gateway}} with a PostgreSQL cluster without a VIP](/how-to/use-kong-with-a-postgres-cluster-without-a-vip/) and the [PostgreSQL multi-host reference](/gateway/postgresql-multi-host-reference/).

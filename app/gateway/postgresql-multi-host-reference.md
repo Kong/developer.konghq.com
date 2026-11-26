@@ -23,7 +23,7 @@ tags:
   - database
 
 search_aliases:
-  - postgresql failover
+  - database failover
   - primary detection
 
 related_resources:
@@ -70,8 +70,7 @@ faqs:
 With a list, {{site.base_gateway}} connects to a node that accepts writes, and finds the new primary when the primary moves.
 This works without a virtual IP (VIP), a load balancer, or a reload.
 
-Multi-host failover applies to [traditional mode](/gateway/traditional-mode/) and to the control plane in [hybrid mode](/gateway/hybrid-mode/).
-It doesn't apply to DB-less mode, data planes, or {{site.konnect_short_name}}, because those deployments don't connect to a database that you manage.
+{% include_cached gateway/postgresql-multi-host-scope.md %}
 
 To set up a cluster with multiple PostgreSQL nodes, see [Use {{site.base_gateway}} with a PostgreSQL cluster without a VIP](/how-to/use-kong-with-a-postgres-cluster-without-a-vip/).
 
@@ -134,7 +133,7 @@ For the read-only connection, {{site.base_gateway}} accepts any node that it can
 
 ## Logs
 
-{{site.base_gateway}} writes the following log entries:
+{{site.base_gateway}} produces the following messages for multi-host PostgreSQL deployments:
 
 <!--vale off-->
 {% table %}
@@ -152,14 +151,10 @@ rows:
   - event: A worker moves to a different node.
     level: "`notice`"
     message: "`connected to PostgreSQL host pg2:5432 (previous host: pg1:5432)`"
-  - event: No node accepts writes.
-    level: "`error`"
-    message: "`failed to connect to any PostgreSQL host (pg1:5432: connection refused; pg2:5432: server is read-only (not the primary))`"
 {% endtable %}
 <!--vale on-->
 
 The `notice` entry appears at the default [`log_level`](/gateway/configuration/#log-level).
-When no node is available, the error message lists the cause for each node.
 
 ## Limitations and failure modes
 
@@ -173,19 +168,38 @@ columns:
   - title: Behavior
     key: behavior
 rows:
+  - situation: All nodes are unreachable or read-only.
+    behavior: |
+      The operation that needs the database fails with `failed to connect to any PostgreSQL host`, followed by the cause for each node, for example `(pg1:5432: connection refused; pg2:5432: server is read-only (not the primary))`. 
+      <br><br>
+      The Admin API logs this message at `error` and returns a generic `500` response. At startup, {{site.base_gateway}} doesn't start.
   - situation: A query is in progress during a switchover.
-    behavior: PostgreSQL closes the sessions on the old primary, so the queries in progress on those sessions fail. {{site.base_gateway}} doesn't retry them, because a retry can run a write two times. The next query connects to the new primary. An Admin API client can retry the request.
+    behavior: |
+      PostgreSQL closes the sessions on the old primary, so the queries in progress on those sessions fail. {{site.base_gateway}} doesn't retry them, because a retry can run a write two times. 
+      The next query connects to the new primary. An Admin API client can retry the request.
   - situation: Two nodes accept writes at the same time (split brain).
-    behavior: "{{site.base_gateway}} can't detect split brain. It uses the first primary that it finds. The database cluster manager must prevent split brain."
+    behavior: |
+      {{site.base_gateway}} can't detect split brain. It uses the first primary that it finds.
+      The database cluster manager must prevent split brain.
   - situation: The cluster uses asynchronous replication.
-    behavior: If the old primary didn't replicate a write before the failover, the write is lost. This includes rows that other nodes use to invalidate cache entries, so some entries can stay stale. This is a property of the database setup, not of this feature.
+    behavior: |
+      If the old primary didn't replicate a write before the failover, the write is lost. 
+      This includes rows that other nodes use to invalidate cache entries, so some entries can stay stale.
   - situation: The old primary stays up as a read-only node without a restart.
-    behavior: The first write on a pooled connection fails in each worker. The failure makes {{site.base_gateway}} check pooled connections, and the next connection moves to the new primary.
+    behavior: |
+      The first write on a pooled connection fails in each worker.
+      The failure makes {{site.base_gateway}} check pooled connections, and the next connection moves to the new primary.
   - situation: A firewall or NAT drops idle connections silently.
-    behavior: Each dead pooled connection makes one request time out, as with one node. Set [`pg_keepalive_timeout`](/gateway/configuration/#pg-keepalive-timeout) lower than the idle timeout of your network devices.
+    behavior: |
+      Each dead pooled connection makes one request time out, as with one node.
+      Set [`pg_keepalive_timeout`](/gateway/configuration/#pg-keepalive-timeout) lower than the idle timeout of your network devices.
   - situation: A DNS name resolves to many addresses.
-    behavior: "{{site.base_gateway}} treats the name as one node, and doesn't try each address. List each node as a separate entry."
+    behavior: |
+      {{site.base_gateway}} treats the name as one node, and doesn't try each address.
+      List each node as a separate entry.
   - situation: You want to balance load or rank nodes.
-    behavior: "{{site.base_gateway}} doesn't balance load, weight, or reorder nodes. It uses the first primary that it finds."
+    behavior: |
+      {{site.base_gateway}} doesn't balance load, weight, or reorder nodes.
+      It uses the first primary that it finds.
 {% endtable %}
 <!--vale on-->
