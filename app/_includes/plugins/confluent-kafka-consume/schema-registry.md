@@ -156,7 +156,9 @@ Otherwise, the field must be nullable, or the plugin rejects the request as miss
 Because an Avro-tagged value like `{"string": "hello"}` already matches a single branch by name, `simple_json` accepts it as-is. 
 This lets you migrate clients from `avro_json` to `simple_json` one at a time, instead of all at once.
 
+{% if include.slug == 'kafka-upstream' or include.slug == 'kafka-log' or include.slug == 'kafka-consume' %}
 For AWS Glue Schema Registry, set the same field under `schema_registry.glue.value_schema` or `schema_registry.glue.key_schema`.
+{% endif %}
 
 For a sample configuration, see [Simple JSON encoding for Avro schemas](./examples/schema-registry-simple-json/).
 {% endif %}
