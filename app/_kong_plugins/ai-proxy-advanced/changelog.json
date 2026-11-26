@@ -1011,6 +1011,78 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.19": [
+    {
+      "message": "Fixed an issue where Databricks reasoning was dropped when the upstream returned it as `reasoning_content` instead of content parts.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Gemini 3 models rejected OpenAI-format requests with tool-call history because the converted function calls had no thought signature.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Gemini image generation misattributed modality tokens and omitted cache usage in responses and AI logs.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where prompt and cached token counts were lost for Anthropic-compatible streaming providers, such as Baseten, that report prompt usage only in `message_delta`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where unsigned thinking blocks from open-weight Anthropic-compatible models were stripped from replayed request history, causing models to re-reason every turn.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Bedrock streaming through\n`invoke-with-response-stream` reported no cache read/write token counts on\n`bedrock`-format responses and no per-TTL cache-write breakdown, which billed\ncached tokens at the full input rate.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a request body the gateway rebuilt was\nre-encoded in a member order that changed between workers and restarts, causing upstream\nprompt cache misses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where request bodies were re-encoded\nwith a non-deterministic JSON key order. Content-neutral transforms now\nforward the client's original request bytes.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where, after a vault rotated the secrets referenced in a target's `auth` configuration, the target kept using expired credentials until the configuration was reloaded.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a native route that rewrote the request\nbody re-encoded it in a member order that changed between workers and restarts,\ncausing upstream prompt cache misses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where OpenAI Responses API (`/v1/responses`) cache-write tokens were billed at a single rate instead of the rate for their prompt-cache TTL.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where requests to Claude models failed because the plugin sent `temperature`, `top_p`, `top_k`, and `seed`, which those models reject.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed excessive memory use when decoding large AWS Bedrock response streams.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where downloading a non-JSONL file through the `llm/v1/files` content endpoint with `logging.log_statistics` enabled truncated the response body. The batch usage parser aborted the `body_filter` phase partway through the download.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Supported health checks and circuit breaker for the load balancer. Added two new fields `max_fails` and `fail_timeout`.",

@@ -95,6 +95,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.19": [
+    {
+      "message": "Fixed a false mismatch error. The plugin logged the error when two plugins shared a `namespace` and had identical counter syncing settings. The plugin now also logs a mismatch when plugins in one `namespace` use different `decrease_by_fractions_in_redis` values. Such plugins write counters under different Redis keys, so they do not share one counter.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where rate limiting failed after a Redis password rotation until Kong Gateway restarted.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support to count cost for routes with dynamic AI models.\n",

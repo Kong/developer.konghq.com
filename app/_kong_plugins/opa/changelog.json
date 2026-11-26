@@ -39,6 +39,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.19": [
+    {
+      "message": "Added WebSocket (`ws`/`wss`) protocol support. The OPA plugin evaluates\nthe policy during the WebSocket handshake, before the connection is established.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where OPA decision headers could break\nthe WebSocket handshake.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support for the `tls_certificate_verify` global option. When this option is enabled, the plugin's `ssl_verify` setting cannot be disabled.",

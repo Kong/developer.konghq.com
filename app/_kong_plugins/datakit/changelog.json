@@ -173,6 +173,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.19": [
+    {
+      "message": "Fixed high memory use and long `configure()` times in the Datakit plugin. Each rebuild of the plugins iterator compiled the jq filter again for every `jq` node of every plugin instance. Now all `jq` nodes in a worker share one compiled jq state for each filter text.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added json_to_xml node to support converting JSON or lua table to XML data.",

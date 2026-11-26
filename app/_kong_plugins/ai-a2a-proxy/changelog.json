@@ -31,5 +31,17 @@
       "type": "feature",
       "scope": "Plugin"
     }
+  ],
+  "3.14.0.19": [
+    {
+      "message": "Fixed an issue where a JSON-RPC endpoint whose path ended with `/extendedAgentCard` had its advertised endpoint URL truncated.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where empty arrays in agent cards were re-encoded as empty objects, which failed strict A2A SDK schema validation.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
   ]
 }

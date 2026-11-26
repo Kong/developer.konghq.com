@@ -68,6 +68,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.19": [
+    {
+      "message": "Fixed an issue where an anonymous consumer without groups got a 403 response instead of a 401 response when `include_consumer_groups` was enabled. If you rely on the previous `403` status code in tests or client code, update them accordingly before upgrading to this version.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where the cache was not being invalidated for incremental sync in certain scenarios, leading to stale data being served.",

@@ -136,6 +136,23 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.19": [
+    {
+      "message": "Fixed excessive memory use when decoding large AWS Bedrock response streams.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where downloading a non-JSONL file through the `llm/v1/files` content endpoint with `logging.log_statistics` enabled truncated the response body. The batch usage parser aborted the `body_filter` phase partway through the download.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Vertex AI embeddings failed for Gemini-native models such as `gemini-embedding-2`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added dimension configuration support for Amazon Titan Embed v2 models.\n",
