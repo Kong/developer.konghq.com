@@ -33,8 +33,7 @@ app/_how-tos/ai-gateway/v1/create-a-complex-ai-chat-history.md:
   status: pending
   canonical_url: /ai-gateway/ai-providers/
 app/_how-tos/ai-gateway/v1/filter-knowledge-based-queries-with-rag-injector.md:
-  status: pending
-  canonical_url: /ai-gateway/policies/ai-rag-injector/
+  canonical_url: /ai-gateway/filter-knowledge-based-queries-with-rag-injector/
 app/_how-tos/ai-gateway/v1/forward-openai-sdk-model-to-ai-proxy-advanced.md:
   status: pending
   canonical_url: /ai-gateway/ai-providers/openai/
