@@ -305,6 +305,11 @@ up again, the Data Plane nodes will contact them and resume connected mode.
 
 You can also [configure Data Plane resiliency](/gateway/cp-outage/) in case of Control Plane outages. 
 
+Data plane nodes are also tolerant of a configuration they can't apply. 
+Each node validates the configuration the control plane sends it and applies or rejects it on its own, so a node that rejects a new configuration keeps serving the one it already has.
+In {{site.konnect_short_name}}, if a node doesn't have a configuration at all, the control plane sends it the last configuration that worked for its {{site.base_gateway}} version, so it can start proxying traffic. 
+For more information, see [Data plane configuration status](/gateway/data-plane-reference/#data-plane-configuration-status).
+
 ### Disconnected mode in on-prem deployments
 
 The viability of the Data Plane while disconnected means that Control Plane

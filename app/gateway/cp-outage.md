@@ -29,6 +29,8 @@ related_resources:
     url: /gateway/cp-dp-communication/
   - text: "Cloud provider integration support for {{site.ee_product_name}}"
     url: /gateway/cloud-provider-support-matrix/
+  - text: "Data plane configuration status in {{site.konnect_short_name}}"
+    url: /gateway/data-plane-reference/#data-plane-configuration-status
 
 faqs:
   - q: Is it recommended to have the Control Plane exporting to the backup store (`KONG_CLUSTER_FALLBACK_CONFIG_EXPORT`)?
@@ -48,6 +50,10 @@ faqs:
 ---
 
 {{site.base_gateway}} can be set up to support configuring new Data Planes in the event of a Control Plane outage. Data Plane resilience works by designating one or more backup nodes and allowing it read/write access to a data store. This backup node will automatically push valid {{site.base_gateway}} configurations to the data store. In the event of a Control Plane outage, when a new node is created, it will pull the latest {{site.base_gateway}} configuration from the data store, configure itself, and start proxying requests. 
+
+{:.info}
+> In {{site.konnect_short_name}}, a new data plane node that rejects the current configuration receives the [last known good configuration](/gateway/data-plane-reference/#data-plane-configuration-status) from the control plane. 
+> That requires a running control plane, so it doesn't replace data plane resilience during an outage.
 
 {:.info}
 >This option is only recommended for users who have to adhere to strict high-availability SLAs because it requires a larger maintenance load.
@@ -145,7 +151,7 @@ kong-exporter:
 
 All the object keynames/prefixes mentioned in the following paragraphs are parameterized with the prefix given in the config and the {{site.base_gateway}} version. For example, let's say the node has a version of `3.6.0.0`. The backup nodes will create registering files to run the leader election with a prefix `test-prefix/3.6.0.0/election/`. You can set up a lifecycle rule to delete objects with this prefix if it's not updated for days. The selected node is responsible for writing to the S3 bucket when it receives new configuration. The file structure is automatically created inside of the bucket and shouldn't be created manually. The key name is `test-prefix/3.6.0.0/config.json`.
 
-In {{site.base_gateway}} 3.5 or earlier, this node is responsible for writing to the S3 bucket when it receives new configuration. The file structure is automatically created inside of the bucket and should not be created manually. If the node version is `3.2.0.0`, using the example above, the key name will be `test-prefix/3.2.0.0/config.json`.
+In {{site.base_gateway}} 3.5 or earlier, this node is responsible for writing to the S3 bucket when it receives new configuration. The file structure is automatically created inside of the bucket and should not be created manually. If the node version is `3.2.0.0` and the prefix is `test-prefix`, the key name will be `test-prefix/3.2.0.0/config.json`.
 
 Both the Control Plane and Data Plane can be configured to export configurations.
 
@@ -192,7 +198,7 @@ kong-dp-exporter:
 ```
 
 This node is responsible for writing to the GCP bucket when it receives a new configuration. 
-The file structure is automatically created inside of the bucket and should not be created manually. If the node version is `3.2.0.0`, using the example above, the key name will be `test-prefix/3.2.0.0/config.json`. 
+The file structure is automatically created inside of the bucket and should not be created manually. If the node version is `3.2.0.0` and the prefix is `test-prefix`, the key name will be `test-prefix/3.2.0.0/config.json`. 
 
 Both the Control Plane and Data Plane can be configured to export configurations.
 
@@ -216,7 +222,7 @@ You can configure new Data Planes to load a configuration from the GCP cloud sto
 
 You can configure non-AWS S3-compatible object storage. The process is similar to the AWS S3 process, but requires an additional parameter: `AWS_CONFIG_STORAGE_ENDPOINT`. This is set to the endpoint of your object storage provider. 
 
-The example below uses MinIO to demonstrate configuring a backup node: 
+The following example uses MinIO to demonstrate configuring a backup node: 
 
 ```yaml
   kong-exporter:
