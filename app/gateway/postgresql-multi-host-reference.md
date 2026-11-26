@@ -2,7 +2,7 @@
 title: PostgreSQL multi-host reference
 content_type: reference
 layout: reference
-description: 'Reference for configuring {{site.base_gateway}} with a list of PostgreSQL nodes, so that it finds the primary and follows it after a switchover.'
+description: 'How {{site.base_gateway}} uses a list of PostgreSQL nodes in `pg_host`. Covers the host list format, how {{site.base_gateway}} finds the primary, timeouts, logs, and failure modes.'
 permalink: /gateway/postgresql-multi-host-reference/
 
 breadcrumbs:
@@ -52,18 +52,18 @@ faqs:
       Each node gets the full `pg_timeout` period.
   - q: Does {{site.base_gateway}} check for the primary on every query?
     a: |
-      No. {{site.base_gateway}} checks each new connection for the primary.
+      No, {{site.base_gateway}} checks each new connection for the primary.
       It checks pooled connections only after a failure, until one connection succeeds.
   - q: Can I use `host:port` in `pg_host` with only one node?
     a: |
-      Yes. If `pg_host` contains a single entry, {{site.base_gateway}} uses it and doesn't check whether the node is a primary.
+      Yes, if `pg_host` contains a single entry, {{site.base_gateway}} uses it and doesn't check whether the node is a primary.
   - q: Does {{site.base_gateway}} spread reads across standbys?
     a: |
-      No. {{site.base_gateway}} doesn't load-balance across PostgreSQL nodes.
+      No, {{site.base_gateway}} doesn't load-balance across PostgreSQL nodes.
       To send read-only queries to other nodes, use `pg_ro_host`.
   - q: Does multi-host failover work with AWS IAM, Azure, GCP, or OAuth authentication?
     a: |
-      Yes. {{site.base_gateway}} gets a token for each node.
+      Yes, {{site.base_gateway}} gets a token for each node.
 ---
 
 {{site.base_gateway}} accepts a list of PostgreSQL nodes in [`pg_host`](/gateway/configuration/#pg-host).
@@ -76,26 +76,16 @@ To set up a cluster with multiple PostgreSQL nodes, see [Use {{site.base_gateway
 
 ## Host list format
 
-Configure `pg_host` with a list of hosts.
-Separate the nodes in the host list with commas.
-Each entry is a host name or an address, with an optional port:
-
-```text
-pg_host = pg1,pg2:5433,[::1]:5434
-```
-
-* An entry without a port uses [`pg_port`](/gateway/configuration/#pg-port).
-* To specify a port with an IPv6 address, put the address in brackets. Without a port, the brackets are optional.
-* {{site.base_gateway}} doesn't start when an entry is empty, has an invalid port, or has an invalid format. The error starts with `invalid pg_host`.
-
-All nodes must share the same database and credentials.
+[`pg_host`](/gateway/configuration/#pg-host) accepts a comma-separated list of nodes, with an optional port for each entry.
+{{site.base_gateway}} doesn't start when an entry is empty, has an invalid port, or has an invalid format.
+The error starts with `invalid pg_host`.
 
 A list with one node keeps the existing behavior.
 Only a list with more than one node adds the check for the primary.
 
 ## How {{site.base_gateway}} finds the primary
 
-{{site.base_gateway}} tries the nodes in list order, and wraps around to the first node at the end of the list.
+{{site.base_gateway}} tries the nodes in list order, and starts again from the first node at the end of the list.
 Each worker starts from the last node that worked, so when nothing fails, {{site.base_gateway}} tries only one node.
 
 For each new connection, {{site.base_gateway}} runs `SHOW transaction_read_only`:
@@ -103,7 +93,7 @@ For each new connection, {{site.base_gateway}} runs `SHOW transaction_read_only`
 * When the result is `on`, the node is a standby. {{site.base_gateway}} closes the connection and tries the next node.
 * When a node fails to connect, {{site.base_gateway}} tries the next node.
 
-A node that an operator set to read-only with `default_transaction_read_only` also answers `on`, so {{site.base_gateway}} treats it as a standby.
+A node that an operator set to read-only with `default_transaction_read_only` also returns `on`, so {{site.base_gateway}} treats it as a standby.
 
 While everything is working, {{site.base_gateway}} doesn't check connections that it reuses from the pool.
 After a node fails, or after a query on the read-write connection fails, {{site.base_gateway}} checks pooled connections until one connection succeeds.
@@ -112,10 +102,15 @@ Each node has its own connection pool, and [`pg_pool_size`](/gateway/configurati
 ## Timeouts
 
 [`pg_timeout`](/gateway/configuration/#pg-timeout) applies to each node.
-A slow or unreachable node doesn't reduce the time that the primary gets.
+Each node gets a full `pg_timeout`, so a slow or unreachable node doesn't shorten the wait for the primary.
 When nodes are down, the time to find the primary can be up to the number of nodes multiplied by `pg_timeout`.
 
-A node that answers slowly can use more than `pg_timeout`, because the timeout applies to each network operation of a connection attempt: the TCP connection, TLS, startup, authentication, and the primary check.
+A slow node can take longer than `pg_timeout` in total, because the timeout applies to each network operation of a connection attempt:
+* The TCP connection
+* TLS
+* Startup
+* Authentication
+* The primary check
 
 Each worker finds the primary independently, so after a start or a switchover each worker tries the nodes itself.
 If the first node in the list drops packets, the first connection of each worker waits up to `pg_timeout`.
@@ -129,7 +124,7 @@ To shorten the worst case, set a lower `pg_timeout`.
 
 [`pg_ro_host`](/gateway/configuration/#pg-ro-host) accepts a list in the [same format as `pg_host`](#host-list-format).
 For the read-only connection, {{site.base_gateway}} accepts any node that it can connect to, primary or standby.
-{{site.base_gateway}} doesn't prefer standbys, so a read-only query can run on the primary.
+{{site.base_gateway}} doesn't give standbys priority, so a read-only query can run on the primary.
 
 ## Logs
 
@@ -155,6 +150,7 @@ rows:
 <!--vale on-->
 
 The `notice` entry appears at the default [`log_level`](/gateway/configuration/#log-level).
+To see the `info` entry, set `log_level` to `info` or `debug`.
 
 ## Limitations and failure modes
 
@@ -170,16 +166,20 @@ columns:
 rows:
   - situation: All nodes are unreachable or read-only.
     behavior: |
-      The operation that needs the database fails with `failed to connect to any PostgreSQL host`, followed by the cause for each node, for example `(pg1:5432: connection refused; pg2:5432: server is read-only (not the primary))`. 
+      The operation that needs the database fails with `failed to connect to any PostgreSQL host`, followed by the cause for each node, for example `(pg1:5432: timeout; pg2:5432: server is read-only (not the primary))`.
       <br><br>
-      The Admin API logs this message at `error` and returns a generic `500` response. At startup, {{site.base_gateway}} doesn't start.
+      The Admin API logs this message at `error` and returns a generic `500` response.
+      If this happens at startup, {{site.base_gateway}} fails to start.
   - situation: A query is in progress during a switchover.
     behavior: |
-      PostgreSQL closes the sessions on the old primary, so the queries in progress on those sessions fail. {{site.base_gateway}} doesn't retry them, because a retry can run a write two times. 
-      The next query connects to the new primary. An Admin API client can retry the request.
+      PostgreSQL closes the sessions on the old primary, so the queries in progress on those sessions fail.
+      {{site.base_gateway}} doesn't retry them, because a retry can run a write twice.
+      The next query connects to the new primary.
+      An Admin API client can retry the request.
   - situation: Two nodes accept writes at the same time (split brain).
     behavior: |
-      {{site.base_gateway}} can't detect split brain. It uses the first primary that it finds.
+      {{site.base_gateway}} can't detect split brain.
+      It uses the first primary that it finds.
       The database cluster manager must prevent split brain.
   - situation: The cluster uses asynchronous replication.
     behavior: |
@@ -188,11 +188,11 @@ rows:
   - situation: The old primary stays up as a read-only node without a restart.
     behavior: |
       The first write on a pooled connection fails in each worker.
-      The failure makes {{site.base_gateway}} check pooled connections, and the next connection moves to the new primary.
+      The failure makes {{site.base_gateway}} check pooled connections, so the next query uses a connection to the new primary.
   - situation: A firewall or NAT drops idle connections silently.
     behavior: |
       Each dead pooled connection makes one request time out, as with one node.
-      Set [`pg_keepalive_timeout`](/gateway/configuration/#pg-keepalive-timeout) lower than the idle timeout of your network devices.
+      Set [`pg_keepalive_timeout`](/gateway/configuration/#pg-keepalive-timeout) lower than the idle timeout of your network devices, so that {{site.base_gateway}} closes idle pooled connections before the devices drop them.
   - situation: A DNS name resolves to many addresses.
     behavior: |
       {{site.base_gateway}} treats the name as one node, and doesn't try each address.

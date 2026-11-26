@@ -67,7 +67,7 @@ automated_tests: false
 ---
 
 If your PostgreSQL nodes run in different data centers without a virtual IP (VIP) or load balancer in front of them, a single `pg_host` value can't follow the primary when it moves to a different node.
-When you list every node in [`pg_host`](/gateway/configuration/#pg-host), {{site.base_gateway}} connects to the node that accepts writes, and follows the primary when it moves.
+When you list every node in [`pg_host`](/gateway/configuration/#pg-host), {{site.base_gateway}} connects to the node that accepts writes, and connects to the new primary after a switchover.
 You don't need to edit `pg_host` or reload {{site.base_gateway}}.
 
 {% include_cached gateway/postgresql-multi-host-scope.md %}
@@ -131,14 +131,14 @@ This example creates one primary and two standbys that use streaming replication
 ## Run database migrations
 
 List every node in `KONG_PG_HOST`, separated by commas.
-An entry without a port uses `pg_port`.
+An entry without a port uses [`pg_port`](/gateway/configuration/#pg-port).
 To use a different port for a node, write the entry as `host:port`.
 
 {:.warning}
 > When building the `KONG_PG_HOST` list, use the following guidelines:
-> * Don't list nodes of different clusters. {{site.base_gateway}} treats every entry as a copy of the same database.
-> * Don't list a node that you don't control. {{site.base_gateway}} sends the database credentials to every node in the list.
-> * Don't use a DNS name that resolves to many addresses as one entry. {{site.base_gateway}} treats each entry as one node, and doesn't try each address of a name. List each node as a separate entry.
+> * Do not list nodes of different clusters. {{site.base_gateway}} treats every entry as a copy of the same database.
+> * Do not list a node that you do not control. {{site.base_gateway}} sends the database credentials to every node in the list.
+> * Do not use a DNS name that resolves to many addresses as one entry. {{site.base_gateway}} treats each entry as one node, and does not try each address of a name. List each node as a separate entry.
 
 Run `kong migrations bootstrap` to bootstrap the database.
 {{site.base_gateway}} finds the primary in the list and runs the migrations on it:
@@ -172,8 +172,8 @@ docker run -d --name kong-gateway --network kong-pg-net \
 ```
 
 To find the primary, {{site.base_gateway}} runs `SHOW transaction_read_only` on each new connection:
-* A node that answers `off` accepts writes, so {{site.base_gateway}} keeps the connection.
-* A node that answers `on` is a standby, so {{site.base_gateway}} closes the connection and tries the next node.
+* A node that returns `off` accepts writes, so {{site.base_gateway}} keeps the connection.
+* A node that returns `on` is a standby, so {{site.base_gateway}} closes the connection and tries the next node.
 
 The order of the list doesn't decide which node is the primary.
 
@@ -249,18 +249,18 @@ If you get an error right after the promotion, send the request again.
 
 ## Validate
 
-Check that {{site.base_gateway}} moved to the new primary:
+Check that {{site.base_gateway}} is connected to the new primary:
 
 ```sh
 docker logs kong-gateway 2>&1 | grep "connected to PostgreSQL host"
 ```
 
-The output includes a notice for each worker that moved to the new primary, with the node that it used before:
+The output includes a notice for each worker that connected to the new primary, with the node that it used before:
 
 ```
 [notice] ... connected to PostgreSQL host pg-standby1:5432 (previous host: pg-primary:5432)
 ```
-{:.wrap}
+{:.no-copy-code .wrap}
 
-While the primary is down, the error log can also list the cause for each node that {{site.base_gateway}} tried, for example `pg-primary:5432: connection refused` and `pg-standby2:5432: server is read-only (not the primary)`.
+When {{site.base_gateway}} can't find a node that accepts writes, for example between stopping the primary and promoting a standby, the error log lists the cause for each node that it tried, such as `pg-primary:5432: timeout` and `pg-standby2:5432: server is read-only (not the primary)`.
 This is expected until one node accepts writes.

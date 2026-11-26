@@ -117,7 +117,7 @@ of the {{site.base_gateway}} configuration reference.
 
 ## Using a PostgreSQL cluster without a VIP {% new_in 3.17 %}
 
-If your PostgreSQL nodes have no virtual IP (VIP) or load balancer in front of them, you can list every node in [`pg_host`](/gateway/configuration/#pg-host).
+If your PostgreSQL nodes don't have a virtual IP (VIP) or load balancer in front of them, you can list every node in [`pg_host`](/gateway/configuration/#pg-host).
 {{site.base_gateway}} connects to the node that accepts writes, and finds the new primary when the primary moves.
 See the [PostgreSQL multi-host reference](/gateway/postgresql-multi-host-reference/) and [Use {{site.base_gateway}} with a PostgreSQL cluster without a VIP](/how-to/use-kong-with-a-postgres-cluster-without-a-vip/).
 
