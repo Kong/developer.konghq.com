@@ -412,6 +412,7 @@ Istio
 Istio's
 istioctl
 item_title
+Jamf
 jaq
 Jamf
 Javascript
@@ -488,6 +489,7 @@ kustomize
 KWallet
 keystores
 kv
+KWallet
 Lakera
 langchain
 lapis
@@ -659,6 +661,7 @@ PostgreSQL
 PowerShell
 preferred_name
 premade
+preinstall
 prepend
 prepended
 prepending

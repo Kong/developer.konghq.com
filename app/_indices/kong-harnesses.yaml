@@ -55,3 +55,12 @@ groups:
           - path: /kong-harnesses/doctor/
           - path: /kong-harnesses/troubleshooting/
           - path: /kong-harnesses/errors/
+
+  - title: Claude Code
+    sections:
+      - items:
+          - path: /kong-harnesses/claude-code-outside-traffic/
+          - path: /kong-harnesses/claude-code-web-and-slack/
+          - path: /kong-harnesses/fleet-build-options/
+          - path: /kong-harnesses/roll-out-claude-code-through-mdm/
+          - path: /kong-harnesses/remove-a-claude-code-fleet-build/
