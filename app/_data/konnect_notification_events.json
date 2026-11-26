@@ -1,0 +1,68 @@
+[
+  {
+    "event_type": "devportal_application.registration_pending",
+    "event_title": "Application Registration Request",
+    "event_description": "Notify admins when a new application requests access to an API",
+    "event_namespace": "dev-portal"
+  },
+  {
+    "event_type": "devportal_developer.registration_pending",
+    "event_title": "Developer Registration Request",
+    "event_description": "Notify portal admins when a new developer requests access to their portal",
+    "event_namespace": "dev-portal"
+  },
+  {
+    "event_type": "koko.cp.eol-node-connected",
+    "event_title": "EOL Node Connected",
+    "event_description": "A data plane node with an EOL version connected to the control plane.",
+    "event_namespace": "gateway-manager"
+  },
+  {
+    "event_type": "kai.feature.enablement",
+    "event_title": "KAI Feature Enablement",
+    "event_description": "Notification when KAI is enabled",
+    "event_namespace": "organization"
+  },
+  {
+    "event_type": "kauth.spat.expired",
+    "event_title": "System Account Access Token Expired",
+    "event_description": "System Account Access Token has expired and requires a new token to be generated",
+    "event_namespace": "organization"
+  },
+  {
+    "event_type": "kauth.spat.expiring",
+    "event_title": "System Account Access Token Expiring",
+    "event_description": "System Account Access Token is expiring and requires a new token to be generated",
+    "event_namespace": "organization"
+  },
+  {
+    "event_type": "kaudit.konnect.webhook-disabled",
+    "event_title": "Unhealthy Audit Log Webhook - Kong Konnect",
+    "event_description": "Unhealthy Audit Log Webhook for Konnect",
+    "event_namespace": "organization"
+  },
+  {
+    "event_type": "billing.enterprise-trial.admin-request",
+    "event_title": "Product evaluation request",
+    "event_description": "Your team requested a product evaluation",
+    "event_namespace": "plan-and-usage"
+  },
+  {
+    "event_type": "billing.invoice.unpaid-reminder-final",
+    "event_title": "Unpaid invoice final reminder",
+    "event_description": "Final reminder for an unpaid invoice",
+    "event_namespace": "plan-and-usage"
+  },
+  {
+    "event_type": "billing.invoice.unpaid-reminder",
+    "event_title": "Unpaid invoice reminder",
+    "event_description": "Reminder for an unpaid invoice",
+    "event_namespace": "plan-and-usage"
+  },
+  {
+    "event_type": "billing.invoice.upcoming-reminder",
+    "event_title": "Upcoming invoice reminder",
+    "event_description": "Reminder for an upcoming invoice",
+    "event_namespace": "plan-and-usage"
+  }
+]
