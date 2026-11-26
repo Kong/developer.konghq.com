@@ -110,6 +110,10 @@ To run in {{site.konnect_short_name}}, a custom plugin must meet the following r
 * Custom validation functions must be written in Lua and be self-contained within the `schema.lua` file.
 * The `schema.lua` file must not contain any `require()` statements.
 * Plugins that require third-party libraries must reference them in the `handler.lua` file.
+* {% new_in 3.17 %} To classify a field with the `classification` attribute, set the tier as a lowercase string: `public`, `internal`, or `confidential`.
+  `schema.lua` can't use the `typedefs.classification` constants, because they need a `require()` statement.
+  Data planes that run a {{site.base_gateway}} version earlier than 3.17 can't load a schema that uses the attribute.
+  See [Classify sensitive fields](/custom-plugins/schema.lua/#classify-sensitive-fields).
 
 {:.warning}
 > **Caution**: Carefully test the operation of any custom plugins before using them in production. 
