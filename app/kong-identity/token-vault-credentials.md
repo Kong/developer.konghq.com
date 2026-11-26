@@ -236,7 +236,7 @@ In the following examples, replace the following values:
 * `$CLIENT_ID` and `$CLIENT_SECRET`: The client ID and client secret of the OAuth app you created in the third-party service.
 * `$STATIC_SECRET`: The API key or token you generated in the third-party service.
 * `$NEW_STATIC_SECRET`: The replacement value when you rotate a secret.
-* `$GROUP_ID`: The ID of a group in your directory, for example `7b0c9e1a-3f4d-4e2b-9a56-8d1c2f6e4b73`. To get it, send a `GET` request to the [`/v2/directories/{directoryId}/groups` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/listGroups).
+* `$GROUP_ID`: The ID of a group in your directory. To get it, send a `GET` request to the [`/v2/directories/{directoryId}/groups` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/listGroups).
 
 ### Store a credential
 
