@@ -118,6 +118,27 @@ rows:
               - /kong-harnesses/claude-code-outside-traffic/
               - /kong-harnesses/claude-code-web-and-slack/
   - header:
+      type: h3
+      text: "Claude Code release compatibility"
+    column_count: 2
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Claude Code compatibility testing
+            icon: /assets/icons/third-party/claude.svg
+            description: How Kong tests each Claude Code release through {{site.ai_gateway}}, and which provider modes the tests cover
+            cta:
+              url: /ai-gateway/claude-code-compatibility/
+      - blocks:
+        - type: card
+          config:
+            title: Claude Code release known issues
+            icon: /assets/icons/warning.svg
+            description: Claude Code releases that fail in a tested mode, what breaks, and how to avoid it
+            cta:
+              url: /ai-gateway/claude-code-known-issues/
+  - header:
       type: h2
       text: "Codex CLI"
       description: "Codex CLI is OpenAI's command-line tool for code generation and assistance. Proxy Codex CLI requests through {{site.ai_gateway}} to gain visibility into API usage, implement rate limiting, and centralize credential management."
@@ -154,6 +175,19 @@ rows:
               icon: /assets/icons/dashscope.svg
               cta:
                 url: /ai-gateway/use-qwen-code-with-ai-gateway-qwen/
+  - header:
+      type: h2
+      text: References
+    columns:
+      - blocks:
+        - type: reference_list
+          config:
+            pages:
+              - /ai-gateway/claude-code-compatibility/
+              - /ai-gateway/claude-code-known-issues/
+              - /kong-harnesses/
+              - /kong-harnesses/setup/
+              - /kong-harnesses/doctor/
   # - header:
   #     type: h3
   #     text: "Gemini CLI"

@@ -1,0 +1,21 @@
+modes:
+  - name: Anthropic API
+    switch: None (default)
+    url: "`ANTHROPIC_BASE_URL`"
+    skip: None
+    other: None
+  - name: Microsoft Foundry
+    switch: "`CLAUDE_CODE_USE_FOUNDRY=1`"
+    url: "`ANTHROPIC_FOUNDRY_BASE_URL`"
+    skip: "`CLAUDE_CODE_SKIP_FOUNDRY_AUTH=1`"
+    other: None
+  - name: Claude Platform on AWS
+    switch: "`CLAUDE_CODE_USE_ANTHROPIC_AWS=1`"
+    url: "`ANTHROPIC_AWS_BASE_URL`"
+    skip: "`CLAUDE_CODE_SKIP_ANTHROPIC_AWS_AUTH=1`"
+    other: "`ANTHROPIC_AWS_WORKSPACE_ID`"
+  - name: Amazon Bedrock Mantle
+    switch: "`CLAUDE_CODE_USE_MANTLE=1`"
+    url: "`ANTHROPIC_BEDROCK_MANTLE_BASE_URL`"
+    skip: "`CLAUDE_CODE_SKIP_MANTLE_AUTH=1`"
+    other: None
