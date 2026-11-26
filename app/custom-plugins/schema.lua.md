@@ -335,6 +335,120 @@ If your field falls into that category, document which CEL variables are safe to
 This isn't a risk expressible fields introduce on their own. 
 Making a field expressible just lets an operator express an unsafe choice as a formula instead of a fixed value. Document the risk the same way you would for a static field, rather than assume the operator will guess right.
 
+## Classify sensitive fields {% new_in 3.17 %}
+
+Classification tiers describe the sensitivity level of plugin field values.
+{{site.konnect_short_name}} uses the tiers to decide which values to mask in API responses.
+{{site.base_gateway}} doesn't act on the tiers.
+
+Use the `classification` attribute to declare one of the following tiers:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Tier
+    key: tier
+  - title: Use for
+    key: use
+rows:
+  - tier: "`PUBLIC`"
+    use: Values that aren't sensitive, such as timeouts and toggles.
+  - tier: "`INTERNAL`"
+    use: Values that aren't secret but shouldn't leave {{site.konnect_short_name}}, such as hosts, URLs, and endpoints.
+  - tier: "`CONFIDENTIAL`"
+    use: Secrets, such as passwords, API keys, client secrets, and private keys. Also free-form value maps that can carry tokens, such as header values. {{site.konnect_short_name}} masks these values by default.
+{% endtable %}
+<!--vale on-->
+
+Set the tier with the constants in `typedefs.classification`:
+
+```lua
+local typedefs = require "kong.db.schema.typedefs"
+local classification = typedefs.classification
+
+{
+  api_key = {
+    type = "string",
+    encrypted = true,
+    classification = classification.CONFIDENTIAL,
+  },
+},
+{
+  endpoint = {
+    type = "string",
+    classification = classification.INTERNAL,
+  },
+},
+```
+
+A tier on a `record`, `array`, `set`, or `map` also applies to everything inside it, unless a nested field declares its own tier.
+
+{% navtabs 'plugin-schemas' %}
+{% navtab "Konnect API" %}
+To check the tiers of bundled plugin fields, get the schema of any plugin from the {{site.konnect_short_name}} Control Plane Config API with the `/schemas/plugins` endpoint:
+```sh
+curl -s "$KONNECT_CONTROL_PLANE_URL/v2/control-planes/{controlPlaneId}/core-entities/schemas/plugins/{pluginName}"
+  -H "Authorization: Bearer $KONNECT_TOKEN"
+```
+
+To check a custom plugin schema, use the `/plugin-schemas` endpoint:
+```sh
+curl -s "$KONNECT_CONTROL_PLANE_URL/v2/control-planes/{controlPlaneId}/core-entities/plugin-schemas/{pluginName}"
+  -H "Authorization: Bearer $KONNECT_TOKEN"
+```
+
+{% endnavtab %}
+{% navtab "Admin API" %}
+
+To check the tiers in the schema of your plugin, query the `/schemas/plugins` endpoint of the Admin API:
+
+```sh
+curl -s "http://localhost:8001/schemas/plugins/{pluginName}"
+```
+
+{% endnavtab %}
+{% endnavtabs %}
+
+
+### Fields without a tier
+
+{{site.base_gateway}} doesn't require a tier for any field in a custom plugin.
+{{site.konnect_short_name}} treats a field without a tier as public, so it doesn't mask the value.
+Set `classification` to `CONFIDENTIAL` on every field that holds a credential or other secret value, including every field that uses `encrypted`.
+
+### Data plane compatibility
+
+{:.warning}
+> Data planes that run a {{site.base_gateway}} version earlier than 3.17 can't load a plugin schema that uses the `classification` attribute.
+> This includes plugins that you stream from the control plane.
+>
+> For custom plugins that you upload to {{site.konnect_short_name}}, `schema.lua` can't use `require()`, so you can't use the `typedefs.classification` constants.
+> Set the tier as a string instead: `public`, `internal`, or `confidential`. See [Custom plugins in {{site.konnect_short_name}} hybrid mode](/custom-plugins/konnect-hybrid-mode/#requirements).
+>
+> Upgrade all data planes to 3.17 or later before adding `classification` to a custom plugin.
+
+If you can't upgrade all data planes first, for example during a staged upgrade, set the attribute only on versions that support it.
+The `typedefs` table raises an error for a name that it doesn't define, so a check like `typedefs.classification and ...` fails on earlier versions.
+Use `pcall` instead:
+
+```lua
+local typedefs = require "kong.db.schema.typedefs"
+
+local ok, classification = pcall(function() return typedefs.classification end)
+local CONFIDENTIAL = ok and classification.CONFIDENTIAL or nil
+
+{
+  api_key = {
+    type = "string",
+    encrypted = true,
+    classification = CONFIDENTIAL,
+  },
+},
+```
+
+On earlier versions, `ok` is `false`, so `CONFIDENTIAL` is `nil`, and Lua omits the attribute from the field.
+The plugin then loads without a tier.
+
 ## Examples
 
 This `schema.lua` file is for the [key-auth](/plugins/key-auth/) plugin:

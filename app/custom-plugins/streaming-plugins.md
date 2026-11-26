@@ -58,6 +58,8 @@ Keep the following custom plugin limitations in mind for streaming plugins:
 * Custom modules cannot be required when plugin sandboxing is enabled. External Lua files or shared libraries can't be loaded.
 * Custom validation must be implemented in `handler.lua`, not `schema.lua`. In `handler.lua`, it can be logged and handled as part of plugin business logic.
 * Plugins can't read/write to the {{site.base_gateway}} filesystem.
+* {% new_in 3.17 %} Data planes that run a {{site.base_gateway}} version earlier than 3.17 reject a schema that uses the `classification` attribute.
+  Upgrade all data planes first. See [Data plane compatibility](/custom-plugins/schema.lua/#data-plane-compatibility).
 
 ## Permissions required
 
