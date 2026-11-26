@@ -77,6 +77,15 @@ Both groups can use the same {{site.ai_gateway}} base URL with two sets of AI Mo
 * Subscription AI Models use the same IDs with a `-subscription` suffix, for example `claude-opus-5-5-subscription`.
   They authenticate the IdP token in the `x-kong-id-token` header.
 
+The following diagram shows a subscription request:
+
+{% mermaid %}
+flowchart LR
+  C[{{ site.claude_code }}] -->|claude.ai token in Authorization| G
+  C -->|IdP token in x-kong-id-token| G[{{site.ai_gateway}}]
+  G -->|claude.ai token, unchanged| A[Anthropic]
+{% endmermaid %}
+
 {:.warning}
 > This setup has the following limits:
 > * {{site.ai_gateway}} can't check that the claude.ai account belongs to the developer who the IdP token identifies.

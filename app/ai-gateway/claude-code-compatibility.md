@@ -55,6 +55,13 @@ Kong checks the {{ site.claude_code }} `latest` release channel every hour.
 Each test run uses the newest {{ site.claude_code }} release with the `latest` {{site.ai_gateway}} image.
 Kong runs the tests again whenever a new {{ site.claude_code }} release or a new `latest` {{site.ai_gateway}} image is available.
 
+{% mermaid %}
+flowchart LR
+  R[New {{ site.claude_code }} release on the latest channel] --> T[Test run]
+  T --> S[Test results for that release and image]
+  I[New latest {{site.ai_gateway}} image] --> T
+{% endmermaid %}
+
 Test results apply only to the `latest` {{site.ai_gateway}} image.
 Kong doesn't test earlier {{site.ai_gateway}} releases again.
 
