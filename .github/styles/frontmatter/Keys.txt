@@ -38,6 +38,7 @@ tech_preview
 feature_gates
 extended_description
 skip_proxy_ip
+skip_konnect_token
 gateway_custom_env
 gateway_env
 ai_gateway_enterprise
