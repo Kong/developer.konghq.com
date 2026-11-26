@@ -115,7 +115,8 @@ rows:
       type: h2
       text: "Sign in to your agent CLI"
 
-  - columns:
+  - column_count: 3
+    columns:
     - blocks:
       - type: card
         config:
