@@ -1,6 +1,5 @@
 <!--vale off-->
 {% assign summary='{{site.ai_gateway}} running' %}
-<!--vale on-->
 {% assign env_variables = include.prereqs['konnect'] %}
 {% capture details_content %}
 {% capture vanilla_snippet %}
@@ -24,6 +23,8 @@ curl -Ls https://get.konghq.com/ai | bash -s -- -k $KONNECT_TOKEN {% if env_vari
 
 {{ run_snippet }}
 {% else %}
+<!--vale on-->
+
 This is a {{site.konnect_short_name}} tutorial and requires a {{site.konnect_short_name}} personal access token.
 
 1. Create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
@@ -34,7 +35,9 @@ This is a {{site.konnect_short_name}} tutorial and requires a {{site.konnect_sho
    export KONNECT_TOKEN='YOUR_KONNECT_PAT'
    ```
 
+<!--vale off-->
 3. {{ run_step }}
+<!--vale on-->
 
 {{ run_snippet | indent: 3 }}
 {% endif %}
