@@ -341,26 +341,31 @@ Classification tiers describe the sensitivity level of plugin field values.
 {{site.konnect_short_name}} uses the tiers to decide which values to mask in API responses.
 {{site.base_gateway}} doesn't act on the tiers.
 
-Use the `classification` attribute to declare one of the following tiers:
+Use the `classification` attribute to declare one of the following tiers, either with the constant or with its string value:
 
 <!--vale off-->
 {% table %}
 columns:
-  - title: Tier
+  - title: Constant
     key: tier
+  - title: String value
+    key: value
   - title: Use for
     key: use
 rows:
   - tier: "`PUBLIC`"
+    value: "`public`"
     use: Values that aren't sensitive, such as timeouts and toggles.
   - tier: "`INTERNAL`"
+    value: "`internal`"
     use: Values that aren't secret but shouldn't leave {{site.konnect_short_name}}, such as hosts, URLs, and endpoints.
   - tier: "`CONFIDENTIAL`"
+    value: "`confidential`"
     use: Secrets, such as passwords, API keys, client secrets, and private keys. Also free-form value maps that can carry tokens, such as header values. {{site.konnect_short_name}} masks these values by default.
 {% endtable %}
 <!--vale on-->
 
-Set the tier with the constants in `typedefs.classification`:
+The following `schema.lua` fragment classifies a secret field as `CONFIDENTIAL` and a hostname field as `INTERNAL`, using the constants in `typedefs.classification`:
 
 ```lua
 local typedefs = require "kong.db.schema.typedefs"
@@ -385,15 +390,7 @@ A tier on a `record`, `array`, `set`, or `map` also applies to everything inside
 
 {% navtabs 'plugin-schemas' %}
 {% navtab "Konnect API" %}
-To check the tiers of bundled plugin fields, get the schema of any plugin from the {{site.konnect_short_name}} Control Plane Config API with the `/schemas/plugins` endpoint:
-```sh
-curl -s "$KONNECT_CONTROL_PLANE_URL/v2/control-planes/{controlPlaneId}/core-entities/schemas/plugins/{pluginName}" \
-  -H "Authorization: Bearer $KONNECT_TOKEN"
-```
-
-To check a custom plugin schema, use the `/plugin-schemas` endpoint:
-```sh
-curl -s "$KONNECT_CONTROL_PLANE_URL/v2/control-planes/{controlPlaneId}/core-entities/plugin-schemas/{pluginName}" \
+To check the tiers of a bundled plugin's fields, get its schema with the [`/schemas/plugins`](/api/konnect/control-planes-config/#/operations/fetch-plugin-schema) endpoint of the {{site.konnect_short_name}} Control Plane Config API:
   -H "Authorization: Bearer $KONNECT_TOKEN"
 ```
 
@@ -419,17 +416,16 @@ Set `classification` to `CONFIDENTIAL` on every field that holds a credential or
 ### Data plane compatibility
 
 {:.warning}
-> Data planes that run a {{site.base_gateway}} version earlier than 3.17 can't load a plugin schema that uses the `classification` attribute.
-> This includes plugins that you stream from the control plane.
+> Data planes that run a {{site.base_gateway}} version earlier than 3.17 cannot load a plugin schema that uses the `classification` attribute.
+> This includes plugins that you [stream](/custom-plugins/streaming-plugins/) from the control plane.
 >
-> For custom plugins that you upload to {{site.konnect_short_name}}, `schema.lua` can't use `require()`, so you can't use the `typedefs.classification` constants.
+> For custom plugins that you upload to {{site.konnect_short_name}}, `schema.lua` cannot use `require()`, so you cannot use the `typedefs.classification` constants.
 > Set the tier as a string instead: `public`, `internal`, or `confidential`. See [Custom plugins in {{site.konnect_short_name}} hybrid mode](/custom-plugins/konnect-hybrid-mode/#requirements).
 >
 > Upgrade all data planes to 3.17 or later before adding `classification` to a custom plugin.
 
-If you can't upgrade all data planes first, for example during a staged upgrade, set the attribute only on versions that support it.
-The `typedefs` table raises an error for a name that it doesn't define, so a check like `typedefs.classification and ...` fails on earlier versions.
-Use `pcall` instead:
+The following example sets the tier of a secret field as a string, which doesn't need `require()`:
+
 
 ```lua
 local typedefs = require "kong.db.schema.typedefs"
