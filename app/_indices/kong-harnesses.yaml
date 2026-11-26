@@ -25,6 +25,8 @@ groups:
 
   - title: CLI References
     sections:
+      - items:
+          - path: /kong-harnesses/commands/
       - title: Get Started
         items:
           - path: /kong-harnesses/setup/

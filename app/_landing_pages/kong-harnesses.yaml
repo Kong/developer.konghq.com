@@ -86,6 +86,15 @@ rows:
     - blocks:
       - type: card
         config:
+          title: Profiles
+          description: Create or import a profile that names the gateway, the identity provider, and the model.
+          cta:
+            text: Manage profiles
+            url: /kong-harnesses/profile/
+            align: end
+    - blocks:
+      - type: card
+        config:
           title: Sign in
           description: "Learn how kong-harnesses signs you in to {{site.ai_gateway}}, validates the result, and signs you out."
           cta:
@@ -105,10 +114,10 @@ rows:
       - type: card
         config:
           title: CLI reference
-          description: Look up kong-harnesses commands, options, and identity provider settings.
+          description: Find the kong-harnesses command for each task, from setup and sign-in to profiles and diagnostics.
           cta:
             text: Read the CLI reference
-            url: /index/kong-harnesses/#cli-references
+            url: /kong-harnesses/commands/
             align: end
 
   - header:
@@ -227,6 +236,7 @@ rows:
           - type: reference_list
             config:
               pages:
+                - /kong-harnesses/commands/
                 - /kong-harnesses/identity-provider/
                 - /kong-harnesses/profile/
                 - /kong-harnesses/install/
