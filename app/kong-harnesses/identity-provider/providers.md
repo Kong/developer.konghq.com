@@ -50,7 +50,7 @@ rows:
   - setting: Offline access
     value: "In the API of the gateway, enable **Allow Offline Access**."
   - setting: Audience
-    value: "Register the gateway as an API with an identifier that is an absolute URI, such as `https://gateway.example.com/api`. Set `--audience` to it, and set `--audience-parameter audience`."
+    value: "Register the gateway as an API with an identifier that is an absolute URI, such as `https://gateway.example.com/api`. Set `--audience` to it, and set `--audience-parameter audience`, so that Auth0 issues the access token for the gateway. A sign-in can work without it, but don't use that in production."
   - setting: Access token lifetime
     value: "Auth0 issues access tokens for 24 hours by default, so set `--max-token-lifetime-seconds 86400`. Or set the token lifetime of the API from 365 to 3600 seconds."
 {% endtable %}

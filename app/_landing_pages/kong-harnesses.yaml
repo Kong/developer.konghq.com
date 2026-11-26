@@ -206,7 +206,7 @@ rows:
           title: Install for every user
           description: Install kong-harnesses for every user of a computer, or deploy it with an MDM tool.
           cta:
-            text: Read the install guide
+            text: Read the guide
             url: /kong-harnesses/install/
             align: end
     - blocks:
@@ -215,7 +215,7 @@ rows:
           title: Pin a version range
           description: Limit managed computers to the {{site.claude_code}} versions that you tested through {{site.ai_gateway}}.
           cta:
-            text: Pin a version range
+            text: Read the guide
             url: /kong-harnesses/pin-a-claude-code-fleet/
             align: end
     - blocks:
@@ -224,7 +224,7 @@ rows:
           title: Move to a new model
           description: Move managed computers to a new Claude model without interrupting active sessions.
           cta:
-            text: Move to a new model
+            text: Read the guide
             url: /kong-harnesses/move-a-claude-code-fleet-to-a-new-model/
             align: end
 
