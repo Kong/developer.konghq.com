@@ -81,7 +81,7 @@ The following diagram shows how a request flows from a principal to a third-part
 1. A principal (your users, agents, and applications) sends a request through {{site.ai_gateway}}.
 1. {{site.ai_gateway}} routes the request to an MCP server or a Model Provider with a Token Vault provider attached for outbound authentication.
 1. Token Vault verifies the caller's token with the trusted IdP, using the token's issuer (`iss`) and subject (`sub`) to identify the principal.
-1. Token Vault releases the matching credential for the credential provider, such as GitHub or Slack. If the principal doesn't have a credential for that provider yet, {{site.ai_gateway}} returns an enrollment URL as a link (for the MCPs that support the [URL elicitation mode](https://modelcontextprotocol.io/specification/2025-11-25/client/elicitation)) or as text (for other clients), so they can connect their account first. See [Credential enrollment](/identity/token-vault/credentials/#credential-enrollment).
+1. Token Vault releases the matching credential for the credential provider, such as GitHub or Slack. If the principal doesn't have a credential for that provider yet, {{site.ai_gateway}} returns an enrollment URL as a link (for the MCP servers that support the [URL elicitation mode](https://modelcontextprotocol.io/specification/2025-11-25/client/elicitation)) or as text (for other clients), so they can connect their account first. See [Credential enrollment](/identity/token-vault/credentials/#credential-enrollment).
 
 The IdP token only identifies the principal. It never becomes the stored credential.
 
