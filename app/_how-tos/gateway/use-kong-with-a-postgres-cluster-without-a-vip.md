@@ -22,10 +22,9 @@ tags:
   - database
 
 search_aliases:
-  - pg_host
-  - postgres failover
+  - postgresql failover
   - postgresql high availability
-  - multi-host postgres
+  - multi-host postgresql
 
 tldr:
   q: How do I run {{site.base_gateway}} against a PostgreSQL cluster that has no virtual IP (VIP) or load balancer?

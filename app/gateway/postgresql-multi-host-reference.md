@@ -23,10 +23,8 @@ tags:
   - database
 
 search_aliases:
-  - pg_host
-  - postgres failover
+  - postgresql failover
   - primary detection
-  - transaction_read_only
 
 related_resources:
   - text: Use {{site.base_gateway}} with a PostgreSQL cluster without a VIP
