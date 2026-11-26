@@ -11,6 +11,10 @@ tools:
 breadcrumbs:
   - /kong-harnesses/
   - /kong-harnesses/profile/
+
+related_resources:
+  - text: Register kong-harnesses in your identity provider
+    url: /kong-harnesses/identity-provider/
 ---
 
 The `profile create` command builds and installs a connection profile using OIDC discovery. Run it without flags to start the interactive three-step setup, or pass the issuer, client, gateway, and audience explicitly.

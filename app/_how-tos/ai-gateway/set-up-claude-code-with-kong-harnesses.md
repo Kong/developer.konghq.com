@@ -45,6 +45,8 @@ related_resources:
     url: /kong-harnesses/claude-code-outside-traffic/
   - text: "{{ site.claude_code }} on the web and Claude in Slack"
     url: /kong-harnesses/claude-code-web-and-slack/
+  - text: Register kong-harnesses in your identity provider
+    url: /kong-harnesses/identity-provider/
 
 prereqs:
   inline:
