@@ -102,7 +102,7 @@ rows:
         - type: card
           config:
             title: "{{ site.konnect_short_name }} Gateway Service integration"
-            description: Link Konnect and send requests from {{ site.insomnia }} to Routes in {{site.konnect_short_name}}, and use [plugins](/insomnia/konnect-integration/#plugins-tab) and the [Debugger](/insomnia/konnect-integration/#debugger).
+            description: Link Konnect and send requests from {{ site.insomnia }} to Routes in {{site.konnect_short_name}}, and use plugins and the Debugger.
             icon: /assets/icons/service-hub.svg
             cta:
               text: Learn more
