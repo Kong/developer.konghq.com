@@ -58,8 +58,8 @@ Kong runs the tests again whenever a new {{ site.claude_code }} release or a new
 {% mermaid %}
 flowchart LR
   R[New {{ site.claude_code }} release on the latest channel] --> T[Test run]
-  I[New latest {{site.ai_gateway}} image] --> T
   T --> S[Test results for that release and image]
+  I[New latest {{site.ai_gateway}} image] --> T
 {% endmermaid %}
 
 Test results apply only to the `latest` {{site.ai_gateway}} image.
