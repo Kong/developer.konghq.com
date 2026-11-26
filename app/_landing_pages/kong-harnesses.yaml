@@ -45,24 +45,6 @@ rows:
     - blocks:
       - type: card
         config:
-          title: Get started
-          description: Learn how to use kong-harnesses for the first time.
-          cta:
-            text: Get started
-            url: /kong-harnesses/get-started/
-            align: end
-    - blocks:
-      - type: card
-        config:
-          title: Reference
-          description: Look up kong-harnesses commands and options.
-          cta:
-            text: Read the reference
-            url: /kong-harnesses/example-reference/
-            align: end
-    - blocks:
-      - type: card
-        config:
           title: Install for every user
           description: Install kong-harnesses for every user of a computer, or deploy it with an MDM tool.
           cta:
