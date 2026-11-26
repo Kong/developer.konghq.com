@@ -146,7 +146,7 @@ When you configure a provider (for example, GitHub), Token Vault registers it as
 Enrollment happens once per user and per provider, not per organization.
 If a second user wants to use GitHub with an agent, they need to go through enrollment, and get their own credentials stored in Token Vault. What is shared across the organization is the provider configuration (Client ID, scopes, endpoints).
 
-For providers that support dynamic client registration (DCR), such as `atlassian-rovo`, you don't need to create an app in the provider's console: Token Vault registers the OAuth client with the provider at first use.
+For providers that support dynamic client registration (DCR), such as `atlassian-rovo`, you don't need to create an app in the provider's console: {{site.ai_gateway}} registers the OAuth client with the provider at first use.
 
 ### Shared credential enrollment
 
