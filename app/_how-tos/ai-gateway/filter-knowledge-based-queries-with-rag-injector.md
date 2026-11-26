@@ -14,7 +14,7 @@ related_resources:
   - text: AI Policy entity reference
     url: /ai-gateway/entities/ai-policy/
 
-description: Learn how to use metadata filters to refine the results that the AI RAG Injector Policy retrieves from a knowledge base.
+description: Use metadata filters to refine the results that the AI RAG Injector Policy retrieves from a knowledge base.
 
 products:
   - ai-gateway
@@ -333,7 +333,7 @@ Use one clause to filter on a date, a source, or a tag:
 {% navtab "Date" %}
 
 This request retrieves chunks dated on or after January 1, 2024.
-The response covers the 2024 quarterly and annual reports and the analyst reports, and it leaves out the 2022 and 2023 content.
+The retrieved chunks cover the 2024 quarterly and annual reports and the analyst reports, and they leave out the 2022 and 2023 content.
 
 <!--vale off-->
 {% validation request-check %}
