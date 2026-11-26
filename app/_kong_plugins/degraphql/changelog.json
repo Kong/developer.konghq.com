@@ -6,6 +6,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.9": [
+    {
+      "message": "Fixed an issue where DeGraphQL route changes applied to only one worker process, and a failed route load left the router with a partial set of routes.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin router did not refresh after an incremental sync update on a data plane, leaving routes stale until the next full config push.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Fixed an issue where the plugin failed to parse GraphQL variables with nested array types like `[String]!`. The error `attempt to index field 'name' (a nil value)` occurred because the type parser did not correctly handle deeply nested type structures such as `nonNullType(listType(namedType))`.\n",

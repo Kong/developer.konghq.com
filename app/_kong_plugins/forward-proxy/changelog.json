@@ -6,6 +6,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.9": [
+    {
+      "message": "Fixed an issue where response-phase plugins and the PDK could not read the response that the Forward Proxy plugin proxies. Set the new `allow_response_buffering` option to `true` to enable the fix. The option only takes effect when the route needs the response body.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a 101 response pooled the switched upstream connection, so a later request to the same upstream could fail. The connection is now closed after a 101.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "`https_verify` is now enabled by default. This option\nverifies the upstream server certificate presented after the plugin\nestablishes a `CONNECT` tunnel through the proxy.\n",

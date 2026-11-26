@@ -18,6 +18,28 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.9": [
+    {
+      "message": "Added A2A v1.0 wire-format support alongside v0.3. This feature extends the normalization layer of the plugin to support A2A v1.0, covering the unified Part type, wrapped stream event discriminators, CamelCase operation names, and the new URL paths without the `/v1` prefix.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added URL rewriting for all `supportedInterfaces` in the agent card, as defined in the A2A 1.0 specification. This feature was added to fix an issue where the plugin did not rewrite `supportedInterfaces[].url` to the Kong Gateway URL. Clients that discovered an agent through Kong Gateway could then call the upstream agent directly instead of routing through Kong Gateway.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a JSON-RPC endpoint whose path ended with `/extendedAgentCard` had its advertised endpoint URL truncated.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where empty arrays in agent cards were re-encoded as empty objects, which failed strict A2A SDK schema validation.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.10": [
     {
       "message": "now rewrites the URL for all `supportedInterfaces` in the agent card.",
