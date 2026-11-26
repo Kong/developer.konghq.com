@@ -60,6 +60,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.9": [
+    {
+      "message": "Fixed an issue where the plugins created a\nnew Kafka producer for each message when `security.certificate_id`\nreferenced a certificate with vault references.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "The options `security.ssl_verify` which control SSL certificate\nverification for Kafka endpoints, are now enabled by default.\n",

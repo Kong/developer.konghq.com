@@ -6,6 +6,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.9": [
+    {
+      "message": "Improved validation of model names and batch IDs used in upstream request paths.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.2": [
     {
       "message": "Fixed an issue where `ai-request-transformer` and `ai-response-tranformer`\nplugins did not work properly with the `ollama` provider.\n",

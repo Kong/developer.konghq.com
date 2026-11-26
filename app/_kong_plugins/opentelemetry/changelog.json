@@ -116,6 +116,48 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.9": [
+    {
+      "message": "Fixed an issue where a WebSocket handshake that never opened a connection drove `kong.websocket.server.active_connections` negative, reported a false duration, and was not counted.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where multi-valued HTTP headers in access logs were exported as numbered attributes instead of an array, which caused Elasticsearch mapping conflicts and dropped records.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the metrics export could become too large for the OTLP receiver to accept (`http: request body too large`) when there were many metric series.\nAdded the `metrics.max_export_batch_size` configuration field, which splits the metrics into multiple export requests of up to that many data points each. If the field is not set, the plugin uses the `OTEL_METRIC_EXPORT_MAX_BATCH_SIZE` environment variable. If neither is set, the plugin exports all metrics in one request, as before.\nA failed metrics export request is now retried only until the next push, which exports newer metrics. A request that could not be exported by then is discarded.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `kong.shared_dict.size` metric reused the same datapoint timestamp across exports, causing monitoring systems to treat the series as stale.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the trace header pointed to a span that was never exported when a plugin such as AWS Lambda ended the request before the balancer ran.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the description of `kong.websocket.handshake.error.count` was ambiguous. It now states that the metric counts only protocol validation failures.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin removed existing metric\nseries when the `otel_metrics` shared dictionary was full. The plugin now\ndrops the new series and keeps the existing ones.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where unchanged metrics kept stale timestamps, which caused Prometheus to reject metrics batches sent through remote write.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Fixed an issue where invalid `x-b3-flags` header values caused 500 responses.",

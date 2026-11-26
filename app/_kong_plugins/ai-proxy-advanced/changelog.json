@@ -524,6 +524,128 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.9": [
+    {
+      "message": "Added support for preserving the Anthropic `max` effort value during cross-format conversion. This feature was added as part of a fix for an issue where Anthropic `output_config.effort` was ignored during cross-format conversion, including Bedrock `additionalModelRequestFields`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Improved validation of model names and batch IDs used in upstream request paths.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `consistent-hashing` balancer algorithm routed requests with the same `hash_on_header` value to different targets when multiple workers were running.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a request body the gateway rebuilt was\nre-encoded in a member order that changed between workers and restarts, causing upstream\nprompt cache misses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where request bodies were re-encoded\nwith a non-deterministic JSON key order. Content-neutral transforms now\nforward the client's original request bytes.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where, after a vault rotated the secrets referenced in a target's `auth` configuration, the target kept using expired credentials until the configuration was reloaded.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a native route that rewrote the request\nbody re-encoded it in a member order that changed between workers and restarts,\ncausing upstream prompt cache misses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where OpenAI Responses API (`/v1/responses`) cache-write tokens were billed at a single rate instead of the rate for their prompt-cache TTL.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where prompt cache token counts and costs were wrong when `llm_format` was `openai`, the default. Cached prompt tokens were dropped from the token count and cost, and cache read and cache write requests were priced the same, so `cache_read_cost` and `cache_write_cost` were not applied. The plugin now maps prompt cache control across the OpenAI, Anthropic, and Amazon Bedrock chat formats. If you rely on the previous token counts or costs in reports or billing, review them before upgrading to this version.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Databricks reasoning was dropped when the upstream returned it as `reasoning_content` instead of content parts.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Gemini 3 models rejected OpenAI-format requests with tool-call history because the converted function calls had no thought signature.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Gemini image generation misattributed modality tokens and omitted cache usage in responses and AI logs.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Gemini service account authentication probed `metadata.google.internal` even when a service account JSON was configured.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `gen_ai.request.max_tokens` attribute was missing from OpenTelemetry spans.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Anthropic streaming finish reasons were not mapped during OpenAI-to-Anthropic conversion.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where requests to Claude models failed because the plugin sent `temperature`, `top_p`, `top_k`, and `seed`, which those models reject.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `gen_ai.system_instructions` OpenTelemetry span attribute contained the system prompt even when `logging.log_payloads` was disabled.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where prompt and cached token counts were lost for Anthropic-compatible streaming providers, such as Baseten, that report prompt usage only in `message_delta`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where an Anthropic `thinking` block (`adaptive`, `enabled`, or\n`disabled`) was always converted into a `reasoning_effort` request parameter and forwarded to the\ntarget model, even when that model did not support reasoning. The plugin now omits the gateway-derived\nvalue for OpenAI, Mistral, and Cohere targets without reasoning support. An explicit\n`reasoning_effort` sent by the client is still forwarded as before.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where unsigned thinking blocks from open-weight Anthropic-compatible models were stripped from replayed request history, causing models to re-reason every turn.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Bedrock streaming through\n`invoke-with-response-stream` reported no cache read/write token counts on\n`bedrock`-format responses and no per-TTL cache-write breakdown, which billed\ncached tokens at the full input rate.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin reused an expired Azure managed identity token, causing intermittent upstream 401 errors.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed excessive memory use when decoding large AWS Bedrock response streams.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where downloading a non-JSONL file through the `llm/v1/files` content endpoint with `logging.log_statistics` enabled truncated the response body. The batch usage parser aborted the `body_filter` phase partway through the download.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added native passthrough support for Vertex AI multimodal embeddings. Introduced new `llm/v1/multimodal-embeddings` route type.\n",
