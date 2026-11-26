@@ -31,8 +31,12 @@ prereqs:
       - example-route
 
 next_steps:
-  - text: Use the Collection Runner in Insomnia
+  - text: Use the Collection Runner in {{ site.insomnia }}
     url: /how-to/use-the-collection-runner/
+  - text: Inspect the plugins that apply to a synced request
+    url: /insomnia/konnect-integration/#plugins-tab
+  - text: Debug requests with {{ site.konnect_short_name }} Debugger in {{ site.insomnia }}
+    url: /insomnia/konnect-integration/#debugger
 breadcrumbs:
   - /insomnia/
 related_resources:
@@ -49,7 +53,7 @@ tldr:
 
 ## Link {{ site.insomnia }} to {{ site.konnect_short_name }}
 
-1. In your workspace, open the **Konnect** tab
+1. In your workspace, click the **Konnect** tab.
 1. In the **Personal Access Token**, paste the PAT
 1. Click **Connect & Sync**
 

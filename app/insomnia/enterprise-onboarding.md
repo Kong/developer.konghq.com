@@ -1,7 +1,7 @@
 ---
-title: Get started with Insomnia Enterprise
+title: Get started with {{ site.insomnia }} Enterprise
 
-description: Learn how to set up your Insomnia Enterprise instance.
+description: Learn how to set up your {{ site.insomnia }} Enterprise instance.
 
 content_type: reference
 layout: reference
@@ -64,37 +64,37 @@ faqs:
       but cannot be modified until reactivated under a supported plan.
   - q: What happens if I downgrade?
     a: |
-      Insomnia supports both **manual** and **automatic** downgrades, depending on subscription and renewal status.
+      {{ site.insomnia }} supports both **manual** and **automatic** downgrades, depending on subscription and renewal status.
       When a paid plan expires without renewal:
       - **Enterprise** downgrades to **Essentials**  
       - **Pro** downgrades to **Essentials**  
       - **Trial** downgrades to the **previous plan**
-  - q: Do I need an activation code to start using Insomnia Enterprise?  
+  - q: Do I need an activation code to start using {{ site.insomnia }} Enterprise?  
     a: |
       Subscriptions that are paid for by credit card are called **Self-serve Enterprise** subscriptions and don't require an activation code.  
       Access is granted automatically once payment is completed.  
     
       If you purchased Enterprise through the **sales team**, you will receive an activation code as part of the onboarding process.
-  - q: How do I know that I have successfully upgraded to Insomnia Enterprise?
+  - q: How do I know that I have successfully upgraded to {{ site.insomnia }} Enterprise?
     a: |
       Look for the **Enterprise** badge in the top-right corner of the app.
 
-      If you don’t see the badge, you're either not part of an Enterprise workspace, or you don't have an **Owner** or **Co-owner** role. If you require support, reach out to **Insomnia Support** at support@insomnia.rest or [https://support.konghq.com/support/s/](https://support.konghq.com/support/s/).
+      If you don’t see the badge, you're either not part of an Enterprise workspace, or you don't have an **Owner** or **Co-owner** role. If you require support, reach out to **{{ site.insomnia }} Support** at support@insomnia.rest or [https://support.konghq.com/support/s/](https://support.konghq.com/support/s/).
     
 ---
 
-If you're new to Insomnia Enterprise, this document will guide you through the full setup of your instance in [**Insomnia Admin**](https://app.insomnia.rest/).
+If you're new to {{ site.insomnia }} Enterprise, this document will guide you through the full setup of your instance in [**{{ site.insomnia }} Admin**](https://app.insomnia.rest/).
 
 {:.decorative}
-> **Start a 14-day trial of Insomnia Enterprise:** Any Owner or Co-owner can start a 14-day trial to evaluate Enterprise features in Insomnia. To activate your trial, from the Insomnia application, click **Start 14 day trial** and then confirm. To learn more about Enterprise features, go to the [Insomnia pricing page](https://insomnia.rest/pricing/).
+> **Start a 14-day trial of {{ site.insomnia }} Enterprise:** Any Owner or Co-owner can start a 14-day trial to evaluate Enterprise features in {{ site.insomnia }}. To activate your trial, from the {{ site.insomnia }} application, click **Start 14 day trial** and then confirm. To learn more about Enterprise features, go to the [{{ site.insomnia }} pricing page](https://insomnia.rest/pricing/).
 
 ## 1. Activate your Enterprise membership
 
-Once you've signed up for the Insomnia Enterprise plan through the [sales team](https://insomnia.rest/pricing/contact), you'll get an activation code. If you're already an **Owner** or **Co-owner** of an upgraded Enterprise workspace, skip this step.
+Once you've signed up for the {{ site.insomnia }} Enterprise plan through the [sales team](https://insomnia.rest/pricing/contact), you'll get an activation code. If you're already an **Owner** or **Co-owner** of an upgraded Enterprise workspace, skip this step.
 
 To activate the code, complete the following steps:
 
-1. From the [Insomnia Admin](https://app.insomnia.rest/app/home) console, click [**Plan & billing**](https://app.insomnia.rest/app/billing) in the sidebar.
+1. From the [{{ site.insomnia }} Admin](https://app.insomnia.rest/app/home) console, click [**Plan & billing**](https://app.insomnia.rest/app/billing) in the sidebar.
 1. Click **Enter Activation Code**.
 1. In the **Activation code** field, enter your activation code.
    
@@ -108,7 +108,7 @@ By default, your account is created with an organization named **Personal Worksp
 You can invite users to that organization, but you can also create other organizations to manage access to projects.
 Let's take the example of [KongAir](https://github.com/Kong/KongAir/tree/main?tab=readme-ov-file#kongair): the airline might have a _Cargo_ organization and a _Passengers_ organization, with different projects accessible to different users and teams.
 
-1. In the Insomnia Admin app, navigate to your Insomnia account dropdown menu and click [**Your organizations**](https://app.insomnia.rest/app/dashboard/organizations).
+1. In the {{ site.insomnia }} Admin app, navigate to your {{ site.insomnia }} account dropdown menu and click [**Your organizations**](https://app.insomnia.rest/app/dashboard/organizations).
 1. Click **New organization**.
 1. In the **Organization name** field, enter a name for your organization.
 1. Click **Create organization**.
@@ -126,7 +126,7 @@ Using the [KongAir](https://github.com/Kong/KongAir/tree/main?tab=readme-ov-file
 > You can either create teams manually, or through your [SCIM](#7-enable-scim) provider. Manually created teams can be synchronized with SCIM teams.
 
 To create teams manually:
-1. In your Insomnia account dropdown menu, click **Enterprise Controls**.
+1. Go to [{{ site.insomnia }} Admin](https://app.insomnia.rest/app/home).
 1. In the sidebar, click [**Teams**](https://app.insomnia.rest/app/enterprise/team).
 1. Click **Create Team**. 
 1. In the **Team name** field, enter a team name.
@@ -152,7 +152,7 @@ New users can be invited to your Enterprise instance in three different ways:
 
 ### Invite a user to an organization
 
-1. In your Insomnia account dropdown menu, click [**Your organizations**](https://app.insomnia.rest/app/dashboard/organizations).
+1. In your {{ site.insomnia }} account dropdown menu, click [**Your organizations**](https://app.insomnia.rest/app/dashboard/organizations).
 1. Click the org that you want to invite users to.
 1. In the **Invite** field, enter the users' email addresses.
 1. Click **Invite**.
@@ -162,7 +162,7 @@ Once the users accept the invitation, they will have access to the content in th
 
 ### Invite a user to a team
 
-1. In your Insomnia account dropdown menu, click **Enterprise Controls**.
+1. Go to [{{ site.insomnia }} Admin](https://app.insomnia.rest/app/home).
 1. In the sidebar, click [**Teams**](https://app.insomnia.rest/app/enterprise/team).
 1. Click the team you want to invite users to.
 1. In the **Invite new members** field, enter the users' email addresses.
@@ -175,7 +175,7 @@ Once the users accept the invitation, they will have access to the organizations
 
 Adding a domain allows you to automatically manage users with email addresses in that domain. It's also a prerequisite for SSO and SCIM.
 
-1. In your Insomnia account dropdown menu, click **Enterprise Controls**.
+1. Go to [{{ site.insomnia }} Admin](https://app.insomnia.rest/app/home).
 1. In the sidebar, click [**Domains**](https://app.insomnia.rest/app/enterprise/domains/list).
 1. Click **New Domain**.
 1. From the **Verify using** settings, select how you want to verify your domain:
@@ -183,7 +183,7 @@ Adding a domain allows you to automatically manage users with email addresses in
   * **Root domain verification record**: You can this option to reuse the existing verification record of a root domain to verify a subdomain. For example, if you have already verified the `example.com` domain, you can use this option to verify `app.example.com` without having to add a new record to your DNS.
 1. In the **Domain** field, enter your domain.
 1. Click **Create Domain**. If you selected **Root domain verification record**, the domain will be verified automatically.
-1. If you selected **Unique verification record**, Insomnia provides a TXT record that you'll need to add to your DNS tool to verify the domain.
+1. If you selected **Unique verification record**, {{ site.insomnia }} provides a TXT record that you'll need to add to your DNS tool to verify the domain.
 Once you've added the record to your DNS tool, click the checkbox to confirm that it's done, and click **Verify Domain**.
 
 Once your domain is created, you can click it to access its settings. For more details, see [Add domains](/insomnia/enterprise-account-management/#add-domains).
@@ -192,7 +192,7 @@ Once your domain is created, you can click it to access its settings. For more d
 
 Once your domain is verified, you can set up SSO with SAML 2.0 or OIDC with your preferred provider.
 
-See our how-to guides to learn how to configure SSO for Insomnia with:
+See our how-to guides to learn how to configure SSO for {{ site.insomnia }} with:
 * [Okta SAML](/how-to/okta-saml-sso-insomnia/)
 * [Okta OpenID Connect](/how-to/okta-oidc-sso-insomnia/)
 * [Azure SAML](/how-to/azure-saml-sso-insomnia/)
@@ -201,27 +201,28 @@ See our how-to guides to learn how to configure SSO for Insomnia with:
 
 Once you've configured SSO, you can use the same provider to set up SCIM.
 
-See our how-to guides to learn how to configure SCIM for Insomnia with:
+See our how-to guides to learn how to configure SCIM for {{ site.insomnia }} with:
 * [Okta SAML](/how-to/configure-scim-for-insomnia-with-okta/)
 * [Azure SAML](/how-to/configure-scim-for-insomnia-with-azure/)
 
 ## 8. Configure storage control
 
-Insomnia allows you to have control over the [storage options](/insomnia/storage/) used in your instance. You can define whether users can use [Cloud Sync](/insomnia/storage/#cloud-sync), [Local Vault](/insomnia/storage/#local-vault), or [Git Sync](/insomnia/storage/#git-sync) storage, or a combination of these.
+{{ site.insomnia }} allows you to have control over the [storage options](/insomnia/storage/) used in your instance. You can define whether users can use [Cloud Sync](/insomnia/storage/#cloud-sync), [Local Vault](/insomnia/storage/#local-vault), or [Git Sync](/insomnia/storage/#git-sync) storage, or a combination of these.
 
 This allows you to completely control where your proprietary code and data are, and what servers they touch.
 
-1. In your Insomnia account dropdown menu, click **Enterprise Controls**.
-1. In the sidebar, click [**Storage**](https://app.insomnia.rest/app/enterprise/storage).
-1. Click the **Edit** icon for your personal workspaces and organizations.
+1. Go to [{{ site.insomnia }} Admin](https://app.insomnia.rest/app/home).
+1. In the sidebar, click [**Policies**](https://app.insomnia.rest/app/enterprise/policies).
+1. Click the [**Project Storage**](https://app.insomnia.rest/app/enterprise/policies/storage) tab.
+1. Click the edit icon for your personal workspaces and organizations.
 1. Select the storage options you want to allow.
 1. Click **Save**.
 
 ## 9. Import content
 
-Now that your Insomnia Enterprise instance is configured, you and your collaborators can start using the Insomnia app to design and test your APIs. If you are migrating from another tool, such as Postman, you can import your content:
+Now that your {{ site.insomnia }} Enterprise instance is configured, you and your collaborators can start using the {{ site.insomnia }} app to design and test your APIs. If you are migrating from another tool, such as Postman, you can import your content:
 
-* [Import and export reference for Insomnia](/insomnia/import-export/)
-* [Migrate collections and environments from Postman to Insomnia](/how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/)
-* [Import content from Postman to multiple Insomnia projects](/how-to/import-content-from-postman-to-multiple-insomnia-projects/)
-* [Import an API specification into an API Collection in Insomnia](/how-to/import-an-api-spec/)
+* [Import and export reference for {{ site.insomnia }}](/insomnia/import-export/)
+* [Migrate collections and environments from Postman to {{ site.insomnia }}](/how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/)
+* [Import content from Postman to multiple {{ site.insomnia }} projects](/how-to/import-content-from-postman-to-multiple-insomnia-projects/)
+* [Import an API specification into an API Collection in {{ site.insomnia }}](/how-to/import-an-api-spec/)
