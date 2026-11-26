@@ -346,6 +346,7 @@ headmatter
 healthcheck
 healthchecks
 helpdesk
+hermes
 hostname
 hostnames
 hotfix
@@ -413,6 +414,7 @@ istioctl
 item_title
 Jamf
 jaq
+Jamf
 Javascript
 jetstack
 Jira
@@ -470,6 +472,7 @@ konnect
 KPI
 KPIs
 KRaft
+KWallet
 kscheme
 ksearch
 kubeconfig
@@ -483,6 +486,7 @@ kumactl
 kustomization
 kustomizations
 kustomize
+KWallet
 keystores
 kv
 KWallet
@@ -550,6 +554,7 @@ misconfiguration
 misconfigurations
 misconfigured
 misrouted
+mkcert
 mockbin
 modelarmor
 moesif
@@ -609,11 +614,13 @@ oidc
 okta
 Okta's
 ollama
+omp
 onboard
 onboarding
 onwards
 opa
 openai
+opencode
 openid
 openresty
 openshift
@@ -836,6 +843,8 @@ subtrees
 sudo
 Supabase
 superset
+supersedence
+Supersedence
 supports_konnect
 svg
 svgs
