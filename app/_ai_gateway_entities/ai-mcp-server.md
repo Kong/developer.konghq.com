@@ -182,6 +182,8 @@ AI MCP Servers can be created and managed through the:
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/mcp-servers`
 * [kongctl](/kongctl/)
 
+{% include md/ai-gateway/v2/view-declarative-config.md entity="AI MCP Server" %}
+
 For configuration examples and step-by-step setup instructions, see [Set up an AI MCP Server](#set-up-an-ai-mcp-server).
 
 After you've created an MCP server, you can [add it to {{site.konnect_catalog}}](/catalog/mcp-servers/).

@@ -103,6 +103,8 @@ AI Models can be created and managed through:
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/models`
 * [kongctl](/kongctl/)
 
+{% include md/ai-gateway/v2/view-declarative-config.md entity="AI Model" %}
+
 For configuration examples and step-by-step setup instructions, see [Set up an AI Model](#set-up-an-ai-model).
 
 ## How it works

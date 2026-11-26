@@ -121,6 +121,8 @@ AI Agents can be created and managed through:
 * {{site.ai_gateway}} API: `/v1/ai-gateways/{aiGatewayId}/agents`
 * [kongctl](/kongctl/)
 
+{% include md/ai-gateway/v2/view-declarative-config.md entity="AI Agent" %}
+
 For configuration examples and step-by-step setup instructions, see the following [Set up an AI Agent](#set-up-an-ai-agent) section.
 
 ## AI Agent types
