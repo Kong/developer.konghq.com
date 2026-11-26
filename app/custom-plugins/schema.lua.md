@@ -387,13 +387,13 @@ A tier on a `record`, `array`, `set`, or `map` also applies to everything inside
 {% navtab "Konnect API" %}
 To check the tiers of bundled plugin fields, get the schema of any plugin from the {{site.konnect_short_name}} Control Plane Config API with the `/schemas/plugins` endpoint:
 ```sh
-curl -s "$KONNECT_CONTROL_PLANE_URL/v2/control-planes/{controlPlaneId}/core-entities/schemas/plugins/{pluginName}"
+curl -s "$KONNECT_CONTROL_PLANE_URL/v2/control-planes/{controlPlaneId}/core-entities/schemas/plugins/{pluginName}" \
   -H "Authorization: Bearer $KONNECT_TOKEN"
 ```
 
 To check a custom plugin schema, use the `/plugin-schemas` endpoint:
 ```sh
-curl -s "$KONNECT_CONTROL_PLANE_URL/v2/control-planes/{controlPlaneId}/core-entities/plugin-schemas/{pluginName}"
+curl -s "$KONNECT_CONTROL_PLANE_URL/v2/control-planes/{controlPlaneId}/core-entities/plugin-schemas/{pluginName}" \
   -H "Authorization: Bearer $KONNECT_TOKEN"
 ```
 
@@ -536,7 +536,7 @@ end
 return CustomHandler
 ```
 
-The above example uses the [kong.log.inspect](/gateway/pdk/reference/kong.log/#kong-log-inspect)
+This example uses the [kong.log.inspect](/gateway/pdk/reference/kong.log/#kong-log-inspect)
 function of the [Plugin Development Kit](/gateway/pdk/reference/) to print out those values to the {{site.base_gateway}}
 logs.
 
