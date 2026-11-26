@@ -34,7 +34,7 @@ related_resources:
 ---
 
 Kong runs automated compatibility tests on each new {{ site.claude_code }} release through {{site.ai_gateway}}.
-These tests verify that {{site.ai_gateway}} forwards {{ site.claude_code }} requests to model providers without breaking tool calls, subagents, or required protocol fields.
+These tests verify that {{site.ai_gateway}} forwards {{ site.claude_code }} requests to model providers without breaking tool calls, sub-agents, or required protocol fields.
 
 When a release fails in a tested mode, Kong lists the affected release, what breaks, and how to avoid it in [{{ site.claude_code }} release known issues](/ai-gateway/claude-code-known-issues/).
 
@@ -66,7 +66,7 @@ The gateway setup follows [Route Claude CLI traffic through {{site.ai_gateway}} 
 Anthropic's [gateway compatibility guide](https://code.claude.com/docs/en/llm-gateway-protocol) lists headers and body fields that a gateway forwards unchanged.
 In each tested provider mode, the tests verify the following behaviors:
 
-* **Tool calls and subagents**: {{ site.claude_code }} completes a session that includes a tool call and a subagent.
+* **Tool calls and sub-agents**: {{ site.claude_code }} completes a session that includes a tool call and a sub-agent.
 * **Header forwarding**: {{site.ai_gateway}} forwards the `anthropic-version` and `anthropic-beta` request headers unchanged.
   In the Claude Platform on AWS mode, the tests also verify that {{site.ai_gateway}} forwards the `anthropic-workspace-id` header unchanged.
 * **Request body forwarding**: {{site.ai_gateway}} forwards the `system`, `messages`, `tools`, `thinking`, `context_management`, and `output_config` request body fields unchanged.
