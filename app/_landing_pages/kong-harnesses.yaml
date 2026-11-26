@@ -33,7 +33,9 @@ rows:
           config: |
             You should use kong-harnesses if one or more of the following is true:
             - You want your coding agent to send every model request through {{site.ai_gateway}} with your company sign-in
+            - You want the gateway to know which developer sent each request, instead of seeing one shared key
             - You're an administrator who sets up the sign-in once for all developers
+            - You want the agent CLI settings written for you, instead of edited by hand on each computer
             - You manage many computers and want them to use a tested agent version and model
             - You want checks that show why a sign-in or a setup fails
 

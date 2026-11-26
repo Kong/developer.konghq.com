@@ -40,6 +40,29 @@ related_resources:
 It renews their access tokens with a refresh token, so they don't sign in again each time.
 This page lists the settings that the client in your identity provider needs, and the profile flags that carry them.
 
+The following diagram shows the requests that your identity provider receives.
+
+{% mermaid %}
+sequenceDiagram
+  actor D as Developer
+  participant K as kong-harnesses
+  participant I as Identity provider
+  participant A as Agent CLI
+  participant G as {{site.ai_gateway}}
+  D->>K: login
+  K->>I: Open the browser with the authorization request
+  D->>I: Sign in and consent
+  I->>K: Redirect to the callback with a code
+  K->>I: Exchange the code at the token endpoint
+  I-->>K: Access, refresh and ID tokens
+  Note over K: Saves the sign-in in the secret store
+  A->>K: Ask for a token
+  K->>I: Refresh token grant, when the access token is close to expiring
+  I-->>K: New access token
+  K-->>A: Access token
+  A->>G: Request with the access token
+{% endmermaid %}
+
 {{site.kong_harnesses}} is tested with Okta.
 For the Okta steps, see the prerequisites of [Set up {{ site.claude_code }} with kong-harnesses](/ai-gateway/set-up-claude-code-with-kong-harnesses/).
 For Auth0, Keycloak, Microsoft Entra ID and PingFederate, see [Identity provider settings](/kong-harnesses/identity-provider/providers/).
@@ -113,6 +136,8 @@ Give the client the refresh token grant type and the `offline_access` scope.
 When you set `--scope`, your list replaces the defaults, needs `openid` and `offline_access`, and has at most 16 scopes.
 
 When the identity provider refuses a refresh token with `invalid_grant`, the developer must run [`kong-harnesses login`](/kong-harnesses/login/) again.
+To end a developer's access, remove them in the identity provider.
+A refused renewal ends the sign-in, and the developer keeps access only until the current access token expires.
 
 ## Gateway audience
 
