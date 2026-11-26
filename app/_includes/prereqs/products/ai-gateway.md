@@ -1,4 +1,6 @@
+<!--vale off-->
 {% assign summary='{{site.ai_gateway}} running' %}
+<!--vale on-->
 {% assign env_variables = include.prereqs['konnect'] %}
 {% capture details_content %}
 {% capture vanilla_snippet %}
