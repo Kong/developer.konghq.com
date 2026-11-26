@@ -20,6 +20,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.19": [
+    {
+      "message": "Fixed an issue where DeGraphQL route changes applied to only one worker process, and a failed route load left the router with a partial set of routes.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where the degraphql handle type Boolean was not being assigned correctly in the degraphql router.",

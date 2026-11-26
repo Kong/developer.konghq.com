@@ -41,6 +41,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.19": [
+    {
+      "message": "Fixed excessive memory use when decoding large AWS Bedrock response streams.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed OpenAI Responses API (`llm/v1/responses`) support. Cache hits returned a malformed stream that clients rejected with `stream closed before response.completed`, and different prompts could collapse to the same cache entry. Responses API answers are now captured and replayed in the Responses API wire format, and the prompt is embedded as plain text instead of the JSON `input_text` envelope.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where cost savings attributes `ai_proxy_cache_cost_savings` were not properly calculated when cache hits.\n",

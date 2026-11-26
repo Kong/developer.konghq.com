@@ -16,6 +16,23 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.19": [
+    {
+      "message": "Fixed an issue where a missing CA certificate aborted the TLS handshake. The handshake now completes without a client certificate request until the CA exists.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a missing CA certificate stopped the build\nof the CA DN list. The gateway then did not request a client certificate at all,\neven for SNIs that did not use that CA certificate. The plugin now skips the missing CA\ncertificate and uses the remaining ones.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the CA DN list sent with `send_ca_dn` did\nnot follow changes to CA certificates. A CA certificate created after the\nplugin never reached the list, so the client did not send its certificate.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support for the `tls_certificate_verify` global option.\nWhen this option is enabled, the plugin's `ssl_verify` flag\ncannot be disabled.\n",

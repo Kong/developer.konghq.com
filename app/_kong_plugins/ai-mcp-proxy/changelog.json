@@ -191,6 +191,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.19": [
+    {
+      "message": "Fixed an issue where arrays of RPC messages were not blocked in `passthrough-listener` mode. Arrays are outside the MCP specification and cause unexpected behavior in MCP plugins. If your clients send JSON-RPC batch arrays in `passthrough-listener` mode, update them to send one message per request before upgrading to this version.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue with path parameter validation in tools.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added support for MCP ACL control.\n",
