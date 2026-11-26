@@ -212,6 +212,15 @@ To match on a metadata value instead, compare the key to a value:
 principal.metadata.department == "finance"
 ```
 
+{:.warning}
+> If a metadata key contains characters other than letters, digits, and underscores, such as a hyphen, use brackets instead of a dot: `principal.metadata["cost-center"] == "42"`.
+
+The syntax follows the [CEL expressions reference](/gateway/plugins/expressions/#expression-syntax), except that `default()` isn't supported. To guard against a metadata key that might be missing, use `has()` instead:
+
+```
+has(principal.metadata.team) && principal.metadata.team == "a"
+```
+
 See [Add a selector to a credential](#add-a-selector-to-a-credential).
 
 {{site.identity}} rejects the following expressions when you create or update the credential:
@@ -235,7 +244,7 @@ When the {{site.ai_gateway_name}} requests a credential, Token Vault evaluates t
 
 If no selector matches, it releases the default credential. If no selector matches and the provider has no default credential, Token Vault returns a `404`. Token Vault skips `pending` shared OAuth credentials, so a selector can't match until an admin completes the enrollment.
 
-A metadata key that the principal doesn't have counts as no match, not as an error. For example:
+A metadata key that the principal doesn't have counts as no match, not as an error. For example, the following failures to evaluate would result in different results:
 
 * **`principal.metadata.department == "finance"` doesn't match a principal without a `department` key:** Token Vault moves on to the next credential.
 * **A selector fails to evaluate for any other reason:** The request fails instead of falling back to the next credential.
