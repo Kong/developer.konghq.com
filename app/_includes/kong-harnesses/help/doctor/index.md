@@ -12,20 +12,18 @@ not change any settings. It also checks that:
 
   - the gateway has a route for each agent CLI that is set up, and accepts
     your sign-in there (doctor sends an empty request to find out)
-  - for OpenCode, npm can install the gateway plugin (doctor asks the npm
-    registry with your own npm token), and the plugin is in OpenCode's cache
   - for Claude Code, /model offers only the models that the gateway serves,
     the selected model is one of them, and no setting still sends Claude
     Code to Anthropic
+  - on Windows, when kong-harnesses runs from Program Files, only
+    administrators can change it and the folders above it
 
 -o json prints the report as one JSON document with a schema_version and one
 entry for each agent CLI. -o yaml prints the same document as YAML.
 
 --report prints a JSON report to attach to a support ticket. It adds the
 kong-harnesses version and the platform. For Claude Code it adds the
-settings, the shell variables and the Claude Code version. For Codex,
-OpenCode, omp, Hermes and pi it adds only the path of the config file and
-whether that file exists. Each value that can hold a secret is replaced with <redacted>,
+settings, the shell variables and the Claude Code version. Each value that can hold a secret is replaced with <redacted>,
 so you can attach the report as it is.
 
 --inference sends one small model request through Claude Code's route, so
@@ -54,7 +52,7 @@ Flags:
       --report            print a JSON report to attach to a support ticket
 
 Global Flags:
-      --client client     the one agent client to work on: claude-code, codex, opencode, omp, hermes, or pi
+      --client client     the one agent client to work on: claude-code
       --log-file path     write the debug log to this path instead of stderr
       --log-level level   the log level: trace, debug, info, warn, error; debug and trace also write the debug log (default error)
 ```

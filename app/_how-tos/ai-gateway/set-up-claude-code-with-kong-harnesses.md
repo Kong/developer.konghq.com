@@ -175,9 +175,10 @@ Use `127.0.0.1` instead of `localhost`, because `localhost` depends on the syste
 {:.info}
 > kong-harnesses accepts a plain `http://` gateway origin only for `localhost` or a loopback address, such as `127.0.0.1` or `[::1]`.
 > For every other gateway host, use an `https://` origin with a certificate that the operating system trusts.
-> The issuer and its endpoints always need `https://`.{% comment %} Hidden until the other harnesses ship (December fast follow).
-> Only {{ site.claude_code }}, omp, and pi work with an `http://` gateway.
-> Codex, OpenCode, and Hermes Agent need an `https://` gateway.{% endcomment %}
+> The issuer and its endpoints always need `https://`.{% comment %} Hidden until the other agent CLIs ship (December fast follow).
+> The omp and pi agent CLIs also work with an `http://` gateway on this computer.
+> Codex, OpenCode and Hermes need an `https://` gateway.
+> They send the sign-in through proxy settings that kong-harnesses can't check, so kong-harnesses leaves them out on an `http://` gateway.{% endcomment %}
 > See [Plain HTTP gateways](/kong-harnesses/profile-file/#plain-http-gateways) for the client rules.
 
 {:.warning}

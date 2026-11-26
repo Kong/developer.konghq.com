@@ -346,6 +346,7 @@ headmatter
 healthcheck
 healthchecks
 helpdesk
+hermes
 hostname
 hostnames
 hotfix
@@ -398,6 +399,7 @@ inlineString
 inso
 Instana
 instrumentations
+Intune
 invalidation
 invalidations
 involvedObject
@@ -411,6 +413,7 @@ Istio's
 istioctl
 item_title
 jaq
+Jamf
 Javascript
 jetstack
 Jira
@@ -468,6 +471,7 @@ konnect
 KPI
 KPIs
 KRaft
+KWallet
 kscheme
 ksearch
 kubeconfig
@@ -481,6 +485,7 @@ kumactl
 kustomization
 kustomizations
 kustomize
+KWallet
 keystores
 kv
 Lakera
@@ -547,6 +552,7 @@ misconfiguration
 misconfigurations
 misconfigured
 misrouted
+mkcert
 mockbin
 modelarmor
 moesif
@@ -606,11 +612,13 @@ oidc
 okta
 Okta's
 ollama
+omp
 onboard
 onboarding
 onwards
 opa
 openai
+opencode
 openid
 openresty
 openshift
@@ -832,6 +840,8 @@ subtrees
 sudo
 Supabase
 superset
+supersedence
+Supersedence
 supports_konnect
 svg
 svgs

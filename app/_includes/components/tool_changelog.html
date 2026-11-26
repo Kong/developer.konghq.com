@@ -1,0 +1,18 @@
+{% for version in changelog.versions %}
+{% assign _version_slug = version.number | slugify %}
+<h2 id="{{ _version_slug }}">{{ version.number }}</h2>
+<p class="text-sm"><strong>Release date</strong> {{ version.release_date }}</p>
+
+{% for type in version.entries_by_type %}
+{% assign _type_slug = type[0] | slugify %}{% assign _h3_id = _version_slug | append: "-" | append: _type_slug %}{% capture _type_text %}{{ type[0] | capitalize | titleize }}{% endcapture %}
+<h3 id="{{ _h3_id }}">{{ _type_text }}</h3>
+
+<ul>
+{% for entry in type[1] %}
+<li>{{ entry.message | rstrip | markdownify }}</li>
+{% endfor %}
+</ul>
+
+{% endfor %}
+
+{% endfor %}
