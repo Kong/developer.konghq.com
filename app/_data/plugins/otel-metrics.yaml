@@ -9,6 +9,7 @@ metrics:
       - kong.auth.consumer.name
       - kong.auth.principal.id
       - kong.auth.principal.display_name
+      - kong.auth.credential.id
       - kong.response.source
       - kong.workspace.name
       - http.request.method
@@ -47,6 +48,7 @@ metrics:
       - kong.auth.consumer.name
       - kong.auth.principal.id
       - kong.auth.principal.display_name
+      - kong.auth.credential.id
       - kong.workspace.name
   - name: http.server.response.size
     description: Total size of the HTTP response sent back to the client in bytes.
@@ -58,6 +60,7 @@ metrics:
       - kong.auth.consumer.name
       - kong.auth.principal.id
       - kong.auth.principal.display_name
+      - kong.auth.credential.id
       - kong.workspace.name
   - name: stream.server.session.count
     min_version: "3.16"
@@ -250,7 +253,7 @@ metrics:
       - kong.auth.consumer.name
   - name: kong.websocket.handshake.error.count
     min_version: "3.14"
-    description: Number of errors seen during the WebSocket handshake.
+    description: Number of errors seen during the WebSocket protocol upgrade validation, such as an invalid HTTP method or missing or malformed upgrade headers.
     unit: "{error}"
     type: Sum
     attributes:
@@ -625,6 +628,67 @@ metrics:
       - kong.entitlement_enforcement.decision
       - kong.entitlement_enforcement.reason
       - kong.entitlement_enforcement.feature_key
+  - name: kong.circuit_breaker.state
+    min_version: "3.17"
+    description: Circuit status. A value of 1 means the circuit is in this state, and 0 means it is not.
+    unit: "1"
+    type: Gauge
+    attributes:
+      - kong.circuit_breaker.circuit
+      - kong.plugin.id
+      - kong.service.name
+      - kong.route.name
+      - kong.circuit_breaker.state
+  - name: kong.circuit_breaker.policy.failure
+    min_version: "3.17"
+    description: Number of requests that counted as a policy failure.
+    unit: "{request}"
+    type: Sum
+    attributes:
+      - kong.circuit_breaker.circuit
+      - kong.plugin.id
+      - kong.service.name
+      - kong.route.name
+  - name: kong.circuit_breaker.latency.violation
+    min_version: "3.17"
+    description: Number of requests that exceeded the latency threshold.
+    unit: "{request}"
+    type: Sum
+    attributes:
+      - kong.circuit_breaker.circuit
+      - kong.plugin.id
+      - kong.service.name
+      - kong.route.name
+  - name: kong.circuit_breaker.open
+    min_version: "3.17"
+    description: Number of times a circuit opened.
+    unit: "{event}"
+    type: Sum
+    attributes:
+      - kong.circuit_breaker.circuit
+      - kong.plugin.id
+      - kong.service.name
+      - kong.route.name
+  - name: kong.circuit_breaker.recovery
+    min_version: "3.17"
+    description: Number of times a circuit returned to closed.
+    unit: "{event}"
+    type: Sum
+    attributes:
+      - kong.circuit_breaker.circuit
+      - kong.plugin.id
+      - kong.service.name
+      - kong.route.name
+  - name: kong.circuit_breaker.request.rejected
+    min_version: "3.17"
+    description: Number of requests rejected while a circuit was open or the probe sample was full.
+    unit: "{request}"
+    type: Sum
+    attributes:
+      - kong.circuit_breaker.circuit
+      - kong.plugin.id
+      - kong.service.name
+      - kong.route.name
 
 access_logs:
   - client.address
@@ -701,11 +765,22 @@ attributes:
   kong.auth.consumer.name: Name of the authenticated Consumer.
   kong.auth.principal.id: "ID of the authenticated [Principal](/identity/principals/). Only set when {{site.identity}} has authenticated a Principal for the request."
   kong.auth.principal.display_name: "Display name of the authenticated [Principal](/identity/principals/). Only set when a display name has been defined for the Principal."
+  kong.auth.credential.id: "ID of the authenticated credential. Only set when `metrics.enable_credential_attribute` is enabled and the request has an authenticated credential. Each worker records at most [`opentelemetry_metrics_credential_attr_limit`](/gateway/configuration/#opentelemetry-metrics-credential-attr-limit) distinct values, and omits the attribute for any further values."
   kong.response.source: |
     Origin of the current response. Possible values:
       - `upstream` if the response originated by successfully contacting the upstream service
       - `kong` otherwise
   kong.workspace.name: Name of the Workspace.
+  kong.circuit_breaker.circuit: |
+    Type of circuit. Possible values:
+      - `policy`
+      - `latency`
+  kong.circuit_breaker.state: |
+    State of the circuit. Possible values:
+      - `closed`
+      - `open`
+      - `half_open`
+  kong.plugin.id: ID of the plugin instance.
   http.request.method: Method used in the HTTP request.
   kong.shared_dict.name: Name of the shared dict.
   kong.subsystem: |
