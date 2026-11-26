@@ -195,26 +195,37 @@ Selectors release different shared credentials to different principals, for exam
 
 `selector` is a Common Expression Language (CEL) expression (up to 1,024 characters). The expression can read these principal fields:
 
-* `principal.id`
-* `principal.display_name`
-* `principal.groups`
-* `principal.metadata`
+* `principal.id`: The principal's ID, as a string.
+* `principal.display_name`: The principal's display name, as a string.
+* `principal.groups`: A list of the groups the principal belongs to, directly or through a nested team. Each item is an object with an `id` key and a `type` key (`group` or `team`).
+* `principal.metadata`: A map of the principal's metadata, including metadata it inherits.
 
-For example, to share credentials with a group whose ID is `7b0c9e1a-3f4d-4e2b-9a56-8d1c2f6e4b73`, you write the following CEL expression:
+Because each item in `principal.groups` is an object, match a group with `exists()` on its `id`. For example, to share credentials with a group whose ID is `7b0c9e1a-3f4d-4e2b-9a56-8d1c2f6e4b73`, you write the following CEL expression:
 
 ```
-"7b0c9e1a-3f4d-4e2b-9a56-8d1c2f6e4b73" in principal.groups
+principal.groups.exists(g, g.id == "7b0c9e1a-3f4d-4e2b-9a56-8d1c2f6e4b73")
+```
+
+To match on a metadata value instead, compare the key to a value:
+
+```
+principal.metadata.department == "finance"
 ```
 
 See [Add a selector to a credential](#add-a-selector-to-a-credential).
 
-{{site.identity}} rejects a malformed expression, or one that references an unknown field, when you create or update the credential.
+{{site.identity}} rejects the following expressions when you create or update the credential:
+
+* A malformed expression.
+* An expression that references an unknown field.
+* An expression that doesn't evaluate to a boolean. For example, `principal.metadata.department` alone is rejected, but `principal.metadata.department == "finance"` is accepted.
+* An expression that compares a group directly, such as `"<group-id>" in principal.groups`. Use the `exists()` form instead.
 
 ### Priority
 
 `priority` is required with a selector, and not allowed without one. Each priority must be unique on the provider, otherwise the request returns a `409`. You set `priority` with a whole number of `0` or more.
 
-A credential without `priority` applies to all principals.
+A credential without a `selector` (and therefore without a `priority`) applies to all principals.
 
 When the {{site.ai_gateway_name}} requests a credential, Token Vault evaluates the selectors in ascending priority order and releases the first match. For example, these credentials would be checked in the following order:
 
@@ -222,7 +233,12 @@ When the {{site.ai_gateway_name}} requests a credential, Token Vault evaluates t
 1. Credential B: selector for team-b, priority 20
 1. Credential C: no selector (the default)
 
-If no selector matches, it releases the default credential. If no selector matches and the provider has no default credential, Token Vault returns a `404`. If a selector fails to evaluate, the request fails instead of falling back to the next credential.
+If no selector matches, it releases the default credential. If no selector matches and the provider has no default credential, Token Vault returns a `404`. Token Vault skips `pending` shared OAuth credentials, so a selector can't match until an admin completes the enrollment.
+
+A metadata key that the principal doesn't have counts as no match, not as an error. For example:
+
+* **`principal.metadata.department == "finance"` doesn't match a principal without a `department` key:** Token Vault moves on to the next credential.
+* **A selector fails to evaluate for any other reason:** The request fails instead of falling back to the next credential.
 
 ## Manage credentials
 
@@ -358,6 +374,7 @@ headers:
   - 'Content-Type: application/json'
 body:
   secret: $NEW_STATIC_SECRET
+  selector: 'principal.groups.exists(g, g.id == "$GROUP_ID")'
   priority: 10
 {% endkonnect_api_request %}
 <!--vale on-->
