@@ -2,7 +2,7 @@
 title: Use {{site.base_gateway}} with a PostgreSQL cluster without a VIP
 permalink: /how-to/use-kong-with-a-postgres-cluster-without-a-vip/
 content_type: how_to
-description: Learn how to list every node of a PostgreSQL cluster in `pg_host` so that {{site.base_gateway}} finds the primary without a virtual IP (VIP) or load balancer.
+description: Set `pg_host` to a list of every node in a PostgreSQL cluster, so that {{site.base_gateway}} finds the primary without a virtual IP (VIP) or load balancer.
 
 products:
   - gateway
@@ -66,7 +66,7 @@ related_resources:
 automated_tests: false
 ---
 
-If your PostgreSQL nodes run in different data centers with no virtual IP (VIP) or load balancer in front of them, a single `pg_host` value can't follow the primary when it moves to a different node.
+If your PostgreSQL nodes run in different data centers without a virtual IP (VIP) or load balancer in front of them, a single `pg_host` value can't follow the primary when it moves to a different node.
 When you list every node in [`pg_host`](/gateway/configuration/#pg-host), {{site.base_gateway}} connects to the node that accepts writes, and follows the primary when it moves.
 You don't need to edit `pg_host` or reload {{site.base_gateway}}.
 
@@ -259,9 +259,6 @@ docker logs kong-gateway 2>&1 | grep "connected to PostgreSQL host"
 
 The output includes a notice for each worker that moved to the new primary, with the node that it used before:
 
-```text
-connected to PostgreSQL host pg-standby1:5432 (previous host: pg-primary:5432)
-```
 
 While the primary is down, the error log can also list the cause for each node that {{site.base_gateway}} tried, for example `pg-primary:5432: connection refused` and `pg-standby2:5432: server is read-only (not the primary)`.
 This is expected until one node accepts writes.
