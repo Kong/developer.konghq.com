@@ -117,7 +117,7 @@ faqs:
 
 ## What is Retrieval Augmented Generation (RAG)?
 
-Retrieval-Augmented Generation (RAG) is a technique that improves the accuracy and relevance of language model responses by enriching prompts with external data at runtime. Instead of relying solely on what the model was trained on, RAG retrieves contextually relevant information—such as documents, support articles, or internal knowledge—from connected data sources like vector databases.
+Retrieval-Augmented Generation (RAG) is a technique that improves the accuracy and relevance of language model responses by enriching prompts with external data at runtime. Instead of relying solely on what the model was trained on, RAG retrieves contextually relevant information, for example documents, support articles, or internal knowledge, from connected data sources like vector databases.
 
 This retrieved context is then automatically injected into the prompt before the model generates a response. RAG is a critical safeguard in specialized or high-stakes applications, where factual accuracy matters. LLMs are prone to hallucinations, plausible-sounding but factually incorrect or fabricated responses. RAG helps mitigate this by grounding the model’s output in real, verifiable data.
 
@@ -211,7 +211,7 @@ This phase runs in real time, taking user input and producing a context-aware re
 1. The system builds a custom prompt by combining the retrieved chunks with the original query.
 1. The LLM generates a contextually accurate response using both the retrieved context and its own internal knowledge.
 
-The diagram below shows how data flows through both phases of the RAG pipeline, from ingestion and embedding to real-time query handling and response generation:
+The following diagram shows how data flows through both phases of the RAG pipeline, from ingestion and embedding to real-time query handling and response generation:
 
 <!-- vale off -->
 {% mermaid %}
