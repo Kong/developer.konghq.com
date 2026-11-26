@@ -39,7 +39,7 @@ prereqs:
   konnect:
     - name: TOKEN_VAULT_PRIVATE_KEY
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"
       position: before
       content: "{% include prereqs/products/konnect-auth-only.md raw=true %}"
       icon_url: /assets/icons/gateway.svg
