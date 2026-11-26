@@ -27,12 +27,6 @@ rows:
                       - [**Codex CLI**](#codex-cli): OpenAI
                       - [**Qwen Code CLI**](#qwen-code-cli): OpenAI and Alibaba Cloud (DashScope)
 
-
-                      {:.info}
-                      > **Current limitations:**
-                      > * Load balancing or failover features currently only work if all providers share the same model identifier.
-                      > * Streaming is not supported when using non-Claude models with the following providers: Azure OpenAI, Google Gemini, and AWS Bedrock. Token usage might be reported as 0, but otherwise functionality is not affected.
-
   - header:
       type: h2
       text: "Claude Code"
@@ -96,6 +90,54 @@ rows:
             description: Use Claude Code with HuggingFace provider
             cta:
               url: /ai-gateway/use-claude-code-with-ai-gateway-huggingface/
+      - blocks:
+        - type: card
+          config:
+            title: Claude Code with Claude subscriptions
+            icon: /assets/icons/anthropic.svg
+            description: Use Claude Code with a Claude subscription and company-paid models
+            cta:
+              url: /ai-gateway/use-claude-subscriptions-with-ai-gateway/
+      - blocks:
+        - type: card
+          config:
+            title: Claude Code with kong-harnesses
+            icon: /assets/icons/third-party/claude.svg
+            description: Use Claude Code with kong-harnesses and an Okta sign-in
+            cta:
+              url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
+  - header:
+      type: h3
+      text: "Claude Code references"
+    columns:
+      - blocks:
+        - type: reference_list
+          config:
+            pages:
+              - /kong-harnesses/claude-code-features-behind-the-gateway/
+              - /kong-harnesses/claude-code-outside-traffic/
+              - /kong-harnesses/claude-code-web-and-slack/
+  - header:
+      type: h3
+      text: "Claude Code release compatibility"
+    column_count: 2
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Claude Code compatibility testing
+            icon: /assets/icons/third-party/claude.svg
+            description: How Kong tests each Claude Code release through {{site.ai_gateway}}, and which provider modes the tests cover
+            cta:
+              url: /ai-gateway/claude-code-compatibility/
+      - blocks:
+        - type: card
+          config:
+            title: Claude Code release known issues
+            icon: /assets/icons/warning.svg
+            description: Claude Code releases that fail in a tested mode, what breaks, and how to avoid it
+            cta:
+              url: /ai-gateway/claude-code-known-issues/
   - header:
       type: h2
       text: "Codex CLI"
@@ -133,6 +175,19 @@ rows:
               icon: /assets/icons/dashscope.svg
               cta:
                 url: /ai-gateway/use-qwen-code-with-ai-gateway-qwen/
+  - header:
+      type: h2
+      text: References
+    columns:
+      - blocks:
+        - type: reference_list
+          config:
+            pages:
+              - /ai-gateway/claude-code-compatibility/
+              - /ai-gateway/claude-code-known-issues/
+              - /kong-harnesses/
+              - /kong-harnesses/setup/
+              - /kong-harnesses/doctor/
   # - header:
   #     type: h3
   #     text: "Gemini CLI"

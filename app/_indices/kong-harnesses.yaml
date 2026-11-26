@@ -1,0 +1,69 @@
+title: kong-harnesses Documentation
+groups:
+  - title: About kong-harnesses
+    sections:
+      - items:
+          - path: /kong-harnesses/
+          - path: /kong-harnesses/install/
+          - path: /kong-harnesses/deploy-with-intune/
+          - path: /kong-harnesses/upgrade-with-intune/
+          - path: /kong-harnesses/remove-kong-harnesses/
+          - path: /kong-harnesses/delete-invalid-profiles-and-leftover-keys/
+          - path: /kong-harnesses/support/
+          - path: /kong-harnesses/changelog/
+
+  - title: Sign In Guides
+    sections:
+      - items:
+          - path: /kong-harnesses/sign-in/
+          - path: /kong-harnesses/sign-in/claude-code/
+          # - path: /kong-harnesses/sign-in/codex/
+          # - path: /kong-harnesses/sign-in/opencode/
+          # - path: /kong-harnesses/sign-in/hermes/
+          # - path: /kong-harnesses/sign-in/omp/
+          # - path: /kong-harnesses/sign-in/pi/
+
+  - title: CLI References
+    sections:
+      - items:
+          - path: /kong-harnesses/commands/
+      - title: Get Started
+        items:
+          - path: /kong-harnesses/setup/
+      - title: Sign In and Out
+        items:
+          - path: /kong-harnesses/sign-in/errors/
+          - path: /kong-harnesses/login/
+          - path: /kong-harnesses/logout/
+      - title: Manage Profiles
+        items:
+          - path: /kong-harnesses/profile/
+          - path: /kong-harnesses/identity-provider/
+          - path: /kong-harnesses/identity-provider/providers/
+          - path: /kong-harnesses/identity-provider/checks/
+          - path: /kong-harnesses/profile/*/**
+          - path: /kong-harnesses/profile-file/
+      - title: Get Access Tokens
+        items:
+          - path: /kong-harnesses/credential/
+          - path: /kong-harnesses/token/
+      - title: View Status
+        items:
+          - path: /kong-harnesses/status/
+          - path: /kong-harnesses/statusline/
+      - title: Refresh Budget Numbers
+        items:
+          - path: /kong-harnesses/budget/
+          - path: /kong-harnesses/budget/*/**
+      - title: Diagnose Problems
+        items:
+          - path: /kong-harnesses/doctor/
+          - path: /kong-harnesses/troubleshooting/
+          - path: /kong-harnesses/errors/
+
+  - title: Claude Code
+    sections:
+      - items:
+          - path: /kong-harnesses/claude-code-features-behind-the-gateway/
+          - path: /kong-harnesses/claude-code-outside-traffic/
+          - path: /kong-harnesses/claude-code-web-and-slack/

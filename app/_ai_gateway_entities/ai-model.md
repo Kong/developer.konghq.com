@@ -413,16 +413,24 @@ To limit which teams or applications can call an AI Model, use the [`access.acls
 
 If your callers are {{site.identity}} principals and you want to manage access rules in {{site.konnect_short_name}} instead of on each AI Model, use the [Access Policy Engine](/ai-gateway/access-policy-engine/). For a comparison, see [Choose between access control options](/ai-gateway/access-policy-engine/#choose-between-access-control-options).
 
-To control how consumers authenticate before their access is evaluated, configure the [`access.auth_strategies`](#schema-aigateway-model-access-identity-providers) array with one or more [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) references. Each AI Model supports one `key-auth` auth strategy and one [`openid-connect`](/ai-gateway/openid-connect/) auth strategy simultaneously.
+To control how consumers authenticate before their access is evaluated, configure the [`access.auth_strategies`](#schema-aigateway-model-access-auth-strategies) array with one or more [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) references. Each AI Model supports one `key-auth` auth strategy and one [`openid-connect`](/ai-gateway/openid-connect/) auth strategy simultaneously.
 
 {:.info}
-> All AI Models in a {{site.ai_gateway}} exposed on the same base path that use OIDC authentication must reference the same `openid-connect` AI Auth Strategy.
+> AI Models in a {{site.ai_gateway}} that use OIDC and have the same route match conditions must reference the same `openid-connect` AI Auth Strategy.
+> To use different `openid-connect` AI Auth Strategies on one base path, add a route rule, such as [`config.route.headers`](#schema-aigateway-model-config-route-headers).
 >
 > For more information, see [OIDC token authentication](/ai-gateway/entities/ai-auth-strategy/#oidc-token-authentication).
 
 ### CEL-based ACLs
 
 {% include md/ai-gateway/v2/cel-acls.md entity="AI Model" anchor="#schema-aigateway-model-access" %}
+
+## Claude Code with developer subscriptions
+
+{{ site.claude_code }} developers who sign in with their own Claude subscription can use the same base URL as developers on company-paid Claude models.
+Each group uses its own set of AI Models and its own `openid-connect` AI Auth Strategy.
+Route header rules on the subscription AI Models keep the two sets apart.
+For the steps, see [Serve Claude subscriptions and company Claude models on one {{site.ai_gateway}} base URL](/ai-gateway/use-claude-subscriptions-with-ai-gateway/).
 
 ## Attach AI Policies
 

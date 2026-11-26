@@ -43,7 +43,7 @@ faqs:
       No, the secret is only shared once when the client is created. Store it securely.
   - q: Can I reuse this auth server for other AI Agents, AI Models, or AI MCP Servers?
     a: |
-      Yes. Create additional scopes and clients under the same auth server, or reference the same `issuer` from multiple `openid-connect` AI Auth Strategies. All AI Models in the same {{site.ai_gateway}} that use OIDC must reference the same AI Auth Strategy, so plan scopes accordingly if you're authenticating multiple entity types with the same auth server.
+      Yes. Create additional scopes and clients under the same auth server, or reference the same `issuer` from multiple `openid-connect` AI Auth Strategies. AI Models that use OIDC and have the same route match conditions must reference the same AI Auth Strategy. To use different `openid-connect` AI Auth Strategies on one base path, add a route rule, such as [`config.route.headers`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-headers). Plan scopes accordingly if you're authenticating multiple entity types with the same auth server.
 ---
 
 ## Create an auth server in {{site.identity}}

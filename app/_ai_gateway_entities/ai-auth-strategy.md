@@ -216,7 +216,9 @@ To map the token to an existing AI Consumer, set `config.consumer_claims` to an 
 `config.cache_tokens_salt` is required for `openid-connect` AI Auth Strategies. It's a string used to generate the cache key for token endpoint request caching; set it to any unique value for this provider instance.
 
 {:.warning}
-> All AI Models in the same {{site.ai_gateway}} that use OIDC authentication must reference the same `openid-connect` AI Auth Strategy. Using different OIDC providers across models in the same {{site.ai_gateway}} is not supported.
+> AI Models that use OIDC and have the same route match conditions must reference the same `openid-connect` AI Auth Strategy.
+> To use different `openid-connect` AI Auth Strategies on one base path, add a route rule, such as [`config.route.headers`](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-route-headers).
+> For an example, see [Serve Claude subscriptions and company Claude models on one {{site.ai_gateway}} base URL](/ai-gateway/use-claude-subscriptions-with-ai-gateway/).
 
 ## Identity mapping
 

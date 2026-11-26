@@ -4,6 +4,7 @@
   "description": "Automation to sync kongctl versions and help text",
   "type": "module",
   "scripts": {
+    "test": "node --test",
     "extract-help": "node extract-help.js",
     "fetch-versions": "node fetch-versions.js"
   },

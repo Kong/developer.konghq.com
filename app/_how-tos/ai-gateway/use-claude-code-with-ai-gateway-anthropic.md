@@ -8,6 +8,8 @@ related_resources:
     url: /ai-gateway/
   - text: Identify AI Consumers on AI Model traffic with {{site.identity}}
     url: /ai-gateway/identify-ai-consumers-with-kong-identity/
+  - text: Set up {{ site.claude_code }} with kong-harnesses
+    url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
 
 description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic
 
@@ -39,6 +41,16 @@ tags:
 tldr:
   q: How do I run Claude CLI through {{site.ai_gateway}}?
   a: Install {{ site.claude_code }}, create an AI Model Provider for Anthropic and an AI Model that targets it, then point {{ site.claude_code }}'s `ANTHROPIC_BASE_URL` at your local {{site.ai_gateway}} endpoint so all LLM requests pass through the gateway for monitoring and control.
+
+faqs:
+  - q: |
+      {% include faqs/claude-code-kong-harnesses-setup.md section='question' %}
+    a: |
+      {% include faqs/claude-code-kong-harnesses-setup.md section='answer' model="my-claude" %}
+  - q: |
+      {% include faqs/claude-code-repository-settings.md section='question' %}
+    a: |
+      {% include faqs/claude-code-repository-settings.md section='answer' %}
 
 ---
 

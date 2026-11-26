@@ -60,6 +60,8 @@ sections:
       - title: "Proxy AI CLI tools through {{site.ai_gateway}}"
         description: Configure {{site.ai_gateway}} to proxy requests from AI command-line tools to LLM providers.
         url: /ai-gateway/ai-clis/
+      - path: /ai-gateway/claude-code-compatibility/
+      - path: /ai-gateway/claude-code-known-issues/
       - path: /ai-gateway/forward-proxy/
       - path: /ai-gateway/semantic-similarity/
       - path: /ai-gateway/conditions/
