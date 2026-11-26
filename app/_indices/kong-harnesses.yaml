@@ -59,5 +59,6 @@ groups:
   - title: Claude Code
     sections:
       - items:
+          - path: /kong-harnesses/claude-code-features-behind-the-gateway/
           - path: /kong-harnesses/claude-code-outside-traffic/
           - path: /kong-harnesses/claude-code-web-and-slack/

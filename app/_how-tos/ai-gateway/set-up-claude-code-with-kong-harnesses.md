@@ -39,6 +39,8 @@ related_resources:
     url: /ai-gateway/use-claude-code-with-ai-gateway-anthropic/
   - text: kong-harnesses setup
     url: /kong-harnesses/setup/
+  - text: "{{ site.claude_code }} features behind the gateway"
+    url: /kong-harnesses/claude-code-features-behind-the-gateway/
   - text: "{{ site.claude_code }} traffic outside {{site.ai_gateway}}"
     url: /kong-harnesses/claude-code-outside-traffic/
   - text: "{{ site.claude_code }} on the web and Claude in Slack"
@@ -280,47 +282,6 @@ kong-harnesses profile activate quickstart --client claude-code
 `profile activate` sends a test request with your sign-in to the gateway, writes the {{ site.claude_code }} settings, and then runs the `doctor` checks.
 Follow each `fix:` line that appears, fix any remaining problems, and run the same command again.
 If `profile activate` asks to install the gateway prices for `/cost`, you can decline, because the install needs administrator rights.
-
-## Features that change behind the gateway
-
-Some {{ site.claude_code }} features need a claude.ai or Anthropic Console account, send data to Anthropic, or behave differently with gateway models.
-To inspect the {{ site.claude_code }} choices in the profile, run:
-
-```sh
-kong-harnesses profile get quickstart
-```
-
-{% table %}
-columns:
-  - title: Feature
-    key: feature
-  - title: Why it changes
-    key: why
-  - title: What you can do
-    key: recover
-rows:
-  - feature: Cost warnings
-    why: They report Anthropic API spend, and a gateway session doesn't incur Anthropic API spend.
-    recover: Nothing to do.
-  - feature: "`/cost` prices"
-    why: "{{ site.claude_code }} prices each model at Anthropic's prices, not at your gateway's prices."
-    recover: >-
-      If the profile or the gateway states prices, `profile activate` asks to install them.
-      The install needs administrator rights, and works only on macOS and Linux.
-      A model without a stated price keeps the price that {{ site.claude_code }} uses by default.
-  - feature: WebSearch on some models
-    why: >-
-      Some models cannot search the web, but answer as if they did.
-      When the gateway or the profile names such a model, WebSearch says that no search ran.
-    recover: Switch to a Claude model with `/model` when you need a web search.
-{% endtable %}
-
-A profile also controls features that contact Anthropic or other hosts outside the gateway, including claude.ai connectors, fast mode, `/bug`, `/feedback`, the feedback survey, automatic updates, the WebFetch domain check, usage metrics, feature flags, and automatic install of Anthropic's plugin marketplace.
-[{{ site.claude_code }} traffic outside {{site.ai_gateway}}](/kong-harnesses/claude-code-outside-traffic/) lists each host that these features contact, what changes when they are off, and how to change them.
-[{{ site.claude_code }} on the web and Claude in Slack](/kong-harnesses/claude-code-web-and-slack/) explains how to turn off Claude products that run sessions outside the developer's computer, without the gateway.
-The profile and the {{site.ai_gateway}} route decide whether the advisor tool and tool search of {{ site.claude_code }} are on.
-{{ site.claude_code }} itself hides `/usage-credits`, organization memory sync and Remote Control, because they need a claude.ai sign-in or a direct connection to Anthropic.
-The Artifact tool works only in the cases that [Artifact availability](/kong-harnesses/claude-code-outside-traffic/#artifact-availability) lists.
 
 ## Validate
 

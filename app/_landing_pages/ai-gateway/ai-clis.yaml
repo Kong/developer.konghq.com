@@ -27,12 +27,6 @@ rows:
                       - [**Codex CLI**](#codex-cli): OpenAI
                       - [**Qwen Code CLI**](#qwen-code-cli): OpenAI and Alibaba Cloud (DashScope)
 
-
-                      {:.info}
-                      > **Current limitations:**
-                      > * Load balancing or failover features currently only work if all providers share the same model identifier.
-                      > * Streaming is not supported when using non-Claude models with the following providers: Azure OpenAI, Google Gemini, and AWS Bedrock. Token usage might be reported as 0, but otherwise functionality is not affected.
-
   - header:
       type: h2
       text: "Claude Code"
@@ -112,6 +106,17 @@ rows:
             description: Use Claude Code with kong-harnesses and an Okta sign-in
             cta:
               url: /ai-gateway/set-up-claude-code-with-kong-harnesses/
+  - header:
+      type: h3
+      text: "Claude Code references"
+    columns:
+      - blocks:
+        - type: reference_list
+          config:
+            pages:
+              - /kong-harnesses/claude-code-features-behind-the-gateway/
+              - /kong-harnesses/claude-code-outside-traffic/
+              - /kong-harnesses/claude-code-web-and-slack/
   - header:
       type: h2
       text: "Codex CLI"
