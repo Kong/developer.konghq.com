@@ -3,33 +3,83 @@
     "config": {
       "additionalProperties": false,
       "properties": {
-        "api_key": {
-          "type": "string",
-          "description": "Straiker Defend API key.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
-          "required": true
-        },
         "detect_url": {
           "type": "string",
-          "description": "Straiker Defend webhook endpoint.",
-          "default": "https://api.prod.straiker.ai/api/v1/detect/webhook"
+          "description": "Straiker detect endpoint.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "required": true
         },
-        "block": {
-          "type": "boolean",
-          "description": "When true, Straiker detections can block both the incoming request and the final model response. When false, detections are evaluated and logged but traffic is never blocked.",
-          "default": true
+        "api_key": {
+          "type": "string",
+          "description": "Straiker integration key.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
+          "required": true
         },
-        "fail_open": {
-          "type": "boolean",
-          "description": "Behavior when the Straiker webhook is unreachable or errors on the pre-call (request) check. true allows the request through. false blocks the request when the webhook can't be reached. Post-call (response) evaluation always fails open, so a model answer is never withheld because the webhook was down.",
-          "default": true
+        "timeout_ms": {
+          "type": "integer",
+          "description": "Timeout for a synchronous scoring call, in milliseconds.",
+          "default": 8000,
+          "minimum": 100,
+          "maximum": 60000
         },
-        "debug": {
+        "fail_closed": {
           "type": "boolean",
-          "description": "Enables verbose request, response, and webhook logging for local validation. Keep disabled in production.",
+          "description": "Reject traffic when Straiker can't be reached. When `false`, traffic passes and the response is stamped `degraded`.",
           "default": false
+        },
+        "score_request": {
+          "type": "boolean",
+          "description": "Score the prompt. Turn off on non-inference paths such as `count_tokens`, which carries no system prompt and can be misclassified.",
+          "default": true
+        },
+        "score_response": {
+          "type": "boolean",
+          "description": "Score the model's answer.",
+          "default": true
+        },
+        "max_body_bytes": {
+          "type": "integer",
+          "description": "Skip scoring above this size, in bytes.",
+          "default": 10485760,
+          "minimum": 1024,
+          "maximum": 67108864
+        },
+        "upstream_api_key": {
+          "type": "string",
+          "description": "Model credential the gateway holds, injected on the way out so clients never carry a platform key.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/)."
+        },
+        "upstream_key_header": {
+          "type": "string",
+          "description": "Header that carries the upstream credential. Use `authorization` for OpenAI-style providers.",
+          "default": "x-api-key"
+        },
+        "user_ref": {
+          "type": "string",
+          "description": "Fallback attribution, used only when no Kong Consumer is resolved.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+        },
+        "session_from_body": {
+          "type": "boolean",
+          "description": "Derive a stable session ID when the client sends no session header.",
+          "default": true
+        },
+        "debug_preamble": {
+          "type": "boolean",
+          "description": "Log the system-prompt shape to explain client resolution. Prints prompt content to the Kong log, so keep it disabled in production.",
+          "default": false
+        },
+        "client": {
+          "type": "string",
+          "description": "Names the client on a single-application route. Leave unset on a shared gateway."
+        },
+        "agent_ref": {
+          "type": "string",
+          "description": "Names one agent. Scope it to a route."
+        },
+        "format_hint": {
+          "type": "string",
+          "description": "Only used to resolve an ambiguous `messages` array.",
+          "enum": ["anthropic.messages", "openai.chat"]
         }
       },
-      "required": ["api_key"],
+      "required": ["detect_url", "api_key"],
       "type": "object"
     },
     "consumer": {
@@ -74,8 +124,9 @@
     },
     "protocols": {
       "description": "A list of the request protocols that will trigger this plugin.",
+      "default": ["grpc", "grpcs", "http", "https"],
       "items": {
-        "enum": ["grpc", "grpcs", "http", "https", "tcp", "tls", "tls_passthrough", "udp", "ws", "wss"],
+        "enum": ["grpc", "grpcs", "http", "https"],
         "type": "string"
       },
       "type": "array"

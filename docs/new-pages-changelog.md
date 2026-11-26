@@ -284,8 +284,6 @@ Internal, auto-generated changelog of newly published content pages on developer
 ### Kong Gateway
 
 - [Flush a public Dedicated Cloud Gateway managed cache using Terraform](https://developer.konghq.com/dedicated-cloud-gateways/flush-managed-cache/)
-- [Straiker Coding Agent Buffered](https://developer.konghq.com/plugins/straiker-coding-agent-buffered/)
-- [Straiker Coding Agent Streaming](https://developer.konghq.com/plugins/straiker-coding-agent-streaming/)
 - [Straiker](https://developer.konghq.com/plugins/straiker/)
 
 ### Other
