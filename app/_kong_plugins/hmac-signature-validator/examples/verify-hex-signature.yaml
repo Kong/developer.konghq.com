@@ -1,0 +1,33 @@
+description: 'Verify an HMAC-SHA256 signature that the sender encodes as hex in the X-Signature-SHA256 header.'
+
+extended_description: |
+  Verify an HMAC-SHA256 signature that the sender encodes as hex in the `X-Signature-SHA256` header.
+  The plugin computes the HMAC of the request body with the shared secret, and rejects the request with a `403` response when the result doesn't match the signature.
+
+  The plugin verifies the request body only.
+  It doesn't authenticate a client or set a Consumer.
+
+title: 'Verify a hex-encoded signature'
+
+weight: 900
+
+variables:
+  shared-secret:
+    value: $WEBHOOK_SHARED_SECRET
+    description: The shared secret that the sender uses to sign the request body.
+
+config:
+  signature_header: X-Signature-SHA256
+  signature_format: hex
+  algorithm: hmac-sha256
+  shared_secret: ${shared-secret}
+
+min_version:
+  gateway: '3.17'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
