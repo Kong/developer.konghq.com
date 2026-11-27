@@ -40,11 +40,6 @@ related_resources:
     url: https://www.meta.ai/
 ---
 
-<!--
-TODO(AI-246 OQ1): the runtime capability matrix isn't confirmed. Verify image generation and editing, video input, and audio transcription before GA.
-TODO(AI-246 OQ2): the `meta` discriminator name may change. Update `type: meta` here and in providers.yaml if it does.
--->
-
 {% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Meta" %}
 
 ## Configure a {{ provider.name }} provider
@@ -76,11 +71,16 @@ variables:
 
 ## Configure a {{ provider.name }} model
 
-{{ provider.name }} supports chat completions and the Responses API through the OpenAI format, and the Messages API through the Anthropic format.
-{{ provider.name }} also supports streaming, tool calling, and structured output.
-Models also accept image, video, and PDF input.
+{{ provider.name }} supports the following APIs:
 
-By default, {{site.ai_gateway}} sends requests to the {{ provider.name }} hosted Model API at `https://api.meta.ai/v1`.
+* Chat completions through the OpenAI format, with the `generate` capability.
+* The Responses API through the OpenAI format, with the `agentic` capability.
+* The Messages API through the Anthropic format, with the `anthropic` format.
+
+All three APIs support streaming.
+Chat completions also support tool calling, structured output, and image input.
+
+By default, {{site.ai_gateway}} sends requests to the {{ provider.name }} hosted Model API at `https://api.meta.ai`.
 Set the target `name` to the upstream model ID, for example `muse-spark-1.3`.
 {{site.ai_gateway}} sends the name to {{ provider.name }} unchanged.
 
@@ -103,8 +103,4 @@ data:
         type: meta
 {% endentity_example %}
 
-To use a different base URL, set `upstream_url` on the target.
-
-{:.warning}
-> When you use a model ID with a `-contributor` suffix, {{ provider.name }} can train on your prompts.
-> Don't use these model IDs for sensitive data.
+To send requests to a different host, set `upstream_base_url` on the target to the scheme and host only, for example `https://api.meta.ai`.

@@ -40,8 +40,6 @@ related_resources:
     url: https://docs.together.ai/
 ---
 
-
-
 {% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Together AI" %}
 
 ## Configure a {{ provider.name }} provider
@@ -63,7 +61,7 @@ data:
       type: basic
       headers:
         - name: Authorization
-          value: ${key}
+          value: Bearer ${key}
 variables:
   key:
     value: $TOGETHER_API_KEY
@@ -73,18 +71,25 @@ variables:
 
 ## Configure a {{ provider.name }} model
 
-{{ provider.name }} supports chat completions and completions through the OpenAI format.
-Streaming uses server-sent events (SSE).
+{{ provider.name }} supports the following APIs:
 
-By default, {{site.ai_gateway}} sends requests to `https://api.together.xyz/v1`.
-Set the target `name` to the {{ provider.name }} model ID, for example `meta-llama/Llama-3.3-70B-Instruct-Turbo`.
+* Chat completions through the OpenAI format, with the `generate` capability.
+* The Responses API through the OpenAI format, with the `agentic` capability.
+* The Messages API through the Anthropic format, with the `anthropic` format.
+
+All three APIs support streaming.
+Streaming uses server-sent events (SSE).
+Chat completions also support tool calling.
+
+By default, {{site.ai_gateway}} sends requests to `https://api.together.ai`.
+Set the target `name` to the {{ provider.name }} model ID, for example `deepseek-ai/DeepSeek-V4.1-Flash`.
 {{site.ai_gateway}} sends the name to {{ provider.name }} unchanged.
 
 {% entity_example %}
 type: model
 data:
-  display_name: Llama 3.3 70B on Together AI
-  name: llama-3-3-70b
+  display_name: DeepSeek V4.1 Flash on Together AI
+  name: deepseek-v4-1-flash
   type: model
   capabilities:
     - generate
@@ -93,10 +98,10 @@ data:
       paths:
         - /togetherai
   targets:
-    - name: meta-llama/Llama-3.3-70B-Instruct-Turbo
+    - name: deepseek-ai/DeepSeek-V4.1-Flash
       provider: my-togetherai-account
       config:
         type: togetherai
 {% endentity_example %}
 
-To use a different base URL, set `upstream_url` on the target.
+To send requests to a different host, set `upstream_base_url` on the target to the scheme and host only, for example `https://api.together.ai`.
