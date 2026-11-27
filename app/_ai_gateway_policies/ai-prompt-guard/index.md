@@ -41,7 +41,7 @@ You can use a combination of `allow` and `deny` rules to preserve integrity and 
 {% include_cached md/ai-gateway/v2/guardrail-chunking.md local=true subject="prompt" window=10000 %}
 
 This Policy matches regular expressions locally, so the window only limits the text each pass reads.
-A pattern that straddles two parts can go undetected, so set `chunk_overlap` if your patterns can cross a boundary.
+A pattern that straddles two parts can go undetected, so set `chunking.overlap` if your patterns can cross a boundary.
 A match on a deny pattern in any part blocks the text.
 When the Policy has allow patterns, a match in any part allows the text, and a text where no part matches is blocked.
 

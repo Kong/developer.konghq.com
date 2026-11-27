@@ -100,7 +100,8 @@ On requests in the OpenAI Responses format, the Policy sends tool calls as `name
 
 {% include_cached md/ai-gateway/v2/guardrail-chunking.md service="PII service" subject="a request" window=10000 messages=true single_call=true %}
 
-A sanitized part can't repeat, so `chunk_overlap` must be `0`.
+A sanitized part can't repeat, so the Policy cuts without overlap and then sends a second call that carries the text around each cut.
+That call masks a value that a cut split in two, and `chunking.overlap` sets how many characters on each side of a cut it carries.
 The Policy sanitizes every request, so this always applies.
 
 ## AI PII Anonymizer service

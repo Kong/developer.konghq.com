@@ -72,7 +72,9 @@ An empty rendering means the part holds nothing to mask, and the part keeps its 
 
 * `allow_masking` must be `true`.
 * `text_source` must be `last_message`, because the Policy writes the masked text back into that one message.
-* `chunk_overlap` must be `0`, because a masked part can't repeat.
+* `chunking.overlap` must be at most half of `chunking.max_chunk_size`.
+  A masked part can't repeat, so the Policy cuts without overlap and then masks the text around each cut in a second set of calls.
+  `overlap` sets how many characters on each side of a cut that second set covers.
 
 ## Configuration
 

@@ -64,11 +64,13 @@ To mask across several messages, keep using the legacy fields.
 {% include_cached md/ai-gateway/v2/guardrail-chunking.md service="AWS Bedrock Guardrails service" window=10000 audit=true streaming=true %}
 
 AWS publishes its limit as a quota in text units, and one text unit is 1,000 characters.
-The quota varies by AWS Region, so convert your own quota to characters before you set `max_chunk_size`.
+The quota varies by AWS Region, so convert your own quota to characters before you set `chunking.max_chunk_size`.
 
 When `allow_masking` is `true`, the Policy joins the masked parts in order. Two rules apply:
 
-* `chunk_overlap` must be `0`, because a masked part can't repeat.
+* `chunking.overlap` must be at most half of `chunking.max_chunk_size`.
+  A masked part can't repeat, so the Policy cuts without overlap and then masks the text around each cut in a second set of calls.
+  `overlap` sets how many characters on each side of a cut that second set covers.
 * `text_source` must be `last_message`, because any other source sends the request body as one encoded JSON string, which can't be cut at a sentence end.
 
 ## Rejection modes
