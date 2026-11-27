@@ -35,7 +35,7 @@ This is a {{site.konnect_short_name}} tutorial and requires a {{site.konnect_sho
    export KONNECT_TOKEN='YOUR_KONNECT_PAT'
    ```
 
-<!--vale off-->
+   <!--vale off-->
 3. {{ run_step }}
 
 {{ run_snippet | indent: 3 }}
