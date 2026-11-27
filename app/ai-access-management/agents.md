@@ -45,10 +45,10 @@ related_resources:
 faqs:
   - q: Does creating an agent with **New agent** give the agent an identity?
     a: |
-      No. **New agent** makes the agent reachable through {{site.ai_gateway}} so that others can call it. To let the agent call models, MCP servers, or other agents with its own identity, create an [agent identity](#agent-identities), issue it a [virtual key](/ai-access-management/virtual-keys/), and [link the agent to its identity](#link-an-agent-to-its-identity).
+      No. **New agent** makes the agent reachable through {{site.ai_gateway}} so that others can call it. To let the agent call models, MCP servers, or other agents with its own identity, give it an [agent identity](/ai-access-management/agents/).
   - q: Can I change an agent's type after I create it?
     a: |
-      No. The **Type** of an agent can't be edited after creation. To switch between A2A and HTTP, create a new agent with the other type and delete the old one.
+      No. The **Type** of an agent can't be edited in {{site.konnect_short_name}} after creation. To switch between A2A and HTTP, create a new agent with the other type and delete the old one.
   - q: Why does my A2A agent answer `413 Request body too large`?
     a: |
       The request body is larger than the agent's **Max request body size**. {{site.ai_gateway}} reads the body of A2A agent requests to detect A2A operations, and rejects bodies over the limit. Raise the limit, or set it to `0` to remove it. See [Max request body size](#max-request-body-size).
@@ -77,20 +77,14 @@ rows:
     setup: |
       * Choose an [auth strategy](#auth-strategy) so that callers authenticate.
       * Optional: [Restrict access with an ACL](#access-control) to the groups that may call the agent.
-  - usecase: "Your agent acts on behalf of the users who call it"
-    setup: |
-      * Choose an OpenID Connect [auth strategy](#auth-strategy).
-      * Set [**Outbound authentication**](#outbound-authentication) to **Token exchange**, so that the agent receives a token issued for it.
   - usecase: "Your agent also calls models or MCP servers"
     setup: |
-      * Create an [agent identity](#agent-identities).
-      * Issue it credentials: a [virtual key](/ai-access-management/virtual-keys/) to call models, or an OAuth client from your identity provider to call MCP servers.
-      * [Link the agent to its identity](#link-an-agent-to-its-identity).
+      * Give it an [agent identity](/ai-access-management/agents/).
 {% endtable %}
 <!-- vale on -->
 
 For example, a support team creates a booking agent deployed to AWS AgentCore so that a support agent can call it.
-The booking agent also calls a model and an MCP server, so the team gives it an agent identity and links the two.
+The booking agent also calls a model and an MCP server, so the team gives it an agent identity.
 
 ## Create an agent
 
@@ -100,13 +94,14 @@ An agent is reachable through the gateway as soon as you create it, without a se
 The agent belongs to the {{site.ai_gateway}} that's selected in the **Gateway** filter of the agents list, because the form doesn't have its own gateway field.
 After the gateway's data planes receive the configuration, callers reach the agent at the data plane host followed by the route's base path, for example `https://<YOUR_DP_HOST>/booking-agent`.
 The agent's **Connect** tab shows a sample request.
+The sample sends the key in the `Authorization` header, so adjust it if your [auth strategy](#auth-strategy) expects the key in another header or a query parameter.
 
 To create an agent, do the following:
 
 1. In the {{site.konnect_short_name}} sidebar, click **Agents**.
 1. From the **Gateway** dropdown menu, select the {{site.ai_gateway}} that callers will use.
 1. Click **New agent**.
-1. Fill in the **General information**, **Configuration**, **Route**, and **Authentication and access** sections.
+1. Fill in the **General information**, **Configuration**, **Route**, and **Access** sections.
 1. Click **Create**.
 
 {:.warning}
@@ -151,20 +146,9 @@ rows:
       * [**Auth strategy**](#auth-strategy): A key authentication strategy with principal mapping enabled
       * [**Access control**](#access-control): **Allow**, with a **Principal group** rule for each team
     why: "The ACL needs to know who the caller is, so it works with the auth strategy. Callers outside the allowed groups are rejected before they reach the agent."
-  - usecase: "Callers sign in with your identity provider, and the agent needs a token for that user instead of the token the caller sent"
-    config: |
-      * [**Auth strategy**](#auth-strategy): OpenID Connect
-      * [**Outbound authentication**](#outbound-authentication): **Token exchange**, with the **OAuth 2.0 token exchange** grant
-      * **Audience**: The identifier that your identity provider uses for the agent, like `api://booking-agent`
-    why: "The agent receives a token issued for it, with only the scopes it needs, and still knows which user it's acting for."
-  - usecase: "Your identity provider is Microsoft Entra ID, and the agent calls other APIs on behalf of the signed-in user"
-    config: |
-      * [**Auth strategy**](#auth-strategy): OpenID Connect
-      * [**Outbound authentication**](#outbound-authentication): **Token exchange**, with the **Microsoft Entra OBO** grant
-    why: "Entra ID uses its own on-behalf-of flow instead of standard token exchange."
   - usecase: "The agent runs on Amazon Bedrock AgentCore Runtime and rejects the gateway's requests"
     config: |
-      * [**Outbound authentication**](#outbound-authentication): **AWS IAM (SigV4)**, with an assumed role
+      * [**Upstream authentication**](#upstream-authentication): AWS IAM (SigV4), with an assumed role
     why: "AgentCore Runtime only accepts requests signed with AWS IAM. An assumed role keeps credentials short-lived and works across accounts."
   - usecase: "You run the agent in several regions, and callers far from it see slow responses"
     config: |
@@ -192,7 +176,7 @@ rows:
     config: |
       * [**Upstream**](#upstream): Single URL
       * [**Proxy settings**](#proxy-settings): Your proxy's host and port
-    why: "For A2A agents, proxy settings don't work with multiple targets."
+    why: "Proxy settings don't work with multiple targets."
   - usecase: "Callers get `413` errors when they send files or long messages to an A2A agent"
     config: |
       * [**Max request body size**](#max-request-body-size): A value larger than your largest message, or `0`
@@ -201,15 +185,10 @@ rows:
     config: |
       * [**Log payloads**](#log-payloads): Enabled
     why: "Request and response bodies appear in the output of logging AI Policies. Payloads can contain sensitive data."
-  - usecase: "The agent also calls models or MCP servers, and you want to see both roles as one agent"
-    config: |
-      * An [agent identity](#agent-identities) for the agent
-      * [**Link identity record**](#link-an-agent-to-its-identity) on the agent
-    why: "The agent and its identity point to each other."
   - usecase: "The agent only accepts clients that present a certificate"
     config: |
-      * [Upstream TLS](/ai-gateway/entities/ai-agent/#upstream-tls), with the {{site.ai_gateway}} API or kongctl
-    why: "The **New agent** form doesn't include upstream TLS options. Requires {{site.ai_gateway}} 2.3 or later."
+      * [**Upstream TLS**](#upstream-tls): A **Client certificate**
+    why: "{{site.ai_gateway}} presents the certificate to the agent for mutual TLS."
 {% endtable %}
 <!-- vale on -->
 
@@ -225,7 +204,7 @@ The **Display name** is shown in {{site.konnect_short_name}}.
 #### Type
 
 The **Type** defines whether {{site.ai_gateway}} understands the [Agent-to-Agent (A2A) protocol](https://a2aproject.github.io/A2A/) for this agent.
-You can't change it after you create the agent.
+You can't change it in {{site.konnect_short_name}} after you create the agent.
 
 <!-- vale off -->
 {% table %}
@@ -251,20 +230,10 @@ rows:
 
 For details on A2A processing, see [How A2A traffic flows](/ai-gateway/entities/ai-agent/#how-a2a-traffic-flows).
 
-#### Log payloads
-
-**Log payloads** records request and response bodies in the output of logging AI Policies.
-It's disabled by default.
-Enable it when you need to see what callers send and what the agent answers, for example to debug a conversation.
-Payloads can contain sensitive data, so only enable it if your logging pipeline can handle that data.
-
-When **Log payloads** is enabled, **Logging max payload size** truncates logged payloads at that size, in bytes.
-Lower it if payloads use too much log storage, or raise it if they're cut off before the part you need.
-
 #### Labels
 
 Labels are key-value pairs, like `team=customer-service`.
-Use them to filter the agents list with the **Labels** filter.
+They're shown in the **Labels** column of the agents list.
 
 ### Configuration
 
@@ -326,6 +295,16 @@ rows:
 
 See [Load balancing and failover](/ai-gateway/entities/ai-agent/#load-balancing-and-failover) for more examples.
 
+#### Log payloads
+
+**Log payloads** records request and response bodies in the output of logging AI Policies.
+It's disabled by default.
+Enable it when you need to see what callers send and what the agent answers, for example to debug a conversation.
+Payloads can contain sensitive data, so only enable it if your logging pipeline can handle that data.
+
+When **Log payloads** is enabled, **Logging max payload size** truncates logged payloads at that size, in bytes.
+Lower it if payloads use too much log storage, or raise it if they're cut off before the part you need.
+
 #### Max request body size
 
 **Max request body size** is the largest request body, in bytes, that {{site.ai_gateway}} reads for an A2A agent.
@@ -334,49 +313,15 @@ Raise it when callers send large messages, for example with file content include
 Set it to `0` to remove the limit.
 The data plane's `client_max_body_size` still applies.
 
-#### Proxy settings
+#### Upstream authentication
 
-Use **Proxy settings** when the data plane can't reach the agent directly and must go through a forward proxy, for example a corporate egress proxy.
-Set the HTTP or HTTPS proxy host and port, and the proxy credentials if the proxy requires them.
-Store the proxy password in a vault instead of in plain text with the key icon in the field.
-**No proxy** is optional. List hosts there only when the data plane can reach them directly and they should skip the proxy, for example `localhost` or an internal host name.
+**Upstream authentication**, in the section's **Advanced fields**, signs requests to the agent with AWS IAM (SigV4).
+It's separate from [Access](#access): upstream authentication sets the credentials the agent receives, while the auth strategy checks the identity of callers at the gateway.
 
-{:.warning}
-> For A2A agents, proxy settings don't work with **Multiple targets**: requests fail with a `500` error. Use **Single URL** with a proxy.
+Enable **Authenticate to the upstream service with AWS IAM (SigV4)** when the agent runs on [Amazon Bedrock AgentCore Runtime](https://aws.amazon.com/bedrock/agentcore/), which only accepts requests signed with AWS IAM.
+{{site.ai_gateway}} then signs every request to the agent for the `bedrock-agentcore` service, including requests that aren't A2A operations.
+When it's disabled, {{site.ai_gateway}} forwards the caller's request without credentials of its own.
 
-#### Outbound authentication
-
-**Outbound authentication** defines which credentials {{site.ai_gateway}} sends to the agent.
-It's separate from [Authentication and access](#authentication-and-access): outbound authentication sets the credentials the agent receives, while the auth strategy checks the identity of callers at the gateway.
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Option
-    key: option
-  - title: What {{site.ai_gateway}} sends to the agent
-    key: behavior
-  - title: Choose it when
-    key: when
-rows:
-  - option: "**None**"
-    behavior: "The caller's request, without credentials of the gateway's own."
-    when: "The agent doesn't require credentials, or it accepts the credentials that callers send."
-  - option: "**AWS IAM (SigV4)**"
-    behavior: "Requests signed with AWS IAM credentials."
-    when: "The agent runs on [Amazon Bedrock AgentCore Runtime](https://aws.amazon.com/bedrock/agentcore/), which only accepts requests signed with AWS IAM."
-  - option: "**Token exchange**"
-    behavior: "A token from your identity provider, issued for the agent in exchange for the caller's token."
-    when: "The agent must receive a token meant for it, while still acting for the user who called it."
-{% endtable %}
-<!-- vale on -->
-
-**AWS IAM (SigV4)** and **Token exchange** each have their own settings:
-
-{% navtabs "outbound-authentication" %}
-{% navtab "AWS IAM (SigV4)" %}
-
-When you choose **AWS IAM (SigV4)**, {{site.ai_gateway}} signs every request to the agent for the `bedrock-agentcore` service, including requests that aren't A2A operations.
 Choose where the credentials come from:
 
 <!-- vale off -->
@@ -387,7 +332,7 @@ columns:
   - title: Choose it when
     key: when
 rows:
-  - credentials: "Static IAM user credentials: **Access key ID** and **Secret access key**, with an optional **Session token**"
+  - credentials: "Static IAM user credentials: **AWS access key ID** and **AWS secret access key**, with an optional **AWS session token**"
     when: "The data plane runs outside AWS. Store the secret in a vault instead of in plain text."
   - credentials: "No access key: {{site.ai_gateway}} detects the credentials from its environment"
     when: "The data plane runs in AWS and already has credentials, for example from an EC2 instance profile or environment variables."
@@ -396,54 +341,20 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-Set **Region** if {{site.ai_gateway}} can't infer it from the environment, and **STS endpoint URL** to use a custom AWS STS endpoint when assuming a role.
-
-{% endnavtab %}
-{% navtab "Token exchange" %}
-
-When you choose **Token exchange**, {{site.ai_gateway}} exchanges the caller's token at your identity provider for a token meant for the agent, and sends that token to the agent.
-The agent receives a token with its own audience and scopes, and the token still identifies the user who made the request.
-
-Token exchange needs an OpenID Connect [auth strategy](#auth-strategy), since the caller's token is the input of the exchange.
-For the full flow, see [Token exchange](/ai-gateway/openid-connect/#token-exchange).
-
-Choose the **Grant** that your identity provider supports:
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Grant
-    key: grant
-  - title: Choose it when
-    key: when
-rows:
-  - grant: "**OAuth 2.0 token exchange**"
-    when: "Your identity provider supports [RFC 8693](https://www.rfc-editor.org/rfc/rfc8693) token exchange, like Okta, Keycloak, or Auth0."
-  - grant: "**JWT bearer token exchange**"
-    when: "Your identity provider accepts the caller's token as a JWT bearer assertion, as defined in [RFC 7523](https://www.rfc-editor.org/rfc/rfc7523), instead of supporting RFC 8693."
-  - grant: "**Microsoft Entra OBO**"
-    when: "Your identity provider is Microsoft Entra ID, which uses its own on-behalf-of (OBO) flow."
-{% endtable %}
-<!-- vale on -->
-
-Then set the following:
-
-* **Audience** and **Scopes:** What the exchanged token is for. Set **Audience** to the identifier that your identity provider uses for the agent, like `api://booking-agent`, and request only the scopes the agent needs, like `bookings:read`. When both are empty, the exchange request doesn't include an audience or scopes.
-* **Subject token issuers:** The issuers whose tokens {{site.ai_gateway}} exchanges. Tokens from other issuers pass through unchanged. By default, every token from a listed issuer is exchanged. To exchange only some of them, add conditions on the token's audience or scopes, like **Audience must include** or **Scopes must exclude**.
-* **Actor token:** Optional. Send an actor token when your identity provider needs to know which party acts on behalf of the user.
-* **Extra request headers and body parameters:** Optional. Use them when your identity provider expects values that the grant doesn't send.
-* **Token cache:** Enabled by default. {{site.ai_gateway}} reuses each exchanged token until it expires instead of calling your identity provider on every request.
-
-{% endnavtab %}
-{% endnavtabs %}
+Set **AWS region** if {{site.ai_gateway}} can't infer it from the environment, and **STS endpoint URL** to use a custom AWS STS endpoint when assuming a role.
 
 #### Upstream TLS
 
-To present a client certificate to the agent for [mutual TLS](/ai-gateway/entities/ai-agent/#upstream-tls), or to verify the agent's certificate against a private CA, configure the agent with the {{site.ai_gateway}} API or kongctl.
+**Upstream TLS**, in the section's **Advanced fields**, secures the connection between {{site.ai_gateway}} and the agent:
 
-The following example configures a booking agent that only accepts clients with a certificate, and that serves a certificate signed by an internal CA.
-{{site.ai_gateway}} presents the `booking-agent-client-cert` [AI Certificate](/ai-gateway/entities/ai-certificate/) to the agent, and verifies the agent against the `internal-root-ca` [AI CA Certificate](/ai-gateway/entities/ai-ca-certificate/).
-Create both certificates on the same {{site.ai_gateway}} first, since the agent references them by name:
+* **Client certificate:** An [AI Certificate](/ai-gateway/entities/ai-certificate/) that {{site.ai_gateway}} presents to the agent, for an agent that only accepts clients with a certificate ([mutual TLS](/ai-gateway/entities/ai-agent/#upstream-tls)).
+* **CA certificates:** [AI CA Certificates](/ai-gateway/entities/ai-ca-certificate/) that {{site.ai_gateway}} uses to verify the agent's certificate, for an agent that serves a certificate signed by a private CA. Without them, {{site.ai_gateway}} uses its default trust store.
+
+You can set either option on its own.
+The certificates must exist on the same {{site.ai_gateway}}. To add them, click **Manage certificates**.
+The agent's URL must use `https` when you set either option.
+
+The following example configures the same settings with the {{site.ai_gateway}} API or kongctl, which reference the certificates by name:
 
 {% entity_example %}
 type: agent
@@ -462,8 +373,15 @@ data:
         - /booking-agent
 {% endentity_example %}
 
-The agent's `url` must use `https` when you set `certificates` or `ca_certificates`.
-You can set either field on its own: `certificates` for mutual TLS, or `ca_certificates` for a private CA.
+#### Proxy settings
+
+Use **Proxy settings**, in the section's **Advanced fields**, when the data plane can't reach the agent directly and must go through a forward proxy, for example a corporate egress proxy.
+Set the HTTP or HTTPS proxy host and port, and the proxy credentials if the proxy requires them.
+To store the proxy username or password in a vault instead of in plain text, use **Look up key in vault** in the field.
+**No proxy** is optional. List hosts there only when the data plane can reach them directly and they should skip the proxy, for example `localhost` or an internal host name.
+
+{:.warning}
+> Proxy settings don't work with **Multiple targets**. Requests to an A2A agent fail with a `500` error, and requests to an HTTP agent go directly to the targets without the proxy. Use **Single URL** with a proxy.
 
 ### Route
 
@@ -490,15 +408,17 @@ rows:
 The defaults of the route's **Advanced fields** work for most agents.
 Change them in these cases:
 
+* **Methods:** Any method by default. Leave it empty for an A2A agent, since callers reach it with `POST`, and fetch its Agent Card with `GET`.
+* **Strip path:** Enabled by default, so {{site.ai_gateway}} removes the base path before it sends the request to the agent. Disable it if the agent expects the full path.
 * **Preserve host:** Enable it if the agent needs the `Host` header that the caller sent, instead of its own host name.
 * **Request buffering** and **Response buffering:** Enabled by default. Disable them for faster streaming of large or chunked requests and responses.
 
-Other route options, like **Methods**, **Strip path**, **Protocols**, and **Regex priority**, are available with the {{site.ai_gateway}} API or kongctl.
+The **Advanced fields** also include **Protocols**, **Regex priority**, **HTTPS redirect status code**, and **Tags**.
 See [Routing configuration](/ai-gateway/entities/ai-agent/#routing-configuration).
 
-### Authentication and access
+### Access
 
-The **Authentication and access** section defines who can call the agent.
+The **Access** section defines who can call the agent.
 Both of its options are optional, but without them any caller whose request matches the route can use the agent.
 
 #### Auth strategy
@@ -519,10 +439,10 @@ columns:
 rows:
   - type: "Key authentication, with [principal mapping](/ai-gateway/entities/ai-auth-strategy/#principal-mapping) enabled"
     when: "Callers should use [virtual keys](/ai-access-management/virtual-keys/)."
-    result: "Users, [agent identities](#agent-identities), and groups call the agent with their own key, and requests are attributed to them."
+    result: "Users, [agent identities](/ai-access-management/agents/), and groups call the agent with their own key, and requests are attributed to them."
   - type: "OpenID Connect"
     when: "Callers already get tokens from your identity provider."
-    result: "Callers send their identity provider's token. [Token exchange](#outbound-authentication) needs this type of strategy."
+    result: "Callers send their identity provider's token."
 {% endtable %}
 <!-- vale on -->
 
@@ -545,108 +465,13 @@ See [CEL-based ACLs](/ai-gateway/entities/ai-agent/#cel-based-acls).
 
 ### After you create the agent
 
-An agent's details show its usage, its access settings, and the AI Policies applied to it.
+An agent's details show its configuration and usage.
 From the agent's details, you can:
 
-* Attach [AI Policies](/ai-gateway/entities/ai-policy/) to the agent from the **Policies** tab, with **Manage policies**.
+* See the requests the agent received in the last 7 days in the **Usage** tab.
 * Copy a sample request from the **Connect** tab.
-* From the **Actions** dropdown menu, select "Start debugging", "View declarative config", "Edit", "Link identity record", or "Delete".
+* From the **Actions** dropdown menu, select "Edit", "View declarative config", or "Delete".
+
+To attach [AI Policies](/ai-gateway/entities/ai-policy/) to the agent, add their names to the agent's [`policies`](/ai-gateway/entities/ai-agent/#attach-ai-policies) field with the {{site.ai_gateway}} API or kongctl.
 
 To stop routing traffic to an agent without deleting it, disable the agent's toggle in the agents list.
-
-## Let an agent call your {{site.ai_gateway}} resources
-
-An agent identity lets an agent call your {{site.ai_gateway}} resources, like models, MCP servers, and other agents, either on its own behalf or on behalf of a user.
-An agent only needs an identity when it calls these resources itself.
-Creating an agent doesn't give it an identity, so you create the identity separately in {{site.identity}} and [link it to the agent](#link-an-agent-to-its-identity).
-
-An agent has its own identity, separate from the users who manage it:
-
-* **Own access rules:** The rules that apply to an agent are independent from the rules that apply to the users who manage it.
-* **Own credentials:** An agent authenticates with its own credentials like [virtual keys](/ai-access-management/virtual-keys/) to call models, or with an OAuth client from your identity provider to call MCP servers.
-* **Own attribution:** {{site.ai_gateway}} attributes requests to the agent that makes them, not to the users who manage it.
-
-When an agent acts on behalf of a user (for example, when it authenticates to an MCP server for that user), {{site.ai_gateway}} identifies the agent and the user separately.
-An access decision can depend on the user, the agent, or both.
-
-Admins create agent identities manually.
-An agent identity has a name, a description, labels, and metadata.
-After you create an agent identity, you can:
-
-* Edit its details.
-* Add it to one or more [groups](/ai-access-management/concepts/#groups).
-* Issue it a [virtual key](/ai-access-management/virtual-keys/) by choosing the agent as the key holder.
-* See its virtual keys, groups, access rules, and remote credentials in the agent's details.
-* Deactivate it to stop it from authenticating, and reactivate it later without creating new credentials.
-* Delete it.
-
-In the {{site.identity}} API, an agent identity is a [principal](/identity/principals/) with `type` set to `agent`.
-The type can't be changed after creation, so a user can't be converted into an agent.
-
-### Users vs agents
-
-Users and agents are both callers, but they represent different things, and you manage them differently as an admin:
-
-<!--vale off-->
-{% feature_table %}
-item_title: Features
-columns:
-  - title: User
-    key: user
-    center: true
-  - title: Agent
-    key: agent
-    center: true
-
-features:
-  - title: "Represents"
-    user: "A person"
-    agent: "A software system"
-  - title: "Created manually by an admin"
-    user: true
-    agent: true
-  - title: "[Imported from an org structure](/ai-access-management/concepts/#import-an-org-structure)"
-    user: true
-    agent: false
-  - title: "[Provisioned automatically](/ai-access-management/concepts/#identity-providers) on first sign-in"
-    user: true
-    agent: false
-  - title: "Signs in through an [identity provider](/ai-access-management/concepts/#identity-providers)"
-    user: true
-    agent: false
-  - title: "Authenticates with a [virtual key](/ai-access-management/virtual-keys/)"
-    user: true
-    agent: true
-  - title: "Authenticates with an OAuth client from an identity provider"
-    user: false
-    agent: true
-  - title: "Belongs to one or more [groups](/ai-access-management/concepts/#groups)"
-    user: true
-    agent: true
-  - title: "Belongs to a [team](/ai-access-management/concepts/#teams)"
-    user: true
-    agent: false
-  - title: "Has its own access rules"
-    user: true
-    agent: true
-  - title: "Can be deactivated"
-    user: true
-    agent: true
-{% endfeature_table %}
-<!--vale on-->
-
-### Link an agent to its identity
-
-An agent and its agent identity are separate records, even though they represent the same software system.
-Linking them lets you see one from the other: the agents list shows the linked identity in its **Identity record** column, and the identity's details show the linked agent.
-
-To link an agent to its identity, do the following:
-
-1. In the {{site.konnect_short_name}} sidebar, click **Agents**.
-1. Click the agent.
-1. From the **Actions** dropdown menu, select "Link identity record".
-1. Select the agent identity.
-1. Click **Link**.
-
-An identity links to one agent at a time.
-If the identity you select is already linked to another agent, it moves to this one.

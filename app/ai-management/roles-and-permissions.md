@@ -240,15 +240,11 @@ rows:
     admin: true
     manager: false
     individual: false
-  - capability: "Edit, delete, debug, or link an identity record to an agent from the **Actions** menu"
+  - capability: "Edit or delete an agent, or view its declarative config, from the **Actions** menu"
     admin: true
     manager: false
     individual: false
   - capability: "Change logging for an agent with **Log payloads**"
-    admin: true
-    manager: false
-    individual: false
-  - capability: "View an agent's auth strategies, ACLs, and policies in the **Access** and **Policies** tabs"
     admin: true
     manager: false
     individual: false
