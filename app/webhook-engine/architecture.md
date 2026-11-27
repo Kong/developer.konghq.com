@@ -84,11 +84,11 @@ columns:
   - title: Description
     key: description
 rows:
-  - entity: Listener
+  - entity: "[Listener](/webhook-engine/entities/listener/)"
     description: |
       A listener defines the IP addresses and TCP port at which the engine accepts HTTP `POST` requests from publishers.
       HTTP-sourced channels are exposed on a listener.
-  - entity: Channel
+  - entity: "[Channel](/webhook-engine/entities/channel/)"
     description: |
       A channel receives events from exactly one source and applies an ordered ingest policy chain to each ingested event.
       The only source type is `http`, which receives events over HTTP `POST` on a listener at one or more paths.
