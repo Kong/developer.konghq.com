@@ -79,9 +79,9 @@ rows:
 The following diagram shows how a request flows from a principal to a third-party credential provider through the {{site.identity}} Token Vault:
 
 1. A principal (your users, agents, and applications) sends a request through {{site.ai_gateway}}.
-1. {{site.ai_gateway}} routes the request to an MCP server with a Token Vault provider attached for outbound authentication.
+1. {{site.ai_gateway}} routes the request to an MCP server or a Model Provider with a Token Vault provider attached for outbound authentication.
 1. Token Vault verifies the caller's token with the trusted IdP, using the token's issuer (`iss`) and subject (`sub`) to identify the principal.
-1. Token Vault releases the matching credential for the credential provider, such as GitHub or Slack. If the principal doesn't have a credential for that provider yet, {{site.ai_gateway}} returns an enrollment URL so they can connect their account first. See [Credential enrollment](/identity/token-vault/credentials/#credential-enrollment).
+1. Token Vault releases the matching credential for the credential provider, such as GitHub or Slack. If the principal doesn't have a credential for that provider yet, {{site.ai_gateway}} returns an enrollment URL so they can connect their account first. The URL is a link for the MCP servers that support the [URL elicitation mode](https://modelcontextprotocol.io/specification/2025-11-25/client/elicitation) and text for other clients. See [Credential enrollment](/identity/token-vault/credentials/#credential-enrollment).
 
 The IdP token only identifies the principal. It never becomes the stored credential.
 
@@ -138,7 +138,9 @@ You attach policies to the {{site.ai_gateway}}, which is where you scope and enf
 
 1. Receives a caller's Okta-issued token.
 1. Presents it to Token Vault to request a credential for a specific provider.
-1. After it gets one back, it injects the credential into the actual outbound request to the third-party service (for example, as a header, for providers that support it).
+1. After it gets one back, it injects the credential into the actual outbound request to the third-party service.
+
+By default, {{site.ai_gateway}} sends the credential in an `Authorization: Bearer` header. To use a different header or a query parameter, set [`config.upstream.auth.token_vault.credential.outbound`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-config-upstream) on the AI MCP Server.
 
 ## Directory
 
@@ -211,7 +213,8 @@ A `PUT` on the [`updateTrustedIdp` endpoint](/api/konnect/kong-identity-principa
 
 You connect third-party services by adding a provider to the {{site.identity}} Token Vault. This lets an organization centralize identities and shared connections in one place, instead of configuring each service separately in every agent or client.
 
-{{site.identity}} provides templates to bind external services. The template supplies the third-party service's secret type, default OAuth endpoints, default scopes, and credential placement. 
+{{site.identity}} provides templates to bind external services. The template supplies the third-party service's secret type, default OAuth endpoints, default scopes, and the credential placements the service supports.
+
 To list the templates and their defaults, send a `GET` request to the [`listCredentialProviderTemplates` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/listCredentialProviderTemplates). You create a provider by sending a `POST` request to the [`createVaultProvider` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/createVaultProvider) with the following fields:
 
 * `template_name`: The provider template to bind, listed in the following table.
@@ -251,12 +254,12 @@ rows:
       * `datadog` (requires PKCE)
       * `miro` (requires PKCE)
     param: |
-      None. Don't send a `client_id`: set `dcr_enabled` (it defaults to `true` for templates that ship a registration endpoint, such as `datadog` and `miro`), and Token Vault registers the client with the provider on first use.
+      None. Don't send a `client_id`: set `dcr_enabled` (it defaults to `true` for templates that ship a registration endpoint, such as `datadog` and `miro`), and {{site.ai_gateway}} registers the client with the provider on first use.
   - provider: "OAuth authorization code provider that isn't in the catalog"
     value: "`custom-oauth`"
     param: |
       `client_id`, `client_secret`, `authorization_endpoint`, and `token_endpoint`.
-  - provider: "Provider that authenticates with a pre-issued API key or token in a header"
+  - provider: "Provider that authenticates with a pre-issued API key or token in a header or query parameter"
     value: "`static_secret`"
     param: |
       None. You store the secret as a credential after creating the provider. `client_id` and `client_secret` aren't allowed.
