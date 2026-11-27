@@ -224,10 +224,6 @@ columns:
   - title: Individual User
     key: individual
 rows:
-  - capability: "View every agent on the selected gateway in the agents list"
-    admin: true
-    manager: true
-    individual: true
   - capability: "Add an agent with **New agent**"
     admin: true
     manager: false
@@ -248,14 +244,6 @@ rows:
     admin: true
     manager: false
     individual: false
-  - capability: "View an agent's auth strategies, ACLs, and policies in the **Access** and **Policies** tabs"
-    admin: true
-    manager: false
-    individual: false
-  - capability: "View usage in an agent's **Usage** tab"
-    admin: "Yes, for the whole organization"
-    manager: "Yes, for themselves and their team"
-    individual: "Yes, for their own requests"
   - capability: "Request access to call an agent with **Request access**"
     admin: false
     manager: true

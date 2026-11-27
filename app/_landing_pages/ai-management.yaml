@@ -344,7 +344,7 @@ rows:
               icon: /assets/icons/key.svg
               cta:
                 text: Virtual keys in access management
-                url: /ai-access-management/virtual-keys/
+                url: /ai-access-management/concepts/#virtual-keys
       - blocks:
           - type: card
             config:
