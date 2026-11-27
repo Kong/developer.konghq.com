@@ -172,7 +172,7 @@ rows:
   - property: "`ai.proxy.aws-guardrails.output_processing_latency`"
     description: The time, in milliseconds, spent processing the response through the guardrail.
   - property: "`ai.proxy.aws-guardrails.input_chunk_count`"
-    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunk_text` is off. See [Text chunking](/ai-gateway/policies/ai-aws-guardrails/#text-chunking).
+    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunking.enabled` is `false`. See [Text chunking](/ai-gateway/policies/ai-aws-guardrails/#text-chunking).
   - property: "`ai.proxy.aws-guardrails.output_chunk_count`"
     description: The number of calls the guardrail service answered for the response. For a streamed response, the count adds up over all parts.
   - property: "`ai.proxy.aws-guardrails.input_block_reason`"
@@ -224,7 +224,7 @@ rows:
   - property: "`ai.proxy.gcp-model-armor.output_processing_latency`"
     description: The time, in milliseconds, spent processing the response through Model Armor.
   - property: "`ai.proxy.gcp-model-armor.input_chunk_count`"
-    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunk_text` is off. See [Text chunking](/ai-gateway/policies/ai-gcp-model-armor/#text-chunking).
+    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunking.enabled` is `false`. See [Text chunking](/ai-gateway/policies/ai-gcp-model-armor/#text-chunking).
   - property: "`ai.proxy.gcp-model-armor.output_chunk_count`"
     description: The number of calls the guardrail service answered for the response. For a streamed response, the count adds up over all parts.
   - property: "`ai.proxy.gcp-model-armor.input_block_reason`"
@@ -298,7 +298,7 @@ rows:
   - property: "`ai.proxy.azure-content-safety.output_processing_latency`"
     description: The time, in milliseconds, spent processing the response through Azure Content Safety.
   - property: "`ai.proxy.azure-content-safety.input_chunk_count`"
-    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunk_text` is off. See [Text chunking](/ai-gateway/policies/ai-azure-content-safety/#text-chunking).
+    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunking.enabled` is `false`. See [Text chunking](/ai-gateway/policies/ai-azure-content-safety/#text-chunking).
   - property: "`ai.proxy.azure-content-safety.output_chunk_count`"
     description: The number of calls the guardrail service answered for the response. For a streamed response, the count adds up over all parts.
   - property: "`ai.proxy.azure-content-safety.input_block_reason`"
@@ -354,7 +354,7 @@ rows:
   - property: "`ai.proxy.lakera-guard.output_processing_latency`"
     description: The time, in milliseconds, that Lakera took to process the response.
   - property: "`ai.proxy.lakera-guard.input_chunk_count`"
-    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunk_text` is off. See [Text chunking](/ai-gateway/policies/ai-lakera-guard/#text-chunking).
+    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunking.enabled` is `false`. See [Text chunking](/ai-gateway/policies/ai-lakera-guard/#text-chunking).
   - property: "`ai.proxy.lakera-guard.output_chunk_count`"
     description: The number of calls the guardrail service answered for the response. For a streamed response, the count adds up over all parts.
   - property: "`ai.proxy.lakera-guard.input_request_uuid`"
@@ -413,7 +413,7 @@ rows:
   - property: "`ai.proxy.custom-guardrail.output_processing_latency`"
     description: The time (in milliseconds) taken to process the output through the guardrail.
   - property: "`ai.proxy.custom-guardrail.input_chunk_count`"
-    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunk_text` is off. See [Text chunking](/ai-gateway/policies/ai-custom-guardrail/#text-chunking).
+    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunking.enabled` is `false`. See [Text chunking](/ai-gateway/policies/ai-custom-guardrail/#text-chunking).
   - property: "`ai.proxy.custom-guardrail.output_chunk_count`"
     description: The number of calls the guardrail service answered for the response. For a streamed response, the count adds up over all parts.
   - property: "`ai.proxy.custom-guardrail.input_block_reason`"
@@ -454,7 +454,7 @@ rows:
   - property: "`ai.proxy.nvidia-nemo-guardrail.output_processing_latency`"
     description: The time, in milliseconds, spent processing the response through NeMo Guardrails.
   - property: "`ai.proxy.nvidia-nemo-guardrail.input_chunk_count`"
-    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunk_text` is off. See [Text chunking](/ai-gateway/policies/ai-nvidia-nemo-guardrail/#text-chunking).
+    description: The number of calls the guardrail service answered for the request. The value is `1` when `config.chunking.enabled` is `false`. See [Text chunking](/ai-gateway/policies/ai-nvidia-nemo-guardrail/#text-chunking).
   - property: "`ai.proxy.nvidia-nemo-guardrail.output_chunk_count`"
     description: The number of calls the guardrail service answered for the response. For a streamed response, the count adds up over all parts.
   - property: "`ai.proxy.nvidia-nemo-guardrail.input_block_reason`"
