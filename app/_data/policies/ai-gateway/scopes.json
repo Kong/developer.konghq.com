@@ -90,6 +90,13 @@
     ]
   },
   {
+    "name": "ai-mcp-sanitizer",
+    "scopes": [
+      "mcp-servers",
+      "global"
+    ]
+  },
+  {
     "name": "ai-nvidia-nemo-guardrail",
     "scopes": [
       "models"
