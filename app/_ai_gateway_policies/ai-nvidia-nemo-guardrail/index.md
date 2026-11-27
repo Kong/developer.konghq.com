@@ -238,10 +238,12 @@ When NeMo reports a violation, {{site.ai_gateway}} blocks the content and return
 * [`config.request_failure_message`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-request-failure-message): Returned when a request is blocked.
 * [`config.response_failure_message`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-response-failure-message): Returned when a response is blocked.
 
-Two other fields change how the Policy blocks violations:
+The Policy always blocks a violation and never masks it.
+Setting [`config.allow_masking`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-allow-masking) to `true` has no effect.
 
-* [`config.allow_masking`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-allow-masking): Masks violating content instead of blocking the request or response. Enabling this field disables streaming, because the Policy needs the complete payload to mask it.
-* [`config.stop_on_error`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-stop-on-error): Controls what happens when the check itself fails, for example when the NeMo service is unreachable or [`config.timeout`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-timeout) expires. When enabled, which is the default, {{site.ai_gateway}} stops processing the request. Disable it to fail open and let traffic through unchecked.
+The [`config.stop_on_error`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-stop-on-error) field controls what happens when the check itself fails, for example when the NeMo service is unreachable or [`config.timeout`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-timeout) expires.
+When enabled, which is the default, {{site.ai_gateway}} stops processing the request.
+Disable it to fail open and let traffic through unchecked.
 
 {:.warning}
 > Setting `stop_on_error: false` means an outage in the NeMo Guardrails service silently disables your safety rails. Only disable it when availability matters more than enforcement.

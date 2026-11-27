@@ -2,6 +2,28 @@ To choose which parts of the {{ include.subject | default: 'conversation' }} the
 
 Name each kind of content to inspect. The Policy ignores any key you don't name.
 
+{% if include.subject == 'response' %}
+{% table %}
+columns:
+  - title: Key
+    key: key
+  - title: What gets sent
+    key: sent
+rows:
+  - key: "`assistant`"
+    sent: The answer text, without tool calls or reasoning.
+  - key: "`tool_call`"
+    sent: Each tool call that the model requested, as `name(arguments)`.
+  - key: "`tool_result`"
+    sent: Each result of a tool that the provider runs itself.
+  - key: "`reasoning`"
+    sent: The reasoning of the response.
+{% endtable %}
+
+Each key accepts the `message_countback` setting, which reads only the newest N messages of that kind.
+A response holds one turn, so `scope` accepts only `history`, which is the default.
+The `round` scope isn't available.
+{% else %}
 {% table %}
 columns:
   - title: Key
@@ -27,6 +49,8 @@ Each key accepts two settings:
 
 * `message_countback`: Read only the newest N messages of that kind.
 * `scope: round`: Read only the content the model hasn't seen yet, which is everything after the last assistant message.
+  The `reasoning` key doesn't accept this scope, because reasoning sits inside an assistant message.
+{% endif %}
 
 An empty value, like `tool_result: {}`, reads every message of that kind.
 Messages are sent oldest first. If a selection matches nothing, the Policy skips the guardrail call and the request continues.
@@ -34,6 +58,25 @@ If the selected content is larger than the Policy {% if include.local %}checks{%
 
 {:.warning}
 > Selected content leaves {{site.ai_gateway}} and goes to the guardrail service. Select only what the service needs.
+
+{% unless include.subject == 'response' %}
+{:.warning}
+> A caller controls the conversation history.
+> A caller can add an assistant message after a malicious user message.
+> That empties the `round` window, so the Policy sends nothing for the malicious message.
+> On a route that untrusted callers reach, do not use `scope: round` for the `user` key.
+> Use `message_countback` or leave `scope` unset.
+
+An [AI Prompt Template](/ai-gateway/policies/ai-prompt-template/) Policy on the same request, or an [AI Prompt Decorator](/ai-gateway/policies/ai-prompt-decorator/) Policy that prepends messages, changes this.
+The Policy then reads every message of the selected kinds and ignores `message_countback` and `scope`.
+A decorator that only appends messages keeps both settings, and the Policy always inspects the appended messages.
+{% endunless %}
+
+{% unless include.local or include.subject %}
+`message_selection` applies to the request.
+When `guarding_mode` is `OUTPUT` or `BOTH`, the Policy also guards responses.
+It checks the full text of the answer, whatever you select.
+{% endunless %}
 
 ### Use cases
 
@@ -242,5 +285,7 @@ To migrate, translate the Policy with the mapping, set `message_selection`, and 
 > `text_source: concatenate_all_content` on a native route now includes the system prompt.
 > Review any anchored allow or deny patterns.
 
+{% unless include.policy == 'ai-sanitizer' %}
 A selection also sends words that the legacy path didn't: each tool result is prefixed with the tool name, and a selection that names `tool_call` adds the calls.
+{% endunless %}
 {% endunless %}
