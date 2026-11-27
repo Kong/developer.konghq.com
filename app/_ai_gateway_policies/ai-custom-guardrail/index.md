@@ -35,6 +35,45 @@ Here's how it works if you apply it to both requests and responses:
 
 {% include_cached md/ai-gateway/v2/guardrail-flow-diagram.md name=page.name service="Guardrail service" masking=true %}
 
+## Message selection
+
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-custom-guardrail" %}
+
+### Masking
+
+When you set `allow_masking`, the guardrail service returns one masked text for the whole request, so the Policy needs exactly one message to write that text back into.
+Select either `user` or `tool_result`, with `message_countback: 1`:
+
+```yaml
+config:
+  allow_masking: true
+  message_selection:
+    user:
+      message_countback: 1
+```
+
+
+You can't mask `system`. You can't mask the following keys either, as they don't have a single text field to write into, and the Policy never rewrites the system prompt:
+
+* `assistant`
+* `tool_call`
+* `reasoning` 
+
+{{site.ai_gateway}} rejects a configuration that selects one of these keys, more than one key, or more than one message when you save it.
+To mask across several messages, keep using the legacy fields.
+
+
+## Text chunking
+
+{% include_cached md/ai-gateway/v2/guardrail-chunking.md window=10000 audit=true streaming=true %}
+
+To mask content, set `response.mask` to a template that renders the masked text of a part, for example `$(resp.maskedContent)`.
+An empty rendering means the part holds nothing to mask, and the part keeps its own text. Masking has three requirements:
+
+* `allow_masking` must be `true`.
+* `text_source` must be `last_message`, because the Policy writes the masked text back into that one message.
+* `chunk_overlap` must be `0`, because a masked part can't repeat.
+
 ## Configuration
 
 To configure the AI Custom Guardrail Policy to work with your guardrail service, you must define your guardrail vendor API's required parameters under [`config.params`](./reference/#schema--config-params). The key is the parameter name, and the value can be a string or a Lua expression.

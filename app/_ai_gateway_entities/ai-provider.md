@@ -97,6 +97,10 @@ When configuring an [AI Model](/ai-gateway/entities/ai-model/), you reference an
 {% icon_card icon="vllm.svg" title="vLLM" cta_url="/ai-gateway/ai-providers/vllm/" %}
 {% icon_card icon="sagemaker.svg" title="AWS SageMaker" cta_url="/ai-gateway/ai-providers/sagemaker/" %}
 {% icon_card icon="typesafe.svg" title="TypeSafe AI" cta_url="/ai-gateway/ai-providers/typesafe/" %}
+{% icon_card icon="metaai.svg" title="Meta" cta_url="/ai-gateway/ai-providers/meta/" %}
+{% icon_card icon="fireworks.svg" title="Fireworks AI" cta_url="/ai-gateway/ai-providers/fireworks/" %}
+{% icon_card icon="togetherai.svg" title="Together AI" cta_url="/ai-gateway/ai-providers/togetherai/" %}
+{% comment %}{% icon_card icon="byteplus.svg" title="BytePlus ModelArk" cta_url="/ai-gateway/ai-providers/byteplus/" %}{% endcomment %}
 {% endhtml_tag %}
 
 ## Outbound authentication

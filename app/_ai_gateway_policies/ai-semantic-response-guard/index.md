@@ -63,8 +63,37 @@ To enforce these rules, the AI Semantic Response Guard Policy:
 1. Searches the vector database (Redis or pgvector) against configured `allow_responses` or `deny_responses`.
 1. Applies the decision rules described in [How it works](#how-it-works).
 
+## Response selection
+
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md subject="response" action="evaluates" example="the answer text without tool calls or reasoning" local=true %}
+
+The Policy rejects the `user` and `system` keys.
+The following details apply to responses:
+
+* `tool_result` selects the output of tools that the provider runs on its own side. Tools that you run yourself answer in the next request, so they never appear in a response.
+* The Policy doesn't support masking.
+* The Policy supports `message_selection` only on routes that don't use passthrough mode.
+
+### Streamed responses
+
+A selection that only names `assistant` keeps streaming, and the Policy inspects the answer text as it arrives.
+A selection that names `tool_call`, `reasoning`, or `tool_result` turns buffering on, because that content isn't available in the stream.
+The Policy then guards the whole response once it is complete, so clients receive it only after it is complete.
+A client that requested a stream receives a single JSON response instead of an event stream.
+Choose `assistant` alone if you need the response to keep streaming.
+
 {:.info}
 > If a response is blocked or if a system error occurs during evaluation, the AI Policy returns a `403 Forbidden` to the client without exposing that the AI Semantic Response Guard blocked it.
+
+
+## Text chunking
+
+{% include_cached md/ai-gateway/v2/guardrail-chunking.md local=true subject="response" window=1500 streaming=true selection_anchor="response-selection" selection_label="Response selection" %}
+
+The Policy compares one vector per part, so a long response becomes several comparisons.
+It defaults to a smaller window because a long text dilutes the vector.
+A part that matches a deny response blocks the text.
+When the Policy lists allow responses, a part that matches none of them blocks the text, so a Policy with allow responses is stricter once the text is split.
 
 ## Detect without blocking
 

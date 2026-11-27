@@ -1,37 +1,34 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "description": "A string representing a protocol, such as HTTP or HTTPS."
+      },
+      "description": "A set of strings representing protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
     "config": {
       "type": "object",
       "properties": {
-        "access_logs": {
-          "type": "object",
-          "properties": {
-            "custom_attributes_by_lua": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string",
-                "minLength": 1
-              },
-              "description": "A key-value map that dynamically modifies access log fields using Lua code."
-            },
-            "endpoint": {
-              "type": "string",
-              "description": "An HTTP URL endpoint where access logs (e.g. request/response, route/service, latency, etc.) are exported.",
-              "x-referenceable": true
-            }
-          }
-        },
-        "batch_span_count": {
-          "type": "integer",
-          "description": "The number of spans to be sent in a single batch."
-        },
-        "connect_timeout": {
-          "type": "integer",
-          "maximum": 2147483646,
-          "minimum": 0,
-          "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-          "default": 1000
-        },
         "send_timeout": {
           "type": "integer",
           "maximum": 2147483646,
@@ -39,70 +36,57 @@
           "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
           "default": 5000
         },
-        "read_timeout": {
-          "type": "integer",
-          "maximum": 2147483646,
-          "minimum": 0,
-          "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-          "default": 5000
-        },
-        "traces_endpoint": {
-          "type": "string",
-          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
-          "x-referenceable": true
-        },
-        "metrics": {
+        "client_certificate": {
           "type": "object",
           "properties": {
-            "enable_consumer_attribute": {
-              "type": "boolean",
-              "description": "A boolean value that determines if `http.server.request.count`, `http.server.request.size` and `http.server.response.size` metrics should fill in the consumer attribute when available.",
-              "default": false
-            },
-            "enable_principal_attribute": {
-              "type": "boolean",
-              "description": "A boolean value that determines if `http.server.request.count`, `http.server.request.size` and `http.server.response.size` metrics should fill in the principal attributes when an authenticated principal is available.",
-              "default": false
-            },
-            "enable_request_metrics": {
-              "type": "boolean",
-              "description": "A boolean value that determines if request count metrics should be collected. If enabled, `http.server.request.count` metrics will be exported.",
-              "default": false
-            },
-            "enable_bandwidth_metrics": {
-              "type": "boolean",
-              "description": "A boolean value that determines if bandwidth metrics should be collected. If enabled, `http.server.request.size` and `http.server.response.size` metrics will be exported.",
-              "default": false
-            },
-            "enable_latency_metrics": {
-              "type": "boolean",
-              "description": "A boolean value that determines if latency metrics should be collected. If enabled, `kong.latency.total`, `kong.latency.internal` and `kong.latency.upstream` metrics will be exported.",
-              "default": false
-            },
-            "enable_credential_attribute": {
-              "type": "boolean",
-              "description": "A boolean value that determines if `http.server.request.count`, `http.server.request.size`, `http.server.response.size`, `gen_ai.client.token.usage` and `kong.gen_ai.llm.cost` metrics should fill in the credential attribute when available.",
-              "default": false
-            },
-            "enable_upstream_health_metrics": {
-              "type": "boolean",
-              "description": "A boolean value that determines if upstream health metrics should be collected. If enabled, `kong.upstream.target.status` metrics will be exported.",
-              "default": false
-            },
-            "enable_ai_metrics": {
-              "type": "boolean",
-              "description": "A boolean value that determines if AI metrics should be collected. If enabled, `gen_ai.*`, `mcp.*`, `kong.gen_ai.*`, `kong.gen_ai.a2a.*` and `kong.mcp.*` metrics will be exported. To enable latency metrics for AI metrics, `enable_latency_metrics` must also be set to `true`. To enable `error.type` attribute for AI metrics, `enable_request_metrics` must also be set to `true`.",
-              "default": false
-            },
+            "id": {
+              "type": "string"
+            }
+          },
+          "description": "Certificate to use as the mTLS client certificate when connecting to a configured HTTPS endpoint. It applies to every signal: traces, logs, access_logs and metrics.",
+          "x-foreign": true,
+          "x-min-runtime-version": "2.2"
+        },
+        "header_type": {
+          "type": "string",
+          "enum": [
+            "aws",
+            "b3",
+            "b3-single",
+            "datadog",
+            "gcp",
+            "ignore",
+            "instana",
+            "jaeger",
+            "ot",
+            "preserve",
+            "w3c"
+          ],
+          "default": "preserve"
+        },
+        "http_response_header_for_traceid": {
+          "type": "string"
+        },
+        "logs_endpoint": {
+          "type": "string",
+          "description": "An HTTP URL endpoint where internal logs are exported.",
+          "x-referenceable": true
+        },
+        "access_logs": {
+          "type": "object",
+          "properties": {
             "endpoint": {
               "type": "string",
-              "description": "An HTTP URL endpoint where metrics are exported.",
+              "description": "An HTTP URL endpoint where access logs (e.g. request/response, route/service, latency, etc.) are exported.",
               "x-referenceable": true
             },
-            "push_interval": {
-              "type": "number",
-              "description": "The interval in seconds at which metrics are pushed to the OTLP server. This setting is only applicable when `endpoint` is set.",
-              "default": 60
+            "custom_attributes_by_lua": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": "A key-value map that dynamically modifies access log fields using Lua code."
             }
           }
         },
@@ -114,30 +98,92 @@
           },
           "description": "The custom headers to be added in the HTTP request sent to the OTLP server. This setting is useful for adding the authentication headers (token) for the APM backend."
         },
-        "resource_attributes": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string",
-            "x-lua-required": true
-          }
+        "connect_timeout": {
+          "type": "integer",
+          "maximum": 2147483646,
+          "minimum": 0,
+          "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+          "default": 1000
         },
-        "sampling_strategy": {
+        "traces_endpoint": {
           "type": "string",
-          "enum": [
-            "parent_drop_probability_fallback",
-            "parent_probability_fallback"
-          ],
-          "description": "The sampling strategy to use for OTLP `traces`. Set `parent_drop_probability_fallback` if you want parent-based sampling when the parent span contains a `false` sampled flag, and fallback to probability-based sampling otherwise. Set `parent_probability_fallback` if you want parent-based sampling when the parent span contains a valid sampled flag (`true` or `false`), and fallback to probability-based sampling otherwise.",
-          "default": "parent_drop_probability_fallback"
-        },
-        "logs_endpoint": {
-          "type": "string",
-          "description": "An HTTP URL endpoint where internal logs are exported.",
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
           "x-referenceable": true
+        },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "enable_request_metrics": {
+              "type": "boolean",
+              "description": "A boolean value that determines if request count metrics should be collected. If enabled, `http.server.request.count` metrics will be exported.",
+              "default": false
+            },
+            "enable_bandwidth_metrics": {
+              "type": "boolean",
+              "description": "A boolean value that determines if bandwidth metrics should be collected. If enabled, `http.server.request.size` and `http.server.response.size` metrics will be exported.",
+              "default": false
+            },
+            "enable_ai_metrics": {
+              "type": "boolean",
+              "description": "A boolean value that determines if AI metrics should be collected. If enabled, `gen_ai.*`, `mcp.*`, `kong.gen_ai.*`, `kong.gen_ai.a2a.*` and `kong.mcp.*` metrics will be exported. To enable latency metrics for AI metrics, `enable_latency_metrics` must also be set to `true`. To enable `error.type` attribute for AI metrics, `enable_request_metrics` must also be set to `true`.",
+              "default": false
+            },
+            "enable_consumer_attribute": {
+              "type": "boolean",
+              "description": "A boolean value that determines if `http.server.request.count`, `http.server.request.size` and `http.server.response.size` metrics should fill in the consumer attribute when available.",
+              "default": false
+            },
+            "enable_latency_metrics": {
+              "type": "boolean",
+              "description": "A boolean value that determines if latency metrics should be collected. If enabled, `kong.latency.total`, `kong.latency.internal` and `kong.latency.upstream` metrics will be exported.",
+              "default": false
+            },
+            "enable_upstream_health_metrics": {
+              "type": "boolean",
+              "description": "A boolean value that determines if upstream health metrics should be collected. If enabled, `kong.upstream.target.status` metrics will be exported.",
+              "default": false
+            },
+            "endpoint": {
+              "type": "string",
+              "description": "An HTTP URL endpoint where metrics are exported.",
+              "x-referenceable": true
+            },
+            "push_interval": {
+              "type": "number",
+              "description": "The interval in seconds at which metrics are pushed to the OTLP server. This setting is only applicable when `endpoint` is set.",
+              "default": 60
+            },
+            "max_export_batch_size": {
+              "type": "integer",
+              "description": "The maximum number of data points in a batch that are exported at once. If set, the metrics are split into several requests of up to this many data points, which avoids the request being rejected by an OTLP server that limits the request body size. If it is not set, the `OTEL_METRIC_EXPORT_MAX_BATCH_SIZE` environment variable is used, and if that is not set either, all metrics are exported in one request.",
+              "x-min-runtime-version": "2.4"
+            },
+            "enable_principal_attribute": {
+              "type": "boolean",
+              "description": "A boolean value that determines if `http.server.request.count`, `http.server.request.size` and `http.server.response.size` metrics should fill in the principal attributes when an authenticated principal is available.",
+              "default": false,
+              "x-min-runtime-version": "2.3"
+            },
+            "enable_credential_attribute": {
+              "type": "boolean",
+              "description": "A boolean value that determines if `http.server.request.count`, `http.server.request.size`, `http.server.response.size`, `gen_ai.client.token.usage` and `kong.gen_ai.llm.cost` metrics should fill in the credential attribute when available.",
+              "default": false,
+              "x-min-runtime-version": "2.3"
+            }
+          }
         },
         "queue": {
           "type": "object",
           "properties": {
+            "concurrency_limit": {
+              "type": "integer",
+              "enum": [
+                -1,
+                1
+              ],
+              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
+              "default": 1
+            },
             "max_batch_size": {
               "type": "integer",
               "maximum": 1000000,
@@ -181,54 +227,33 @@
               "minimum": 0.001,
               "description": "Maximum time in seconds between retries, caps exponential backoff.",
               "default": 60
-            },
-            "concurrency_limit": {
-              "type": "integer",
-              "enum": [
-                -1,
-                1
-              ],
-              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
-              "default": 1
             }
           },
           "default": {
             "max_batch_size": 200
           }
         },
-        "client_certificate": {
+        "resource_attributes": {
           "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            }
-          },
-          "description": "Certificate to use as the mTLS client certificate when connecting to a configured HTTPS endpoint. It applies to every signal: traces, logs, access_logs and metrics.",
-          "x-foreign": true
+          "additionalProperties": {
+            "type": "string",
+            "x-lua-required": true
+          }
         },
-        "http_response_header_for_traceid": {
-          "type": "string"
-        },
-        "header_type": {
-          "type": "string",
-          "enum": [
-            "aws",
-            "b3",
-            "b3-single",
-            "datadog",
-            "gcp",
-            "ignore",
-            "instana",
-            "jaeger",
-            "ot",
-            "preserve",
-            "w3c"
-          ],
-          "default": "preserve"
+        "batch_span_count": {
+          "type": "integer",
+          "description": "The number of spans to be sent in a single batch."
         },
         "batch_flush_delay": {
           "type": "integer",
           "description": "The delay, in seconds, between two consecutive batches."
+        },
+        "read_timeout": {
+          "type": "integer",
+          "maximum": 2147483646,
+          "minimum": 0,
+          "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+          "default": 5000
         },
         "sampling_rate": {
           "type": "number",
@@ -239,13 +264,6 @@
         "propagation": {
           "type": "object",
           "properties": {
-            "clear": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Header names to clear after context extraction. This allows to extract the context from a certain header and then remove it from the request, useful when extraction and injection are performed on different header formats and the original header should not be sent to the upstream. If left empty, no headers are cleared."
-            },
             "inject": {
               "type": "array",
               "items": {
@@ -297,39 +315,29 @@
                 ]
               },
               "description": "Header formats used to extract tracing context from incoming requests. If multiple values are specified, the first one found will be used for extraction. If left empty, Kong will not extract any tracing context information from incoming requests and generate a trace with no parent and a new trace ID."
+            },
+            "clear": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Header names to clear after context extraction. This allows to extract the context from a certain header and then remove it from the request, useful when extraction and injection are performed on different header formats and the original header should not be sent to the upstream. If left empty, no headers are cleared."
             }
           },
           "default": {
             "default_format": "w3c"
           }
+        },
+        "sampling_strategy": {
+          "type": "string",
+          "enum": [
+            "parent_drop_probability_fallback",
+            "parent_probability_fallback"
+          ],
+          "description": "The sampling strategy to use for OTLP `traces`. Set `parent_drop_probability_fallback` if you want parent-based sampling when the parent span contains a `false` sampled flag, and fallback to probability-based sampling otherwise. Set `parent_probability_fallback` if you want parent-based sampling when the parent span contains a valid sampled flag (`true` or `false`), and fallback to probability-based sampling otherwise.",
+          "default": "parent_drop_probability_fallback"
         }
       }
-    },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "tcp",
-          "tls",
-          "tls_passthrough",
-          "udp",
-          "ws",
-          "wss"
-        ],
-        "description": "A string representing a protocol, such as HTTP or HTTPS."
-      },
-      "description": "A set of strings representing protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
     },
     "consumer": {
       "type": "object",

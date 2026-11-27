@@ -108,8 +108,6 @@ rows:
     description: "Checks both requests and responses."
 {% endtable %}
 
-To control which parts of the conversation the Policy sends for evaluation, use [`config.text_source`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-text-source). Set it to `concatenate_user_content` to check only `user` input, or `concatenate_all_content` to include the full exchange, including system and assistant messages.
-
 {:.info}
 > Match the rails defined in your NeMo guardrail configuration to the phases named in `config.guarding_mode`. A configuration used with `guarding_mode: INPUT` should define only an input rail; a configuration used with `guarding_mode: OUTPUT` should define only an output rail. NeMo evaluates whichever rails a configuration defines every time it's called, regardless of `guarding_mode`, so an output rail included in an input-only check runs against an empty response.
 
@@ -204,6 +202,20 @@ For the full set of supported keys, see the [NeMo Guardrails configuration refer
 
 When you use an inline configuration, make sure the model you name in `guardrails.config.models` is available to the NeMo microservice. Depending on how you deploy NeMo, you might need to register it first with the `POST /v1/guardrail/models` endpoint. For more information, see [Manage models](https://docs.nvidia.com/nemo/microservices/latest/guardrails/manage-models.html) in the NVIDIA documentation.
 
+## Message selection
+
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-nvidia-nemo-guardrail" %}
+
+This Policy sends NeMo a `messages` array with roles instead of one block of text, and the selection works the same way. It skips a blank prompt in every configuration, whether or not you set `message_selection`.
+
+
+## Text chunking
+
+{% include_cached md/ai-gateway/v2/guardrail-chunking.md service="NeMo guardrail service" window=1500 audit=true streaming=true messages=true %}
+NeMo doesn't evaluate any rails for a group without a user message.
+The Policy therefore repeats a user turn at the start of each group.
+That turn counts toward the window.
+
 ## Authentication
 
 The NeMo Guardrails microservice needs credentials for the LLM that evaluates your rails. Set the key in [`config.auth.api_key`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-auth-api-key), and {{site.ai_gateway}} forwards it to NeMo on every check.
@@ -219,7 +231,6 @@ Two fields control how {{site.ai_gateway}} builds the header:
 > * **Do not** change `config.auth.header` unless your NeMo deployment expects a different header. The NeMo microservice reads `X-Model-Authorization` to resolve which LLM provider to use for the guardrail check. If the header is missing, NeMo falls back to its configured default provider, and your rails may run against a model you did not intend.
 > * For a NeMo model configured with `engine: openai`, set `config.auth.prefix` to an empty string (`""`). NeMo passes the `X-Model-Authorization` header value straight to its OpenAI client as the API key, without stripping a `Bearer ` scheme from it first, so the default prefix becomes part of the credential and the check fails to authenticate.
 
-
 ## Blocking behavior
 
 When NeMo reports a violation, {{site.ai_gateway}} blocks the content and returns a failure message. You can customize the messages for each phase:
@@ -227,10 +238,12 @@ When NeMo reports a violation, {{site.ai_gateway}} blocks the content and return
 * [`config.request_failure_message`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-request-failure-message): Returned when a request is blocked.
 * [`config.response_failure_message`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-response-failure-message): Returned when a response is blocked.
 
-Two other fields change how the Policy blocks violations:
+The Policy always blocks a violation and never masks it.
+Setting [`config.allow_masking`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-allow-masking) to `true` has no effect.
 
-* [`config.allow_masking`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-allow-masking): Masks violating content instead of blocking the request or response. Enabling this field disables streaming, because the Policy needs the complete payload to mask it.
-* [`config.stop_on_error`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-stop-on-error): Controls what happens when the check itself fails, for example when the NeMo service is unreachable or [`config.timeout`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-timeout) expires. When enabled, which is the default, {{site.ai_gateway}} stops processing the request. Disable it to fail open and let traffic through unchecked.
+The [`config.stop_on_error`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-stop-on-error) field controls what happens when the check itself fails, for example when the NeMo service is unreachable or [`config.timeout`](/ai-gateway/policies/ai-nvidia-nemo-guardrail/reference/#schema--config-timeout) expires.
+When enabled, which is the default, {{site.ai_gateway}} stops processing the request.
+Disable it to fail open and let traffic through unchecked.
 
 {:.warning}
 > Setting `stop_on_error: false` means an outage in the NeMo Guardrails service silently disables your safety rails. Only disable it when availability matters more than enforcement.

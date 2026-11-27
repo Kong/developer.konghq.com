@@ -34,6 +34,9 @@ You can configure **either** an allow list or a deny list with AI Consumers, AI 
 
 The ACL policy requires that AI Consumers are authenticated and you should set up [AI Auth Strategies](/ai-gateway/entities/ai-auth-strategy/) before enabling this policy.
 
+To control access for {{site.identity}} principals with rules that you manage in {{site.konnect_short_name}}, use the [Access Policy Engine](/ai-gateway/access-policy-engine/) instead. 
+For a comparison, see [Choose between access control options](/ai-gateway/access-policy-engine/#choose-between-access-control-options).
+
 ## Upstream Consumer Groups header
 
 If `hide_groups_header` is set to `false` and an AI Consumer is validated, {{site.ai_gateway}} appends a `X-Consumer-Groups` header to the request before proxying it to the upstream service. The header contains a comma separated list of groups that belong to the AI Consumer, for example `admin, pro_user`. This allows you to identify the groups associated with the AI Consumer. 

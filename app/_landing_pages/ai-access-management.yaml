@@ -114,7 +114,7 @@ rows:
           config:
             title: Who can call {{site.ai_gateway}}
             description: |
-              Add users, organize them into groups, and connect an identity provider for sign-in.
+              Add users, organize them into groups, connect an identity provider for sign-in, and set rules for which models and MCP tools each group can use.
             icon: /assets/icons/team.svg
             ctas:
               - text: Users
@@ -123,6 +123,8 @@ rows:
                 url: /ai-access-management/concepts/#groups
               - text: Identity providers
                 url: /ai-access-management/concepts/#identity-providers
+              - text: Access Policy Engine
+                url: /ai-gateway/access-policy-engine/
       - blocks:
         - type: card
           config:

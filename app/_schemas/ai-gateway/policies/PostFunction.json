@@ -36,14 +36,14 @@
           },
           "default": []
         },
-        "rewrite": {
+        "certificate": {
           "type": "array",
           "items": {
             "type": "string"
           },
           "default": []
         },
-        "header_filter": {
+        "body_filter": {
           "type": "array",
           "items": {
             "type": "string"
@@ -57,14 +57,7 @@
           },
           "default": []
         },
-        "ws_upstream_frame": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "default": []
-        },
-        "certificate": {
+        "rewrite": {
           "type": "array",
           "items": {
             "type": "string"
@@ -78,7 +71,7 @@
           },
           "default": []
         },
-        "body_filter": {
+        "header_filter": {
           "type": "array",
           "items": {
             "type": "string"
@@ -93,6 +86,13 @@
           "default": []
         },
         "ws_handshake": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "ws_upstream_frame": {
           "type": "array",
           "items": {
             "type": "string"

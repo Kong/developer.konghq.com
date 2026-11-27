@@ -1,58 +1,11 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
-        "text_source": {
-          "type": "string",
-          "enum": [
-            "concatenate_all_content",
-            "concatenate_user_content",
-            "last_message"
-          ],
-          "description": "Select where to pick the 'text' for the guardrail service request.",
-          "default": "last_message"
-        },
-        "timeout": {
-          "type": "number",
-          "description": "Connection timeout with the guardrail service.",
-          "default": 10000
-        },
-        "params": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string",
-            "x-referenceable": true,
-            "x-lua-required": true
-          },
-          "description": "Parameters to be used in the guardrail service request. Keys are the parameter name and values can be either Lua expressions in the form `$(some_lua_expression)`or string. For expression, it will be evaluated as the value for the corresponding key. For string, it will be attempted to be parsed as string in JSON format, otherwise it will be used as is."
-        },
         "metrics": {
           "type": "object",
           "properties": {
-            "block_reason": {
-              "type": "string",
-              "description": "Metric to indicate the reason for blocking the input."
-            },
             "block_detail": {
               "type": "string",
               "description": "Metric to indicate the detail for blocking the input."
@@ -60,6 +13,10 @@
             "masked": {
               "type": "string",
               "description": "Metric to indicate whether the input was masked."
+            },
+            "block_reason": {
+              "type": "string",
+              "description": "Metric to indicate the reason for blocking the input."
             }
           }
         },
@@ -69,6 +26,54 @@
             "type": "string"
           },
           "description": "A list of custom metrics to be recorded."
+        },
+        "proxy_config": {
+          "type": "object",
+          "properties": {
+            "https_proxy_host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com."
+            },
+            "https_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            },
+            "proxy_scheme": {
+              "type": "string",
+              "enum": [
+                "http"
+              ],
+              "description": "The proxy scheme to use when connecting. Only `http` is supported.",
+              "default": "http"
+            },
+            "auth_username": {
+              "type": "string",
+              "description": "The username to authenticate with, if the forward proxy is protected by basic authentication.",
+              "x-referenceable": true
+            },
+            "auth_password": {
+              "type": "string",
+              "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
+              "x-referenceable": true,
+              "x-encrypted": true
+            },
+            "no_proxy": {
+              "type": "string",
+              "description": "Comma-separated list of hosts that should not be proxied."
+            },
+            "http_proxy_host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com."
+            },
+            "http_proxy_port": {
+              "type": "integer",
+              "maximum": 65535,
+              "minimum": 0,
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
+            }
+          }
         },
         "ssl_verify": {
           "type": "boolean",
@@ -85,27 +90,13 @@
           "description": "Controls block response format and status code. 'none' returns 400 with plain text block reason, 'stealth' 403 without details and 'verbose' returns 403 with rich JSON details. In streaming mode, the final SSE chunk includes finish_reason='blocked_by_guard' and 'verbose' will include a 'guardrail_result' metadata entry under 'data.choices[0]' in OpenAI format.",
           "default": "none"
         },
-        "guarding_mode": {
-          "type": "string",
-          "enum": [
-            "BOTH",
-            "INPUT",
-            "OUTPUT"
-          ],
-          "description": "The guardrail mode to use for the request.",
-          "default": "INPUT"
-        },
-        "functions": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string",
-            "x-lua-required": true
-          },
-          "description": "Custom functions to be used in expression templates."
-        },
         "response": {
           "type": "object",
           "properties": {
+            "mask": {
+              "type": "string",
+              "description": "Template or string to evaluate the masked text of the part. A rendering that is empty means the part holds nothing to mask, and the part keeps its own text."
+            },
             "block": {
               "type": "string",
               "description": "template or string to evaluate block field"
@@ -121,30 +112,47 @@
           ],
           "description": "Configuration specific to parse guardrail response."
         },
-        "log_blocked_content": {
-          "type": "boolean",
-          "description": "Whether to log prompts and responses that are blocked by the guardrail.",
-          "default": false
+        "text_source": {
+          "type": "string",
+          "enum": [
+            "concatenate_all_content",
+            "concatenate_user_content",
+            "last_message"
+          ],
+          "description": "Select where to pick the 'text' for the guardrail service request.",
+          "default": "last_message"
         },
-        "continue_on_detection": {
-          "type": "boolean",
-          "description": "If true, the guardrail will not block the request or response. Block data and details will still be visible via kong logs. You can expect this field to work coherently with `guarding_mode` parameter.",
-          "default": false
-        },
-        "allow_masking": {
-          "type": "boolean",
-          "description": "Allow masking the request/response instead of blocking it. Streaming will be disabled if this is enabled.",
-          "default": false
-        },
-        "response_buffer_size": {
-          "type": "number",
-          "description": "The amount of bytes receiving from upstream to be buffered before sending to the guardrail service. This only applies to the response content guard.",
-          "default": 100
+        "message_selection": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "scope": {
+                "type": "string",
+                "enum": [
+                  "history",
+                  "round"
+                ]
+              },
+              "message_countback": {
+                "type": "integer",
+                "maximum": 1000,
+                "minimum": 1
+              }
+            }
+          },
+          "description": "The parts of the request to send to the guardrail service, each with its own window: the text of a role, a tool call, a tool result, or the reasoning. An absent key is not inspected. Replaces text_source and allow_all_conversation_history. A round window starts after the last assistant message, so an appended assistant turn empties it and the guard does not run. On a route an untrusted caller reaches, use scope 'history' for the user turn. The selected content leaves the gateway.",
+          "x-min-runtime-version": "2.4"
         },
         "stop_on_error": {
           "type": "boolean",
           "description": "Stop processing if an error occurs.",
           "default": true
+        },
+        "allow_masking": {
+          "type": "boolean",
+          "description": "Allow masking the request/response instead of blocking it. Streaming will be disabled if this is enabled.",
+          "default": false
         },
         "request": {
           "type": "object",
@@ -210,58 +218,177 @@
           ],
           "description": "Configuration specific to guardrail request. Fields below support template evaluation. Warning: if template is used, please verify that the client is from a trusted source to prevent injection."
         },
-        "proxy_config": {
+        "continue_on_detection": {
+          "type": "boolean",
+          "description": "If true, the guardrail will not block the request or response. Block data and details will still be visible via kong logs. You can expect this field to work coherently with `guarding_mode` parameter.",
+          "default": false
+        },
+        "functions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-lua-required": true
+          },
+          "description": "Custom functions to be used in expression templates."
+        },
+        "guarding_mode": {
+          "type": "string",
+          "enum": [
+            "BOTH",
+            "INPUT",
+            "OUTPUT"
+          ],
+          "description": "The guardrail mode to use for the request.",
+          "default": "INPUT"
+        },
+        "response_buffer_size": {
+          "type": "number",
+          "description": "The amount of streamed answer text, in characters, that the policy accumulates before it calls the guardrail service. This only applies to the response content guard, and one call carries at most chunking.max_chunk_size characters of that text. With streaming.withhold_response false, the text of one window reaches the client before the call that covers it returns.",
+          "default": 100
+        },
+        "streaming": {
           "type": "object",
           "properties": {
-            "proxy_scheme": {
+            "withhold_response": {
+              "type": "boolean",
+              "description": "Whether a streamed answer waits for the guardrail decision before the client receives it. When it is false, the client reads the answer as the model writes it, and a block that lands later reaches it as a terminal event after the blocked text. When it is true, the answer arrives one guardrail call behind, and a block replaces the blocked text.",
+              "default": false,
+              "x-min-runtime-version": "2.4"
+            },
+            "release_mode": {
               "type": "string",
               "enum": [
-                "http"
+                "at_eof",
+                "per_scan"
               ],
-              "description": "The proxy scheme to use when connecting. Only `http` is supported.",
-              "default": "http"
-            },
-            "auth_username": {
-              "type": "string",
-              "description": "The username to authenticate with, if the forward proxy is protected by basic authentication.",
-              "x-referenceable": true
-            },
-            "auth_password": {
-              "type": "string",
-              "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
-              "x-referenceable": true,
-              "x-encrypted": true
-            },
-            "no_proxy": {
-              "type": "string",
-              "description": "Comma-separated list of hosts that should not be proxied."
-            },
-            "http_proxy_host": {
-              "type": "string",
-              "description": "A string representing a host name, such as example.com."
-            },
-            "http_proxy_port": {
-              "type": "integer",
-              "maximum": 65535,
-              "minimum": 0,
-              "description": "An integer representing a port number between 0 and 65535, inclusive."
-            },
-            "https_proxy_host": {
-              "type": "string",
-              "description": "A string representing a host name, such as example.com."
-            },
-            "https_proxy_port": {
-              "type": "integer",
-              "maximum": 65535,
-              "minimum": 0,
-              "description": "An integer representing a port number between 0 and 65535, inclusive."
+              "description": "When a withheld answer is released. per_scan releases the window that a clean call covers, so the client reads the answer in bursts one call behind. at_eof releases the answer only after the last call returns, so the client reads no byte of a blocked answer and receives the whole answer at once otherwise. It has no effect when the response is not withheld. A held answer also releases early when it passes 1 MB, and when a guard call reaches its timeout.",
+              "default": "per_scan",
+              "x-min-runtime-version": "2.4"
             }
-          }
+          },
+          "description": "The settings that change when a guarded stream may send the bytes of its answer. They do not change how one text is cut for one call; chunking holds that.",
+          "x-min-runtime-version": "2.4"
+        },
+        "chunking": {
+          "type": "object",
+          "properties": {
+            "recursive_separators": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": "The separators that the recursive strategy cuts on, coarsest first. Each one must hold at least one character.",
+              "default": [
+                "",
+                "",
+                " ",
+                ". "
+              ],
+              "x-min-runtime-version": "2.4"
+            },
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether the policy cuts a text that is above chunking.max_chunk_size before it sends the text to the guardrail service. When it is false, one call carries the whole text, and the guardrail service can refuse a request that large.",
+              "default": false,
+              "x-min-runtime-version": "2.4"
+            },
+            "strategy": {
+              "type": "string",
+              "enum": [
+                "fixed_size",
+                "recursive"
+              ],
+              "description": "How a text above chunking.max_chunk_size is cut. fixed_size cuts inside a fixed window at a sentence end. recursive cuts at the coarsest separator of chunking.recursive_separators that fits the window.",
+              "default": "fixed_size",
+              "x-min-runtime-version": "2.4"
+            },
+            "max_chunk_size": {
+              "type": "integer",
+              "maximum": 1000000,
+              "minimum": 1000,
+              "description": "The largest chunk, in characters, that one guardrail call sends. Set it to the input limit of the guardrail service in use. 10000 is a common input limit of guardrail services.",
+              "default": 10000,
+              "x-min-runtime-version": "2.4"
+            },
+            "min_chunk_size": {
+              "type": "integer",
+              "maximum": 1000000,
+              "minimum": 1,
+              "description": "The lower limit of a cut, in characters. Every chunk but the last holds at least this count, and it must stay at or above three quarters of chunking.max_chunk_size. A lower floor lets a short early sentence end win the cut, which splits the text into short chunks beside full ones and multiplies the calls to the guardrail service. The default is 80 percent of the window of the policy, so a short chunk does not dilute detection.",
+              "default": 8000,
+              "x-min-runtime-version": "2.4"
+            },
+            "overlap": {
+              "type": "integer",
+              "maximum": 1000,
+              "minimum": 0,
+              "description": "The characters that two consecutive chunks share, or the width of the boundary window on each side of a cut when the policy masks. It narrows the gap at a boundary and does not close it.",
+              "default": 100,
+              "x-min-runtime-version": "2.4"
+            },
+            "timeout": {
+              "type": "number",
+              "maximum": 3600000,
+              "minimum": 1,
+              "description": "The total time, in milliseconds, that the whole check may take, all calls together. A check that reaches it stops. With stop_on_error false, the rest of the text then goes uninspected.",
+              "default": 30000,
+              "x-min-runtime-version": "2.4"
+            },
+            "parallelism": {
+              "type": "integer",
+              "maximum": 32,
+              "minimum": 1,
+              "description": "The largest number of guardrail calls that one buffered check keeps in flight. 1 sends the chunks one at a time. The check narrows below this value when the service answers slower than its fastest wave, and it adds a call back when the service keeps that pace. At one call it stays for the rest of the check, because one call measures no queue. It applies to the request and the buffered response paths, never to a streamed answer.",
+              "default": 1,
+              "x-min-runtime-version": "2.4"
+            }
+          },
+          "description": "The settings that cut a text above chunking.max_chunk_size into chunks. A stored configuration always holds this object with its defaults. The object carries enabled false, so one call sends the whole text. An explicit null is refused: omit the object, or send enabled false.",
+          "x-min-runtime-version": "2.4"
+        },
+        "timeout": {
+          "type": "number",
+          "description": "Connection timeout with the guardrail service.",
+          "default": 10000
+        },
+        "log_blocked_content": {
+          "type": "boolean",
+          "description": "Whether to log prompts and responses that are blocked by the guardrail.",
+          "default": false
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-referenceable": true,
+            "x-lua-required": true
+          },
+          "description": "Parameters to be used in the guardrail service request. Keys are the parameter name and values can be either Lua expressions in the form `$(some_lua_expression)`or string. For expression, it will be evaluated as the value for the corresponding key. For string, it will be attempted to be parsed as string in JSON format, otherwise it will be used as is."
         }
       },
       "required": [
         "request",
         "response"
+      ]
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
       ]
     },
     "consumer": {

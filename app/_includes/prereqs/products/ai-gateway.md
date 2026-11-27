@@ -35,12 +35,12 @@ This is a {{site.konnect_short_name}} tutorial and requires a {{site.konnect_sho
    export KONNECT_TOKEN='YOUR_KONNECT_PAT'
    ```
 
-<!--vale off-->
+   <!--vale off-->
 3. {{ run_step }}
 
 {{ run_snippet | indent: 3 }}
 {% endif %}
-!--vale on-->
+<!--vale on-->
 This sets up a {{site.ai_gateway}} control plane named `ai-quickstart`, provisions a local data plane, and prints out the following environment variables export:
 
 ```bash

@@ -723,5 +723,9 @@
 # AI Access Management moved out of ai-gateway
 /ai-gateway/access-management/ /ai-access-management/ 301
 
+# Access Policy Engine
+/ai-gateway/policies/access-policy-engine/ /ai-gateway/access-policy-engine/ 301
+/ai-gateway/policies/access-policy-engine/reference/ /ai-gateway/access-policy-engine/ 301
+
 # Security advisories moved under /support/security/
 /support/kong-ingress-controller-is-not-affected-by-ingressnightmare/  /support/security/security-advisory-ingressnightmare/

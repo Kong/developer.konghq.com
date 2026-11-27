@@ -39,6 +39,11 @@ Only regex patterns are supported, and all fields are required: `name`, `regex`,
 
 The `name` must be unique for each pattern.
 
+The {{include.policy_name}} Policy accepts any value in `regex` when you save the configuration, including an expression that doesn't compile.
+The PII service compiles each pattern with Python's [`re` module](https://docs.python.org/3/library/re.html) when it handles a request.
+It rejects the request if a pattern is invalid.
+Test each regular expression against Python's `re` module before you deploy it.
+
 #### How the score works
 
 The `score` is the confidence value that a custom pattern assigns to its matches.

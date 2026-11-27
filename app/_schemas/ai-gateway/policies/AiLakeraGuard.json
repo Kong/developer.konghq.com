@@ -1,76 +1,40 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
     "config": {
       "type": "object",
       "properties": {
-        "text_source": {
-          "type": "string",
-          "enum": [
-            "concatenate_all_content",
-            "concatenate_user_content",
-            "last_message"
-          ],
-          "description": "Select where to pick the 'text' for the Lakera Guard request (when text/generation is selected).",
-          "default": "concatenate_all_content"
-        },
-        "log_blocked_content": {
-          "type": "boolean",
-          "description": "Whether to log prompts and responses that are blocked by the guardrail.",
-          "default": false
-        },
-        "project_id": {
-          "type": "string",
-          "description": "Project ID to apply filters from. If null, it will use the subscription's default project.",
-          "x-referenceable": true
-        },
         "request_failure_message": {
           "type": "string",
           "description": "The message to return when a failure occurs on the request phase.",
           "default": "Request was filtered by Lakera Guard"
         },
-        "api_key": {
-          "type": "string",
-          "description": "API key for the Lakera Guard subscription.",
-          "x-referenceable": true,
-          "x-encrypted": true
-        },
-        "continue_on_detection": {
-          "type": "boolean",
-          "description": "If true, the guardrail will not block the request or response. Block data and details will still be visible via kong logs. You can expect this field to work coherently with `guarding_mode` parameter.",
-          "default": false
-        },
-        "lakera_service_url": {
-          "type": "string",
-          "description": "The guard-operation URL of the Lakera Guard service. Defaults to the SaaS /v2/guard endpoint. It can be set to a locally hosted instance of Lakera Guard.",
-          "default": "https://api.lakera.ai/v2/guard",
-          "x-referenceable": true
-        },
-        "stop_on_error": {
-          "type": "boolean",
-          "description": "Stop processing if an error occurs.",
-          "default": true
-        },
-        "timeout": {
+        "response_buffer_size": {
           "type": "number",
-          "description": "Connection timeout with the guardrail service.",
-          "default": 10000
-        },
-        "reveal_failure_categories": {
-          "type": "boolean",
-          "description": "Whether to reveal failure categories in the response to the caller.",
-          "default": false
+          "description": "The amount of streamed answer text, in characters, that the policy accumulates before it calls the guardrail service. This only applies to the response content guard, and one call carries at most chunking.max_chunk_size characters of that text. With streaming.withhold_response false, the text of one window reaches the client before the call that covers it returns.",
+          "default": 100
         },
         "proxy_config": {
           "type": "object",
           "properties": {
-            "no_proxy": {
-              "type": "string",
-              "description": "Comma-separated list of hosts that should not be proxied."
-            },
-            "http_proxy_host": {
-              "type": "string",
-              "description": "A string representing a host name, such as example.com."
-            },
             "http_proxy_port": {
               "type": "integer",
               "maximum": 65535,
@@ -105,23 +69,113 @@
               "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
               "x-referenceable": true,
               "x-encrypted": true
+            },
+            "no_proxy": {
+              "type": "string",
+              "description": "Comma-separated list of hosts that should not be proxied."
+            },
+            "http_proxy_host": {
+              "type": "string",
+              "description": "A string representing a host name, such as example.com."
             }
           }
+        },
+        "lakera_service_url": {
+          "type": "string",
+          "description": "The guard-operation URL of the Lakera Guard service. Defaults to the SaaS /v2/guard endpoint. It can be set to a locally hosted instance of Lakera Guard.",
+          "default": "https://api.lakera.ai/v2/guard",
+          "x-referenceable": true
+        },
+        "reveal_failure_categories": {
+          "type": "boolean",
+          "description": "Whether to reveal failure categories in the response to the caller.",
+          "default": false
+        },
+        "message_selection": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "scope": {
+                "type": "string",
+                "enum": [
+                  "history",
+                  "round"
+                ]
+              },
+              "message_countback": {
+                "type": "integer",
+                "maximum": 1000,
+                "minimum": 1
+              }
+            }
+          },
+          "description": "The parts of the request to send to the guardrail service, each with its own window: the text of a role, a tool call, a tool result, or the reasoning. An absent key is not inspected. Replaces text_source and allow_all_conversation_history. A round window starts after the last assistant message, so an appended assistant turn empties it and the guard does not run. On a route an untrusted caller reaches, use scope 'history' for the user turn. The selected content leaves the gateway.",
+          "x-min-runtime-version": "2.4"
+        },
+        "streaming": {
+          "type": "object",
+          "properties": {
+            "withhold_response": {
+              "type": "boolean",
+              "description": "Whether a streamed answer waits for the guardrail decision before the client receives it. When it is false, the client reads the answer as the model writes it, and a block that lands later reaches it as a terminal event after the blocked text. When it is true, the answer arrives one guardrail call behind, and a block replaces the blocked text.",
+              "default": false,
+              "x-min-runtime-version": "2.4"
+            },
+            "release_mode": {
+              "type": "string",
+              "enum": [
+                "at_eof",
+                "per_scan"
+              ],
+              "description": "When a withheld answer is released. per_scan releases the window that a clean call covers, so the client reads the answer in bursts one call behind. at_eof releases the answer only after the last call returns, so the client reads no byte of a blocked answer and receives the whole answer at once otherwise. It has no effect when the response is not withheld. A held answer also releases early when it passes 1 MB, and when a guard call reaches its timeout.",
+              "default": "per_scan",
+              "x-min-runtime-version": "2.4"
+            }
+          },
+          "description": "The settings that change when a guarded stream may send the bytes of its answer. They do not change how one text is cut for one call; chunking holds that.",
+          "x-min-runtime-version": "2.4"
+        },
+        "log_blocked_content": {
+          "type": "boolean",
+          "description": "Whether to log prompts and responses that are blocked by the guardrail.",
+          "default": false
+        },
+        "continue_on_detection": {
+          "type": "boolean",
+          "description": "If true, the guardrail will not block the request or response. Block data and details will still be visible via kong logs. You can expect this field to work coherently with `guarding_mode` parameter.",
+          "default": false
+        },
+        "api_key": {
+          "type": "string",
+          "description": "API key for the Lakera Guard subscription.",
+          "x-referenceable": true,
+          "x-encrypted": true
+        },
+        "stop_on_error": {
+          "type": "boolean",
+          "description": "Stop processing if an error occurs.",
+          "default": true
+        },
+        "timeout": {
+          "type": "number",
+          "description": "Connection timeout with the guardrail service.",
+          "default": 10000
+        },
+        "response_failure_message": {
+          "type": "string",
+          "description": "The message to return when a failure occurs on the response phase.",
+          "default": "Response was filtered by Lakera Guard"
         },
         "verify_ssl": {
           "type": "boolean",
           "description": "Whether to verify the SSL certificate of the guardrail service endpoint.",
           "default": true
         },
-        "rejection_mode": {
+        "project_id": {
           "type": "string",
-          "enum": [
-            "none",
-            "stealth",
-            "verbose"
-          ],
-          "description": "Controls block response format and status code. 'none' returns 400 with plain text block reason, 'stealth' 403 without details and 'verbose' returns 403 with rich JSON details. In streaming mode, the final SSE chunk includes finish_reason='blocked_by_guard' and 'verbose' will include a 'guardrail_result' metadata entry under 'data.choices[0]' in OpenAI format.",
-          "default": "none"
+          "description": "Project ID to apply filters from. If null, it will use the subscription's default project.",
+          "x-referenceable": true
         },
         "guarding_mode": {
           "type": "string",
@@ -133,36 +187,115 @@
           "description": "The guardrail mode to use for the request.",
           "default": "INPUT"
         },
-        "response_failure_message": {
+        "text_source": {
           "type": "string",
-          "description": "The message to return when a failure occurs on the response phase.",
-          "default": "Response was filtered by Lakera Guard"
+          "enum": [
+            "concatenate_all_content",
+            "concatenate_user_content",
+            "last_message"
+          ],
+          "description": "Select where to pick the 'text' for the Lakera Guard request (when text/generation is selected).",
+          "default": "concatenate_all_content"
         },
-        "response_buffer_size": {
-          "type": "number",
-          "description": "The amount of bytes receiving from upstream to be buffered before sending to the guardrail service. This only applies to the response content guard.",
-          "default": 100
+        "chunking": {
+          "type": "object",
+          "properties": {
+            "strategy": {
+              "type": "string",
+              "enum": [
+                "fixed_size",
+                "recursive"
+              ],
+              "description": "How a text above chunking.max_chunk_size is cut. fixed_size cuts inside a fixed window at a sentence end. recursive cuts at the coarsest separator of chunking.recursive_separators that fits the window.",
+              "default": "fixed_size",
+              "x-min-runtime-version": "2.4"
+            },
+            "max_chunk_size": {
+              "type": "integer",
+              "maximum": 1000000,
+              "minimum": 1000,
+              "description": "The largest chunk, in characters, that one guardrail call sends. Set it to the input limit of the guardrail service in use. 10000 is a common input limit of guardrail services.",
+              "default": 1500,
+              "x-min-runtime-version": "2.4"
+            },
+            "min_chunk_size": {
+              "type": "integer",
+              "maximum": 1000000,
+              "minimum": 1,
+              "description": "The lower limit of a cut, in characters. Every chunk but the last holds at least this count, and it must stay at or above three quarters of chunking.max_chunk_size. A lower floor lets a short early sentence end win the cut, which splits the text into short chunks beside full ones and multiplies the calls to the guardrail service. The default is 80 percent of the window of the policy, so a short chunk does not dilute detection.",
+              "default": 1200,
+              "x-min-runtime-version": "2.4"
+            },
+            "overlap": {
+              "type": "integer",
+              "maximum": 1000,
+              "minimum": 0,
+              "description": "The characters that two consecutive chunks share, or the width of the boundary window on each side of a cut when the policy masks. It narrows the gap at a boundary and does not close it.",
+              "default": 100,
+              "x-min-runtime-version": "2.4"
+            },
+            "timeout": {
+              "type": "number",
+              "maximum": 3600000,
+              "minimum": 1,
+              "description": "The total time, in milliseconds, that the whole check may take, all calls together. A check that reaches it stops. With stop_on_error false, the rest of the text then goes uninspected.",
+              "default": 30000,
+              "x-min-runtime-version": "2.4"
+            },
+            "parallelism": {
+              "type": "integer",
+              "maximum": 32,
+              "minimum": 1,
+              "description": "The largest number of guardrail calls that one buffered check keeps in flight. 1 sends the chunks one at a time. The check narrows below this value when the service answers slower than its fastest wave, and it adds a call back when the service keeps that pace. At one call it stays for the rest of the check, because one call measures no queue. It applies to the request and the buffered response paths, never to a streamed answer.",
+              "default": 1,
+              "x-min-runtime-version": "2.4"
+            },
+            "recursive_separators": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": "The separators that the recursive strategy cuts on, coarsest first. Each one must hold at least one character.",
+              "default": [
+                "",
+                "",
+                " ",
+                ". "
+              ],
+              "x-min-runtime-version": "2.4"
+            },
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether the policy cuts a text that is above chunking.max_chunk_size before it sends the text to the guardrail service. When it is false, one call carries the whole text, and the guardrail service can refuse a request that large.",
+              "default": false,
+              "x-min-runtime-version": "2.4"
+            }
+          },
+          "description": "The settings that cut a text above chunking.max_chunk_size into chunks. A stored configuration always holds this object with its defaults. The object carries enabled false, so one call sends the whole text. An explicit null is refused: omit the object, or send enabled false.",
+          "x-min-runtime-version": "2.4"
+        },
+        "rejection_mode": {
+          "type": "string",
+          "enum": [
+            "none",
+            "stealth",
+            "verbose"
+          ],
+          "description": "Controls block response format and status code. 'none' returns 400 with plain text block reason, 'stealth' 403 without details and 'verbose' returns 403 with rich JSON details. In streaming mode, the final SSE chunk includes finish_reason='blocked_by_guard' and 'verbose' will include a 'guardrail_result' metadata entry under 'data.choices[0]' in OpenAI format.",
+          "default": "none"
         }
       }
     },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
+    "consumer_group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
       },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
+      "additionalProperties": false,
+      "description": "If set, the policy will activate only for requests where the specified consumer group has been authenticated. (Note that some policies can not be restricted to consumers groups this way.). Leave unset for the policy to activate regardless of the authenticated Consumer Groups"
     },
     "route": {
       "type": "object",
@@ -193,16 +326,6 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
-    },
-    "consumer_group": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will activate only for requests where the specified consumer group has been authenticated. (Note that some policies can not be restricted to consumers groups this way.). Leave unset for the policy to activate regardless of the authenticated Consumer Groups"
     }
   }
 }

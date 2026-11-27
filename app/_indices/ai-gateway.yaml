@@ -142,6 +142,7 @@ sections:
     items:
       - path: /ai-gateway/ai-gateway-v2-concepts/
       - path: /ai-access-management/concepts/
+      - path: /ai-gateway/access-policy-engine/
       - path: /ai-gateway/configuration/
       - path: /ai-gateway/configure-on-prem/
       - path: /ai-gateway/v2-migration-guide/

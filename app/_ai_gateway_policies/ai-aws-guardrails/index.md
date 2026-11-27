@@ -18,7 +18,6 @@ related_resources:
     url: /ai-gateway/how-to/use-ai-aws-guardrails-policy/
 ---
 
-
 The AI AWS Guardrails Policy enforces introspection on both inbound requests and outbound responses handled by the [AI Model](/ai-gateway/entities/ai-model/) entity. It integrates with the [AWS Bedrock Guardrails](https://aws.amazon.com/bedrock/guardrails/) service to apply compliance and safety policies at the {{site.ai_gateway}} level. This ensures all data exchanged between clients and upstream LLMs adheres to the configured security standards.
 
 ## Prerequisites
@@ -30,12 +29,47 @@ Before using the AI AWS Guardrails Policy, you must define your guardrail polici
 
 ## How it works
 
-The AI AWS Guardrails Policy includes a configurable [`response_buffer_size`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-response-buffer-size) parameter. This setting controls how many tokens from the upstream LLM response are buffered during streaming before being sent to the AWS Guardrails service for inspection. For example, setting `response_buffer_size` to `50` means the AI AWS Guardrails Policy will collect 50 tokens from the upstream model before sending them to AWS Guardrails for evaluation. Guardrail evaluation runs in chunks as tokens stream in.
+The AI AWS Guardrails Policy includes a configurable [`response_buffer_size`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-response-buffer-size) parameter. This setting controls how many characters of the upstream LLM response are buffered during streaming before being sent to the AWS Guardrails service for inspection. For example, setting `response_buffer_size` to `50` means the AI AWS Guardrails Policy will collect 50 characters from the upstream model before sending them to AWS Guardrails for evaluation. Guardrail evaluation runs in chunks as the response streams in.
 
 {:.info}
 > A smaller buffer size allows faster policy evaluation and quicker response rejection but may increase the number of guardrail calls. Larger sizes reduce API calls but may delay policy enforcement.
 
-For response and request inspection, the Policy by default guards input only. You can change this behavior with the [`guarding_mode`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-guarding-mode) field, which supports `INPUT`, `OUTPUT`, or `BOTH`. To control which parts of the conversation are sent for content evaluation, use the [`text_source`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-text-source) field. Set it to `concatenate_user_content` to inspect only `user` input, or `concatenate_all_content` to include the full exchange, including system and assistant messages.
+For response and request inspection, the Policy by default guards input only. You can change this behavior with the [`guarding_mode`](/ai-gateway/policies/ai-aws-guardrails/reference/#schema--config-guarding-mode) field, which supports `INPUT`, `OUTPUT`, or `BOTH`.
+
+## Message selection
+
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-aws-guardrails" %}
+
+### Masking
+
+When you set `allow_masking`, the guardrail service returns one masked text for the whole request, so the Policy needs exactly one message to write that text back into.
+Select either `user` or `tool_result`, with `message_countback: 1`:
+
+```yaml
+config:
+  allow_masking: true
+  message_selection:
+    user:
+      message_countback: 1
+```
+
+`system`, `assistant`, `tool_call`, and `reasoning` can't be masked.
+`assistant`, `tool_call`, and `reasoning` don't have a single text field to write into, and the Policy never rewrites the system prompt.
+{{site.ai_gateway}} rejects a configuration that selects one of these keys, more than one key, or more than one message when you save it.
+To mask across several messages, keep using the legacy fields.
+
+
+## Text chunking
+
+{% include_cached md/ai-gateway/v2/guardrail-chunking.md service="AWS Bedrock Guardrails service" window=10000 audit=true streaming=true %}
+
+AWS publishes its limit as a quota in text units, and one text unit is 1,000 characters.
+The quota varies by AWS Region, so convert your own quota to characters before you set `max_chunk_size`.
+
+When `allow_masking` is `true`, the Policy joins the masked parts in order. Two rules apply:
+
+* `chunk_overlap` must be `0`, because a masked part can't repeat.
+* `text_source` must be `last_message`, because any other source sends the request body as one encoded JSON string, which can't be cut at a sentence end.
 
 ## Rejection modes
 

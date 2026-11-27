@@ -40,6 +40,8 @@ related_resources:
     url: /mcp/
   - text: MCP version support
     url: /ai-gateway/mcp-version-support/
+  - text: AI MCP Sanitizer Policy
+    url: /ai-gateway/policies/ai-mcp-sanitizer/
   - text: Model Context Protocol specification
     url: https://modelcontextprotocol.io/
   - text: Map a RESTful API to MCP tools
@@ -221,6 +223,8 @@ rows:
       Use [Rate Limiting](/ai-gateway/policies/rate-limiting/) or [Rate Limiting Advanced](/ai-gateway/policies/rate-limiting-advanced/) Policy to control MCP request volume per AI Consumer or AI Consumer Group."
   - use_case: "Track all MCP traffic and ACL decisions."
     example: "Enable request and response logging through [AI logging Policies](/ai-gateway/policies/?category=logging) and audit trails."
+  - use_case: "Protect sensitive data in tool calls"
+    example: "Use the [AI MCP Sanitizer](/ai-gateway/policies/ai-mcp-sanitizer/) Policy (tech preview) to redact PII in `tools/call` arguments and results. Targeting results [changes how some server types stream](/ai-gateway/policies/ai-mcp-sanitizer/#streaming-and-performance-trade-offs)."
   - use_case: "Traffic control"
     example: "Apply [Request Transformer](/ai-gateway/policies/request-transformer/) or [Response Transformer](/ai-gateway/policies/response-transformer/) Policy to modify MCP payloads, or use [ACLs](#acl-tool-control) for fine-grained tool access."
 {% endtable %}
@@ -499,6 +503,8 @@ When you expose tools through an AI MCP Server, anyone who can reach the endpoin
 
 ACLs are evaluated only after the AI Consumer's identity is resolved through this authentication step. For ACL configuration, see [ACL tool control](#acl-tool-control).
 
+If your callers are {{site.identity}} principals and you want to manage access to tools with rules in {{site.konnect_short_name}}, use the [Access Policy Engine](/ai-gateway/access-policy-engine/). For a comparison, see [Choose between access control options](/ai-gateway/access-policy-engine/#choose-between-access-control-options).
+
 ### Protected resource metadata
 
 If your MCP clients follow the MCP authorization specification's discovery flow, they need to know which authorization server protects your AI MCP Server before they can request a token, or they fail outright instead of prompting the user through an OAuth flow. To support these clients, advertise [OAuth 2.0 Protected Resource Metadata](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization) (RFC 9728) through [`access.metadata`](#schema-aigateway-mcpserver-access-metadata) on `conversion-listener`, `listener`, and `passthrough-listener` AI MCP Servers.
@@ -542,7 +548,10 @@ If you omit `access.metadata`, `access.auth_strategies` still authenticates requ
 * **Access control and AI Auth Strategies:** Govern who can reach the AI MCP Server.
 * **Upstream authentication:** Set with [`config.upstream.auth`](#schema-aigateway-mcpserver-config-upstream). This controls how {{site.ai_gateway}} authenticates itself to external services. By default, {{site.ai_gateway}} proxies these requests without adding credentials.
 
-This applies to the mode that connects directly to an external service (`passthrough-listener`). A `listener` AI MCP Server has no upstream of its own, since it only aggregates tools from other AI MCP Servers.
+This applies to the AI MCP Server modes that make requests to an upstream service.
+The `aws` upstream authentication type is supported on `passthrough-listener`, `upstream-server`, `conversion-listener`, and `conversion-only`.
+A `listener` AI MCP Server has no upstream of its own, since it only aggregates tools from other AI MCP Servers.
+`config.upstream.auth` is also distinct from [`config.server.tools_list_auth`](#tool-list-authentication), which only authenticates the one-time fetch of an `upstream-server`'s tool list, not the tool-call requests themselves.
 
 ### AWS IAM (SigV4)
 
@@ -554,7 +563,24 @@ Some upstream services don't accept bearer tokens or API keys at all, and only a
 * Environment auto-detection when you omit `access_key_id` and `secret_access_key`, for example, an EC2 instance profile or environment variables
 * Role assumption through `assume_role_arn` and `role_session_name`, layered on top of either credential source. Recommended for production use and cross-account access.
 
-Set `region` to override the region. Otherwise, {{site.ai_gateway}} infers from the environment, and `sts_endpoint_url` to use a custom AWS STS endpoint when assuming a role.
+Set `region` to override the region. Otherwise, {{site.ai_gateway}} infers it from the environment, and `sts_endpoint_url` to use a custom AWS STS endpoint when assuming a role.
+
+Upstream authentication is independent of client-side `access.auth_strategies`.
+For example, clients can authenticate to {{site.ai_gateway}} with OpenID Connect through an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), while {{site.ai_gateway}} signs requests to the upstream with SigV4.
+
+A single `config.upstream.auth` block applies to all tools of the AI MCP Server.
+Per-tool `upstream.auth` overrides aren't supported.
+
+### Signing service and region
+
+Set `service` explicitly when the upstream is reached through a custom domain name, such as an Amazon API Gateway custom domain, because the host doesn't identify the AWS service. For example, set `service` to `lambda` for a Lambda function URL.
+Set `region` explicitly if the Data Plane environment doesn't provide the region you want to sign for. Otherwise, {{site.ai_gateway}} infers it from the environment.
+
+### Credential sources
+
+{{site.ai_gateway}} uses static credentials (`access_key_id`, `secret_access_key`, and optionally `session_token`) if you set them.
+Otherwise, it uses the Data Plane's default AWS credential provider chain.
+In either case, you can set `assume_role_arn` to assume a role before signing.
 
 {:.info}
 > `secret_access_key` and `session_token` are write-only and [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)
@@ -570,6 +596,26 @@ config:
       assume_role_arn: arn:aws:iam::123456789012:role/mcp-tool-access
       role_session_name: kong-ai-gateway
 ```
+
+The following `conversion-listener` example calls an IAM-protected Amazon API Gateway custom domain.
+Clients authenticate to {{site.ai_gateway}} with OpenID Connect through an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/), and {{site.ai_gateway}} signs the converted upstream requests with SigV4.
+Because a custom domain name doesn't identify the AWS service, the example sets `service` explicitly, along with `region`:
+
+```yaml
+type: conversion-listener
+access:
+  auth_strategies:
+    - oidc-strategy
+config:
+  url: https://api.example.com/prod
+  upstream:
+    auth:
+      type: aws
+      service: execute-api
+      region: us-east-1
+      assume_role_arn: arn:aws:iam::123456789012:role/mcp-tool-access
+```
+
 
 ### Token Vault
 
@@ -625,6 +671,123 @@ config:
   ca_certificates:
     - kongair-internal-root-ca
 ```
+
+## Load balancing and failover
+
+<!-- Inferred from the AI Agent schema; the MCP Server schema doesn't publish these fields yet. -->
+An AI MCP Server with a single upstream MCP server has a single point of failure.
+When the upstream MCP server is slow or its region has an outage, every client of the AI MCP Server is affected.
+To avoid this, run the upstream MCP server in more than one place, for example in several regions for latency or data residency, or as a primary with a standby, and define [`config.targets`](#schema-aigateway-mcpserver-config-targets) instead of a single [`config.url`](#schema-aigateway-mcpserver-config-url).
+{{site.ai_gateway}} then distributes requests across the targets and stops sending traffic to a target that isn't responding.
+
+Set either `config.url` or `config.targets`. An AI MCP Server can't use both.
+AI MCP Servers that use `config.url` continue to work without changes.
+Multiple targets apply to replicas of the same backend.
+To expose tools from different MCP servers through one endpoint, use [tool aggregation](#tool-aggregation-with-upstream-server) instead.
+
+Common reasons to use multiple targets:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Goal
+    key: goal
+  - title: How to configure it
+    key: how
+rows:
+  - goal: "Spread load across regional replicas"
+    how: "Add one target for each replica and use `round-robin`. Give each target a [`weight`](#schema-aigateway-mcpserver-config-targets) that reflects its capacity, for example `100` for a large region and `50` for a smaller one."
+  - goal: "Roll out a new version gradually"
+    how: "Add the current and the new deployment as targets and give the new one a small weight, such as `90` and `10`. Raise the weight as you gain confidence."
+  - goal: "Keep a standby for outages"
+    how: "Set `failover: true` on the standby target. It receives traffic only when all regular targets are unavailable."
+  - goal: "Send each client to the fastest replica"
+    how: "Use `lowest-latency` so {{site.ai_gateway}} sends requests to the target with the lowest response time."
+  - goal: "Keep an MCP session on the same replica"
+    how: "Use `consistent-hashing` and hash on the `Mcp-Session-Id` header, so every request in a session reaches the same target."
+{% endtable %}
+<!-- vale on -->
+
+### Choose an algorithm
+
+The balancer algorithm, set in [`config.balancer.algorithm`](#schema-aigateway-mcpserver-config-balancer), determines which target receives each request.
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Algorithm
+    key: algorithm
+  - title: Best for
+    key: use
+rows:
+  - algorithm: "`round-robin`"
+    use: "Replicas with similar capacity. Requests rotate across the targets, taking each target's `weight` into account."
+  - algorithm: "`least-connections`"
+    use: "Long-running tool calls and streaming responses, where some requests keep a connection open much longer than others. New requests go to the target with the fewest open connections."
+  - algorithm: "`lowest-latency`"
+    use: "Replicas in different regions, where the closest or least busy one should serve most traffic."
+  - algorithm: "`consistent-hashing`"
+    use: "Upstream MCP servers that keep session state in memory. Requests with the same value in the [`hash_on_header`](#schema-aigateway-mcpserver-config-balancer-hash-on-header) header always go to the same target."
+{% endtable %}
+<!-- vale on -->
+
+### Failover targets
+
+A failover target is a backup that you mark with `failover: true`.
+{{site.ai_gateway}} uses failover targets only when every regular target is unavailable.
+Failover targets aren't supported with `consistent-hashing`, because that algorithm must keep a given hash value on a fixed target.
+
+### Supported server modes
+
+Multiple targets work in every [server mode](#server-modes) that connects to an upstream: `passthrough-listener`, `conversion-listener`, `conversion-only`, and `upstream-server`.
+The `listener` mode doesn't accept targets, because a listener only aggregates tools from other AI MCP Servers and doesn't connect to an upstream itself.
+To load balance a `listener` endpoint, add targets to each `upstream-server` or `conversion-only` source that it aggregates.
+
+The upstream behind each target depends on the mode:
+
+- **`passthrough-listener` and `upstream-server`**: each target is a replica of the upstream MCP server.
+- **`conversion-listener` and `conversion-only`**: each target is a replica of the REST API that {{site.ai_gateway}} converts into MCP tools.
+
+### Sessions and multiple targets
+
+<!-- INFERRED, NOT CONFIRMED: how Mcp-Session-Id interacts with the balancer, and whether the first request of a session (initialize) can be hashed.
+MCP clients on revisions before `2026-07-28` identify a session with the `Mcp-Session-Id` header.
+Clients on the `2026-07-28` revision don't use sessions and send no `Mcp-Session-Id`, so there's no session to pin and the following guidance doesn't apply to them. See [MCP versions](#mcp-versions). -->
+In `passthrough-listener` and `upstream-server` modes, session state lives on the upstream MCP server, so the replica that created a session must handle every later request in it.
+If your upstream replicas keep session state in memory, use `consistent-hashing` with `hash_on_header: Mcp-Session-Id`.
+[Session affinity](/ai-gateway/entities/ai-model/#schema-aigateway-model-config-balancer-session-affinity) is available only on AI Models, so use consistent hashing to keep a session on one target.
+If your upstream replicas share session state or are stateless, any algorithm works.
+If you use a failover target instead of `consistent-hashing`, requests in an existing session reach a replica that doesn't hold the session, and clients must start a new session.
+
+In `conversion-listener` mode, {{site.ai_gateway}} manages [session state](#sessions) and the targets are stateless REST API replicas, so any algorithm works.
+
+### Example
+
+In the following example, a `passthrough-listener` AI MCP Server serves traffic from two regional replicas of an upstream MCP server and keeps a standby in a third region:
+
+{% entity_example %}
+type: mcp_server
+formats:
+  - konnect-api
+  - kongctl
+data:
+  display_name: KongAir Flight Search MCP Server
+  name: kongair-flight-search-mcp
+  type: passthrough-listener
+  config:
+    targets:
+      - address: flight-search-us.internal.kongair.com:443
+        weight: 100
+      - address: flight-search-eu.internal.kongair.com:443
+        weight: 50
+      - address: flight-search-standby.internal.kongair.com:443
+        failover: true
+    balancer:
+      algorithm: round-robin
+    route:
+      paths:
+        - /kongair-flight-search
+{% endentity_example %}
 
 ## Rate limiting
 
@@ -887,7 +1050,7 @@ features:
     description: Handling WebSocket and gRPC upstreams
     supported: false
   - title: "AI Guardrails"
-    description: Applying guardrails to MCP AI requests and responses
+    description: Applying content safety guardrails to MCP AI requests and responses. For PII protection, see the [AI MCP Sanitizer Policy](/ai-gateway/policies/ai-mcp-sanitizer/).
     supported: false
 {% endfeature_table %}
 <!-- vale on -->

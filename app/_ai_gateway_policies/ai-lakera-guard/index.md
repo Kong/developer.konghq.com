@@ -40,6 +40,17 @@ The AI Lakera Guard Policy inspects model traffic at three points in the LLM req
 
 The AI Lakera Guard Policy inspects request and response bodies for routes that use supported model interaction formats. It skips inspection on non-text response types, which Lakera Guard does not support.
 
+## Message selection
+
+{% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-lakera-guard" action="sends to Lakera Guard" %}
+
+This Policy sends Lakera Guard a `messages` array with roles instead of one block of text. The selection works the same way.
+
+
+## Text chunking
+
+{% include_cached md/ai-gateway/v2/guardrail-chunking.md service="Lakera Guard service" window=1500 audit=true streaming=true messages=true %}
+
 ## Inspected content
 
 {% table %}

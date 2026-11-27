@@ -35,6 +35,8 @@ cleanup:
 related_resources:
   - text: Configure {{site.ai_gateway}} on-prem
     url: /ai-gateway/configure-on-prem/
+  - text: "{{site.ai_gateway}} on-prem UI (Kong AI Manager)"
+    url: /ai-gateway/ai-manager/
   - text: Install {{site.base_gateway}} using Docker Compose
     url: /gateway/install/docker/
   - text: "Install {{site.operator_product_name}} for {{site.ai_gateway_name}} (Tech Preview)"
@@ -173,6 +175,8 @@ This will return an `HTTP/1.1 200 OK` response.
 
 For {{site.ai_gateway}} 2.x running on-prem, you'll use {{site.ai_gateway}} 2.x decK configuration files and `deck ai sync` to apply them.
 `deck ai sync` converts the {{site.ai_gateway}} 2.x AI entities and policies into compatible {{site.base_gateway}} 3.x configuration with plugins, Services, and Routes.
+
+To build and edit this configuration in a local UI, see [Kong AI Manager](/ai-gateway/ai-manager/).
 
 You can convert any `kongctl` {{site.ai_gateway}} 2.x configuration to decK by removing the fields that only apply to a {{site.konnect_short_name}}-managed control plane:
 

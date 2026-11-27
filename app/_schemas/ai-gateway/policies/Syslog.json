@@ -1,90 +1,8 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "tcp",
-          "tls",
-          "tls_passthrough",
-          "udp",
-          "ws",
-          "wss"
-        ],
-        "description": "A string representing a protocol, such as HTTP or HTTPS."
-      },
-      "description": "A set of strings representing protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
-        "log_level": {
-          "type": "string",
-          "enum": [
-            "alert",
-            "crit",
-            "debug",
-            "emerg",
-            "err",
-            "info",
-            "notice",
-            "warning"
-          ],
-          "default": "info"
-        },
-        "successful_severity": {
-          "type": "string",
-          "enum": [
-            "alert",
-            "crit",
-            "debug",
-            "emerg",
-            "err",
-            "info",
-            "notice",
-            "warning"
-          ],
-          "default": "info"
-        },
-        "client_errors_severity": {
-          "type": "string",
-          "enum": [
-            "alert",
-            "crit",
-            "debug",
-            "emerg",
-            "err",
-            "info",
-            "notice",
-            "warning"
-          ],
-          "default": "info"
-        },
-        "server_errors_severity": {
-          "type": "string",
-          "enum": [
-            "alert",
-            "crit",
-            "debug",
-            "emerg",
-            "err",
-            "info",
-            "notice",
-            "warning"
-          ],
-          "default": "info"
-        },
         "custom_fields_by_lua": {
           "type": "object",
           "additionalProperties": {
@@ -151,9 +69,92 @@
               "description": "Header names to redact in addition to the built-in defaults, which already cover Authorization, API keys, and consumer identifiers. Case-insensitive.",
               "default": []
             }
-          }
+          },
+          "x-min-runtime-version": "2.3"
+        },
+        "log_level": {
+          "type": "string",
+          "enum": [
+            "alert",
+            "crit",
+            "debug",
+            "emerg",
+            "err",
+            "info",
+            "notice",
+            "warning"
+          ],
+          "default": "info"
+        },
+        "successful_severity": {
+          "type": "string",
+          "enum": [
+            "alert",
+            "crit",
+            "debug",
+            "emerg",
+            "err",
+            "info",
+            "notice",
+            "warning"
+          ],
+          "default": "info"
+        },
+        "client_errors_severity": {
+          "type": "string",
+          "enum": [
+            "alert",
+            "crit",
+            "debug",
+            "emerg",
+            "err",
+            "info",
+            "notice",
+            "warning"
+          ],
+          "default": "info"
+        },
+        "server_errors_severity": {
+          "type": "string",
+          "enum": [
+            "alert",
+            "crit",
+            "debug",
+            "emerg",
+            "err",
+            "info",
+            "notice",
+            "warning"
+          ],
+          "default": "info"
         }
       }
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "description": "A string representing a protocol, such as HTTP or HTTPS."
+      },
+      "description": "A set of strings representing protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
     },
     "consumer": {
       "type": "object",

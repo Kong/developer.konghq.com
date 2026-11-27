@@ -41,6 +41,8 @@ related_resources:
     url: /ai-gateway/entities/
   - text: "{{site.ai_gateway}} Policies"
     url: /ai-gateway/policies/
+  - text: "{{site.ai_gateway}} on-prem UI (Kong AI Manager)"
+    url: /ai-gateway/ai-manager/
   - text: deck ai sync
     url: /deck/ai/sync/
 ---
@@ -278,6 +280,7 @@ If `deck ai sync` fails partway through, fix the underlying issue, then re-run i
 ## Configuring on-prem {{site.ai_gateway}} 2.x post-migration
 
 After migrating, you'll need to apply any new {{site.ai_gateway}} configuration in a decK format using the {{site.ai_gateway}} 2.x model with [`deck ai sync`](/deck/ai/sync/). 
+You can build and edit this configuration in a local UI with [Kong AI Manager](/ai-gateway/ai-manager/), then apply the exported file yourself.
 You can adapt any {{site.ai_gateway}} 2.x documentation, including the entities and how-to guides on this site, that is written in `kongctl` format for {{site.konnect_short_name}} by doing the following:
 
 * Drop each entity's `ref` field. decK entities don't use `ref` for cross-references the way `kongctl` does.

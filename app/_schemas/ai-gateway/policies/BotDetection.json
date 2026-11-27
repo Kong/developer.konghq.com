@@ -22,20 +22,20 @@
     "config": {
       "type": "object",
       "properties": {
-        "allow": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of regular expressions that should be allowed. The regular expressions will be checked against the `User-Agent` header.",
-          "default": []
-        },
         "deny": {
           "type": "array",
           "items": {
             "type": "string"
           },
           "description": "An array of regular expressions that should be denied. The regular expressions will be checked against the `User-Agent` header.",
+          "default": []
+        },
+        "allow": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of regular expressions that should be allowed. The regular expressions will be checked against the `User-Agent` header.",
           "default": []
         }
       }

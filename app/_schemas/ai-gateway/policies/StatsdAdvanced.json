@@ -1,5 +1,31 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "description": "A string representing a protocol, such as HTTP or HTTPS."
+      },
+      "description": "A set of strings representing protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
     "config": {
       "type": "object",
       "properties": {
@@ -10,10 +36,88 @@
           "description": "An integer representing a port number between 0 and 65535, inclusive.",
           "default": 8125
         },
-        "prefix": {
-          "type": "string",
-          "description": "String to prefix to each metric's name.",
-          "default": "kong"
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "enum": [
+                  "cache_datastore_hits_total",
+                  "cache_datastore_misses_total",
+                  "kong_latency",
+                  "latency",
+                  "request_count",
+                  "request_per_user",
+                  "request_size",
+                  "response_size",
+                  "shdict_usage",
+                  "status_count",
+                  "status_count_per_user",
+                  "status_count_per_user_per_route",
+                  "status_count_per_workspace",
+                  "unique_users",
+                  "upstream_latency"
+                ]
+              },
+              "stat_type": {
+                "type": "string",
+                "enum": [
+                  "counter",
+                  "gauge",
+                  "histogram",
+                  "meter",
+                  "set",
+                  "timer"
+                ]
+              },
+              "sample_rate": {
+                "type": "number"
+              },
+              "consumer_identifier": {
+                "type": "string",
+                "enum": [
+                  "consumer_id",
+                  "custom_id",
+                  "username"
+                ]
+              },
+              "service_identifier": {
+                "type": "string",
+                "enum": [
+                  "service_host",
+                  "service_id",
+                  "service_name",
+                  "service_name_or_host"
+                ]
+              },
+              "workspace_identifier": {
+                "type": "string",
+                "enum": [
+                  "workspace_id",
+                  "workspace_name"
+                ]
+              }
+            },
+            "required": [
+              "name",
+              "stat_type"
+            ]
+          },
+          "description": "List of Metrics to be logged."
+        },
+        "allow_status_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of status code ranges that are allowed to be logged in metrics."
+        },
+        "use_tcp": {
+          "type": "boolean",
+          "description": "Use TCP instead of UDP.",
+          "default": false
         },
         "hostname_in_prefix": {
           "type": "boolean",
@@ -29,6 +133,23 @@
           ],
           "description": "The default consumer identifier for metrics. This will take effect when a metric's consumer identifier is omitted. Allowed values are `custom_id`, `consumer_id`, `username`.",
           "default": "custom_id"
+        },
+        "host": {
+          "type": "string",
+          "description": "A string representing a host name, such as example.com.",
+          "default": "localhost"
+        },
+        "prefix": {
+          "type": "string",
+          "description": "String to prefix to each metric's name.",
+          "default": "kong"
+        },
+        "udp_packet_size": {
+          "type": "number",
+          "maximum": 65507,
+          "minimum": 0,
+          "description": "Combine UDP packet up to the size configured. If zero (0), don't combine the UDP packet. Must be a number between 0 and 65507 (inclusive).",
+          "default": 0
         },
         "service_identifier_default": {
           "type": "string",
@@ -107,129 +228,8 @@
               "default": 1
             }
           }
-        },
-        "host": {
-          "type": "string",
-          "description": "A string representing a host name, such as example.com.",
-          "default": "localhost"
-        },
-        "metrics": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "sample_rate": {
-                "type": "number"
-              },
-              "consumer_identifier": {
-                "type": "string",
-                "enum": [
-                  "consumer_id",
-                  "custom_id",
-                  "username"
-                ]
-              },
-              "service_identifier": {
-                "type": "string",
-                "enum": [
-                  "service_host",
-                  "service_id",
-                  "service_name",
-                  "service_name_or_host"
-                ]
-              },
-              "workspace_identifier": {
-                "type": "string",
-                "enum": [
-                  "workspace_id",
-                  "workspace_name"
-                ]
-              },
-              "name": {
-                "type": "string",
-                "enum": [
-                  "cache_datastore_hits_total",
-                  "cache_datastore_misses_total",
-                  "kong_latency",
-                  "latency",
-                  "request_count",
-                  "request_per_user",
-                  "request_size",
-                  "response_size",
-                  "shdict_usage",
-                  "status_count",
-                  "status_count_per_user",
-                  "status_count_per_user_per_route",
-                  "status_count_per_workspace",
-                  "unique_users",
-                  "upstream_latency"
-                ]
-              },
-              "stat_type": {
-                "type": "string",
-                "enum": [
-                  "counter",
-                  "gauge",
-                  "histogram",
-                  "meter",
-                  "set",
-                  "timer"
-                ]
-              }
-            },
-            "required": [
-              "name",
-              "stat_type"
-            ]
-          },
-          "description": "List of Metrics to be logged."
-        },
-        "allow_status_codes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "List of status code ranges that are allowed to be logged in metrics."
-        },
-        "udp_packet_size": {
-          "type": "number",
-          "maximum": 65507,
-          "minimum": 0,
-          "description": "Combine UDP packet up to the size configured. If zero (0), don't combine the UDP packet. Must be a number between 0 and 65507 (inclusive).",
-          "default": 0
-        },
-        "use_tcp": {
-          "type": "boolean",
-          "description": "Use TCP instead of UDP.",
-          "default": false
         }
       }
-    },
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "tcp",
-          "tls",
-          "tls_passthrough",
-          "udp",
-          "ws",
-          "wss"
-        ],
-        "description": "A string representing a protocol, such as HTTP or HTTPS."
-      },
-      "description": "A set of strings representing protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
     },
     "consumer": {
       "type": "object",

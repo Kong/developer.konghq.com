@@ -29,11 +29,6 @@
     "config": {
       "type": "object",
       "properties": {
-        "upstream_health_metrics": {
-          "type": "boolean",
-          "description": "A boolean value that determines if upstream metrics should be collected. If enabled, `upstream_target_health` metric will be exported.",
-          "default": false
-        },
         "wasm_metrics": {
           "type": "boolean"
         },
@@ -60,6 +55,11 @@
         "bandwidth_metrics": {
           "type": "boolean",
           "description": "A boolean value that determines if bandwidth metrics should be collected. If enabled, `bandwidth_bytes` and `stream_sessions_total` metrics will be exported.",
+          "default": false
+        },
+        "upstream_health_metrics": {
+          "type": "boolean",
+          "description": "A boolean value that determines if upstream metrics should be collected. If enabled, `upstream_target_health` metric will be exported.",
           "default": false
         }
       }
