@@ -44,9 +44,9 @@ faqs:
     a: |
       No. An agent identity only lets the agent call {{site.ai_gateway}} models and MCP servers with its own credentials.
       To let users and other agents call your agent through the gateway, create an [AI Agent](/ai-gateway/entities/ai-agent/).
-  - q: Why can't my agent identity call a model or an MCP server?
+  - q: Why can't my agent call a model or an MCP server with its agent identity?
     a: |
-      An agent identity can't call a model or an MCP server until an [access rule](#access-rules) allows it.
+      An agent that authenticates with its agent identity's credentials can't call a model or an MCP server until an [access rule](#access-rules) on the identity allows it.
       When no rule matches, access is denied, and a rule that denies access wins over a rule that allows it.
   - q: Can I convert a user into an agent identity?
     a: |
@@ -125,9 +125,32 @@ rows:
 Users have the same identity sources.
 For the API equivalent of each type, see [Configure credentials and identities](/identity/principals/#configure-credentials-and-identities).
 
+### Generate a virtual key with the API
+
+To have {{site.identity}} generate a virtual key for an agent identity, send a `POST` request to the [`/v2/directories/{directoryId}/principals/{principalId}/api-keys` endpoint](/api/konnect/kong-identity-principals/v2/) with `type` set to `v1`.
+The following request creates a key named `booking-agent-key` that expires on January 1, 2027:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/principals/$AGENT_ID/api-keys
+status_code: 201
+method: POST
+body:
+  type: v1
+  name: booking-agent-key
+  expires_at: '2027-01-01T00:00:00Z'
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Replace `$DIRECTORY_ID` and `$AGENT_ID` with the IDs in the URL of the agent identity's page, which has the format `/identity/access-management/{directoryId}/agents/{agentId}`.
+
+The response returns the key in its `secret` field.
+Store the secret right away, since {{site.identity}} only returns it when it creates the key.
+If you omit `expires_at`, the key never expires.
+
 ## Access rules
 
-An agent identity can't call any model or MCP server until an access rule allows it.
+An agent that authenticates with its agent identity's credentials can't call any model or MCP server until an access rule on the identity allows it.
 When no rule matches, access is denied, and a rule that denies access wins over a rule that allows it.
 Rules apply to the agent directly, or through the [groups](/ai-access-management/concepts/#groups) it belongs to.
 
@@ -148,7 +171,12 @@ To let the agent call an MCP server, click the **MCP server** tab instead of the
 
 Gateways apply a new or changed access rule the next time they refresh the caller, which can take a few minutes.
 Access rules apply only to authenticated requests.
-Access rules don't control calls to other agents: an AI Agent's auth strategy and [ACL](/ai-gateway/entities/ai-agent/#cel-based-acls) define who can call it.
+Access rules don't apply to requests to [AI Agents](/ai-gateway/entities/ai-agent/): an AI Agent's auth strategy and ACL control who can reach it.
+
+## CLARIFY: Use an agent identity in an agent
+
+An agent uses its agent identity by sending the identity's virtual key with each request to {{site.ai_gateway}} models, MCP servers, and AI Agents.
+To set it up, add a **Key** [identity source](#identity-sources) to the agent identity, then configure the agent to send the key in the header that the resource's auth strategy defines, like `apikey`.
 
 ## Set a spend limit
 
@@ -158,7 +186,7 @@ The lowest limit set on the agent or on its groups applies.
 
 ## Deactivate an agent identity
 
-A deactivated agent identity can't authenticate until you reactivate it, and its credentials are kept.
+An agent can't authenticate with a deactivated agent identity's credentials until you reactivate the identity, and the credentials are kept.
 A gateway that has cached the agent's credentials may keep allowing access until the cache expires.
 To deactivate an agent identity, select "Deactivate" from the identity's **Actions** dropdown menu.
 
