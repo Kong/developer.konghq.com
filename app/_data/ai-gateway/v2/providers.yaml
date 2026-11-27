@@ -713,7 +713,7 @@ providers:
         supported: true
         streaming: false
         upstream_path: 'Uses `batchEmbedContents` API'
-        model_example: 'text-embedding-004'
+        model_example: 'gemini-embedding-001'
         min_version: '2.0'
       files:
         supported: true
@@ -740,13 +740,13 @@ providers:
         supported: true
         streaming: false
         upstream_path: 'Uses `generateContent` API'
-        model_example: 'gemini-2.5-flash-preview-image-generation'
+        model_example: 'gemini-2.5-flash-image'
         min_version: '2.0'
       realtime:
         supported: true
         streaming: true
         upstream_path: 'Uses `BidiGenerateContent` API'
-        model_example: 'gemini-2.5-flash-preview-native-audio'
+        model_example: 'gemini-2.5-flash-native-audio-latest'
         min_version: '2.0'
         note:
           content: 'Realtime processing for Gemini is supported in the native format from SDK only'
@@ -811,7 +811,7 @@ providers:
     url_patterns:
       - 'https://aiplatform.googleapis.com/'
     min_version: '2.0'
-    variant_trigger: 'set `config.gcp_environment` (with `api_endpoint`, `location_id`, and `project_id`) on the AI Model''s target; see [Select Gemini Standard or Gemini Enterprise](#select-gemini-standard-or-gemini-enterprise)'
+    variant_trigger: 'set `config.gcp_environment` (with `location_id` and `project_id`) on the AI Model''s target; see [Select Gemini Standard or Gemini Enterprise](#select-gemini-standard-or-gemini-enterprise)'
     capabilities:
       generate:
         supported: true

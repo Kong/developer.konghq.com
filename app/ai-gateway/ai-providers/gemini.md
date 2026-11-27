@@ -139,12 +139,21 @@ data:
   policies: []
 {% endentity_example %}
 
-`targets[].config.gcp_environment` requires `api_endpoint`, `location_id`, and `project_id`. Set `api_endpoint` to the hostname for your location: `aiplatform.googleapis.com` for `global`, `{location_id}-aiplatform.googleapis.com` for a single region such as `us-east5`, or `aiplatform.{location_id}.rep.googleapis.com` for the multi-region locations `us` and `eu`. You can also set it to a Private Service Connect endpoint.
+`targets[].config.gcp_environment` requires `location_id` and `project_id`.
+The `api_endpoint` setting is optional.
+When you don't set it, {{site.ai_gateway}} derives the hostname from `location_id`:
+
+* `aiplatform.googleapis.com` for `global`
+* `{location_id}-aiplatform.googleapis.com` for a single region such as `us-east5`
+* `aiplatform.{location_id}.rep.googleapis.com` for the multi-region locations `us` and `eu`
+
+Set `api_endpoint` to override the derived hostname, for example to use a Private Service Connect endpoint.
 
 ## Select Gemini Standard or Gemini Enterprise
 
 Gemini Standard and Gemini Enterprise use the same `gemini` provider type.
-{{site.ai_gateway}} routes to Gemini Enterprise only when the AI Model target sets `config.gcp_environment` with `api_endpoint`, `location_id`, and `project_id`. Otherwise, it routes to Gemini Standard, whatever the credential type.
+{{site.ai_gateway}} routes to Gemini Enterprise only when the AI Model target sets `config.gcp_environment` with `location_id` and `project_id`.
+Otherwise, it routes to Gemini Standard, whatever the credential type.
 
 For clients that send native Gemini requests, the request path must match the variant:
 
@@ -383,7 +392,8 @@ rows:
 #### Limitations of Responses translation
 
 * Google stores interactions for 55 days on paid tiers and 1 day on the free tier. {{site.ai_gateway}} doesn't keep conversation history.
-* {{site.ai_gateway}} returns a `400` error that names the field when a request includes a field without an Interactions equivalent. It drops `user`, `safety_identifier`, `prompt_cache_key`, and `prompt_cache_retention` instead.
+* {{site.ai_gateway}} returns a `400` error that names the field when a request includes a field without an Interactions equivalent, such as `metadata`, `conversation`, `prompt`, `context_management`, `max_tool_calls`, or `access_programs`.
+  It drops `user`, `safety_identifier`, `prompt_cache_key`, and `prompt_cache_retention` instead.
 * {{site.ai_gateway}} returns output that the Responses format can't represent, such as an image in a Deep Research report, in the `x_kong_gemini_content` field of the output item instead of failing the request.
 * {{site.ai_gateway}} accepts `text.verbosity`, but it doesn't change Gemini's output.
 * {{site.ai_gateway}} doesn't translate native Interactions requests to the OpenAI or Anthropic formats.
