@@ -67,19 +67,19 @@ To enforce these rules, the AI Semantic Response Guard Policy:
 
 {% include_cached md/ai-gateway/v2/guardrail-message-selection.md subject="response" action="evaluates" example="the answer text without tool calls or reasoning" local=true %}
 
-For responses, the Policy accepts a narrower set of keys, because a response holds one turn from the model:
+The Policy rejects the `user` and `system` keys.
+The following details apply to responses:
 
-* It accepts `assistant`, `tool_call`, `tool_result`, and `reasoning`, and rejects `user` and `system`.
-* It accepts only `scope: history`, because a response doesn't have a round.
 * `tool_result` selects the output of tools that the provider runs on its own side. Tools that you run yourself answer in the next request, so they never appear in a response.
-* It doesn't support masking, so you can't combine `allow_masking` with a selection.
-* It doesn't support `message_selection` on routes that use passthrough mode.
+* The Policy doesn't support masking.
+* The Policy supports `message_selection` only on routes that don't use passthrough mode.
 
 ### Streamed responses
 
 A selection that only names `assistant` keeps streaming, and the Policy inspects the answer text as it arrives.
 A selection that names `tool_call`, `reasoning`, or `tool_result` turns buffering on, because that content isn't available in the stream.
 The Policy then guards the whole response once it is complete, so clients receive it only after it is complete.
+A client that requested a stream receives a single JSON response instead of an event stream.
 Choose `assistant` alone if you need the response to keep streaming.
 
 {:.info}

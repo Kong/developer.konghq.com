@@ -43,7 +43,7 @@ For response and request inspection, the Policy by default guards input only. Yo
 ### Masking
 
 When you set `allow_masking`, the guardrail service returns one masked text for the whole request, so the Policy needs exactly one message to write that text back into.
-Select one of `user`, `system`, or `tool_result`, each with `message_countback: 1`:
+Select either `user` or `tool_result`, with `message_countback: 1`:
 
 ```yaml
 config:
@@ -53,12 +53,10 @@ config:
       message_countback: 1
 ```
 
-`assistant`, `tool_call`, and `reasoning` can't be masked, because they don't have a single text field to write into.
-{{site.ai_gateway}} rejects a configuration that selects more than one key or more than one message when you save it.
+`system`, `assistant`, `tool_call`, and `reasoning` can't be masked.
+`assistant`, `tool_call`, and `reasoning` don't have a single text field to write into, and the Policy never rewrites the system prompt.
+{{site.ai_gateway}} rejects a configuration that selects one of these keys, more than one key, or more than one message when you save it.
 To mask across several messages, keep using the legacy fields.
-
-{:.info}
-> On a native request body, a Policy that sets `allow_masking` and names only `system` has an empty selection, so the guardrail doesn't run.
 
 
 ## Text chunking

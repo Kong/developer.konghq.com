@@ -76,11 +76,24 @@ sequenceDiagram
 
 > _Figure 1: Diagram showing the request and response flow with the AI PII Sanitizer Policy._
 
+### Restore original values in responses
+
+When [`recover_redacted`](./reference/#schema--config-recover-redacted) is `true`, which is the default, the Policy restores the original values in the response by replacing every placeholder.
+The Policy doesn't track which text is a placeholder, so it also replaces text such as `PLACEHOLDER1` or `CUSTOM1` that was part of your own content.
+That part of the response then contains the wrong text.
+Keep text that looks like a placeholder out of the content that you sanitize.
+If you can't control the content, set `recover_redacted` to `false`.
+
 ## Message selection
 
 {% include_cached md/ai-gateway/v2/guardrail-message-selection.md policy="ai-sanitizer" subject="request" action="sends to the PII service" %}
 
-This Policy replaces `allow_all_conversation_history`. It skips a blank prompt in every configuration, whether or not you set `message_selection`.
+This Policy replaces `allow_all_conversation_history`.
+
+The Policy sends each selected message to the PII service as a separate text, because the Policy writes the sanitized text back into that message.
+On requests in the OpenAI chat completions format or the Anthropic Messages format, the Policy sends nothing for `tool_call`.
+It sends each `tool_result` without the tool name.
+On requests in the OpenAI Responses format, the Policy sends tool calls as `name(arguments)` and tool results as `name: output`.
 
 
 ## Text chunking
