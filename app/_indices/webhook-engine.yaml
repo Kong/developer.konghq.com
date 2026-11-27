@@ -5,3 +5,7 @@ sections:
     items:
       - path: /webhook-engine/
       - path: /webhook-engine/architecture/
+  - title: Webhook Engine Entities
+    items:
+      - path: /webhook-engine/entities/listener/
+      - path: /webhook-engine/entities/channel/
