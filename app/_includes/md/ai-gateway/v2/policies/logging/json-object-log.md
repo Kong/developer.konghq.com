@@ -1,6 +1,7 @@
 <!---shared with logging Policies: file-log, http-log, loggly, syslog, tcp-log, udp-log DOCS-1617 --->
 
-The following table describes each object in the log:
+The following table describes each object in the log.
+The log can also contain `service`, `route`, `workspace`, and `ws_id` objects. {{site.ai_gateway}} generates these internally, and you don't configure them.
 
 {% table %}
 columns:
@@ -9,10 +10,10 @@ columns:
   - title: Description
     key: description
 rows:
-  - log: "`service`"
-    description: Properties of the internal {{site.ai_gateway}} Service associated with the requested Route.
-  - log: "`route`"
-    description: Properties of the specific Route requested.
+  - log: "`ai`"
+    description: |
+      {{site.ai_gateway}}-specific data, such as token usage, cost, and the model that handled the request.
+      For the list of fields, see [{{site.ai_gateway}} logs](/ai-gateway/ai-logs/#ai-gateway-policy-logs).
   - log: "`request`"
     description: Properties of the request sent by the client.
   - log: "`request.tls.version`"

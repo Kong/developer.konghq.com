@@ -1,0 +1,30 @@
+description: 'Stop the Syslog Policy from logging LLM request bodies.'
+
+extended_description: |
+  Stop the Syslog Policy from logging LLM request bodies.
+  The Lua code in `custom_fields_by_lua` removes the `ai.proxy.payload.request` field from log entries, and the response body stays in the log.
+  This applies to requests to AI Models with payload logging enabled.
+  Use this to log responses without logging the prompts behind them.
+
+title: Remove LLM request payloads from logs
+
+weight: 870
+
+requirements:
+  - An [AI Model](/ai-gateway/entities/ai-model/) with payload logging enabled.
+
+name: syslog-no-request-payload
+display_name: Syslog without request payloads
+type: syslog
+
+config:
+  custom_fields_by_lua:
+    "ai.proxy.payload.request": "return nil"
+
+attach:
+  ai-model: payload-logging
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
