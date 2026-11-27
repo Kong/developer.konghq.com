@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Konnect AI Gateway
-  version: 2.4.0
+  version: 2.4.6
   description: The API for configuring AI Gateways in Konnect.
   x-extensions-note: |
     Entities and properties may be annotated with `x-min-runtime-version`, the
@@ -18,8 +18,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@ae8187b1c5edd42c2b449c19dd5c1a076b2e2d01
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/ae8187b1c5edd42c2b449c19dd5c1a076b2e2d01'
+  x-oas-source: kong/platform-api@3ef6c283cf47d1f600a1e650ec69df79d314353b
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3ef6c283cf47d1f600a1e650ec69df79d314353b'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -16099,7 +16099,21 @@ components:
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
         datastores:
-          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+          description: |-
+            The Datastores this auth strategy references. At most one datastore of each supported type
+            can be specified (`token-vault` or `redis-ee`). A `token-vault` Datastore holds the credential
+            storage and is required when `token_vault` is set.
+
+            **Requires a minimum runtime version of `2.3`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayDatastoreRef'
+          example:
+            - name: vault-konnect-prod
+            - name: shared-redis
+          maxItems: 2
+          minItems: 1
+          x-min-runtime-version: '2.3'
         type:
           type: string
           enum:
@@ -16208,7 +16222,21 @@ components:
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
         datastores:
-          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+          description: |-
+            The Datastores this auth strategy references. At most one datastore of each supported type
+            can be specified (`token-vault` or `redis-ee`). A `token-vault` Datastore holds the credential
+            storage and is required when `token_vault` is set.
+
+            **Requires a minimum runtime version of `2.3`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayDatastoreRef'
+          example:
+            - name: vault-konnect-prod
+            - name: shared-redis
+          maxItems: 2
+          minItems: 1
+          x-min-runtime-version: '2.3'
         type:
           type: string
           enum:
@@ -22077,7 +22105,21 @@ components:
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
         datastores:
-          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+          description: |-
+            The Datastores this auth strategy references. At most one datastore of each supported type
+            can be specified (`token-vault` or `redis-ee`). A `token-vault` Datastore holds the credential
+            storage and is required when `token_vault` is set.
+
+            **Requires a minimum runtime version of `2.3`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayDatastoreRef'
+          example:
+            - name: vault-konnect-prod
+            - name: shared-redis
+          maxItems: 2
+          minItems: 1
+          x-min-runtime-version: '2.3'
         type:
           type: string
           enum:
@@ -22195,7 +22237,21 @@ components:
         managed_by:
           $ref: '#/components/schemas/ManagedBy'
         datastores:
-          $ref: '#/components/schemas/AIGatewayTokenVaultDatastores'
+          description: |-
+            The Datastores this auth strategy references. At most one datastore of each supported type
+            can be specified (`token-vault` or `redis-ee`). A `token-vault` Datastore holds the credential
+            storage and is required when `token_vault` is set.
+
+            **Requires a minimum runtime version of `2.3`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/AIGatewayDatastoreRef'
+          example:
+            - name: vault-konnect-prod
+            - name: shared-redis
+          maxItems: 2
+          minItems: 1
+          x-min-runtime-version: '2.3'
         type:
           type: string
           enum:
