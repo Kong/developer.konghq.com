@@ -58,7 +58,7 @@ Use virtual keys to:
 
 The gateway treats whoever holds the key as the caller.
 
-In the {{site.identity}} API, virtual keys are called API keys.
+In the {{site.identity}} API, virtual keys are called API keys, and their endpoints end in `api-keys`.
 
 ## How virtual keys work
 
