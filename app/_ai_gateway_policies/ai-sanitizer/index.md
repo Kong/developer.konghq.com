@@ -78,8 +78,8 @@ sequenceDiagram
 
 ### Restore original values in responses
 
-When [`recover_redacted`](./reference/#schema--config-recover-redacted) is `true`, which is the default, the Policy restores the original values in the response by replacing every occurrence of each placeholder.
-The Policy doesn't track which text is a placeholder that it issued, so it also replaces text such as `PLACEHOLDER1` or `CUSTOM1` that was part of your own content.
+When [`recover_redacted`](./reference/#schema--config-recover-redacted) is `true`, which is the default, the Policy restores the original values in the response by replacing every placeholder.
+The Policy doesn't track which text is a placeholder, so it also replaces text such as `PLACEHOLDER1` or `CUSTOM1` that was part of your own content.
 That part of the response then contains the wrong text.
 Keep text that looks like a placeholder out of the content that you sanitize.
 If you can't control the content, set `recover_redacted` to `false`.

@@ -52,8 +52,13 @@ config:
       message_countback: 1
 ```
 
-`system`, `assistant`, `tool_call`, and `reasoning` can't be masked.
-`assistant`, `tool_call`, and `reasoning` don't have a single text field to write into, and the Policy never rewrites the system prompt.
+
+You can't mask `system`. You can't mask the following keys either, as they don't have a single text field to write into, and the Policy never rewrites the system prompt:
+
+* `assistant`
+* `tool_call`
+* `reasoning` 
+
 {{site.ai_gateway}} rejects a configuration that selects one of these keys, more than one key, or more than one message when you save it.
 To mask across several messages, keep using the legacy fields.
 
