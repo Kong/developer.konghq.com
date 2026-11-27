@@ -61,7 +61,7 @@ data:
       type: basic
       headers:
         - name: Authorization
-          value: ${key}
+          value: Bearer ${key}
 variables:
   key:
     value: $TOGETHER_API_KEY
