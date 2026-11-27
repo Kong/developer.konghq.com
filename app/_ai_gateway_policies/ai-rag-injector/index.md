@@ -28,6 +28,8 @@ related_resources:
     url: /ai-gateway/
   - text: AI Semantic Cache Policy
     url: /ai-gateway/policies/ai-semantic-cache/
+  - text: Ensure chatbots adhere to compliance policies with the AI RAG Injector Policy
+    url: /ai-gateway/use-ai-rag-injector-policy/
 
 
 faqs:
@@ -72,6 +74,14 @@ faqs:
       It depends on the Memorystore offering. Memorystore for Redis Cluster (version 8.0 or later) and Memorystore for Valkey (version 8.0 or later) include the JSON data type automatically, so they work with the AI RAG Injector Policy.
 
       Standard (non-cluster) Memorystore for Redis instances, including the Basic tier, are frozen at Redis 7.2 and don't support the JSON module required for vector operations, so they can't be used with this Policy. See [Redis version and module requirements](#vector-databases) for supported versions across all cloud providers.
+  - q: Can I ingest data into the vector database from outside {{site.ai_gateway}}?
+    a: |
+      Yes. The AI RAG Injector Policy only reads from the vector database at request time, and {{site.ai_gateway}} doesn't expose an endpoint for ingesting content, so you write chunks to the database yourself. See [Ingest content into Redis](/ai-gateway/use-ai-rag-injector-policy/#ingest-content-into-redis) for an example script.
+
+      The values on the ingestion side must match the Policy configuration: the database connection, `vectordb_namespace`, the embedding model, `vectordb.dimensions`, and `vectordb.distance_metric`.
+  - q: Why do I get the error `Embedding dimensions do not match the configured vector database`?
+    a: |
+      The embedding model returns vectors with a different length than the `vectordb.dimensions` value. Set [`vectordb.dimensions`](/ai-gateway/policies/ai-rag-injector/reference/#schema--config-vectordb-dimensions) to the output size of the model configured in `embeddings.model`. If you change the embedding model or its dimensions, re-ingest your content so that the stored vectors match.
 ---
 
 ## What is Retrieval Augmented Generation (RAG)?
@@ -108,8 +118,9 @@ The AI RAG Injector Policy automates the retrieval and injection of contextual d
 
 * **Simplifies RAG workflows:** Automatically embeds prompts, queries the vector DB, and injects relevant context without custom retrieval logic.
 * **Platform-level control:** Shifts RAG logic from app code to infrastructure, allowing platform teams to enforce global policies, update configurations centrally, and reduce developer overhead.
-* **Improved security:** Vector DB access is limited to the {{site.ai_gateway}}, eliminating the need to expose it to individual dev teams or AI agents.
-* **Enables RAG in restricted environments:** Supports RAG even where direct access to the vector database is not possible, such as external-facing or isolated services.
+* **Improved security:** At request time, only the {{site.ai_gateway}} queries the vector database, so you don't need to expose it to individual dev teams or AI agents.
+  Only your ingestion pipeline needs write access.
+* **Enables RAG in restricted environments:** Applications and AI agents get retrieval-augmented answers without direct access to the vector database, such as external-facing or isolated services.
 * **Developer productivity:** Developers can focus on building AI features without needing to manage embeddings, similarity search, or context handling.
 * **Save LLM costs:** When using the AI RAG Injector Policy with the AI Prompt Compressor Policy, you can wrap specific prompt parts in `<LLMLINGUA>` tags within your template to target only those sections for compression, preserving the rest of the prompt unchanged.
 
@@ -118,6 +129,8 @@ The AI RAG Injector Policy automates the retrieval and injection of contextual d
 When a user sends a prompt, the AI RAG Injector Policy queries a configured vector database for relevant context and injects that information into the request before passing it to the language model.
 
 1. You attach the AI RAG Injector Policy to an [AI Model](/ai-gateway/entities/ai-model/) via the Konnect API, configuring vector database connection and embedding settings.
+1. You [ingest content into the vector database](#ingest-content-into-the-vector-database) with your own pipeline.
+   The Policy reads from the vector database and doesn't write to it.
 1. When a request reaches the {{site.ai_gateway}}, the AI Policy generates embeddings for request prompts, then queries the vector database for the top-k most similar embeddings.
 1. The AI Policy injects the retrieved content from the vector search result into the request body, and forwards the request to the AI Model Provider.
 
@@ -230,25 +243,114 @@ Rather than guessing from memory, the LLM paired with the RAG pipeline now has t
 
 {% include_cached md/ai-gateway/v2/redis-cloud-providers.md name=page.name heading_level=3 %}
 
+## Ingest content into the vector database
+
+{{site.ai_gateway}} doesn't expose an endpoint for ingesting content.
+Write chunks to the vector database with your own pipeline, using a script or a scheduled job that runs wherever the database is reachable.
+The pipeline doesn't send content through the {{site.ai_gateway}}.
+
+The Policy retrieves your chunks only when the following values in your pipeline match the Policy configuration:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Ingestion pipeline
+    key: pipeline
+  - title: Policy setting
+    key: policy
+rows:
+  - pipeline: The vector database connection, including host, port, and credentials
+    policy: |
+      `vectordb.redis` or `vectordb.pgvector`
+  - pipeline: |
+      The name of the Redis index and key prefix, or the name of the pgvector table, derived from the namespace
+    policy: |
+      [`vectordb_namespace`](/ai-gateway/policies/ai-rag-injector/reference/#schema--config-vectordb-namespace)
+  - pipeline: The embedding model used to embed chunks
+    policy: |
+      [`embeddings.model`](/ai-gateway/policies/ai-rag-injector/reference/#schema--config-embeddings-model)
+  - pipeline: The vector size and distance metric of the index
+    policy: |
+      [`vectordb.dimensions`](/ai-gateway/policies/ai-rag-injector/reference/#schema--config-vectordb-dimensions) and [`vectordb.distance_metric`](/ai-gateway/policies/ai-rag-injector/reference/#schema--config-vectordb-distance-metric)
+{% endtable %}
+<!-- vale on -->
+
+### Ingest into Redis
+
+When you use Redis, your pipeline creates the index before it writes the first chunk.
+The Policy doesn't create the index.
+Name the index `idx:vss_NAMESPACE`, with `NAMESPACE` replaced by your `vectordb_namespace` value.
+The index is a JSON index with the key prefix `NAMESPACE:`.
+
+The pipeline stores each chunk as a JSON document under the key `NAMESPACE:CHUNK_ID` with the following fields:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+rows:
+  - field: "`payload.text`"
+    description: The chunk text that the Policy injects into the prompt.
+  - field: "`vector`"
+    description: The embedding of the chunk.
+  - field: "`metadata`"
+    description: |
+      Optional values for [collections and metadata filtering](#access-control-and-metadata-filtering): `collection`, `source`, `tags`, and `date`.
+      The index must include these fields to filter on them.
+{% endtable %}
+<!-- vale on -->
+
+### Ingest into PostgreSQL with pgvector
+
+When you use pgvector, the Policy creates the `vector` extension and the table the first time it runs.
+Send one request through the AI Model that has the Policy attached, then write rows to the table.
+The table is named `idx__vss_NAMESPACE`, with `NAMESPACE` replaced by your `vectordb_namespace` value.
+Characters other than letters and digits in the namespace become underscores in the table name.
+
+The pipeline inserts one row for each chunk with the following columns:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Column
+    key: column
+  - title: Description
+    key: description
+rows:
+  - column: "`id`"
+    description: A unique ID for the chunk.
+  - column: "`embedding`"
+    description: The embedding of the chunk, stored as a `vector` with the size set in `vectordb.dimensions`.
+  - column: "`payload`"
+    description: |
+      A `jsonb` value in the form `{"payload": {"text": "CHUNK_TEXT", "metadata": {"collection": "default"}}}`.
+      The Policy injects `text` into the prompt.
+      The `metadata` object holds optional values for [collections and metadata filtering](#access-control-and-metadata-filtering).
+{% endtable %}
+<!-- vale on -->
+
+For a complete example that creates the index, splits a document, and writes the chunks to Redis, see [Ensure chatbots adhere to compliance policies with the AI RAG Injector Policy](/ai-gateway/use-ai-rag-injector-policy/).
+
 ## Access control and metadata filtering
 
 After you've configured your vector database and ingested content, you can control which [AI Consumers](/ai-gateway/entities/ai-consumer/) access specific knowledge base articles and refine query results using metadata filters.
 
 ### Collections
 
-A collection is a logical grouping of knowledge base articles with independent access control rules. When you ingest content via the Konnect API, assign it to a collection using the `collection` field in the metadata.
+A collection is a logical grouping of knowledge base articles with independent access control rules.
+When you write chunks to the vector database, assign each one to a collection using the `collection` field in the metadata.
 
 Example metadata structure:
 
 ```json
 {
-  "content": "Quarterly revenue increased 15%...",
-  "metadata": {
-    "collection": "finance-reports",
-    "date": "2023-10-14",
-    "tags": ["finance", "quarterly"],
-    "source": "internal"
-  }
+  "collection": "finance-reports",
+  "date": "2023-10-14",
+  "tags": ["finance", "quarterly"],
+  "source": "internal"
 }
 ```
 
