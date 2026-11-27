@@ -54,7 +54,7 @@ For example, an organization with one Anthropic API key can generate a virtual k
 Use virtual keys to:
 
 * **Reinforce API key security:** Virtual keys can be generated and deleted, and the provider API key never reaches the caller.
-* **Attribute and control costs:** Requests made with a virtual key are attributed to its holder: a [user](/ai-access-management/concepts/#users), an [agent](/ai-access-management/concepts/#agents), or a [group](/ai-access-management/concepts/#groups). The spend limits set on a user apply to that user's traffic.
+* **Attribute and control costs:** Requests made with a virtual key are attributed to its holder: a [user](/ai-access-management/concepts/#users), an [agent](/ai-access-management/agents/), or a [group](/ai-access-management/concepts/#groups). The spend limits set on a user apply to that user's traffic.
 
 The gateway treats whoever holds the key as the caller.
 
@@ -94,7 +94,7 @@ rows:
   - holder: "[User](/ai-access-management/concepts/#users)"
     caller: "The user."
     limit: "5"
-  - holder: "[Agent](/ai-access-management/concepts/#agents)"
+  - holder: "[Agent](/ai-access-management/agents/)"
     caller: "The agent."
     limit: "5"
   - holder: "[Group](/ai-access-management/concepts/#groups)"
