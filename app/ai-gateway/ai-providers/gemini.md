@@ -344,31 +344,7 @@ Use it when your clients, such as OpenAI SDK agents or the OpenAI Codex CLI, alr
 Clients that send native Interactions requests use [passthrough](#forward-native-interactions-requests) instead.
 
 Create an [AI Model](/ai-gateway/entities/ai-model/) with the `openai` format and the `agentic` capability.
-The following AI Model accepts Responses requests on `/v1/responses` and sends them to a Gemini target:
-
-{% entity_example %}
-type: model
-data:
-  name: my-gemini-responses
-  display_name: my-gemini-responses
-  type: model
-  capabilities:
-    - agentic
-  formats:
-    - type: openai
-  config:
-    route:
-      paths:
-        - /v1
-  targets:
-    - name: gemini-3-flash-preview
-      provider: my-gemini-account
-      config:
-        type: gemini
-  policies: []
-{% endentity_example %}
-
-The following table shows how to do common tasks with Responses requests:
+The following table shows how to do common tasks with Responses requests, for an AI Model whose route path is `/v1`:
 
 {% table %}
 columns:
