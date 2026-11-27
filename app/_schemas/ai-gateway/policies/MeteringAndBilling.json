@@ -1,106 +1,12 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "tcp",
-          "tls",
-          "tls_passthrough",
-          "udp",
-          "ws",
-          "wss"
-        ],
-        "description": "A string representing a protocol, such as HTTP or HTTPS."
-      },
-      "description": "A set of strings representing protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
-        "ssl_verify": {
-          "type": "boolean",
-          "description": "Verify the TLS certificate presented by the ingest endpoint.",
-          "default": true
-        },
-        "timeout": {
-          "type": "number",
-          "description": "Maximum time in milliseconds to wait for a response from the ingest endpoint.",
-          "default": 10000
-        },
         "keepalive": {
           "type": "number",
           "description": "How long in milliseconds an idle connection to the ingest endpoint is kept open before being closed.",
           "default": 60000
-        },
-        "queue": {
-          "type": "object",
-          "properties": {
-            "concurrency_limit": {
-              "type": "integer",
-              "enum": [
-                -1,
-                1
-              ],
-              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
-              "default": 1
-            },
-            "max_batch_size": {
-              "type": "integer",
-              "maximum": 1000000,
-              "minimum": 1,
-              "description": "Maximum number of entries that can be processed at a time.",
-              "default": 1
-            },
-            "max_coalescing_delay": {
-              "type": "number",
-              "maximum": 3600,
-              "minimum": 0,
-              "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler.",
-              "default": 1
-            },
-            "max_entries": {
-              "type": "integer",
-              "maximum": 1000000,
-              "minimum": 1,
-              "description": "Maximum number of entries that can be waiting on the queue.",
-              "default": 10000
-            },
-            "max_bytes": {
-              "type": "integer",
-              "description": "Maximum number of bytes that can be waiting on a queue, requires string content."
-            },
-            "max_retry_time": {
-              "type": "number",
-              "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
-              "default": 60
-            },
-            "initial_retry_delay": {
-              "type": "number",
-              "maximum": 1000000,
-              "minimum": 0.001,
-              "description": "Time in seconds before the initial retry is made for a failing batch.",
-              "default": 0.01
-            },
-            "max_retry_delay": {
-              "type": "number",
-              "maximum": 1000000,
-              "minimum": 0.001,
-              "description": "Maximum time in seconds between retries, caps exponential backoff.",
-              "default": 60
-            }
-          }
         },
         "attributes": {
           "type": "array",
@@ -135,6 +41,10 @@
         "subject": {
           "type": "object",
           "properties": {
+            "field": {
+              "type": "string",
+              "description": "The header name, query parameter, consumer field, or application field that contains the customer identifier, e.g. 'x-customer-id'"
+            },
             "look_up_value_in": {
               "type": "string",
               "enum": [
@@ -145,17 +55,13 @@
               ],
               "description": "Where to find the customer identifier in the request.",
               "default": "consumer"
-            },
-            "field": {
-              "type": "string",
-              "description": "The header name, query parameter, consumer field, or application field that contains the customer identifier, e.g. 'x-customer-id'"
             }
           },
           "description": "The subject identifies who gets billed for each request. Choose where the policy should look for the customer identifier."
         },
-        "meter_ai_token_usage": {
+        "meter_api_requests": {
           "type": "boolean",
-          "description": "Emit events for LLM input and output tokens on AI Gateway requests.",
+          "description": "Emit a usage event for each API Gateway request.",
           "default": true
         },
         "ingest_endpoint": {
@@ -169,9 +75,77 @@
           "x-referenceable": true,
           "x-encrypted": true
         },
-        "meter_api_requests": {
+        "ssl_verify": {
           "type": "boolean",
-          "description": "Emit a usage event for each API Gateway request.",
+          "description": "Verify the TLS certificate presented by the ingest endpoint.",
+          "default": true
+        },
+        "timeout": {
+          "type": "number",
+          "description": "Maximum time in milliseconds to wait for a response from the ingest endpoint.",
+          "default": 10000
+        },
+        "queue": {
+          "type": "object",
+          "properties": {
+            "max_entries": {
+              "type": "integer",
+              "maximum": 1000000,
+              "minimum": 1,
+              "description": "Maximum number of entries that can be waiting on the queue.",
+              "default": 10000
+            },
+            "max_bytes": {
+              "type": "integer",
+              "description": "Maximum number of bytes that can be waiting on a queue, requires string content."
+            },
+            "max_retry_time": {
+              "type": "number",
+              "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
+              "default": 60
+            },
+            "initial_retry_delay": {
+              "type": "number",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "description": "Time in seconds before the initial retry is made for a failing batch.",
+              "default": 0.01
+            },
+            "max_retry_delay": {
+              "type": "number",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "description": "Maximum time in seconds between retries, caps exponential backoff.",
+              "default": 60
+            },
+            "concurrency_limit": {
+              "type": "integer",
+              "enum": [
+                -1,
+                1
+              ],
+              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
+              "default": 1
+            },
+            "max_batch_size": {
+              "type": "integer",
+              "maximum": 1000000,
+              "minimum": 1,
+              "description": "Maximum number of entries that can be processed at a time.",
+              "default": 1
+            },
+            "max_coalescing_delay": {
+              "type": "number",
+              "maximum": 3600,
+              "minimum": 0,
+              "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler.",
+              "default": 1
+            }
+          }
+        },
+        "meter_ai_token_usage": {
+          "type": "boolean",
+          "description": "Emit events for LLM input and output tokens on AI Gateway requests.",
           "default": true
         }
       },
@@ -179,6 +153,42 @@
         "api_token",
         "ingest_endpoint"
       ]
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "description": "A string representing a protocol, such as HTTP or HTTPS."
+      },
+      "description": "A set of strings representing protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     },
     "service": {
       "type": "object",
@@ -199,16 +209,6 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
-    },
-    "route": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     }
   },
   "required": [

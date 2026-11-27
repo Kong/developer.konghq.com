@@ -27,11 +27,10 @@
           "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
           "default": "https://acme-v02.api.letsencrypt.org/directory"
         },
-        "eab_hmac_key": {
-          "type": "string",
-          "description": "External account binding (EAB) base64-encoded URL string of the HMAC key. You usually don't need to set this unless it is explicitly required by the CA.",
-          "x-referenceable": true,
-          "x-encrypted": true
+        "tos_accepted": {
+          "type": "boolean",
+          "description": "If you are using Let's Encrypt, you must set this to `true` to agree the terms of service.",
+          "default": false
         },
         "rsa_key_size": {
           "type": "integer",
@@ -43,10 +42,42 @@
           "description": "RSA private key size for the certificate. The possible values are 2048, 3072, or 4096.",
           "default": 4096
         },
-        "allow_any_domain": {
+        "domains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "An array of strings representing hosts. A valid host is a string containing one or more labels separated by periods, with at most one wildcard label ('*')"
+        },
+        "enable_ipv4_common_name": {
           "type": "boolean",
-          "description": "If set to `true`, the policy allows all domains and ignores any values in the `domains` list.",
-          "default": false
+          "description": "A boolean value that controls whether to include the IPv4 address in the common name field of generated certificates.",
+          "default": true
+        },
+        "account_email": {
+          "type": "string",
+          "description": "The account identifier. Can be reused in a different policy instance.",
+          "x-referenceable": true,
+          "x-encrypted": true
+        },
+        "account_key": {
+          "type": "object",
+          "properties": {
+            "key_id": {
+              "type": "string",
+              "description": "The Key ID.",
+              "x-encrypted": true
+            },
+            "key_set": {
+              "type": "string",
+              "description": "The name of the key set to associate the Key ID with.",
+              "x-encrypted": true
+            }
+          },
+          "required": [
+            "key_id"
+          ],
+          "description": "The private key associated with the account."
         },
         "storage_config": {
           "type": "object",
@@ -68,22 +99,25 @@
             "redis": {
               "type": "object",
               "properties": {
-                "database": {
-                  "type": "integer",
-                  "description": "Database to use for the Redis connection when using the `redis` strategy",
-                  "default": 0
+                "extra_options": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "type": "string",
+                      "description": "A namespace to prepend to all keys stored in Redis.",
+                      "default": ""
+                    },
+                    "scan_count": {
+                      "type": "number",
+                      "description": "The number of keys to return in Redis SCAN calls.",
+                      "default": 10
+                    }
+                  },
+                  "description": "Custom ACME Redis options"
                 },
-                "server_name": {
+                "host": {
                   "type": "string",
-                  "description": "A string representing an SNI (server name indication) value for TLS.",
-                  "x-referenceable": true
-                },
-                "port": {
-                  "type": "integer",
-                  "maximum": 65535,
-                  "minimum": 0,
-                  "description": "An integer representing a port number between 0 and 65535, inclusive.",
-                  "default": 6379,
+                  "description": "A string representing a host name, such as example.com.",
                   "x-referenceable": true
                 },
                 "timeout": {
@@ -104,12 +138,40 @@
                   "x-referenceable": true,
                   "x-encrypted": true
                 },
+                "database": {
+                  "type": "integer",
+                  "description": "Database to use for the Redis connection when using the `redis` strategy",
+                  "default": 0
+                },
+                "ssl": {
+                  "type": "boolean",
+                  "description": "If set to true, uses SSL to connect to Redis.",
+                  "default": false
+                },
+                "port": {
+                  "type": "integer",
+                  "maximum": 65535,
+                  "minimum": 0,
+                  "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                  "default": 6379,
+                  "x-referenceable": true
+                },
                 "cloud_authentication": {
                   "type": "object",
                   "properties": {
-                    "aws_role_session_name": {
+                    "aws_region": {
                       "type": "string",
-                      "description": "The session name for the temporary credentials when assuming the IAM role.",
+                      "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
+                      "x-referenceable": true
+                    },
+                    "aws_is_serverless": {
+                      "type": "boolean",
+                      "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
+                      "default": true
+                    },
+                    "aws_access_key_id": {
+                      "type": "string",
+                      "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
                       "x-referenceable": true,
                       "x-encrypted": true
                     },
@@ -119,15 +181,15 @@
                       "x-referenceable": true,
                       "x-encrypted": true
                     },
-                    "azure_client_id": {
-                      "type": "string",
-                      "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    },
                     "azure_client_secret": {
                       "type": "string",
                       "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "azure_tenant_id": {
+                      "type": "string",
+                      "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
                       "x-referenceable": true,
                       "x-encrypted": true
                     },
@@ -141,33 +203,6 @@
                       "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
                       "x-referenceable": true
                     },
-                    "aws_region": {
-                      "type": "string",
-                      "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
-                      "x-referenceable": true
-                    },
-                    "aws_access_key_id": {
-                      "type": "string",
-                      "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    },
-                    "azure_tenant_id": {
-                      "type": "string",
-                      "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
-                      "x-referenceable": true,
-                      "x-encrypted": true
-                    },
-                    "aws_cache_name": {
-                      "type": "string",
-                      "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
-                      "x-referenceable": true
-                    },
-                    "aws_is_serverless": {
-                      "type": "boolean",
-                      "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
-                      "default": true
-                    },
                     "aws_secret_access_key": {
                       "type": "string",
                       "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
@@ -177,41 +212,37 @@
                     "aws_assume_role_arn": {
                       "type": "string",
                       "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
-                      "x-encrypted": true,
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "aws_role_session_name": {
+                      "type": "string",
+                      "description": "The session name for the temporary credentials when assuming the IAM role.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "azure_client_id": {
+                      "type": "string",
+                      "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.",
+                      "x-referenceable": true,
+                      "x-encrypted": true
+                    },
+                    "aws_cache_name": {
+                      "type": "string",
+                      "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
                       "x-referenceable": true
                     }
                   },
                   "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance."
-                },
-                "ssl": {
-                  "type": "boolean",
-                  "description": "If set to true, uses SSL to connect to Redis.",
-                  "default": false
                 },
                 "ssl_verify": {
                   "type": "boolean",
                   "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
                   "default": true
                 },
-                "extra_options": {
-                  "type": "object",
-                  "properties": {
-                    "namespace": {
-                      "type": "string",
-                      "description": "A namespace to prepend to all keys stored in Redis.",
-                      "default": ""
-                    },
-                    "scan_count": {
-                      "type": "number",
-                      "description": "The number of keys to return in Redis SCAN calls.",
-                      "default": 10
-                    }
-                  },
-                  "description": "Custom ACME Redis options"
-                },
-                "host": {
+                "server_name": {
                   "type": "string",
-                  "description": "A string representing a host name, such as example.com.",
+                  "description": "A string representing an SNI (server name indication) value for TLS.",
                   "x-referenceable": true
                 }
               }
@@ -245,17 +276,22 @@
                 "token": {
                   "type": "string",
                   "description": "Consul ACL token.",
-                  "x-referenceable": true,
-                  "x-encrypted": true
+                  "x-encrypted": true,
+                  "x-referenceable": true
                 }
               }
             },
             "vault": {
               "type": "object",
               "properties": {
-                "auth_path": {
+                "auth_method": {
                   "type": "string",
-                  "description": "Vault's authentication path to use."
+                  "enum": [
+                    "kubernetes",
+                    "token"
+                  ],
+                  "description": "Auth Method, default to token, can be 'token' or 'kubernetes'.",
+                  "default": "token"
                 },
                 "auth_role": {
                   "type": "string",
@@ -280,6 +316,14 @@
                   "minimum": 0,
                   "description": "An integer representing a port number between 0 and 65535, inclusive."
                 },
+                "tls_server_name": {
+                  "type": "string",
+                  "description": "SNI used in request, default to host if omitted."
+                },
+                "auth_path": {
+                  "type": "string",
+                  "description": "Vault's authentication path to use."
+                },
                 "kv_path": {
                   "type": "string",
                   "description": "KV prefix path."
@@ -298,54 +342,41 @@
                   "type": "boolean",
                   "description": "Turn on TLS verification.",
                   "default": true
-                },
-                "tls_server_name": {
-                  "type": "string",
-                  "description": "SNI used in request, default to host if omitted."
-                },
-                "auth_method": {
-                  "type": "string",
-                  "enum": [
-                    "kubernetes",
-                    "token"
-                  ],
-                  "description": "Auth Method, default to token, can be 'token' or 'kubernetes'.",
-                  "default": "token"
                 }
               }
             }
           }
         },
-        "account_email": {
+        "preferred_chain": {
           "type": "string",
-          "description": "The account identifier. Can be reused in a different policy instance.",
-          "x-referenceable": true,
-          "x-encrypted": true
+          "description": "A string value that specifies the preferred certificate chain to use when generating certificates."
         },
-        "account_key": {
-          "type": "object",
-          "properties": {
-            "key_id": {
-              "type": "string",
-              "description": "The Key ID.",
-              "x-encrypted": true
-            },
-            "key_set": {
-              "type": "string",
-              "description": "The name of the key set to associate the Key ID with.",
-              "x-encrypted": true
-            }
-          },
-          "required": [
-            "key_id"
-          ],
-          "description": "The private key associated with the account."
+        "fail_backoff_minutes": {
+          "type": "number",
+          "description": "Minutes to wait for each domain that fails to create a certificate. This applies to both a\nnew certificate and a renewal certificate.",
+          "default": 5
         },
         "eab_kid": {
           "type": "string",
           "description": "External account binding (EAB) key id. You usually don't need to set this unless it is explicitly required by the CA.",
           "x-referenceable": true,
           "x-encrypted": true
+        },
+        "eab_hmac_key": {
+          "type": "string",
+          "description": "External account binding (EAB) base64-encoded URL string of the HMAC key. You usually don't need to set this unless it is explicitly required by the CA.",
+          "x-referenceable": true,
+          "x-encrypted": true
+        },
+        "renew_threshold_days": {
+          "type": "number",
+          "description": "Days remaining to renew the certificate before it expires.",
+          "default": 14
+        },
+        "allow_any_domain": {
+          "type": "boolean",
+          "description": "If set to `true`, the policy allows all domains and ignores any values in the `domains` list.",
+          "default": false
         },
         "cert_type": {
           "type": "string",
@@ -355,18 +386,6 @@
           ],
           "description": "The certificate type to create. The possible values are `rsa` for RSA certificate or `ecc` for EC certificate.",
           "default": "rsa"
-        },
-        "tos_accepted": {
-          "type": "boolean",
-          "description": "If you are using Let's Encrypt, you must set this to `true` to agree the terms of service.",
-          "default": false
-        },
-        "domains": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "An array of strings representing hosts. A valid host is a string containing one or more labels separated by periods, with at most one wildcard label ('*')"
         },
         "storage": {
           "type": "string",
@@ -379,25 +398,6 @@
           ],
           "description": "The backend storage type to use. In DB-less mode and Konnect, `kong` storage is unavailable. In hybrid mode and Konnect, `shm` storage is unavailable. `shm` storage does not persist during Kong restarts and does not work for Kong running on different machines, so consider using one of `kong`, `redis`, `consul`, or `vault` in production.",
           "default": "shm"
-        },
-        "enable_ipv4_common_name": {
-          "type": "boolean",
-          "description": "A boolean value that controls whether to include the IPv4 address in the common name field of generated certificates.",
-          "default": true
-        },
-        "renew_threshold_days": {
-          "type": "number",
-          "description": "Days remaining to renew the certificate before it expires.",
-          "default": 14
-        },
-        "fail_backoff_minutes": {
-          "type": "number",
-          "description": "Minutes to wait for each domain that fails to create a certificate. This applies to both a\nnew certificate and a renewal certificate.",
-          "default": 5
-        },
-        "preferred_chain": {
-          "type": "string",
-          "description": "A string value that specifies the preferred certificate chain to use when generating certificates."
         }
       },
       "required": [

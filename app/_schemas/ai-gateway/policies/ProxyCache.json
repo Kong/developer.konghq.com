@@ -29,29 +29,13 @@
     "config": {
       "type": "object",
       "properties": {
-        "memory": {
-          "type": "object",
-          "properties": {
-            "dictionary_name": {
-              "type": "string",
-              "description": "The name of the shared dictionary in which to hold cache entities when the memory strategy is selected. Note that this dictionary currently must be defined manually in the Kong Nginx template.",
-              "default": "kong_db_cache"
-            }
-          }
+        "ignore_uri_case": {
+          "type": "boolean",
+          "default": false
         },
-        "strategy": {
-          "type": "string",
-          "enum": [
-            "memory"
-          ],
-          "description": "The backing data store in which to hold cache entities."
-        },
-        "vary_query_params": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Relevant query parameters considered for the cache key. If undefined, all params are taken into consideration."
+        "storage_ttl": {
+          "type": "integer",
+          "description": "Number of seconds to keep resources in the storage backend. This value is independent of `cache_ttl` or resource TTLs defined by Cache-Control behaviors."
         },
         "vary_headers": {
           "type": "array",
@@ -63,7 +47,8 @@
         "cache_by_principal": {
           "type": "boolean",
           "description": "When enabled, use the authenticated Principal's UUID to compose the cache key.",
-          "default": false
+          "default": false,
+          "x-min-runtime-version": "2.3"
         },
         "response_headers": {
           "type": "object",
@@ -90,7 +75,7 @@
             "maximum": 900,
             "minimum": 100
           },
-          "minLength": 1,
+          "minItems": 1,
           "description": "Upstream response status code considered cacheable.",
           "default": [
             200,
@@ -127,28 +112,54 @@
             "text/plain"
           ]
         },
-        "cache_ttl": {
-          "type": "integer",
-          "description": "TTL, in seconds, of cache entities.",
-          "default": 300
-        },
         "cache_control": {
           "type": "boolean",
           "description": "When enabled, respect the Cache-Control behaviors defined in RFC7234.",
           "default": false
         },
-        "ignore_uri_case": {
-          "type": "boolean",
-          "default": false
+        "memory": {
+          "type": "object",
+          "properties": {
+            "dictionary_name": {
+              "type": "string",
+              "description": "The name of the shared dictionary in which to hold cache entities when the memory strategy is selected. Note that this dictionary currently must be defined manually in the Kong Nginx template.",
+              "default": "kong_db_cache"
+            }
+          }
         },
-        "storage_ttl": {
+        "vary_query_params": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Relevant query parameters considered for the cache key. If undefined, all params are taken into consideration."
+        },
+        "cache_ttl": {
           "type": "integer",
-          "description": "Number of seconds to keep resources in the storage backend. This value is independent of `cache_ttl` or resource TTLs defined by Cache-Control behaviors."
+          "description": "TTL, in seconds, of cache entities.",
+          "default": 300
+        },
+        "strategy": {
+          "type": "string",
+          "enum": [
+            "memory"
+          ],
+          "description": "The backing data store in which to hold cache entities."
         }
       },
       "required": [
         "strategy"
       ]
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     },
     "service": {
       "type": "object",
@@ -179,16 +190,6 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will activate only for requests where the specified consumer group has been authenticated. (Note that some policies can not be restricted to consumers groups this way.). Leave unset for the policy to activate regardless of the authenticated Consumer Groups"
-    },
-    "route": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will only activate when receiving requests via the specified route. Leave unset for the policy to activate regardless of the route being used."
     }
   },
   "required": [

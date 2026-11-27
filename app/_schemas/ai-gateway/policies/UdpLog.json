@@ -29,6 +29,10 @@
     "config": {
       "type": "object",
       "properties": {
+        "host": {
+          "type": "string",
+          "description": "A string representing a host name, such as example.com."
+        },
         "port": {
           "type": "integer",
           "maximum": 65535,
@@ -79,11 +83,8 @@
               "description": "Header names to redact in addition to the built-in defaults, which already cover Authorization, API keys, and consumer identifiers. Case-insensitive.",
               "default": []
             }
-          }
-        },
-        "host": {
-          "type": "string",
-          "description": "A string representing a host name, such as example.com."
+          },
+          "x-min-runtime-version": "2.3"
         }
       },
       "required": [
