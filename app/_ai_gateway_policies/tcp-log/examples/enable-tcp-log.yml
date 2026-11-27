@@ -1,0 +1,39 @@
+description: Configure the TCP Log policy to send request and response logs to a TCP server.
+
+extended_description: |
+  Configure the TCP Log policy to send request and response logs to a TCP server.
+  The policy sends one JSON log entry per request to the `host` and `port` that you set.
+  Clients still get their responses when the TCP server is unreachable.
+  {{site.ai_gateway}} records the failure in its process error log.
+
+title: Send logs to a TCP server
+
+weight: 900
+
+requirements:
+  - A TCP server that accepts connections from {{site.ai_gateway}}, such as a log collector.
+
+variables:
+  tcp_host:
+    description: The host name or IP address of the TCP server.
+    value: $TCP_LOG_HOST
+
+name: tcp-log-enable
+display_name: Send logs to a TCP server
+type: tcp-log
+
+scopes:
+  - global
+  - ai-model
+  - ai-agent
+  - ai-mcp-server
+  - ai-consumer
+
+config:
+  host: ${tcp_host}
+  port: 9000
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

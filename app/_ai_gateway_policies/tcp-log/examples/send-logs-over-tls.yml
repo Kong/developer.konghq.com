@@ -1,0 +1,47 @@
+description: Configure the TCP Log policy to send logs to a TCP server over TLS.
+
+extended_description: |
+  Configure the TCP Log policy to send logs to a TCP server over TLS.
+  The policy sends the `tls_sni` value as the server name in the TLS handshake.
+  The data plane must trust the certificate authority that signed the server certificate.
+  When it doesn't, {{site.ai_gateway}} drops the log entries.
+  Requests still succeed, and the data plane records a TLS handshake error.
+  You can't set `ssl_verify` to `false` while the `tls_certificate_verify` property is `on`, which is the default.
+
+title: Send logs over TLS
+
+weight: 800
+
+requirements:
+  - A TCP server that accepts TLS connections from {{site.ai_gateway}}, such as a log collector.
+  - A server certificate signed by a certificate authority that the data plane trusts.
+
+variables:
+  tcp_host:
+    description: The host name or IP address of the TCP server.
+    value: $TCP_LOG_HOST
+  tls_sni:
+    description: The server name to send in the TLS handshake.
+    value: $TCP_LOG_SNI
+
+name: tcp-log-tls
+display_name: Send logs over TLS
+type: tcp-log
+
+scopes:
+  - global
+  - ai-model
+  - ai-agent
+  - ai-mcp-server
+  - ai-consumer
+
+config:
+  host: ${tcp_host}
+  port: 9443
+  tls: true
+  tls_sni: ${tls_sni}
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl
