@@ -1,0 +1,48 @@
+description: 'Configure the Kafka Upstream plugin to use AWS Glue Schema Registry for validation and message serialization.'
+
+title: 'AWS Glue Schema Registry'
+
+weight: 905
+
+min_version:
+  gateway: '3.17'
+
+requirements:
+ - "[Kafka installed](https://kafka.apache.org/quickstart#quickstart_download) and running"
+ - "[Create a Kafka topic](https://kafka.apache.org/quickstart#quickstart_createtopic)"
+ - "[AWS Glue Schema Registry configured](https://docs.aws.amazon.com/glue/latest/dg/schema-registry.html) with a registered Avro or JSON schema"
+ - "AWS credentials available to the gateway, for example through an IAM role or the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables"
+
+variables:
+  topic:
+    description: 'The name of your Kafka topic.'
+    value: $KAFKA_TOPIC
+  host:
+    description: 'The bootstrap server host.'
+    value: $BOOTSTRAP_SERVER_HOST
+  region:
+    description: 'The AWS region of the Glue Schema Registry. For example, `us-east-1`.'
+    value: $AWS_REGION
+
+config:
+  bootstrap_servers:
+  - host: ${host}
+    port: 9092
+  topic: ${topic}
+  schema_registry:
+    glue:
+      region: ${region}
+      registry_name: default-registry
+      value_schema:
+        schema_name: kong-value
+        schema_version: latest
+  message_by_lua_functions:
+  - "return function(message) return message.body end"
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
