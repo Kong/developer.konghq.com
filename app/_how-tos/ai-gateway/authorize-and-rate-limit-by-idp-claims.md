@@ -166,12 +166,12 @@ ai_gateway_models:
       - type: openai
     access:
       auth_strategies:
-        - !ref keycloak-oidc#name
+        - keycloak-oidc
       acls:
         allow_when:
           - 'has(access_token.claims.tier) && access_token.claims.tier == "gold"'
     policies:
-      - !ref claims-rate-limit#name
+      - claims-rate-limit
     config:
       route:
         paths:
