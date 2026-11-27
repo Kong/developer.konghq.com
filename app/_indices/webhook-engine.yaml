@@ -4,3 +4,4 @@ sections:
   - title: Overview
     items:
       - path: /webhook-engine/
+      - path: /webhook-engine/architecture/

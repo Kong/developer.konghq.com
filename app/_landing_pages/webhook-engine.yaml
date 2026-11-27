@@ -13,7 +13,7 @@ rows:
   - header:
       type: h1
       text: "{{ site.webhook_engine }}"
-      sub_text: "TO DO"
+      sub_text: "Ingest HTTP events, store them, and deliver matching events to your subscribers."
 
   - columns:
       - blocks:
@@ -24,14 +24,36 @@ rows:
               blocks:
                 - type: text
                   text: |
-                   {{ site.webhook_engine }} is...
+                   {{ site.webhook_engine }} is a webhook delivery engine for HTTP events.
+                   It sits between your services that publish events and the subscriber endpoints that consume them.
+                   Publishers send events to channels over HTTP, the engine stores accepted events in Postgres, and subscriptions deliver each event to the matching subscriber endpoints.
+
+                   With its extensible policy engine, you can adapt ingest and delivery to your requirements, validating and governing events where they enter and leave the engine.
+
+  - columns:
       - blocks:
-          - type: structured_text
+          - type: mermaid
             config:
-              blocks:
-                - type: text
-                  text: |
-                    [diagram goes here]
+              diagram: |
+                flowchart LR
+
+                  Client["HTTP client<br/>(publisher)"]
+
+                  subgraph WHE ["Webhook Engine"]
+                    direction LR
+                    Listener["Listener<br/>addresses + port"]
+                    Channel["Channel<br/>HTTP source (paths, auth)<br/>ingest policies"]
+                    Store[("Postgres<br/>event store")]
+                    SubA["Subscription A<br/>condition<br/>delivery policies"]
+                    SubB["Subscription B<br/>condition<br/>delivery policies"]
+                    SubN["Subscription N<br/>condition<br/>delivery policies"]
+                  end
+
+                  Client--"POST event"-->Listener-->Channel
+                  Channel--"accepted events"-->Store
+                  Store--"matching events"-->SubA--"HTTP(S) delivery"-->EndpointA["Subscriber A<br/>endpoint"]
+                  Store--"matching events"-->SubB--"HTTP(S) delivery"-->EndpointB["Subscriber B<br/>endpoint"]
+                  Store--"..."-->SubN--"HTTP(S) delivery"-->EndpointN["Subscriber N<br/>endpoint"]
   - header:
       type: h2
       text: "Install {{ site.webhook_engine }}"
@@ -39,52 +61,33 @@ rows:
       - blocks:
         - type: text
           config: |
-           Get an instance of {{ site.webhook_engine }} running almost instantly:
+            Installation instructions for {{site.webhook_engine}}:
         - type: tabs
-          tab_group: run-gateway
+          tab_group: run-webhook-engine
           config:
             - title: "Konnect"
               content: |
-                This command requires a [{{site.konnect_short_name}} Access Token](https://cloud.konghq.com/global/account/tokens).
-
-                ```sh
-                something
-                ```
-
-                The script creates a Control Plane in {{site.konnect_short_name}} and deploys a local Data Plane using Docker.
-
-                All licensing is handled automatically by {{site.konnect_short_name}}.
-            - title: "Terraform? Operator?"
+                [to do]
+            - title: "Terraform or Operator"
               content: |
                 [to do]
 
   - header:
       type: h2
       text: Key references
-    column_count: 3
+    column_count: 1
     columns:
       - blocks:
           - type: card
             config:
-              title: API reference
+              title: Understand core concepts
               description: |
-                Explore the reference documentation for the {{site.webhook_engine}} API
-              icon: /assets/icons/data-object.svg
+                Learn about how {{site.webhook_engine}} works, including its architecture and key entities
+              icon: /assets/icons/linked-services.svg
               cta:
-                text: API reference
-                url: /api/
+                text: Learn about {{site.webhook_engine}}
+                url: /webhook-engine/architecture/
                 align: end
-
-  - header:
-      type: h2
-      text: Frequently asked questions
-    columns:
-      - blocks:
-        - type: faqs
-          config:
-            - q: I'm getting connection errors between the control plane and data plane. What should I check?
-              a: |
-                {% include_cached faqs/konnect-connection-errors.md %}
 
   - header:
       type: h2
@@ -94,5 +97,6 @@ rows:
           - type: how_to_list
             config:
               products:
-                  - gateway
+                  - webhook-engine
               quantity: 5
+              allow_empty: true
