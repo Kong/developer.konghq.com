@@ -128,7 +128,7 @@ A credential moves through the following stages, depending on the action a user 
 
 1. **Enrollment**: When no credentials exist yet, the first-time flow returns an enrollment URL instead of a token.
 1. **Creation**: At creation, {{site.identity}} stores the credential in Token Vault. For `static_secret` providers, you generate the secret in the third-party service and store it in Token Vault yourself. For OAuth-based providers, the OAuth consent flow creates the credential and stores it automatically.
-1. **Refresh**: For OAuth-based providers, {{site.ai_gateway}} refreshes credentials automatically before they expire (see the provider's `refresh_buffer_seconds`), with locking, to prevent concurrent requests from consuming a refresh token. If a refresh fails while the stored token is still valid, {{site.ai_gateway}}  keeps releasing the stored token.
+1. **Refresh**: For OAuth-based providers, {{site.ai_gateway}} refreshes credentials automatically before they expire (see the provider's `refresh_buffer_seconds`), with locking, to prevent concurrent requests from consuming a refresh token. If a refresh fails while the stored token is still valid, {{site.ai_gateway}} keeps releasing the stored token.
 1. **Deletion/Revocation**: You can revoke credentials independently of the provider itself. Admins can list a user's credentials by sending a `GET` request to the [`/v2/directories/{directoryId}/principals/{principalId}/vault-credentials` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/listVaultCredentials), and delete one by sending a `DELETE` request to the [`/v2/directories/{directoryId}/principals/{principalId}/vault-credentials/{vaultCredentialId}` endpoint](/api/konnect/kong-identity-principals/v2/#/operations/deleteVaultCredential). Deleting a credential doesn't delete the provider, but the user must re-enroll before an agent can call that provider on their behalf again.
 
 ## Credential enrollment
@@ -141,7 +141,7 @@ When you configure a provider (for example, GitHub), Token Vault registers it as
 1. When a request comes in from the agent, {{site.ai_gateway}} returns an enrollment URL. The URL is valid for 10 minutes and opens the third-party service's OAuth consent screen. The screen lists exactly the scopes the provider requested (for example, `repo` on GitHub).
 1. When the user approves, the third-party service redirects back to the {{site.ai_gateway}}'s `/_vault/callback` endpoint and sends an authorization code. The `token-vault-callback-handler` policy serves this endpoint.
 1. Token Vault exchanges the authorization code for the third-party service's access token and refresh token. This exchange happens only between Token Vault and the third-party service, not through the agent.
-1. {{site.ai_gateway}} encrypts the token with the directory public vault key. Token Vault stores it for that user and provider, without being able to read it.
+1. {{site.ai_gateway}} encrypts the token with your directory's public vault key. Token Vault stores the encrypted token for that user and provider.
 
 Enrollment happens once per user and per provider, not per organization.
 If a second user wants to use GitHub with an agent, they need to go through enrollment, and get their own credentials stored in Token Vault. What is shared across the organization is the provider configuration (Client ID, scopes, endpoints).
@@ -206,14 +206,14 @@ Because each item in `principal.groups` is an object, match a group with `exists
 principal.groups.exists(g, g.id == "7b0c9e1a-3f4d-4e2b-9a56-8d1c2f6e4b73")
 ```
 
-To match on a metadata value instead, compare the key to a value:
+To share credentials with principals whose `department` metadata is `finance`, use the following expression:
 
 ```
 principal.metadata.department == "finance"
 ```
 
 {:.warning}
-> If a metadata key contains characters other than letters, digits, and underscores, such as a hyphen, use brackets instead of a dot: `principal.metadata["cost-center"] == "42"`.
+> If a metadata key contains a hyphen or another special character, use brackets instead of a dot: `principal.metadata["cost-center"] == "42"`.
 
 The syntax follows the [CEL expressions reference](/gateway/plugins/expressions/#expression-syntax), except that `default()` isn't supported. To guard against a metadata key that might be missing, use `has()` instead:
 
@@ -225,10 +225,10 @@ See [Add a selector to a credential](#add-a-selector-to-a-credential).
 
 {{site.identity}} rejects the following expressions when you create or update the credential:
 
-* A malformed expression.
-* An expression that references an unknown field.
-* An expression that doesn't evaluate to a boolean. For example, `principal.metadata.department` alone is rejected, but `principal.metadata.department == "finance"` is accepted.
-* An expression that compares a group directly, such as `"<group-id>" in principal.groups`. Use the `exists()` form instead.
+* A malformed expression
+* An expression that references an unknown field
+* An expression that returns a non-boolean value. For example, `principal.metadata.department` alone is rejected, but `principal.metadata.department == "finance"` is accepted
+* A direct group comparison, such as `"<group-id>" in principal.groups`. Use the `exists()` form instead
 
 ### Priority
 
@@ -244,10 +244,8 @@ When the {{site.ai_gateway_name}} requests a credential, Token Vault evaluates t
 
 If no selector matches, it releases the default credential. If no selector matches and the provider has no default credential, Token Vault returns a `404`. Token Vault skips `pending` shared OAuth credentials, so a selector can't match until an admin completes the enrollment.
 
-A metadata key that the principal doesn't have counts as no match, not as an error. For example, the following failures to evaluate would result in different results:
-
-* **`principal.metadata.department == "finance"` doesn't match a principal without a `department` key:** Token Vault moves on to the next credential.
-* **A selector fails to evaluate for any other reason:** The request fails instead of falling back to the next credential.
+When a principal lacks the metadata key that a selector references, Token Vault treats the selector as not matching and moves on to the next credential.
+For any other evaluation failure, the request fails instead of falling back to the next credential.
 
 ## Manage credentials
 

@@ -81,7 +81,7 @@ The following diagram shows how a request flows from a principal to a third-part
 1. A principal (your users, agents, and applications) sends a request through {{site.ai_gateway}}.
 1. {{site.ai_gateway}} routes the request to an MCP server or a Model Provider with a Token Vault provider attached for outbound authentication.
 1. Token Vault verifies the caller's token with the trusted IdP, using the token's issuer (`iss`) and subject (`sub`) to identify the principal.
-1. Token Vault releases the matching credential for the credential provider, such as GitHub or Slack. If the principal doesn't have a credential for that provider yet, {{site.ai_gateway}} returns an enrollment URL as a link (for the MCP servers that support the [URL elicitation mode](https://modelcontextprotocol.io/specification/2025-11-25/client/elicitation)) or as text (for other clients), so they can connect their account first. See [Credential enrollment](/identity/token-vault/credentials/#credential-enrollment).
+1. Token Vault releases the matching credential for the credential provider, such as GitHub or Slack. If the principal doesn't have a credential for that provider yet, {{site.ai_gateway}} returns an enrollment URL so they can connect their account first. The URL is a link for the MCP servers that support the [URL elicitation mode](https://modelcontextprotocol.io/specification/2025-11-25/client/elicitation) and text for other clients. See [Credential enrollment](/identity/token-vault/credentials/#credential-enrollment).
 
 The IdP token only identifies the principal. It never becomes the stored credential.
 
@@ -140,7 +140,7 @@ You attach policies to the {{site.ai_gateway}}, which is where you scope and enf
 1. Presents it to Token Vault to request a credential for a specific provider.
 1. After it gets one back, it injects the credential into the actual outbound request to the third-party service.
 
-By default, the credential goes in an `Authorization: Bearer` header. To use a different header or a query parameter, set [`config.upstream.auth.token_vault.credential.outbound`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-config-upstream) on the AI MCP Server.
+By default, {{site.ai_gateway}} sends the credential in an `Authorization: Bearer` header. To use a different header or a query parameter, set [`config.upstream.auth.token_vault.credential.outbound`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-config-upstream) on the AI MCP Server.
 
 ## Directory
 
@@ -259,7 +259,7 @@ rows:
     value: "`custom-oauth`"
     param: |
       `client_id`, `client_secret`, `authorization_endpoint`, and `token_endpoint`.
-  - provider: "Provider that authenticates with a pre-issued API key or token in a header/query parameter"
+  - provider: "Provider that authenticates with a pre-issued API key or token in a header or query parameter"
     value: "`static_secret`"
     param: |
       None. You store the secret as a credential after creating the provider. `client_id` and `client_secret` aren't allowed.
