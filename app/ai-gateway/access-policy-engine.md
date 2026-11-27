@@ -52,6 +52,7 @@ You write access rules once for your organization in {{site.konnect_short_name}}
 
 The Access Policy Engine evaluates AI Model traffic and AI MCP Server traffic.
 MCP traffic is always evaluated.
+It also evaluates WebSocket upgrade requests: a rejected upgrade never becomes a connection.
 
 The Access Policy Engine doesn't evaluate the following:
 
@@ -61,14 +62,9 @@ The Access Policy Engine doesn't evaluate the following:
 
 Those requests pass through without being checked against any rule, so plain consumer traffic on the same control plane keeps working.
 
-<!-- TODO: confirm with eng. Does this Policy evaluate WebSocket upgrade requests?
-kong-ee's plugin README and the generated AccessPolicyEngine.json protocols enum both
-say ws and wss, but /ai-gateway/entities/ai-policy/ says a global AI Policy runs only on
-HTTP and HTTPS. -->
-
 ## How it works
 
-You control the Access Policy Engine entirely through access rules, and creating the Policy turns on enforcement.
+You control the Access Policy Engine entirely through access rules, and turning on the setting for a control plane starts enforcement.
 To use it:
 
 1. Set up callers as {{site.identity}} principals.
@@ -76,17 +72,17 @@ To use it:
    Put principals in groups so that one rule can cover many callers.
 1. Create access rules in {{site.konnect_short_name}} using the `/v1/policies/acls` endpoint.
    Each rule allows or denies access to AI Models or MCP servers, for a group, a single principal, or everyone in the organization.
-1. Create an [AI Policy](/ai-gateway/entities/ai-policy/) of type `access-policy-engine` with `global: true` on each control plane where you want the rules enforced.
+1. Turn on the Access Policy Engine on each control plane where you want the rules enforced, by setting `access_policy_engine.enabled` to `true` in the control plane's settings (`/v1/ai-gateways/{gatewayId}/settings`).
 
 Access rules belong to your {{site.konnect_short_name}} organization, so you write them once.
-Enforcement is per control plane: the Policy applies only on the control planes where you create it.
-If you run production and staging as separate control planes and want the same rules in both, create the Policy on each.
+Enforcement is per control plane: it applies only on the control planes where you turn it on.
+If you run production and staging as separate control planes and want the same rules in both, turn it on for each.
 
 {:.warning}
 > **Create your allow rules first**
 >
 > A principal needs a matching allow rule, or the request is rejected.
-> If you create the Policy before any rules exist, every request from a principal is rejected.
+> If you turn on the Access Policy Engine before any rules exist, every request from a principal is rejected.
 
 ## Use cases
 
@@ -116,7 +112,7 @@ rows:
     effect: deny
 {% endtable %}
 
-Then an administrator creates the Policy on Acme's production control plane.
+Then an administrator turns on the Access Policy Engine on Acme's production control plane.
 From that point:
 
 * A contractor calls `gpt-4o-mini`.
@@ -171,10 +167,7 @@ Use `access.acls` or the ACL Policy when your callers are AI Consumers, or when 
 
 The three options work independently of each other.
 `access.acls` and the ACL Policy remain fully supported, and each one is evaluated independently of the Access Policy Engine.
-
-<!-- TODO: confirm with eng. When one request matches both this Policy and an entity
-`access.acls` or ACL Policy, do both evaluate, and does the request need an allow from
-both? They're separate plugins, so that's the likely answer, but nothing confirms it. -->
+When more than one applies to a request, each one evaluates it, and a rejection from any of them rejects the request.
 
 ## Write access rules
 
@@ -184,11 +177,14 @@ A deny always takes precedence over an allow.
 
 A new rule takes effect after a delay:
 * Each gateway node re-reads the rules that apply to everyone in the organization about every 30 seconds.
-* Rules that are specific to a principal apply once the data plane's cached copy of that principal expires.
+* Rules that are specific to a principal, and changes to the groups a principal belongs to, apply once the data plane's cached copy of that principal expires.
+  This can take up to 10 minutes, the default `ttl_secs` of the {{site.identity}} directory.
 
 ### Allow a group to access a family of models
 
-Access rules for a model match the model name that the provider serves, which can differ from the name your clients send.
+Access rules for a model match the model name that the provider serves.
+The name that clients send in the request must be the same as the name that the AI Model's target sends to the provider.
+If they differ, for example when clients send `my-gpt-5-mini` and the target is `gpt-5-mini`, the Access Policy Engine can't tell which model the request serves, and it returns a `500` response.
 A trailing wildcard keeps the rule working when the provider releases a new version.
 The following request creates a rule that allows the `employees` group to call every model that matches `gpt-*`:
 
@@ -238,7 +234,9 @@ body:
 
 A rule for an MCP server can list tools to restrict a caller to part of that server.
 Leave `tools` out to cover the whole server, including its session.
-The following request creates a rule that allows one principal to call only `get_ticket` and `list_tickets` on the `jira` MCP server:
+The rule names the server by the id that the data plane gives it, which is the AI MCP Server's name followed by `-route`.
+For an AI MCP Server named `jira`, the id is `jira-route`.
+The following request creates a rule that allows one principal to call only `get_ticket` and `list_tickets` on that server:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -250,18 +248,21 @@ headers:
 body:
   display_name: "support-agent-can-read-jira-tickets"
   anchor:
-    type: user
+    type: principal
     id: $PRINCIPAL_ID
     directory_id: $DIRECTORY_ID
   effect: allow
   resources:
     - type: McpServer
-      name: jira
+      name: jira-route
       tools:
         - get_ticket
         - list_tickets
 {% endkonnect_api_request %}
 <!--vale on-->
+
+The principal can call those two tools, and any other tool call is rejected with a `403`.
+The server's `tools/list` response shows that principal only the two tools they can call.
 
 ## Limitations
 
@@ -271,4 +272,4 @@ body:
 * A principal that doesn't have any access rules is rejected, even when an organization-wide rule would allow the request.
 * If a gateway node can't read the organization-wide rules, it keeps enforcing the rules attached to each principal and retries.
   An organization-wide deny created during that window isn't enforced until the node can read the rules again, so a new deny rule doesn't take effect immediately.
-* When the Policy can't evaluate a request, it returns a `500` response rather than the `403` used for a rejection.
+* When the Access Policy Engine can't evaluate a request, it returns a `500` response rather than the `403` used for a rejection.

@@ -18,7 +18,6 @@ entities:
   - ai-auth-strategy
   - ai-model-provider
   - ai-model
-  - ai-policy
   - principal
 
 tags:
@@ -33,7 +32,7 @@ tldr:
   q: How do I let only one group of {{site.identity}} principals call an AI Model?
   a: |
     Put the principals in a {{site.identity}} group, then create an `allow` access rule (ACL) that anchors the group to the AI Model's upstream model name.
-    Add the [Access Policy Engine](/ai-gateway/access-policy-engine/) globally, and map the callers' credentials to {{site.identity}} principals with an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#principal-mapping).
+    Turn on the [Access Policy Engine](/ai-gateway/access-policy-engine/) for the control plane, and map the callers' credentials to {{site.identity}} principals with an [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/#principal-mapping).
     Requests from principals in the group are proxied to the model. Requests from every other principal are rejected with a `403`.
 
 prereqs:
@@ -207,9 +206,10 @@ body:
 Create an access rule that allows the `employees` group to call `gpt-5-mini`.
 Access rules are called ACLs in the {{site.konnect_short_name}} API.
 
-The rule names the model that the provider serves, `gpt-5-mini`, not the name that clients send, which you set when you create the AI Model.
+The rule names the model that the provider serves, `gpt-5-mini`.
+You create the AI Model so that clients send that same name.
 
-The Policy rejects every request unless an `allow` rule matches, so create the rule before you add the Policy.
+The Access Policy Engine rejects every request unless an `allow` rule matches, so create the rule before you turn it on.
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -304,7 +304,9 @@ body:
 ## Create an AI Model
 
 Create an [AI Model](/ai-gateway/entities/ai-model/) that uses the AI Auth Strategy to authenticate clients.
-Clients call the model as `my-gpt-5-mini`, and the target forwards the request to OpenAI as `gpt-5-mini`.
+Clients call the model as `gpt-5-mini`, and the target forwards the request to OpenAI under the same name.
+The Access Policy Engine requires the two names to match.
+If they differ, it can't tell which model a request serves, and it returns a `500` response.
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -314,8 +316,8 @@ method: POST
 headers:
   - 'Content-Type: application/json'
 body:
-  name: my-gpt-5-mini
-  display_name: my-gpt-5-mini
+  name: gpt-5-mini
+  display_name: gpt-5-mini
   type: model
   enabled: true
   formats:
@@ -330,7 +332,7 @@ body:
       model:
         body_param: model
         values:
-          - my-gpt-5-mini
+          - gpt-5-mini
   capabilities:
     - generate
   targets:
@@ -341,25 +343,21 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Add the Access Policy Engine
+## Turn on the Access Policy Engine
 
-Create an Access Policy Engine Policy with `global: true`.
-It only supports global scope, so you don't attach anything to the AI Model, and it doesn't have configuration of its own.
+Turn on the [Access Policy Engine](/ai-gateway/access-policy-engine/) for the control plane.
+It doesn't have configuration of its own, and the access rules decide what it allows.
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v1/ai-gateways/$AI_GATEWAY_ID/policies
-status_code: 201
-method: POST
+url: /v1/ai-gateways/$AI_GATEWAY_ID/settings
+status_code: 200
+method: PATCH
 headers:
   - 'Content-Type: application/json'
 body:
-  name: access-policy-engine
-  display_name: Access Policy Engine
-  type: access-policy-engine
-  enabled: true
-  global: true
-  config: {}
+  access_policy_engine:
+    enabled: true
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -376,7 +374,7 @@ headers:
   - "apikey: $EMPLOYEE_KEY"
   - 'Content-Type: application/json'
 body:
-  model: my-gpt-5-mini
+  model: gpt-5-mini
   messages:
     - role: user
       content: What is the capital of France?
@@ -386,7 +384,7 @@ indent: 3
    <!--vale on-->
 
 1. Send the same request with the contractor's API key.
-   The contractor isn't in the group, so no `allow` rule matches and the Policy rejects the request:
+   The contractor isn't in the group, so no `allow` rule matches and the Access Policy Engine rejects the request:
 
    <!--vale off-->
 {% validation request-check %}
@@ -397,7 +395,7 @@ headers:
   - "apikey: $CONTRACTOR_KEY"
   - 'Content-Type: application/json'
 body:
-  model: my-gpt-5-mini
+  model: gpt-5-mini
   messages:
     - role: user
       content: What is the capital of France?
@@ -406,7 +404,7 @@ indent: 3
 {% endvalidation %}
    <!--vale on-->
 
-   The Policy returns its default rejection response:
+   The Access Policy Engine returns its default rejection response:
 
    ```json
    {"message":"Forbidden"}
