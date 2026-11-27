@@ -1,0 +1,71 @@
+# Which AI Model Providers each AI Model format and capability can use.
+# Rendered by app/_includes/md/ai-gateway/v2/format-support.md.
+formats:
+  - format: openai
+    capabilities:
+      - capability: "`generate`"
+        providers: All providers
+        notes: "{{site.ai_gateway}} converts the request to the provider's API format."
+      - capability: "`agentic`"
+        providers: OpenAI, Azure OpenAI, xAI, Vercel, Amazon Bedrock
+        notes: "For Amazon Bedrock, set `endpoint_type: mantle` on the target. Requires {{site.ai_gateway}} 2.3 or later."
+      - capability: "`embeddings`"
+        providers: OpenAI, Azure OpenAI, Cohere, Mistral, Llama2, Gemini, Amazon Bedrock, Databricks, Hugging Face, DashScope, Ollama, Vercel
+        notes: "For Amazon Bedrock, keep the default `endpoint_type: runtime`. Llama2 doesn't support the `raw` format."
+      - capability: "`image`"
+        providers: OpenAI, Azure OpenAI, Amazon Bedrock, Gemini, DashScope, xAI, Vercel
+        notes: "For Amazon Bedrock, keep the default `endpoint_type: runtime`."
+      - capability: "`audio/speech`, `audio/transcription`, `audio/translation`"
+        providers: OpenAI, Azure OpenAI
+        notes: "Set each audio capability separately in `capabilities`."
+      - capability: "`realtime`"
+        providers: OpenAI, Azure OpenAI
+        notes: "Gemini realtime works only in the `gemini` format."
+      - capability: "`video`"
+        providers: OpenAI, Azure OpenAI, Amazon Bedrock, Gemini, Hugging Face
+        notes: "For Amazon Bedrock, keep the default `endpoint_type: runtime`."
+      - capability: "`batches`"
+        providers: OpenAI, Azure OpenAI, Amazon Bedrock, Anthropic, Gemini, Kimi
+        notes: "For Amazon Bedrock, keep the default `endpoint_type: runtime` and set `batch_bucket_prefix`."
+      - capability: "`files`"
+        providers: OpenAI, Azure OpenAI, Kimi, Amazon Bedrock
+        notes: "For Amazon Bedrock, set `endpoint_type: mantle` on the target. Requires {{site.ai_gateway}} 2.3 or later."
+      - capability: "`skills`"
+        providers: OpenAI
+        notes: "Requires {{site.ai_gateway}} 2.2 or later. The target must use the `openai` format."
+  - format: anthropic
+    capabilities:
+      - capability: "`generate`"
+        providers: All providers
+        notes: "Amazon Bedrock works with either `endpoint_type`. The `mantle` value requires {{site.ai_gateway}} 2.3 or later."
+      - capability: "`batches`"
+        providers: Anthropic
+        notes: "To send batches to another provider, use the `openai` format."
+      - capability: "`skills`"
+        providers: Anthropic
+        notes: "Requires {{site.ai_gateway}} 2.2 or later. The target must use the `anthropic` format."
+  - format: bedrock
+    capabilities:
+      - capability: All capabilities of the format
+        providers: Amazon Bedrock
+        notes: "Keep the default `endpoint_type: runtime`. The `bedrock` format doesn't work with `mantle`."
+  - format: gemini
+    capabilities:
+      - capability: All capabilities of the format
+        providers: Gemini
+        notes: "Includes Gemini Enterprise. Standard routes need a standard Gemini target, and Enterprise routes need an Enterprise target."
+  - format: cohere
+    capabilities:
+      - capability: "`rerank`"
+        providers: Cohere
+        notes: "Uses the Cohere Rerank API."
+  - format: huggingface
+    capabilities:
+      - capability: "`generate`"
+        providers: Hugging Face
+        notes: "Text generation, including streaming."
+  - format: typesafe
+    capabilities:
+      - capability: "`decisions`"
+        providers: TypeSafe AI
+        notes: "Requires {{site.ai_gateway}} 2.2 or later."
