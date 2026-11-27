@@ -93,7 +93,7 @@ entities:
 
 ## Configure the AI Proxy Advanced plugin
 
-Now, let's let's configure [AI Proxy Advanced](/plugins/ai-proxy-advanced/) with multiple targets to different OpenAI models. The balancer selects which target handles each request, independent of whatever model the SDK originally specified:
+Now, let's configure [AI Proxy Advanced](/plugins/ai-proxy-advanced/) with multiple targets to different OpenAI models. The balancer selects which target handles each request, independent of whatever model the SDK originally specified:
 
 {% entity_examples %}
 entities:
