@@ -1,0 +1,36 @@
+title: 'Count local failures separately from upstream errors'
+
+description: 'Use splitExternalAndLocalErrors so connection-level problems such as timeouts and resets are detected on their own, rather than being counted alongside the errors a destination returns.'
+
+weight: 700
+
+namespace: kong-mesh-demo
+
+config:
+  type: MeshCircuitBreaker
+  name: backend-split-errors
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: web
+    to:
+      - targetRef:
+          kind: MeshService
+          labels:
+            kuma.io/display-name: backend
+        default:
+          outlierDetection:
+            interval: 5s
+            baseEjectionTime: 30s
+            splitExternalAndLocalErrors: true
+            detectors:
+              totalFailures:
+                consecutive: 10
+              localOriginFailures:
+                consecutive: 5
+              successRate:
+                minimumHosts: 5
+                requestVolume: 10
+                standardDeviationFactor: "1.9"

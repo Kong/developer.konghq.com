@@ -1,4 +1,21 @@
 {
+  "3.15.0.9": [
+    {
+      "message": "Fixed an issue where a missing CA certificate aborted the TLS handshake. The handshake now completes without a client certificate request until the CA exists.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a missing CA certificate stopped the build\nof the CA DN list. The gateway then did not request a client certificate at all,\neven for SNIs that did not use that CA certificate. The plugin now skips the missing CA\ncertificate and uses the remaining ones.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the CA DN list sent with `send_ca_dn` did\nnot follow changes to CA certificates. A CA certificate created after the\nplugin never reached the list, so the client did not send its certificate.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "the `ssl_verify` option to validate verification of the\ncertificate presented by the server of the OCSP responder's URL and by the\nserver of the CRL Distribution Point is now enabled by default.\n",
@@ -12,6 +29,23 @@
     },
     {
       "message": "Fixed an issue where client certificates with Subject Alternative Name (SAN) DirectoryName extensions caused authentication errors. Added a new `san_dirname_matcher` configuration option to specify which Distinguished Name attributes from the SAN DirectoryName extension should be used for consumer lookup.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.19": [
+    {
+      "message": "Fixed an issue where a missing CA certificate aborted the TLS handshake. The handshake now completes without a client certificate request until the CA exists.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a missing CA certificate stopped the build\nof the CA DN list. The gateway then did not request a client certificate at all,\neven for SNIs that did not use that CA certificate. The plugin now skips the missing CA\ncertificate and uses the remaining ones.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the CA DN list sent with `send_ca_dn` did\nnot follow changes to CA certificates. A CA certificate created after the\nplugin never reached the list, so the client did not send its certificate.",
       "type": "bugfix",
       "scope": "Plugin"
     }

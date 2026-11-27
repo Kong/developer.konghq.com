@@ -1,9 +1,9 @@
 openapi: 3.0.3
 info:
   title: Konnect Sliver
-  version: 1.9.1
-  x-oas-source: kong/platform-api@2ab738ec1fede7fcb7b50ccfe3e99209ea55c521
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/2ab738ec1fede7fcb7b50ccfe3e99209ea55c521'
+  version: 1.9.6
+  x-oas-source: kong/platform-api@6755f8b07d7235dc06b5cd7e58163a5973e21abd
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6755f8b07d7235dc06b5cd7e58163a5973e21abd'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -943,7 +943,7 @@ components:
       type: object
       properties:
         enabled:
-          $ref: '#/components/schemas/SecretEnabled'
+          $ref: '#/components/schemas/UpdateSecretEnabled'
     ClientSecretList:
       type: object
       properties:
@@ -1101,6 +1101,13 @@ components:
         - private_key_jwt
         - client_secret_post
         - none
+    UpdateTokenEndpointAuthMethod:
+      description: Requested authentication method for OAuth 2.0 endpoints.
+      type: string
+      enum:
+        - private_key_jwt
+        - client_secret_post
+        - none
     TrustedOrigins:
       description: A list or trusted origins to apply the CORS header on for the auth server
       type: array
@@ -1249,6 +1256,9 @@ components:
       description: 'Specifies whether the secret is enabled. If the secret is not enabled, it will not be usable during authentication phase.'
       type: boolean
       default: true
+    UpdateSecretEnabled:
+      description: 'Specifies whether the secret is enabled. If the secret is not enabled, it will not be usable during authentication phase.'
+      type: boolean
     Claim:
       type: object
       properties:
@@ -2896,7 +2906,7 @@ components:
               allow_scopes:
                 $ref: '#/components/schemas/ClientAllowScopes'
               token_endpoint_auth_method:
-                $ref: '#/components/schemas/TokenEndpointAuthMethod'
+                $ref: '#/components/schemas/UpdateTokenEndpointAuthMethod'
               labels:
                 $ref: '#/components/schemas/LabelsUpdate'
           examples:

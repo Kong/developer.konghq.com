@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.18.0
+  version: 3.21.5
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@c883aab36c9956a1a72305fb4aad40fc11240bf0
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c883aab36c9956a1a72305fb4aad40fc11240bf0'
+  x-oas-source: kong/platform-api@6b26c2b5622194addb00c4936b727da2e2f3df00
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6b26c2b5622194addb00c4936b727da2e2f3df00'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -4350,10 +4350,12 @@ components:
           description: The name of the application.
           type: string
           maxLength: 255
+          minLength: 1
         description:
           description: A description of the application.
           type: string
           maxLength: 255
+          minLength: 1
         labels:
           $ref: '#/components/schemas/LabelsUpdate'
         dcr_client_id:
@@ -7203,6 +7205,13 @@ components:
                   nullable: false
                   pattern: '^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$'
                   x-validation-message: must be a valid hex color value
+            border_radius:
+              description: The corner roundness to apply to this portal's theme.
+              type: string
+              enum:
+                - soft
+                - sharp
+                - round
         layout:
           description: This property is deprecated and is not used by the portal.
           type: string
@@ -7834,7 +7843,7 @@ components:
       type: string
       maxLength: 255
     ApiKeyCredentialListItem:
-      description: API key credential returned when listing credentials.
+      description: API key credential returned when listing or importing credentials.
       type: object
       properties:
         type:
@@ -8113,6 +8122,55 @@ components:
           example: groups
           default: groups
       title: OIDC Claim Mappings
+    OIDCIdentityProviderBackChannelLogoutEnabled:
+      description: |
+        Indicates whether back-channel logout is enabled. When enabled, the identity provider can notify
+        the portal to end a user's session when they log out of the identity provider.
+
+        Configure your identity provider's back-channel logout URL as your portal's URL followed by
+        `/api/v3/developer/backchannel-logout`, for example
+        `https://my-portal.example.com/api/v3/developer/backchannel-logout`.
+      type: boolean
+      example: false
+      default: false
+      title: OIDC Identity Provider Back-Channel Logout Enabled Property
+    OIDCIdentityProviderBackChannelLogoutSupported:
+      description: |
+        Indicates whether the OpenID Provider advertises support for back-channel logout
+        (`backchannel_logout_supported` in its discovery metadata). Null when the discovery metadata could not
+        be retrieved or validated, in which case support is unknown.
+      type: boolean
+      example: true
+      nullable: true
+      readOnly: true
+      title: OIDC Identity Provider Back-Channel Logout Supported Property
+    OIDCIdentityProviderBackChannelLogoutSessionSupported:
+      description: |
+        Indicates whether the OpenID Provider advertises that it includes the `sid` claim in logout tokens
+        (`backchannel_logout_session_supported` in its discovery metadata). A provider that omits the value does
+        not include it. Null when the discovery metadata could not be retrieved or validated, in which case
+        support is unknown.
+      type: boolean
+      example: true
+      nullable: true
+      readOnly: true
+      title: OIDC Identity Provider Back-Channel Logout Session Supported Property
+    OIDCIdentityProviderBackChannelLogout:
+      description: |
+        The back-channel logout settings for the OIDC identity provider. To receive logout notifications, set
+        your identity provider's back-channel logout URL to your portal's URL followed by
+        `/api/v3/developer/backchannel-logout`, for example
+        `https://my-portal.example.com/api/v3/developer/backchannel-logout`.
+      type: object
+      properties:
+        enabled:
+          $ref: '#/components/schemas/OIDCIdentityProviderBackChannelLogoutEnabled'
+        supported:
+          $ref: '#/components/schemas/OIDCIdentityProviderBackChannelLogoutSupported'
+        session_supported:
+          $ref: '#/components/schemas/OIDCIdentityProviderBackChannelLogoutSessionSupported'
+      additionalProperties: false
+      title: OIDC Identity Provider Back-Channel Logout
     PortalOIDCIdentityProviderConfig:
       description: The identity provider that contains configuration data for the OIDC authentication integration.
       type: object
@@ -8127,6 +8185,8 @@ components:
           $ref: '#/components/schemas/OIDCIdentityProviderScopes'
         claim_mappings:
           $ref: '#/components/schemas/OIDCIdentityProviderClaimMappings'
+        backchannel_logout:
+          $ref: '#/components/schemas/OIDCIdentityProviderBackChannelLogout'
       additionalProperties: false
       required:
         - issuer_url
@@ -8174,6 +8234,12 @@ components:
           readOnly: true
       additionalProperties: false
       title: Portal SAML Identity Provider Config
+    PortalIdentityProviderConfig:
+      description: The configuration data for the authentication integration.
+      oneOf:
+        - $ref: '#/components/schemas/PortalOIDCIdentityProviderConfig'
+        - $ref: '#/components/schemas/PortalSAMLIdentityProviderConfig'
+      title: Portal Identity Provider Config
     PortalIdentityProvider:
       description: The identity provider that contains configuration data for authentication integration.
       type: object
@@ -8185,15 +8251,44 @@ components:
         enabled:
           $ref: '#/components/schemas/IdentityProviderEnabled'
         config:
-          type: object
-          oneOf:
-            - $ref: '#/components/schemas/PortalOIDCIdentityProviderConfig'
-            - $ref: '#/components/schemas/PortalSAMLIdentityProviderConfig'
+          $ref: '#/components/schemas/PortalIdentityProviderConfig'
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
       title: Portal Identity Provider
+    CreateOIDCIdentityProviderScopes:
+      description: The scopes requested by your application when authenticating with the identity provider. Must include `openid`.
+      allOf:
+        - $ref: '#/components/schemas/OIDCIdentityProviderScopes'
+        - minItems: 1
+      title: Create OIDC Identity Provider Scopes
+    CreateOIDCIdentityProviderConfig:
+      description: The configuration data for creating an OIDC authentication integration.
+      type: object
+      properties:
+        issuer_url:
+          $ref: '#/components/schemas/OIDCIdentityProviderIssuer'
+        client_id:
+          $ref: '#/components/schemas/OIDCIdentityProviderClientId'
+        client_secret:
+          $ref: '#/components/schemas/OIDCIdentityProviderClientSecret'
+        scopes:
+          $ref: '#/components/schemas/CreateOIDCIdentityProviderScopes'
+        claim_mappings:
+          $ref: '#/components/schemas/OIDCIdentityProviderClaimMappings'
+      additionalProperties: false
+      required:
+        - issuer_url
+        - client_id
+        - client_secret
+      title: Create OIDC Identity Provider Config
+    PortalCreateIdentityProviderConfig:
+      description: The configuration data for creating an authentication integration.
+      oneOf:
+        - $ref: '#/components/schemas/CreateOIDCIdentityProviderConfig'
+        - $ref: '#/components/schemas/PortalSAMLIdentityProviderConfig'
+      title: Portal Create Identity Provider Config
     PortalCreateIdentityProvider:
       description: The identity provider that contains configuration data for creating an authentication integration.
       type: object
@@ -8203,10 +8298,7 @@ components:
         type:
           $ref: '#/components/schemas/IdentityProviderType'
         config:
-          type: object
-          oneOf:
-            - $ref: '#/components/schemas/PortalOIDCIdentityProviderConfig'
-            - $ref: '#/components/schemas/PortalSAMLIdentityProviderConfig'
+          $ref: '#/components/schemas/PortalCreateIdentityProviderConfig'
       title: Portal Identity Provider
     UpdateIdentityProviderEnabled:
       description: |
@@ -8242,6 +8334,15 @@ components:
           pattern: \S
       additionalProperties: false
       title: Update OIDC Claim Mappings
+    UpdateOIDCIdentityProviderBackChannelLogout:
+      description: The back-channel logout settings to update. Only the provided properties are updated.
+      type: object
+      properties:
+        enabled:
+          $ref: '#/components/schemas/OIDCIdentityProviderBackChannelLogoutEnabled'
+      additionalProperties: false
+      minProperties: 1
+      title: Update OIDC Identity Provider Back-Channel Logout
     UpdateOIDCIdentityProviderConfig:
       description: |
         The properties of an OIDC identity provider to update. Only the provided properties are updated. When
@@ -8282,6 +8383,8 @@ components:
           minItems: 1
         claim_mappings:
           $ref: '#/components/schemas/UpdateOIDCIdentityProviderClaimMappings'
+        backchannel_logout:
+          $ref: '#/components/schemas/UpdateOIDCIdentityProviderBackChannelLogout'
       additionalProperties: false
       minProperties: 1
       title: Update OIDC Identity Provider Config
@@ -8304,6 +8407,13 @@ components:
       maxProperties: 2
       minProperties: 1
       title: Update SAML Identity Provider Config
+    PortalUpdateIdentityProviderConfig:
+      description: The configuration data to update for the authentication integration.
+      minProperties: 1
+      oneOf:
+        - $ref: '#/components/schemas/UpdateOIDCIdentityProviderConfig'
+        - $ref: '#/components/schemas/UpdateSAMLIdentityProviderConfig'
+      title: Portal Update Identity Provider Config
     PortalUpdateIdentityProvider:
       description: The identity provider that contains configuration data for updating an authentication integration.
       type: object
@@ -8311,11 +8421,7 @@ components:
         enabled:
           $ref: '#/components/schemas/UpdateIdentityProviderEnabled'
         config:
-          type: object
-          minProperties: 1
-          oneOf:
-            - $ref: '#/components/schemas/UpdateOIDCIdentityProviderConfig'
-            - $ref: '#/components/schemas/UpdateSAMLIdentityProviderConfig'
+          $ref: '#/components/schemas/PortalUpdateIdentityProviderConfig'
       additionalProperties: false
       minProperties: 1
       title: Portal Identity Provider
@@ -8588,7 +8694,7 @@ components:
       required:
         - type
         - label
-    CustomFormSelectOption:
+    CustomFormSelectOptionInput:
       description: One selectable option in a dropdown field.
       type: object
       properties:
@@ -8655,7 +8761,7 @@ components:
           description: Available choices presented to the developer.
           type: array
           items:
-            $ref: '#/components/schemas/CustomFormSelectOption'
+            $ref: '#/components/schemas/CustomFormSelectOptionInput'
           example:
             - value: sales
               label: Sales
@@ -8709,7 +8815,7 @@ components:
           description: Available choices presented to the developer.
           type: array
           items:
-            $ref: '#/components/schemas/CustomFormSelectOption'
+            $ref: '#/components/schemas/CustomFormSelectOptionInput'
           example:
             - value: sales
               label: Sales
@@ -8830,7 +8936,9 @@ components:
         Marks a field that comes with the form by default.
 
         Built-in fields can't be removed, retyped, or relabeled, but their
-        `placeholder`, `description`, and `required` settings can still be changed.
+        Built-in fields can't be removed, retyped, or relabeled, and built-in
+        inputs are always `required`. Their `placeholder` and `description`
+        settings can still be changed.
 
         This flag is read-only — it's returned by the API but can't be set when
         creating or updating a form.
@@ -8898,6 +9006,7 @@ components:
         - label
         - name
         - built_in
+        - required
     CustomFormEmailField:
       description: An email address field. Rejects values that aren't a valid email format.
       type: object
@@ -8933,6 +9042,7 @@ components:
         - label
         - name
         - built_in
+        - required
     CustomFormNumberField:
       description: A numeric field.
       type: object
@@ -8968,6 +9078,7 @@ components:
         - label
         - name
         - built_in
+        - required
     CustomFormTextareaField:
       description: A multi-line text field.
       type: object
@@ -9003,6 +9114,38 @@ components:
         - label
         - name
         - built_in
+        - required
+    CustomFormSelectOption:
+      description: One selectable option in a dropdown field.
+      type: object
+      properties:
+        value:
+          description: The value submitted when this option is chosen.
+          type: string
+          example: sales
+          maxLength: 256
+          minLength: 1
+        label:
+          description: The text shown to the developer for this option.
+          type: string
+          example: Sales
+          maxLength: 256
+          minLength: 1
+        selected:
+          description: |
+            When `true`, this option is pre-selected when the form is displayed.
+
+            For a single-select field, at most one option may have `selected: true`.
+
+            Marking more than one option as selected is rejected as invalid.
+          type: boolean
+          example: false
+          default: false
+      additionalProperties: false
+      required:
+        - value
+        - label
+        - selected
     CustomFormSingleSelectField:
       description: |
         A dropdown field where the developer chooses exactly one option. Requires at least 1 option.
@@ -9047,10 +9190,13 @@ components:
           example:
             - value: sales
               label: Sales
+              selected: false
             - value: support
               label: Support
+              selected: false
             - value: engineering
               label: Engineering
+              selected: true
           maxItems: 20
           minItems: 1
       additionalProperties: false
@@ -9061,6 +9207,7 @@ components:
         - options
         - name
         - built_in
+        - required
     CustomFormMultiSelectField:
       description: |
         A dropdown field where the developer can choose multiple options. Requires at least 2 options.
@@ -9105,10 +9252,13 @@ components:
           example:
             - value: sales
               label: Sales
+              selected: false
             - value: support
               label: Support
+              selected: false
             - value: engineering
               label: Engineering
+              selected: true
           maxItems: 20
           minItems: 2
       additionalProperties: false
@@ -9119,6 +9269,7 @@ components:
         - options
         - name
         - built_in
+        - required
     CustomFormSelectField:
       description: |
         A dropdown field. Set `mode` to one of:
@@ -9175,6 +9326,7 @@ components:
         - label
         - name
         - built_in
+        - required
     CustomFormSubmitField:
       description: |
         The form's submit button. Every form must include exactly one. Its `name` is always `submit`.
@@ -11023,7 +11175,7 @@ components:
         cname_status: pending
         ssl:
           verification_status: verified
-          domain_verification_method: http
+          domain_verification_method: custom_certificate
     UpdateRegistrationConsumerExample1:
       value:
         id: 18ee2573-dec0-4b83-be99-fa7700bcdc61
@@ -11681,6 +11833,11 @@ components:
                 description: ID of the audit log destination.
                 type: string
                 format: uuid
+              include_principal_name:
+                description: Whether to include the principal name in the audit log entries sent to the webhook.
+                type: boolean
+                example: true
+                default: false
           examples:
             Disable Webhook:
               $ref: '#/components/examples/Disable-Portal-Audit-Log-Webhook'
@@ -12422,6 +12579,11 @@ components:
                 description: ID of the audit log destination.
                 type: string
                 format: uuid
+              include_principal_name:
+                description: Whether to include the principal name in the audit log entries sent to the webhook.
+                type: boolean
+                example: true
+                default: false
           examples:
             Get Portal Audit Log Webhook:
               $ref: '#/components/examples/Get-Portal-Audit-Log-Webhook'

@@ -22,7 +22,7 @@ function toArray(value) {
 export async function resolveUrlsToTest(
   args,
   config,
-  { repoRoot, imageTag, eventGatewayMinVersion } = {},
+  { repoRoot, imageTag, eventGatewayMinVersion, aiGatewayMinVersion } = {},
 ) {
   if (args.urls && args.product) {
     throw new Error("Pass either --urls or --product, not both.");
@@ -35,7 +35,11 @@ export async function resolveUrlsToTest(
     };
   }
 
-  const versionInputs = { imageTag, eventGatewayMinVersion };
+  const versionInputs = {
+    imageTag,
+    eventGatewayMinVersion,
+    aiGatewayMinVersion,
+  };
 
   if (args.product) {
     const { files } = collectHowToFiles(args.product, { repoRoot });

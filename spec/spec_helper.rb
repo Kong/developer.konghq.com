@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 ENV['JEKYLL_ENV'] ||= 'test'
+ENV['VITE_PORTAL_API_URL'] ||= 'https://developer.konghq.com/'
 
 PROJECT_ROOT = File.expand_path('..', __dir__)
 
@@ -11,8 +12,6 @@ require 'liquid'
 require 'capybara'
 
 Dir[File.join(PROJECT_ROOT, 'app/_plugins/**/*.rb')].sort.each do |f|
-  next if f.end_with?('app/_plugins/blocks/kuma-specific/kuma.rb')
-
   require f
 end
 

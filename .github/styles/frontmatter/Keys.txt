@@ -38,6 +38,7 @@ tech_preview
 feature_gates
 extended_description
 skip_proxy_ip
+skip_konnect_token
 gateway_custom_env
 gateway_env
 ai_gateway_enterprise
@@ -55,3 +56,10 @@ toc_depth
 event-gateway
 schema_name
 reference_with_schema
+skip_license
+cves
+cvss_score
+cvss_version
+affected_versions
+fixed_versions
+status

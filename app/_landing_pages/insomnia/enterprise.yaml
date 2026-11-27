@@ -1,6 +1,6 @@
 metadata:
-  title: Insomnia Enterprise
-  description: Learn more about the features available in the Insomnia Enterprise plan.
+  title: "{{ site.insomnia }} Enterprise"
+  description: Learn more about the features available in the {{ site.insomnia }} Enterprise plan.
   content_type: landing_page
   breadcrumbs:
     - /insomnia/
@@ -11,7 +11,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Insomnia Enterprise"     
+      text: "{{ site.insomnia }} Enterprise"     
     columns:
       - blocks:
           - type: structured_text
@@ -19,11 +19,11 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The Enterprise plan for Insomnia provides advanced options for user management and security.
-                    You can configure Insomnia's end-to-end-encryption (E2EE), storage control, and strong access governance rules on the Enterprise plan.
+                    The Enterprise plan for {{ site.insomnia }} provides advanced options for user management and security.
+                    You can configure {{ site.insomnia }}'s end-to-end-encryption (E2EE), storage control, and strong access governance rules on the Enterprise plan.
 
                     To compare plans, see the [pricing page](https://insomnia.rest/pricing).
-                    To learn how to set up your Insomnia Enterprise instance, see [Get started with Insomnia Enterprise](/insomnia/enterprise-onboarding/).
+                    To learn how to set up your {{ site.insomnia }} Enterprise instance, see [Get started with {{ site.insomnia }} Enterprise](/insomnia/enterprise-onboarding/).
   - column_count: 4
     columns:
       - blocks:
@@ -93,16 +93,16 @@ rows:
         - type: card
           config:
             title: Reports
-            description: Get reports on active and inactive users.
+            description: Download reports on licensed users, user activity, and organization and team membership.
             icon: /assets/icons/analytics.svg
             cta:
               text: Learn more
-              url: /insomnia/enterprise-user-management/#user-activity-reports
+              url: /insomnia/enterprise-user-management/#user-reports
       - blocks:
         - type: card
           config:
             title: "{{ site.konnect_short_name }} Gateway Service integration"
-            description: Link Konnect and send requests from Insomnia to Routes in {{site.konnect_short_name}}. 
+            description: Link Konnect and send requests from {{ site.insomnia }} to Routes in {{site.konnect_short_name}}, and use plugins and the Debugger.
             icon: /assets/icons/service-hub.svg
             cta:
               text: Learn more

@@ -656,13 +656,13 @@ AIGWOpenIDConnectGeneratedConfigClusterCacheRedis is a type alias.
 | `host` _string_ | A string representing a host name, such as example.com. |
 | `keepaliveBacklog` _int_ | Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`. |
 | `keepalivePoolSize` _int_ | The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low. |
-| `password` _string_ | Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. |
+| `password` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. |
 | `port` _int_ | An integer representing a port number between 0 and 65535, inclusive. |
 | `readTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
 | `sendTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
 | `sentinelMaster` _string_ | Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel. |
 | `sentinelNodes` _[][AIGWOpenIDConnectGeneratedConfigClusterCacheRedisSentinelNodes](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigclustercacheredissentinelnodes)_ | Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element. |
-| `sentinelPassword` _string_ | Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels. |
+| `sentinelPassword` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels. |
 | `sentinelRole` _string_ | Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel. |
 | `sentinelUsername` _string_ | Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+. |
 | `serverName` _string_ | A string representing an SNI (server name indication) value for TLS. |
@@ -841,14 +841,14 @@ AIGWOpenIDConnectGeneratedConfigRedis is a type alias.
 | `host` _string_ | A string representing a host name, such as example.com. |
 | `keepaliveBacklog` _int_ | Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`. |
 | `keepalivePoolSize` _int_ | The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low. |
-| `password` _string_ | Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. |
+| `password` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. |
 | `port` _int_ | An integer representing a port number between 0 and 65535, inclusive. |
 | `prefix` _string_ | The Redis session key prefix. |
 | `readTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
 | `sendTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
 | `sentinelMaster` _string_ | Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel. |
 | `sentinelNodes` _[][AIGWOpenIDConnectGeneratedConfigRedisSentinelNodes](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigredissentinelnodes)_ | Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element. |
-| `sentinelPassword` _string_ | Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels. |
+| `sentinelPassword` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels. |
 | `sentinelRole` _string_ | Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel. |
 | `sentinelUsername` _string_ | Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+. |
 | `serverName` _string_ | A string representing an SNI (server name indication) value for TLS. |
@@ -1110,7 +1110,7 @@ AIGatewayAgentAPISpec defines the API spec fields for AIGatewayAgent.
 | `displayName` _string_ | The display name for this agent. |
 | `enabled` _string_ | Whether the Agent is enabled. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this agent, used as a stable human-readable reference. This value is immutable after creation. |
 | `policies` _[][AIGatewayPolicyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyref)_ | List of policy references. |
 | `type` _string_ | The type of the agent. |
@@ -1188,8 +1188,8 @@ The structure varies depending on the agent type.
 
 | Field | Description |
 | --- | --- |
-| `caCertificates` _[][AIGatewayCACertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificatereference)_ | CA certificates used to verify the TLS certificate of the upstream agent endpoint, referenced by name. Each entry must be the `name` of an existing AI CA Certificate on the same AI Gateway.<br /><br />The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service generated for this Agent, which proxies requests to `config.url`.<br /><br />If unset, the default trust store is used to verify the upstream's TLS certificate. |
-| `certificates` _[][AIGatewayCertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificatereference)_ | Client certificates used for mutual TLS (mTLS) authentication with the upstream agent endpoint, referenced by name. Each entry must be the `name` of an existing AI Certificate on the same AI Gateway.<br /><br />The certificates are applied to the Kong Gateway Service generated for this Agent, which proxies requests to `config.url`. The generated Service presents a single client certificate (`client_certificate`) during the TLS handshake with the upstream, so at most one certificate may be configured.<br /><br />If unset, no client certificate is presented to the upstream. |
+| `caCertificates` _[][AIGatewayCACertificateRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificateref)_ | The CA certificates used to verify the TLS certificate of the upstream agent endpoint. Each entry references an AIGatewayCACertificate in the cluster. When `namespace` differs from the AIGatewayAgent's namespace, a KongReferenceGrant in the target namespace must permit the reference. |
+| `certificates` _[][AIGatewayCertificateRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificateref)_ | Client certificates used for mutual TLS (mTLS) authentication with the upstream agent endpoint. Each entry references an AIGatewayCertificate in the cluster. When `namespace` differs from the AIGatewayAgent's namespace, a KongReferenceGrant in the target namespace must permit the reference. At most one certificate may be configured. |
 | `logging` _[AIGatewayAgentConfigLogging](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayagentconfiglogging)_ | Configuration for AI Gateway logging. |
 | `maxRequestBodySize` _int_ | Maximum size of request body to parse. Set to 0 for unlimited. |
 | `proxy` _[AIGatewayProxyConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayproxyconfig)_ | HTTP/HTTPS proxy configuration for outbound requests to the upstream AI provider. |
@@ -1347,7 +1347,7 @@ AIGatewayAuthStrategyKeyAuth Configuration for an auth strategy.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this auth strategy instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this auth strategy instance, used as a stable human-readable reference. This value is immutable after creation. |
 
 _Appears in:_
@@ -1367,7 +1367,7 @@ AIGatewayAuthStrategyOpenIDConnect Configuration for an auth strategy.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this auth strategy instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this auth strategy instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVaultEnrollmentProtection](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvaultenrollmentprotection)_ | Enables enrollment protection for the Token Vault datastore linked to this auth strategy. Users of the linked Token Vault will need to authenticate using this OIDC auth strategy before completing enrollment with upstream providers. Enrollment links always store upstream credentials in the Token Vault belonging to the principal who requested the link. Enrollment protection ensures that other principals cannot use an enrollment link to unknowingly authorize the storage of their upstream credentials in another principal's Token Vault.<br /><br />Note that the auth strategy used to protect upstream resources such as MCP servers need not be the same auth strategy used for enrollment protection. Omit `token_vault` entirely to enforce no such enrollment protection.<br /><br />Requires a `token-vault` Datastore reference in `datastores`; enabling enrollment protection without one is rejected.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -1395,8 +1395,6 @@ _Appears in:_
 - [AIGatewayMCPServerListenerConsumer](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlistenerconsumer)
 - [AIGatewayMCPServerListenerOauth](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverlisteneroauth)
 - [AIGatewayModelAccess](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelaccess)
-
-
 
 
 
@@ -1488,22 +1486,26 @@ AIGatewayCACertificateAPISpec defines the API spec fields for AIGatewayCACertifi
 | --- | --- |
 | `cert` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | PEM-encoded public certificate of the CA. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this CA certificate, used as a stable human-readable reference. This value is immutable after creation. |
 
 _Appears in:_
 
 - [AIGatewayCACertificateSpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificatespec)
 
-#### AIGatewayCACertificateReference
-
-_Underlying type:_ `string`
-
-AIGatewayCACertificateReference A reference to an AI CA Certificate on the
-same AI Gateway, by CA certificate name.
+#### AIGatewayCACertificateRef
 
 
+AIGatewayCACertificateRef references an AIGatewayCACertificate in the cluster. The referenced
+object's Konnect name is used where the Konnect API accepts it.
 
+
+
+| Field | Description |
+| --- | --- |
+| `kind` _string_ | Kind is the kind of the referenced object. |
+| `name` _string_ | Name is the name of the referenced object. |
+| `namespace` _string_ | Namespace, if set to a namespace other than the referrer's, must be permitted by a KongReferenceGrant in that namespace. |
 
 _Appears in:_
 
@@ -1595,7 +1597,7 @@ AIGatewayCertificateAPISpec defines the API spec fields for AIGatewayCertificate
 | `key` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | PEM-encoded private key matching `cert`. |
 | `keyAlt` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | PEM-encoded private key matching `cert_alt`. Requires `cert_alt` to be set. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this certificate, used as a stable human-readable reference. This value is immutable after creation. |
 
 _Appears in:_
@@ -1614,23 +1616,7 @@ object's Konnect name is used where the Konnect API accepts it.
 | --- | --- |
 | `kind` _string_ | Kind is the kind of the referenced object. |
 | `name` _string_ | Name is the name of the referenced object. |
-| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
-
-_Appears in:_
-
-- [AIGatewaySNIAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaysniapispec)
-
-#### AIGatewayCertificateReference
-
-_Underlying type:_ `string`
-
-AIGatewayCertificateReference A reference to an AI Certificate on the same AI
-Gateway, by certificate name.
-The certificate must have a valid private key to be presented as a client
-certificate to an upstream.
-
-
-
+| `namespace` _string_ | Namespace, if set to a namespace other than the referrer's, must be permitted by a KongReferenceGrant in that namespace. |
 
 _Appears in:_
 
@@ -1639,6 +1625,7 @@ _Appears in:_
 - [AIGatewayMCPServerUpstreamServerConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverupstreamserverconfig)
 - [AIGatewayMCPServerWithUpstreamConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverwithupstreamconfig)
 - [AIGatewayMCPServerWithUpstreamNoProxyConfigNoServerConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverwithupstreamnoproxyconfignoserverconfig)
+- [AIGatewaySNIAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaysniapispec)
 
 #### AIGatewayCertificateSpec
 
@@ -1685,7 +1672,7 @@ AIGatewayConsumerAPISpec defines the API spec fields for AIGatewayConsumer.
 | `customID` _string_ | Identifier for mapping the consumer when using OAuth authentication. |
 | `displayName` _string_ | The display name for this consumer instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this consumer, used as a stable human-readable reference. This value is immutable after creation. |
 | `policies` _[][AIGatewayPolicyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyref)_ | List of policy references. |
 | `type` _string_ | The type of the consumer. |
@@ -1706,7 +1693,7 @@ AIGatewayConsumerCredentialAPISpec defines the API spec fields for AIGatewayCons
 | `apiKey` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | The API Key value. If not provided, then the key will be auto generated by the server and returned in the response. |
 | `displayName` _string_ | The display name for this credential instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this credential, used as a stable human-readable reference. This value is immutable after creation. |
 | `ttl` _int_ | The API Key's time-to-live in seconds. A value of 0 means the API Key never expires. |
 | `type` _string_ |  |
@@ -1761,7 +1748,7 @@ AIGatewayConsumerGroupAPISpec defines the API spec fields for AIGatewayConsumerG
 | --- | --- |
 | `displayName` _string_ | The display name for this consumer group instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this consumer group, used as a stable human-readable reference. This value is immutable after creation. |
 | `policies` _[][AIGatewayPolicyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyref)_ | List of policy references. |
 
@@ -2000,7 +1987,7 @@ AIGatewayDataPlaneCertificateAPISpec defines the API spec fields for AIGatewayDa
 | `cert` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | JSON escaped string of the certificate. |
 | `description` _string_ | An optional description of the certificate. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `title` _string_ | A human-readable name for the certificate. |
 
 _Appears in:_
@@ -2551,7 +2538,7 @@ AIGatewayMCPServerConversionListener is a type alias.
 | `displayName` _string_ | The display name for the MCP Server. |
 | `enabled` _string_ | Whether the MCP Server is enabled. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation. |
 | `policies` _[][AIGatewayPolicyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyref)_ | List of policy references. |
 | `rateLimiting` _[AIGatewayMCPServerRateLimiting](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverratelimiting)_ | Rate limits applied to requests to this MCP Server, matched by MCP method or tool name. Each AI Gateway node counts and enforces the limits independently.<br /><br />**Requires a minimum runtime version of `2.3`**. |
@@ -2611,9 +2598,9 @@ to modes where Kong answers as the MCP server.
 | Field | Description |
 | --- | --- |
 | `allowedVersions` _[]string_ | The MCP protocol revisions this server accepts. Leave unset to accept every revision Kong implements, which is the default. When set, `server/discover` advertises exactly this list and a request declaring anything else is rejected. Listing only per-request revisions refuses handshake clients.<br /><br />**Requires a minimum runtime version of `2.1`**. |
-| `caCertificates` _[][AIGatewayCACertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificatereference)_ | CA certificates used to verify the TLS certificate of the upstream MCP server, referenced by name. Each entry must be the `name` of an existing AI CA Certificate on the same AI Gateway.<br /><br />The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service generated for this MCP Server, which proxies requests to the upstream MCP server.<br /><br />If unset, the default trust store is used to verify the upstream's TLS certificate. |
+| `caCertificates` _[][AIGatewayCACertificateRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificateref)_ | The CA certificates used to verify the TLS certificate of the upstream MCP server. Each entry references an AIGatewayCACertificate in the cluster. When `namespace` differs from the AIGatewayMCPServer's namespace, a KongReferenceGrant in the target namespace must permit the reference. |
 | `cache` _[AIGatewayMCPServerConversionListenerConfigCache](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverconversionlistenerconfigcache)_ | Cache hints Kong emits on the cacheable operations it serves. Only clients on a protocol revision that defines them receive them.<br /><br />**Requires a minimum runtime version of `2.1`**. |
-| `certificates` _[][AIGatewayCertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificatereference)_ | Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server, referenced by name. Each entry must be the `name` of an existing AI Certificate on the same AI Gateway.<br /><br />The certificates are applied to the Kong Gateway Service generated for this MCP Server, which proxies requests to the upstream MCP server. The generated Service presents a single client certificate (`client_certificate`) during the TLS handshake with the upstream, so at most one certificate may be configured.<br /><br />If unset, no client certificate is presented to the upstream. |
+| `certificates` _[][AIGatewayCertificateRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificateref)_ | Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server. Each entry references an AIGatewayCertificate in the cluster. When `namespace` differs from the AIGatewayMCPServer's namespace, a KongReferenceGrant in the target namespace must permit the reference. At most one certificate may be configured. |
 | `logging` _[AIGatewayMCPServerConversionListenerConfigLogging](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverconversionlistenerconfiglogging)_ |  |
 | `maxRequestBodySize` _int_ | Maximum size of request body to parse. Set to 0 for unlimited. |
 | `route` _[AIGatewayMCPServerRouteWithMatcher](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverroutewithmatcher)_ | Route configuration for an MCP Server that terminates its own listener. At least one of `hosts`, `paths`, `methods`, or `headers` must be set so the route can match incoming requests. |
@@ -2674,7 +2661,7 @@ AIGatewayMCPServerConversionOnly is a type alias.
 | `displayName` _string_ | The display name for the MCP Server. |
 | `enabled` _string_ | Whether the MCP Server is enabled. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation. |
 | `policies` _[][AIGatewayPolicyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyref)_ | List of policy references. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
@@ -2699,7 +2686,7 @@ AIGatewayMCPServerListener is a type alias.
 | `displayName` _string_ | The display name for the MCP Server. |
 | `enabled` _string_ | Whether the MCP Server is enabled. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation. |
 | `policies` _[][AIGatewayPolicyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyref)_ | List of policy references. |
 | `sources` _[][AIGatewayMCPServerRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverref)_ | The explicit list of source MCP Servers whose tools this listener exposes. Each entry is the immutable `name` of a `conversion-only` (toolset) or `upstream-server` (third-party MCP server) MCP Server in the same AI Gateway. All of the referenced source's tools are exposed. |
@@ -2949,7 +2936,7 @@ AIGatewayMCPServerPassthroughListener is a type alias.
 | `displayName` _string_ | The display name for the MCP Server. |
 | `enabled` _string_ | Whether the MCP Server is enabled. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation. |
 | `policies` _[][AIGatewayPolicyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyref)_ | List of policy references. |
 | `rateLimiting` _[AIGatewayMCPServerRateLimiting](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverratelimiting)_ | Rate limits applied to requests to this MCP Server, matched by MCP method or tool name. Each AI Gateway node counts and enforces the limits independently.<br /><br />**Requires a minimum runtime version of `2.3`**. |
@@ -3218,7 +3205,7 @@ AIGatewayMCPServerUpstreamServer is a type alias.
 | `displayName` _string_ | The display name for the MCP Server. |
 | `enabled` _string_ | Whether the MCP Server is enabled. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this MCP server, used as a stable human-readable reference. This value is immutable after creation. |
 | `policies` _[][AIGatewayPolicyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyref)_ | List of policy references. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
@@ -3238,8 +3225,8 @@ configuration for the MCP Server.
 
 | Field | Description |
 | --- | --- |
-| `caCertificates` _[][AIGatewayCACertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificatereference)_ | CA certificates used to verify the TLS certificate of the upstream MCP server, referenced by name. Each entry must be the `name` of an existing AI CA Certificate on the same AI Gateway.<br /><br />The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service generated for this MCP Server, which proxies requests to the upstream MCP server.<br /><br />If unset, the default trust store is used to verify the upstream's TLS certificate. |
-| `certificates` _[][AIGatewayCertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificatereference)_ | Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server, referenced by name. Each entry must be the `name` of an existing AI Certificate on the same AI Gateway.<br /><br />The certificates are applied to the Kong Gateway Service generated for this MCP Server, which proxies requests to the upstream MCP server. The generated Service presents a single client certificate (`client_certificate`) during the TLS handshake with the upstream, so at most one certificate may be configured.<br /><br />If unset, no client certificate is presented to the upstream. |
+| `caCertificates` _[][AIGatewayCACertificateRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificateref)_ | The CA certificates used to verify the TLS certificate of the upstream MCP server. Each entry references an AIGatewayCACertificate in the cluster. When `namespace` differs from the AIGatewayMCPServer's namespace, a KongReferenceGrant in the target namespace must permit the reference. |
+| `certificates` _[][AIGatewayCertificateRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificateref)_ | Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server. Each entry references an AIGatewayCertificate in the cluster. When `namespace` differs from the AIGatewayMCPServer's namespace, a KongReferenceGrant in the target namespace must permit the reference. At most one certificate may be configured. |
 | `logging` _[AIGatewayMCPServerUpstreamServerConfigLogging](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverupstreamserverconfiglogging)_ | Configuration for AI Gateway logging. |
 | `maxRequestBodySize` _int_ | Maximum size of request body to parse. Set to 0 for unlimited. |
 | `route` _[AIGatewayMCPServerRouteWithMatcher](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverroutewithmatcher)_ | Route configuration for an MCP Server that terminates its own listener. At least one of `hosts`, `paths`, `methods`, or `headers` must be set so the route can match incoming requests. |
@@ -3438,8 +3425,8 @@ configuration for the MCP Server.
 
 | Field | Description |
 | --- | --- |
-| `caCertificates` _[][AIGatewayCACertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificatereference)_ | CA certificates used to verify the TLS certificate of the upstream MCP server, referenced by name. Each entry must be the `name` of an existing AI CA Certificate on the same AI Gateway.<br /><br />The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service generated for this MCP Server, which proxies requests to the upstream MCP server.<br /><br />If unset, the default trust store is used to verify the upstream's TLS certificate. |
-| `certificates` _[][AIGatewayCertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificatereference)_ | Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server, referenced by name. Each entry must be the `name` of an existing AI Certificate on the same AI Gateway.<br /><br />The certificates are applied to the Kong Gateway Service generated for this MCP Server, which proxies requests to the upstream MCP server. The generated Service presents a single client certificate (`client_certificate`) during the TLS handshake with the upstream, so at most one certificate may be configured.<br /><br />If unset, no client certificate is presented to the upstream. |
+| `caCertificates` _[][AIGatewayCACertificateRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificateref)_ | The CA certificates used to verify the TLS certificate of the upstream MCP server. Each entry references an AIGatewayCACertificate in the cluster. When `namespace` differs from the AIGatewayMCPServer's namespace, a KongReferenceGrant in the target namespace must permit the reference. |
+| `certificates` _[][AIGatewayCertificateRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificateref)_ | Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server. Each entry references an AIGatewayCertificate in the cluster. When `namespace` differs from the AIGatewayMCPServer's namespace, a KongReferenceGrant in the target namespace must permit the reference. At most one certificate may be configured. |
 | `logging` _[AIGatewayMCPServerWithUpstreamConfigLogging](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverwithupstreamconfiglogging)_ | Configuration for AI Gateway logging. |
 | `maxRequestBodySize` _int_ | Maximum size of request body to parse. Set to 0 for unlimited. |
 | `proxy` _[AIGatewayProxyConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayproxyconfig)_ | HTTP/HTTPS proxy configuration for outbound requests to the upstream AI provider. |
@@ -3536,8 +3523,8 @@ and request body size limits for the MCP Server.
 
 | Field | Description |
 | --- | --- |
-| `caCertificates` _[][AIGatewayCACertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificatereference)_ | CA certificates used to verify the TLS certificate of the upstream MCP server, referenced by name. Each entry must be the `name` of an existing AI CA Certificate on the same AI Gateway.<br /><br />The CA certificates build the trust store (`ca_certificates`) of the Kong Gateway Service generated for this MCP Server, which proxies requests to the upstream MCP server.<br /><br />If unset, the default trust store is used to verify the upstream's TLS certificate. |
-| `certificates` _[][AIGatewayCertificateReference](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificatereference)_ | Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server, referenced by name. Each entry must be the `name` of an existing AI Certificate on the same AI Gateway.<br /><br />The certificates are applied to the Kong Gateway Service generated for this MCP Server, which proxies requests to the upstream MCP server. The generated Service presents a single client certificate (`client_certificate`) during the TLS handshake with the upstream, so at most one certificate may be configured.<br /><br />If unset, no client certificate is presented to the upstream. |
+| `caCertificates` _[][AIGatewayCACertificateRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificateref)_ | The CA certificates used to verify the TLS certificate of the upstream MCP server. Each entry references an AIGatewayCACertificate in the cluster. When `namespace` differs from the AIGatewayMCPServer's namespace, a KongReferenceGrant in the target namespace must permit the reference. |
+| `certificates` _[][AIGatewayCertificateRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificateref)_ | Client certificates used for mutual TLS (mTLS) authentication with the upstream MCP server. Each entry references an AIGatewayCertificate in the cluster. When `namespace` differs from the AIGatewayMCPServer's namespace, a KongReferenceGrant in the target namespace must permit the reference. At most one certificate may be configured. |
 | `logging` _[AIGatewayMCPServerWithUpstreamNoProxyConfigNoServerConfigLogging](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverwithupstreamnoproxyconfignoserverconfiglogging)_ | Configuration for AI Gateway logging. |
 | `maxRequestBodySize` _int_ | Maximum size of request body to parse. Set to 0 for unlimited. |
 | `route` _[AIGatewayMCPServerRouteWithMatcher](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymcpserverroutewithmatcher)_ | Route configuration for an MCP Server that terminates its own listener. At least one of `hosts`, `paths`, `methods`, or `headers` must be set so the route can match incoming requests. |
@@ -3696,7 +3683,7 @@ to/from an AI Gateway model using the files, batches, and skills APIs.
 | `enabled` _string_ | Whether the model is enabled. |
 | `formats` _[][AIGatewayModelFormat](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelformat)_ | List of request/response formats supported by this model. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model, used as a stable human-readable reference. This value is immutable after creation. |
 | `policies` _[][AIGatewayPolicyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyref)_ | List of policy references. |
 | `targets` _[][AIGatewayTarget](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytarget)_ | One or more backend models that this model entry routes to. |
@@ -4223,7 +4210,7 @@ to/from an AI Gateway model using generative APIs.
 | `enabled` _string_ | Whether the model is enabled. |
 | `formats` _[][AIGatewayModelFormat](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelformat)_ | List of request/response formats supported by this model. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model, used as a stable human-readable reference. This value is immutable after creation. |
 | `policies` _[][AIGatewayPolicyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaypolicyref)_ | List of policy references. |
 | `targets` _[][AIGatewayTarget](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytarget)_ | One or more backend models that this model entry routes to. |
@@ -4342,7 +4329,7 @@ AIGatewayModelProviderAnthropic Configuration for an upstream model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -4378,7 +4365,7 @@ AIGatewayModelProviderAzure Config for Azure model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -4474,7 +4461,7 @@ AIGatewayModelProviderBaseten Configuration for an upstream model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -4510,7 +4497,7 @@ AIGatewayModelProviderBedrock Config for AWS model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -4584,7 +4571,7 @@ AIGatewayModelProviderCerebras Configuration for an upstream model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -4620,7 +4607,7 @@ AIGatewayModelProviderCohere Configuration for an upstream model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -4929,7 +4916,7 @@ AIGatewayModelProviderDashscope Configuration for an upstream model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -4966,7 +4953,7 @@ provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -5002,7 +4989,7 @@ AIGatewayModelProviderDeepseek Configuration for an upstream model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -5038,7 +5025,7 @@ AIGatewayModelProviderGemini Config for GCP model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -5113,7 +5100,7 @@ provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -5149,7 +5136,7 @@ AIGatewayModelProviderKimi Configuration for an upstream model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -5185,7 +5172,7 @@ AIGatewayModelProviderLlama2 Configuration for an upstream model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -5221,7 +5208,7 @@ AIGatewayModelProviderMistral Configuration for an upstream model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -5257,7 +5244,7 @@ AIGatewayModelProviderOllama Configuration for an upstream model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -5293,7 +5280,7 @@ AIGatewayModelProviderOpenai Configuration for an upstream model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -5363,7 +5350,7 @@ AIGatewayModelProviderSagemaker Config for Sagemaker model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -5470,7 +5457,7 @@ AIGatewayModelProviderTypesafe Configuration for an upstream model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -5506,7 +5493,7 @@ AIGatewayModelProviderVercel Configuration for an upstream model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -5542,7 +5529,7 @@ AIGatewayModelProviderVllm Configuration for an upstream model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -5578,7 +5565,7 @@ AIGatewayModelProviderXai Configuration for an upstream model provider.
 | `datastores` _[][AIGatewayDatastoreNamespacedRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorenamespacedref)_ | The Token Vault Datastore holding this entity's credential storage: the directory credentials are written to, and the encryption keys that seal them. Required when `token_vault` is set (on an auth strategy, when its credential manager is enabled), and the referenced Datastore must have type `token-vault`. Only one Datastore can be referenced.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `displayName` _string_ | The display name for this model provider instance. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this model provider instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `tokenVault` _[AIGatewayTokenVault](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaytokenvault)_ | Resolves an upstream credential per request via Kong's Token Vault instead of sending a static credential. The directory credentials live in, and the keys that encrypt them, come from the `token-vault` Datastore this entity references, and are returned read-only in `storage`.<br /><br />Callers must enroll with the configured Token Vault provider before the credential can be resolved. Until enrollment completes, an MCP Server serves virtual `authenticate` and `check_authentication_status` tools that guide the caller through the enrollment flow.<br /><br />**Requires a minimum runtime version of `2.3`**. |
 
@@ -5700,7 +5687,7 @@ AIGatewayModelVectorDBConfigPgVector is a type alias.
 | `dimensions` _int_ | the desired dimensionality for the vectors |
 | `distanceMetric` _string_ | the distance metric to use for vector searches |
 | `host` _string_ | the host of the pgvector database |
-| `password` _string_ | the password of the pgvector database This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `password` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | the password of the pgvector database This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
 | `port` _int_ | the port of the pgvector database |
 | `ssl` _[AIGatewayModelVectorDBConfigPgVectorSSL](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelvectordbconfigpgvectorssl)_ |  |
 | `threshold` _float64_ | the default similarity threshold for accepting semantic search results (float). Higher threshold means more results are considered similar. |
@@ -5751,7 +5738,7 @@ Redis instance.
 | `distanceMetric` _string_ | the distance metric to use for vector searches |
 | `host` _string_ | A string representing a host name, such as example.com. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
 | `keepalive` _[AIGatewayModelVectorDBConfigRedisKeepalive](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelvectordbconfigrediskeepalive)_ | Keepalive configuration for the Redis connection. |
-| `password` _string_ | Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `password` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
 | `port` _[AIGatewayModelVectorDBConfigRedisPort](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelvectordbconfigredisport)_ | An integer representing a port number between 0 and 65535, inclusive. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
 | `readTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
 | `sendTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
@@ -5935,7 +5922,7 @@ AIGatewayModelVectorDBConfigRedisSentinel Configuration for Redis Sentinel.
 | --- | --- |
 | `master` _string_ | Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel. |
 | `nodes` _[][AIGatewayModelVectorDBConfigRedisSentinelNodes](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelvectordbconfigredissentinelnodes)_ | Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element. |
-| `password` _string_ | Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `password` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
 | `role` _string_ | Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel. |
 | `username` _string_ | Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
 
@@ -6033,7 +6020,7 @@ AIGatewayPolicyAPISpec defines the API spec fields for AIGatewayPolicy.
 | `expressions` _k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1.JSON_ | Policy config expressions<br /><br />**Requires a minimum runtime version of `2.3`**. |
 | `global` _string_ | Whether the policy is globally applied to all resources. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this policy instance, used as a stable human-readable reference. This value is immutable after creation. |
 | `type` _string_ | The type of the Policy. This is equivalent to the Kong 3 plugin name. Some examples are: 'ai-sanitizer', 'ai-prompt-guard', and 'rate-limiting'. Note: Plugins have been renamed to Policies in Kong AI Gateway. Policy types and configuration documentation can be found in the [Developer Docs](https://developer.konghq.com/plugins/). |
 | `customPolicyRef` _[AIGatewayCustomPolicyRef](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycustompolicyref)_ | CustomPolicyRef references the AIGatewayCustomPolicy this policy uses, as an alternative to setting type to the custom policy's Konnect name. The referenced custom policy must be programmed in the same AI Gateway; its Konnect name is sent as the policy type. Exactly one of type and customPolicyRef must be set. |
@@ -6155,7 +6142,7 @@ server.
 
 | Field | Description |
 | --- | --- |
-| `password` _string_ | The password to use for proxy authentication. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `password` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | The password to use for proxy authentication. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
 | `username` _string_ | The username to use for proxy authentication. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
 
 _Appears in:_
@@ -6255,7 +6242,7 @@ Redis instance.
 | `database` _int_ | Database to use for the Redis connection when using the `redis` strategy |
 | `host` _string_ | A string representing a host name, such as example.com. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
 | `keepalive` _[AIGatewayRedisCloudConfigurationKeepalive](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayrediscloudconfigurationkeepalive)_ | Keepalive configuration for the Redis connection. |
-| `password` _string_ | Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `password` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
 | `port` _[AIGatewayRedisCloudConfigurationPort](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayrediscloudconfigurationport)_ | An integer representing a port number between 0 and 65535, inclusive. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
 | `readTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
 | `sendTimeout` _int_ | An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2. |
@@ -6440,7 +6427,7 @@ AIGatewayRedisCloudConfigurationSentinel Configuration for Redis Sentinel.
 | --- | --- |
 | `master` _string_ | Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel. |
 | `nodes` _[][AIGatewayRedisCloudConfigurationSentinelNodes](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayrediscloudconfigurationsentinelnodes)_ | Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element. |
-| `password` _string_ | Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
+| `password` _[SensitiveDataSource](#aiconfiguration-konghq-com-v1alpha1-types-sensitivedatasource)_ | Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
 | `role` _string_ | Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel. |
 | `username` _string_ | Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+. This field is [referenceable](https://developer.konghq.com/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). |
 
@@ -6620,7 +6607,7 @@ AIGatewaySNIAPISpec defines the API spec fields for AIGatewaySNI.
 | `displayName` _string_ | The display name for this SNI. |
 | `hostname` _[AIGatewayHostname](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayhostname)_ | A hostname used for TLS Server Name Indication (SNI) matching. Supports an optional wildcard segment at either end of the hostname (for example `*.example.com` or `example.*`). |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _string_ | The name for this SNI. This value is immutable after creation. |
 
 _Appears in:_
@@ -7820,7 +7807,7 @@ AwsSecretsManagerVault is a type alias.
 | `config` _[AwsSecretsManagerVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-awssecretsmanagervaultconfig)_ |  |
 | `description` _string_ | The description of the Vault. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayVaultName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultname)_ | A user-defined unique identifier for this vault instance, used as a stable human-readable reference. This value is immutable after creation. The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities. |
 
 _Appears in:_
@@ -7862,7 +7849,7 @@ AzureKeyVault is a type alias.
 | `config` _[AzureKeyVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-azurekeyvaultconfig)_ |  |
 | `description` _string_ | The description of the Vault. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayVaultName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultname)_ | A user-defined unique identifier for this vault instance, used as a stable human-readable reference. This value is immutable after creation. The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities. |
 
 _Appears in:_
@@ -7967,7 +7954,7 @@ ConjurVault is a type alias.
 | `config` _[ConjurVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-conjurvaultconfig)_ |  |
 | `description` _string_ | The description of the Vault. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayVaultName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultname)_ | A user-defined unique identifier for this vault instance, used as a stable human-readable reference. This value is immutable after creation. The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities. |
 
 _Appears in:_
@@ -8007,7 +7994,7 @@ CreateAIGatewayCustomPolicyInstalledRequest is a type alias.
 | --- | --- |
 | `displayName` _string_ | The display name for this custom policy. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this custom policy, used as a stable human-readable reference. This value is immutable after creation. |
 | `schema` _[ConfigMapDataSource](#aiconfiguration-konghq-com-v1alpha1-types-configmapdatasource)_ | The Lua schema definition for the custom policy, equivalent to a Kong plugin's `schema.lua`. |
 
@@ -8027,7 +8014,7 @@ CreateAIGatewayCustomPolicyStreamingRequest is a type alias.
 | `displayName` _string_ | The display name for this custom policy. |
 | `handler` _[ConfigMapDataSource](#aiconfiguration-konghq-com-v1alpha1-types-configmapdatasource)_ | The Lua handler implementation for the custom policy, equivalent to a Kong plugin's `handler.lua`. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayEntityIdentifier](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayentityidentifier)_ | A user-defined unique identifier for this custom policy, used as a stable human-readable reference. This value is immutable after creation. |
 | `schema` _[ConfigMapDataSource](#aiconfiguration-konghq-com-v1alpha1-types-configmapdatasource)_ | The Lua schema definition for the custom policy, equivalent to a Kong plugin's `schema.lua`. |
 
@@ -8141,7 +8128,7 @@ EnvironmentVariableVault is a type alias.
 | `config` _[EnvironmentVariableVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-environmentvariablevaultconfig)_ |  |
 | `description` _string_ | The description of the Vault. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayVaultName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultname)_ | A user-defined unique identifier for this vault instance, used as a stable human-readable reference. This value is immutable after creation. The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities. |
 
 _Appears in:_
@@ -8194,7 +8181,7 @@ GoogleSecretManagerVault is a type alias.
 | `config` _[GoogleSecretManagerVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-googlesecretmanagervaultconfig)_ |  |
 | `description` _string_ | The description of the Vault. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayVaultName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultname)_ | A user-defined unique identifier for this vault instance, used as a stable human-readable reference. This value is immutable after creation. The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities. |
 
 _Appears in:_
@@ -8232,7 +8219,7 @@ HashiCorpVault is a type alias.
 | `config` _[HashiCorpVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultconfig)_ | Configuration for an AI Gateway Vault. |
 | `description` _string_ | The description of the Vault. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayVaultName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultname)_ | A user-defined unique identifier for this vault instance, used as a stable human-readable reference. This value is immutable after creation. The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities. |
 
 _Appears in:_
@@ -8590,7 +8577,7 @@ KonnectConfigStoreVault is a type alias.
 | `config` _[KonnectConfigStoreVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-konnectconfigstorevaultconfig)_ |  |
 | `description` _string_ | The description of the Vault. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayVaultName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayvaultname)_ | A user-defined unique identifier for this vault instance, used as a stable human-readable reference. This value is immutable after creation. The name is used to load the right Vault configuration and implementation when referencing secrets with the other entities. |
 
 _Appears in:_
@@ -8649,7 +8636,10 @@ _Appears in:_
 _Underlying type:_ `[map[string]ManagedByValue](#map[string]managedbyvalue)`
 
 ManagedBy Stores information about what manages this entity, such as the tool
-or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character.
+or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric
+character, and may contain dashes (`-`), underscores (`_`), and dots (`.`).
+Values must be 1–127 characters long and must not be empty.
+Keys and values must not contain spaces or control characters.
 
 
 
@@ -8814,7 +8804,7 @@ RedisCEDatastore is a type alias.
 | `description` _string_ | The description of the Datastore. |
 | `displayName` _string_ | The display name for this Datastore. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayDatastoreName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorename)_ | A user-defined unique identifier for this Datastore, used as a stable human-readable reference. This value is immutable after creation. |
 
 _Appears in:_
@@ -8858,7 +8848,7 @@ RedisEEDatastore is a type alias.
 | `description` _string_ | The description of the Datastore. |
 | `displayName` _string_ | The display name for this Datastore. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayDatastoreName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorename)_ | A user-defined unique identifier for this Datastore, used as a stable human-readable reference. This value is immutable after creation. |
 
 _Appears in:_
@@ -9037,6 +9027,8 @@ either inline or sourced from a Kubernetes Secret.
 _Appears in:_
 
 - [AIGWOpenIDConnectGeneratedConfig](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfig)
+- [AIGWOpenIDConnectGeneratedConfigClusterCacheRedis](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigclustercacheredis)
+- [AIGWOpenIDConnectGeneratedConfigRedis](#aiconfiguration-konghq-com-v1alpha1-types-aigwopenidconnectgeneratedconfigredis)
 - [AIGatewayCACertificateAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycacertificateapispec)
 - [AIGatewayCertificateAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaycertificateapispec)
 - [AIGatewayConsumerCredentialAPISpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayconsumercredentialapispec)
@@ -9046,6 +9038,12 @@ _Appears in:_
 - [AIGatewayModelProviderConfigAuthBasicHeaders](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderconfigauthbasicheaders)
 - [AIGatewayModelProviderConfigAuthBasicParams](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderconfigauthbasicparams)
 - [AIGatewayModelProviderConfigAuthGCP](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelproviderconfigauthgcp)
+- [AIGatewayModelVectorDBConfigPgVector](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelvectordbconfigpgvector)
+- [AIGatewayModelVectorDBConfigRedis](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelvectordbconfigredis)
+- [AIGatewayModelVectorDBConfigRedisSentinel](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaymodelvectordbconfigredissentinel)
+- [AIGatewayProxyConfigAuth](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayproxyconfigauth)
+- [AIGatewayRedisCloudConfiguration](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayrediscloudconfiguration)
+- [AIGatewayRedisCloudConfigurationSentinel](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayrediscloudconfigurationsentinel)
 - [ConjurVaultConfig](#aiconfiguration-konghq-com-v1alpha1-types-conjurvaultconfig)
 - [DatastoreRedisCloudAuthentication](#aiconfiguration-konghq-com-v1alpha1-types-datastorerediscloudauthentication)
 - [HashiCorpVaultAppRoleConfig](#aiconfiguration-konghq-com-v1alpha1-types-hashicorpvaultapproleconfig)
@@ -9092,7 +9090,7 @@ TokenVaultDatastore is a type alias.
 | `description` _string_ | The description of the Datastore. |
 | `displayName` _string_ | The display name for this Datastore. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayDatastoreName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorename)_ | A user-defined unique identifier for this Datastore, used as a stable human-readable reference. This value is immutable after creation. |
 
 _Appears in:_
@@ -9148,7 +9146,7 @@ itself.
 | `description` _string_ | The description of the Datastore. |
 | `displayName` _string_ | The display name for this Datastore. |
 | `labels` _[PublicLabels](#aiconfiguration-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#aiconfiguration-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `name` _[AIGatewayDatastoreName](#aiconfiguration-konghq-com-v1alpha1-types-aigatewaydatastorename)_ | A user-defined unique identifier for this Datastore, used as a stable human-readable reference. This value is immutable after creation. |
 
 _Appears in:_
@@ -9534,6 +9532,7 @@ OnPremAIGatewaySpec defines the desired state of OnPremAIGateway.
 
 | Field | Description |
 | --- | --- |
+| `minRuntimeVersion` _*string_ | MinRuntimeVersion is the oldest AI Gateway release that must accept the generated configuration, in MAJOR.MINOR form. If not specified, the default applies. This value is independent of DataPlane image tags. Changing it changes the configuration for every DataPlane that references this OnPremAIGateway. |
 | `dataplaneSync` _[OnPremAIGatewayDataPlaneSync](#aigateway-konghq-com-v1alpha1-types-onpremaigatewaydataplanesync)_ | DataPlaneSync defines the configuration for syncing configuration to the data planes referencing this OnPremAIGateway. |
 | `objectFilters` _[OnPremAIGatewayObjectFilters](#aigateway-konghq-com-v1alpha1-types-onpremaigatewayobjectfilters)_ | ObjectFilters defines the filters to limit watched objects by the controllers. |
 | `watchNamespaces` _[OnPremAIGatewayWatchNamespaces](#aigateway-konghq-com-v1alpha1-types-onpremaigatewaywatchnamespaces)_ | WatchNamespaces defines the namespaces the controllers watch for the configuration entities pushed to this gateway's data planes, and for the Secrets they reference.<br /><br />When unset, only the OnPremAIGateway's own namespace is watched. When set to `list`, every listed namespace plus the OnPremAIGateway's own namespace is watched. A WatchNamespaceGrant is required in every listed namespace that is not the OnPremAIGateway's own. When set to `all`, every namespace is watched. This requires the operator to run with an empty `--watch-namespaces`, that is, cluster-wide.<br /><br />Changing this field restarts the control plane instance: its caches are built at start. |
@@ -9990,6 +9989,7 @@ KonnectNamespacedRef is the schema for the KonnectNamespacedRef type.
 
 _Appears in:_
 
+- [ConfigStoreControlPlaneRef](#konnect-konghq-com-v1alpha1-types-configstorecontrolplaneref)
 - [ControlPlaneRef](#common-konghq-com-v1alpha1-types-controlplaneref)
 - [KonnectExtensionControlPlaneRef](#common-konghq-com-v1alpha1-types-konnectextensioncontrolplaneref)
 
@@ -10059,18 +10059,20 @@ _Appears in:_
 - [AIGatewayConsumerCredentialSpec](#aiconfiguration-konghq-com-v1alpha1-types-aigatewayconsumercredentialspec)
 - [EventGatewayBackendClusterSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaybackendclusterspec)
 - [EventGatewayDataPlaneCertificateSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaydataplanecertificatespec)
+- [EventGatewayListenerPolicyChainSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerpolicychainspec)
 - [EventGatewayListenerPolicySpec](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerpolicyspec)
 - [EventGatewayListenerSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerspec)
 - [EventGatewaySchemaRegistrySpec](#configuration-konghq-com-v1alpha1-types-eventgatewayschemaregistryspec)
 - [EventGatewayStaticKeySpec](#configuration-konghq-com-v1alpha1-types-eventgatewaystatickeyspec)
 - [EventGatewayTLSTrustBundleSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaytlstrustbundlespec)
+- [EventGatewayVirtualClusterConsumePolicyChainSpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicychainspec)
 - [EventGatewayVirtualClusterConsumePolicySpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicyspec)
 - [EventGatewayVirtualClusterPolicyChainSpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicychainspec)
 - [EventGatewayVirtualClusterPolicySpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicyspec)
+- [EventGatewayVirtualClusterProducePolicyChainSpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicychainspec)
 - [EventGatewayVirtualClusterProducePolicySpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicyspec)
 - [EventGatewayVirtualClusterSpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterspec)
 - [KonnectCloudGatewayTransitGatewaySpec](#konnect-konghq-com-v1alpha1-types-konnectcloudgatewaytransitgatewayspec)
-- [KonnectConfigStoreSpec](#konnect-konghq-com-v1alpha1-types-konnectconfigstorespec)
 - [KonnectConfigurationDataPlaneGroup](#konnect-konghq-com-v1alpha1-types-konnectconfigurationdataplanegroup)
 - [PortalAPISpec](#konnect-konghq-com-v1alpha1-types-portalapispec)
 - [PortalCustomDomainSpec](#konnect-konghq-com-v1alpha1-types-portalcustomdomainspec)
@@ -10107,6 +10109,9 @@ Allowed values:
 _Underlying type:_ `string array`
 
 Tags is a type for a list of tags applied to a Kong entity.
+Tags starting with the prefixes reserved for the Kubernetes metadata of the source object
+(k8s-group:, k8s-version:, k8s-kind:, k8s-namespace:, k8s-name:, k8s-uid:, k8s-generation:, managed-by:)
+are not allowed as the operator sets them on the Konnect entities.
 
 
 
@@ -10418,14 +10423,17 @@ Package v1alpha1 contains API Schema definitions for the configuration.konghq.co
 - [EventGatewayDataPlaneCertificate](#configuration-konghq-com-v1alpha1-eventgatewaydataplanecertificate)
 - [EventGatewayListener](#configuration-konghq-com-v1alpha1-eventgatewaylistener)
 - [EventGatewayListenerPolicy](#configuration-konghq-com-v1alpha1-eventgatewaylistenerpolicy)
+- [EventGatewayListenerPolicyChain](#configuration-konghq-com-v1alpha1-eventgatewaylistenerpolicychain)
 - [EventGatewaySchemaRegistry](#configuration-konghq-com-v1alpha1-eventgatewayschemaregistry)
 - [EventGatewayStaticKey](#configuration-konghq-com-v1alpha1-eventgatewaystatickey)
 - [EventGatewayTLSTrustBundle](#configuration-konghq-com-v1alpha1-eventgatewaytlstrustbundle)
 - [EventGatewayVirtualCluster](#configuration-konghq-com-v1alpha1-eventgatewayvirtualcluster)
 - [EventGatewayVirtualClusterConsumePolicy](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterconsumepolicy)
+- [EventGatewayVirtualClusterConsumePolicyChain](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterconsumepolicychain)
 - [EventGatewayVirtualClusterPolicy](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterpolicy)
 - [EventGatewayVirtualClusterPolicyChain](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterpolicychain)
 - [EventGatewayVirtualClusterProducePolicy](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterproducepolicy)
+- [EventGatewayVirtualClusterProducePolicyChain](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterproducepolicychain)
 - [IngressClassParameters](#configuration-konghq-com-v1alpha1-ingressclassparameters)
 - [KongCACertificate](#configuration-konghq-com-v1alpha1-kongcacertificate)
 - [KongCertificate](#configuration-konghq-com-v1alpha1-kongcertificate)
@@ -10508,6 +10516,21 @@ EventGatewayListenerPolicy is the Schema for the eventgatewaylistenerpolicys API
 | `spec` _[EventGatewayListenerPolicySpec](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerpolicyspec)_ |  |
 | `status` _[EventGatewayListenerPolicyStatus](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerpolicystatus)_ |  |
 
+### EventGatewayListenerPolicyChain
+
+
+EventGatewayListenerPolicyChain is the Schema for the eventgatewaylistenerpolicychains API.
+
+<!-- event_gateway_listener_policy_chain description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `configuration.konghq.com/v1alpha1`
+| `kind` _string_ | `EventGatewayListenerPolicyChain`
+| `metadata` _k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[EventGatewayListenerPolicyChainSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerpolicychainspec)_ |  |
+| `status` _[EventGatewayListenerPolicyChainStatus](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerpolicychainstatus)_ |  |
+
 ### EventGatewaySchemaRegistry
 
 
@@ -10583,6 +10606,21 @@ EventGatewayVirtualClusterConsumePolicy is the Schema for the eventgatewayvirtua
 | `spec` _[EventGatewayVirtualClusterConsumePolicySpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicyspec)_ |  |
 | `status` _[EventGatewayVirtualClusterConsumePolicyStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicystatus)_ |  |
 
+### EventGatewayVirtualClusterConsumePolicyChain
+
+
+EventGatewayVirtualClusterConsumePolicyChain is the Schema for the eventgatewayvirtualclusterconsumepolicychains API.
+
+<!-- event_gateway_virtual_cluster_consume_policy_chain description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `configuration.konghq.com/v1alpha1`
+| `kind` _string_ | `EventGatewayVirtualClusterConsumePolicyChain`
+| `metadata` _k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[EventGatewayVirtualClusterConsumePolicyChainSpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicychainspec)_ |  |
+| `status` _[EventGatewayVirtualClusterConsumePolicyChainStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicychainstatus)_ |  |
+
 ### EventGatewayVirtualClusterPolicy
 
 
@@ -10627,6 +10665,21 @@ EventGatewayVirtualClusterProducePolicy is the Schema for the eventgatewayvirtua
 | `metadata` _k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[EventGatewayVirtualClusterProducePolicySpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicyspec)_ |  |
 | `status` _[EventGatewayVirtualClusterProducePolicyStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicystatus)_ |  |
+
+### EventGatewayVirtualClusterProducePolicyChain
+
+
+EventGatewayVirtualClusterProducePolicyChain is the Schema for the eventgatewayvirtualclusterproducepolicychains API.
+
+<!-- event_gateway_virtual_cluster_produce_policy_chain description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `configuration.konghq.com/v1alpha1`
+| `kind` _string_ | `EventGatewayVirtualClusterProducePolicyChain`
+| `metadata` _k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[EventGatewayVirtualClusterProducePolicyChainSpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicychainspec)_ |  |
+| `status` _[EventGatewayVirtualClusterProducePolicyChainStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicychainstatus)_ |  |
 
 ### IngressClassParameters
 
@@ -11127,15 +11180,7 @@ BackendClusterName The unique name of the backend cluster.
 
 _Appears in:_
 
-- [BackendClusterReferenceByName](#configuration-konghq-com-v1alpha1-types-backendclusterreferencebyname)
-- [BackendClusterReferenceModify](#configuration-konghq-com-v1alpha1-types-backendclusterreferencemodify)
 - [EventGatewayBackendClusterAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewaybackendclusterapispec)
-
-
-
-
-
-
 
 #### BackendClusterTLS
 
@@ -11197,12 +11242,21 @@ consumed records.
 * `error` - the batch is not delivered to the client.
 Use sparingly: erroring on a batch causes clients to get stuck on the
 problematic offset and requires manual intervention to skip it.
+A single record that always fails the policy, for example one written by a
+producer with access to the topic, pins every consumer group on that offset.
+The error the client receives contains the policy failure reason, which can
+include runtime-specific configuration details.
 * `skip` - the record is not delivered to the client.
 * `passthrough` - passes the record to the client even though policy
 execution failed.
 * `mark` - passes the record to the client but marks it with a
 `kong/policy-failure-<id>` header whose value is the reason for the policy
-failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**.
+failure (truncated to 512 characters).
+The failure reason can contain runtime-specific configuration details, such
+as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error
+text, JWT issuer and audience data, or expression snippets.
+If you don't want to share this information with clients, remove the header
+with a Modify Headers consume policy.<br /><br />**Requires a minimum runtime version of `1.2`**.
 
 
 
@@ -11336,34 +11390,13 @@ EncryptionKeyStatic A static encryption key.
 
 | Field | Description |
 | --- | --- |
-| `key` _[EncryptionKeyStaticReference](#configuration-konghq-com-v1alpha1-types-encryptionkeystaticreference)_ | A static encryption key reference, either by ID or by value. |
+| `key` _[EventGatewayStaticKeyRef](#configuration-konghq-com-v1alpha1-types-eventgatewaystatickeyref)_ | A reference to an EventGatewayStaticKey holding the static encryption key. |
 
 _Appears in:_
 
 - [EncryptionKey](#configuration-konghq-com-v1alpha1-types-encryptionkey)
 - [EventGatewayEncryptConfigEncryptionKey](#configuration-konghq-com-v1alpha1-types-eventgatewayencryptconfigencryptionkey)
 - [EventGatewayParsedRecordEncryptionSelectorEncryptionKey](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordencryptionselectorencryptionkey)
-
-#### EncryptionKeyStaticReference
-
-
-EncryptionKeyStaticReference is a type alias.
-
-
-
-| Field | Description |
-| --- | --- |
-| `id` _*string_ |  |
-| `name` _*string_ |  |
-| `namespacedRef` _[EventGatewayStaticKeyRef](#configuration-konghq-com-v1alpha1-types-eventgatewaystatickeyref)_ | NamespacedRef references an in-cluster EventGatewayStaticKey object, resolved to its Konnect id. It is mutually exclusive with the other fields. |
-
-_Appears in:_
-
-- [EncryptionKeyStatic](#configuration-konghq-com-v1alpha1-types-encryptionkeystatic)
-
-
-
-
 
 #### EncryptionKeyType
 
@@ -11841,7 +11874,7 @@ of the consume schema validation policy when using an inline schema.<br /><br />
 
 | Field | Description |
 | --- | --- |
-| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. A single record that always fails the policy, for example one written by a producer with access to the topic, pins every consumer group on that offset. The error the client receives contains the policy failure reason, which can include runtime-specific configuration details. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters). The failure reason can contain runtime-specific configuration details, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, or expression snippets. If you don't want to share this information with clients, remove the header with a Modify Headers consume policy.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `key` _[EventGatewayConsumeSchemaValidationPolicyInlineSchemaConfigKey](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyinlineschemaconfigkey)_ | Defines the schema for a record key or value, inline.<br /><br />**Requires a minimum runtime version of `1.3`**. |
 | `keyValidationAction` _[ConsumeKeyValidationAction](#configuration-konghq-com-v1alpha1-types-consumekeyvalidationaction)_ | Deprecated. Use `failure_mode`.<br /><br />Defines a behavior when record key is not valid. * mark - marks a record with kong/server header and client ID value to help to identify the clients violating schema. * skip - skips delivering a record. |
 | `validateKey` _string_ | If true, validate the record key.<br /><br />**Requires a minimum runtime version of `1.2`**. |
@@ -11939,9 +11972,8 @@ consume schema validation policy when using JSON parsing without schema.
 
 | Field | Description |
 | --- | --- |
-| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. A single record that always fails the policy, for example one written by a producer with access to the topic, pins every consumer group on that offset. The error the client receives contains the policy failure reason, which can include runtime-specific configuration details. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters). The failure reason can contain runtime-specific configuration details, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, or expression snippets. If you don't want to share this information with clients, remove the header with a Modify Headers consume policy.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `keyValidationAction` _[ConsumeKeyValidationAction](#configuration-konghq-com-v1alpha1-types-consumekeyvalidationaction)_ | Deprecated. Use `failure_mode`.<br /><br />Defines a behavior when record key is not valid. * mark - marks a record with kong/server header and client ID value to help to identify the clients violating schema. * skip - skips delivering a record. |
-| `schemaRegistry` _[EventGatewaySchemaRegistryRef](#configuration-konghq-com-v1alpha1-types-eventgatewayschemaregistryref)_ | A reference to a schema Registry. |
 | `validateKey` _string_ | If true, validate the record key.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `validateValue` _string_ | If true, validate the record value.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `valueValidationAction` _[ConsumeValueValidationAction](#configuration-konghq-com-v1alpha1-types-consumevaluevalidationaction)_ | Deprecated. Use `failure_mode`.<br /><br />Defines a behavior when record value is not valid. * mark - marks a record with kong/server header and client ID value to help to identify the clients violating schema. * skip - skips delivering a record. |
@@ -11961,7 +11993,7 @@ registry.
 
 | Field | Description |
 | --- | --- |
-| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. A single record that always fails the policy, for example one written by a producer with access to the topic, pins every consumer group on that offset. The error the client receives contains the policy failure reason, which can include runtime-specific configuration details. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters). The failure reason can contain runtime-specific configuration details, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, or expression snippets. If you don't want to share this information with clients, remove the header with a Modify Headers consume policy.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `keyValidationAction` _[ConsumeKeyValidationAction](#configuration-konghq-com-v1alpha1-types-consumekeyvalidationaction)_ | Deprecated. Use `failure_mode`.<br /><br />Defines a behavior when record key is not valid. * mark - marks a record with kong/server header and client ID value to help to identify the clients violating schema. * skip - skips delivering a record. |
 | `schemaRegistry` _[EventGatewaySchemaRegistryRef](#configuration-konghq-com-v1alpha1-types-eventgatewayschemaregistryref)_ | A reference to a schema Registry. |
 | `validateKey` _string_ | If true, validate the record key.<br /><br />**Requires a minimum runtime version of `1.2`**. |
@@ -12407,6 +12439,55 @@ _Appears in:_
 
 - [EventGatewayListenerPolicySpec](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerpolicyspec)
 
+#### EventGatewayListenerPolicyChainAPISpec
+
+
+EventGatewayListenerPolicyChainAPISpec defines the API spec fields for EventGatewayListenerPolicyChain.
+
+
+
+| Field | Description |
+| --- | --- |
+| `policies` _[][EventGatewayListenerPolicyRef](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerpolicyref)_ | Policies lists distinct EventGatewayListenerPolicy references in execution order. Each policy must belong to the referenced EventGatewayListener. Namespace defaults to this chain's namespace; a policy in another namespace needs a KongReferenceGrant in its namespace. List every listener policy exactly once. An explicit empty list is valid only when the remote chain has no policies; it does not clear an existing chain. When a policy is created or deleted, update this list to match the complete remote set. |
+
+_Appears in:_
+
+- [EventGatewayListenerPolicyChainSpec](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerpolicychainspec)
+
+#### EventGatewayListenerPolicyChainSpec
+
+
+EventGatewayListenerPolicyChainSpec defines the desired state of EventGatewayListenerPolicyChain.
+
+
+
+| Field | Description |
+| --- | --- |
+| `eventGatewayListenerRef` _[ObjectRef](#common-konghq-com-v1alpha1-types-objectref)_ | EventGatewayListenerRef is the reference to the parent EventGatewayListener object. |
+| `apiSpec` _[EventGatewayListenerPolicyChainAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerpolicychainapispec)_ | APISpec defines the desired state of the resource's API spec fields. |
+
+_Appears in:_
+
+- [EventGatewayListenerPolicyChain](#configuration-konghq-com-v1alpha1-eventgatewaylistenerpolicychain)
+
+#### EventGatewayListenerPolicyChainStatus
+
+
+EventGatewayListenerPolicyChainStatus defines the observed state of EventGatewayListenerPolicyChain.
+
+
+
+| Field | Description |
+| --- | --- |
+| `conditions` _[]k8s.io/apimachinery/pkg/apis/meta/v1.Condition_ | Conditions represent the current state of the resource. |
+| `gatewayID` _[KonnectEntityRef](#configuration-konghq-com-v1alpha1-types-konnectentityref)_ | GatewayID is the Konnect ID of the parent Gateway. |
+| `eventGatewayListenerID` _[KonnectEntityRef](#configuration-konghq-com-v1alpha1-types-konnectentityref)_ | EventGatewayListenerID is the Konnect ID of the parent EventGatewayListener. |
+| `observedGeneration` _int64_ | ObservedGeneration is the most recent generation observed |
+
+_Appears in:_
+
+- [EventGatewayListenerPolicyChain](#configuration-konghq-com-v1alpha1-eventgatewaylistenerpolicychain)
+
 #### EventGatewayListenerPolicyConfig
 
 
@@ -12444,6 +12525,24 @@ Allowed values:
 | --- | --- |
 | `forwardToVirtualCluster` |  |
 | `tlsServer` |  |
+
+#### EventGatewayListenerPolicyRef
+
+
+EventGatewayListenerPolicyRef references an EventGatewayListenerPolicy in the cluster. The referenced
+object's Konnect id is used where the Konnect API accepts it.
+
+
+
+| Field | Description |
+| --- | --- |
+| `kind` _string_ | Kind is the kind of the referenced object. |
+| `name` _string_ | Name is the name of the referenced object. |
+| `namespace` _string_ | Namespace, if set to a namespace other than the referrer's, must be permitted by a KongReferenceGrant in that namespace. |
+
+_Appears in:_
+
+- [EventGatewayListenerPolicyChainAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerpolicychainapispec)
 
 
 
@@ -12930,7 +13029,7 @@ parsed record fields policy.
 | Field | Description |
 | --- | --- |
 | `decryptFields` _[EventGatewayParsedRecordDecryptionSelector](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecorddecryptionselector)_ | Selects fields of a parsed record for decryption. |
-| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. A single record that always fails the policy, for example one written by a producer with access to the topic, pins every consumer group on that offset. The error the client receives contains the policy failure reason, which can include runtime-specific configuration details. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters). The failure reason can contain runtime-specific configuration details, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, or expression snippets. If you don't want to share this information with clients, remove the header with a Modify Headers consume policy.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `keySources` _[][EventGatewayKeySource](#configuration-konghq-com-v1alpha1-types-eventgatewaykeysource)_ | Describes how to find a symmetric key for decryption. |
 
 _Appears in:_
@@ -12943,7 +13042,11 @@ _Appears in:_
 EventGatewayParsedRecordDecryptFieldsPolicyCreate Decrypts fields of parsed
 Kafka records using AES_256_GCM.
 Keys are therefore 256 bits long.<br /><br />Note this policy can only be used as a child of a
-`EventGatewayConsumeSchemaValidationPolicy` policy.<br /><br />**Requires a minimum runtime version of `1.2`**.
+`EventGatewayConsumeSchemaValidationPolicy` policy.<br /><br />This policy only runs on records that the parent schema validation policy
+successfully parses.
+If the parent policy's `failure_mode` is `passthrough` or `mark`, records
+that fail schema validation are delivered to the client without parsing, so
+this policy doesn't run on them and their fields stay encrypted.<br /><br />**Requires a minimum runtime version of `1.2`**.
 
 
 
@@ -13025,7 +13128,7 @@ parsed record policy.
 | Field | Description |
 | --- | --- |
 | `encryptFields` _[][EventGatewayParsedRecordEncryptionSelector](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordencryptionselector)_ | Selects which fields to encrypt and with what keys. |
-| `failureMode` _[ProduceFailureMode](#configuration-konghq-com-v1alpha1-types-producefailuremode)_ | Describes how to handle a failure in a policy applied to produced records. * `reject` - rejects the record batch. * `passthrough` - passes the record silently to the backend cluster even though policy execution failed. * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `failureMode` _[ProduceFailureMode](#configuration-konghq-com-v1alpha1-types-producefailuremode)_ | Describes how to handle a failure in a policy applied to produced records. * `reject` - rejects the record batch. * `passthrough` - passes the record silently to the backend cluster even though policy execution failed. * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters). The header is stored with the record in the backend cluster, so every consumer of the topic sees it, including systems that never pass through the Event Gateway. The failure reason can contain runtime-specific configuration details, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, or expression snippets, and a producer with access to the topic can trigger policy failures on purpose to expose it. If you don't want to share this information, remove the header with a Modify Headers produce policy, or use a different failure mode.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 
 _Appears in:_
 
@@ -13037,7 +13140,11 @@ _Appears in:_
 EventGatewayParsedRecordEncryptFieldsPolicyCreate Encrypts fields of parsed
 Kafka records using AES_256_GCM.
 Keys are therefore 256 bits long.<br /><br />Note this policy can only be used as a child of a
-`EventGatewayProduceSchemaValidationPolicy` policy.<br /><br />**Requires a minimum runtime version of `1.2`**.
+`EventGatewayProduceSchemaValidationPolicy` policy.<br /><br />This policy only runs on records that the parent schema validation policy
+successfully parses.
+If the parent policy's `failure_mode` is `passthrough` or `mark`, records
+that fail schema validation are sent to the backend cluster without parsing,
+so this policy doesn't run on them and their fields aren't encrypted.<br /><br />**Requires a minimum runtime version of `1.2`**.
 
 
 
@@ -13207,7 +13314,7 @@ parsed record fields consume policy.
 
 | Field | Description |
 | --- | --- |
-| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. A single record that always fails the policy, for example one written by a producer with access to the topic, pins every consumer group on that offset. The error the client receives contains the policy failure reason, which can include runtime-specific configuration details. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters). The failure reason can contain runtime-specific configuration details, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, or expression snippets. If you don't want to share this information with clients, remove the header with a Modify Headers consume policy.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `maskFields` _[][EventGatewayParsedRecordMaskSelector](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselector)_ | Selects which fields to mask and how to mask them. |
 
 _Appears in:_
@@ -13249,7 +13356,7 @@ record fields produce policy.
 
 | Field | Description |
 | --- | --- |
-| `failureMode` _[ProduceFailureMode](#configuration-konghq-com-v1alpha1-types-producefailuremode)_ | Describes how to handle a failure in a policy applied to produced records. * `reject` - rejects the record batch. * `passthrough` - passes the record silently to the backend cluster even though policy execution failed. * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `failureMode` _[ProduceFailureMode](#configuration-konghq-com-v1alpha1-types-producefailuremode)_ | Describes how to handle a failure in a policy applied to produced records. * `reject` - rejects the record batch. * `passthrough` - passes the record silently to the backend cluster even though policy execution failed. * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters). The header is stored with the record in the backend cluster, so every consumer of the topic sees it, including systems that never pass through the Event Gateway. The failure reason can contain runtime-specific configuration details, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, or expression snippets, and a producer with access to the topic can trigger policy failures on purpose to expose it. If you don't want to share this information, remove the header with a Modify Headers produce policy, or use a different failure mode.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `maskFields` _[][EventGatewayParsedRecordMaskSelector](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordmaskselector)_ | Selects which fields to mask and how to mask them. |
 
 _Appears in:_
@@ -13391,7 +13498,7 @@ be set.
 
 | Field | Description |
 | --- | --- |
-| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. A single record that always fails the policy, for example one written by a producer with access to the topic, pins every consumer group on that offset. The error the client receives contains the policy failure reason, which can include runtime-specific configuration details. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters). The failure reason can contain runtime-specific configuration details, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, or expression snippets. If you don't want to share this information with clients, remove the header with a Modify Headers consume policy.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `onUnknownField` _[TranscodeOnUnknownField](#configuration-konghq-com-v1alpha1-types-transcodeonunknownfield)_ | Describes how to handle JSON fields that are not defined in the target schema. * `fail` - the transcoding fails. The policy `failure_mode` determines how the failure is handled. * `drop` - the unknown fields are removed from the transcoded value.<br /><br />**Requires a minimum runtime version of `1.3`**. |
 | `schemaSource` _[EventGatewayParsedRecordTranscodeConsumeConfigAvroSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigavroschemasource)_ | Determines how to look up the schema to use for the transcoded output data. Leave this unset if the output data schema isn't needed. |
 
@@ -13448,7 +13555,7 @@ transcode parsed record policy when converting consumed records to JSON.
 
 | Field | Description |
 | --- | --- |
-| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `failureMode` _[ConsumeFailureMode](#configuration-konghq-com-v1alpha1-types-consumefailuremode)_ | Describes how to handle a failure in a policy applied to consumed records. * `error` - the batch is not delivered to the client. Use sparingly: erroring on a batch causes clients to get stuck on the problematic offset and requires manual intervention to skip it. A single record that always fails the policy, for example one written by a producer with access to the topic, pins every consumer group on that offset. The error the client receives contains the policy failure reason, which can include runtime-specific configuration details. * `skip` - the record is not delivered to the client. * `passthrough` - passes the record to the client even though policy execution failed. * `mark` - passes the record to the client but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters). The failure reason can contain runtime-specific configuration details, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, or expression snippets. If you don't want to share this information with clients, remove the header with a Modify Headers consume policy.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `onUnknownField` _[TranscodeOnUnknownField](#configuration-konghq-com-v1alpha1-types-transcodeonunknownfield)_ | Describes how to handle JSON fields that are not defined in the target schema. * `fail` - the transcoding fails. The policy `failure_mode` determines how the failure is handled. * `drop` - the unknown fields are removed from the transcoded value.<br /><br />**Requires a minimum runtime version of `1.3`**. |
 | `schemaSource` _[EventGatewayParsedRecordTranscodeConsumeConfigJSONSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeconsumeconfigjsonschemasource)_ | Determines how to look up the schema to use for the transcoded output data. Leave this unset if the output data schema isn't needed. |
 
@@ -13590,7 +13697,7 @@ be set.
 
 | Field | Description |
 | --- | --- |
-| `failureMode` _[ProduceFailureMode](#configuration-konghq-com-v1alpha1-types-producefailuremode)_ | Describes how to handle a failure in a policy applied to produced records. * `reject` - rejects the record batch. * `passthrough` - passes the record silently to the backend cluster even though policy execution failed. * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `failureMode` _[ProduceFailureMode](#configuration-konghq-com-v1alpha1-types-producefailuremode)_ | Describes how to handle a failure in a policy applied to produced records. * `reject` - rejects the record batch. * `passthrough` - passes the record silently to the backend cluster even though policy execution failed. * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters). The header is stored with the record in the backend cluster, so every consumer of the topic sees it, including systems that never pass through the Event Gateway. The failure reason can contain runtime-specific configuration details, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, or expression snippets, and a producer with access to the topic can trigger policy failures on purpose to expose it. If you don't want to share this information, remove the header with a Modify Headers produce policy, or use a different failure mode.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `onUnknownField` _[TranscodeOnUnknownField](#configuration-konghq-com-v1alpha1-types-transcodeonunknownfield)_ | Describes how to handle JSON fields that are not defined in the target schema. * `fail` - the transcoding fails. The policy `failure_mode` determines how the failure is handled. * `drop` - the unknown fields are removed from the transcoded value.<br /><br />**Requires a minimum runtime version of `1.3`**. |
 | `schemaSource` _[EventGatewayParsedRecordTranscodeProduceConfigAvroSchemaSource](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeproduceconfigavroschemasource)_ | Determines how to look up the schema to use for the transcoded output data. Leave this unset if the output data schema isn't needed. |
 
@@ -13815,7 +13922,7 @@ registered in a schema registry, computing the subject and version to use.
 | Field | Description |
 | --- | --- |
 | `schemaRefDestination` _[EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRefDestination](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemarefdestination)_ | Defines how to record the schema id for the transcoded output data. See the [Confluent docs](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#wire-format) for more about the wire format. |
-| `schemaRegistry` _[EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemaregistry)_ | A reference to a schema Registry. |
+| `schemaRegistry` _[EventGatewaySchemaRegistryRef](#configuration-konghq-com-v1alpha1-types-eventgatewayschemaregistryref)_ | A reference to a schema Registry. |
 | `subject` _string_ | An expression that computes the schema registry subject of the output data's schema. |
 | `version` _string_ | An expression that computes the schema registry version of the output data's schema. |
 
@@ -13865,44 +13972,6 @@ Allowed values:
 | `confluentFormat` |  |
 | `none` |  |
 | `recordHeader` |  |
-
-#### EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistry
-
-
-EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistry represents a union type for schema_registry.
-Only one of the fields should be set based on the Type.
-
-
-
-| Field | Description |
-| --- | --- |
-| `type` _[EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistryType](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemaregistrytype)_ | Type designates the type of configuration. |
-| `id` _[SchemaRegistryReferenceByID](#configuration-konghq-com-v1alpha1-types-schemaregistryreferencebyid)_ | ID configuration. |
-| `name` _[SchemaRegistryReferenceByName](#configuration-konghq-com-v1alpha1-types-schemaregistryreferencebyname)_ | Name configuration. |
-
-_Appears in:_
-
-- [EventGatewayParsedRecordTranscodeSchemaSourceReference](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereference)
-
-#### EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistryType
-
-_Underlying type:_ `string`
-
-EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistryType represents the type of schema_registry.
-
-
-
-
-_Appears in:_
-
-- [EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemaregistry)
-
-Allowed values:
-
-| Value | Description |
-| --- | --- |
-| `id` |  |
-| `name` |  |
 
 #### EventGatewayParsedRecordTranscodeSchemaSourceType
 
@@ -14030,13 +14099,13 @@ of the produce schema validation policy when using an inline schema.<br /><br />
 
 | Field | Description |
 | --- | --- |
-| `failureMode` _[ProduceFailureMode](#configuration-konghq-com-v1alpha1-types-producefailuremode)_ | Describes how to handle a failure in a policy applied to produced records. * `reject` - rejects the record batch. * `passthrough` - passes the record silently to the backend cluster even though policy execution failed. * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `failureMode` _[ProduceFailureMode](#configuration-konghq-com-v1alpha1-types-producefailuremode)_ | Describes how to handle a failure in a policy applied to produced records. * `reject` - rejects the record batch. * `passthrough` - passes the record silently to the backend cluster even though policy execution failed. * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters). The header is stored with the record in the backend cluster, so every consumer of the topic sees it, including systems that never pass through the Event Gateway. The failure reason can contain runtime-specific configuration details, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, or expression snippets, and a producer with access to the topic can trigger policy failures on purpose to expose it. If you don't want to share this information, remove the header with a Modify Headers produce policy, or use a different failure mode.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `key` _[EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigKey](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigkey)_ | Defines the schema for a record key or value, inline.<br /><br />**Requires a minimum runtime version of `1.3`**. |
-| `keyValidationAction` _[ProduceKeyValidationAction](#configuration-konghq-com-v1alpha1-types-producekeyvalidationaction)_ | Defines a behavior when record key is not valid. * reject - rejects a batch for topic partition. Only available for produce. * mark - marks a record with kong/server header and client ID value<br /><br />to help to identify the clients violating schema. |
+| `keyValidationAction` _[ProduceKeyValidationAction](#configuration-konghq-com-v1alpha1-types-producekeyvalidationaction)_ | Defines a behavior when record key is not valid. * reject - rejects a batch for topic partition. Only available for produce. * mark - marks a record with kong/server header and client ID value to help to identify the clients violating schema. |
 | `validateKey` _string_ | If true, validate the record key.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `validateValue` _string_ | If true, validate the record value.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `value` _[EventGatewayProduceSchemaValidationPolicyInlineSchemaConfigValue](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyinlineschemaconfigvalue)_ | Defines the schema for a record key or value, inline.<br /><br />**Requires a minimum runtime version of `1.3`**. |
-| `valueValidationAction` _[ProduceValueValidationAction](#configuration-konghq-com-v1alpha1-types-producevaluevalidationaction)_ | Defines a behavior when record value is not valid. * reject - rejects a batch for topic partition. Only available for produce. * mark - marks a record with kong/server header and client ID value<br /><br />to help to identify the clients violating schema. |
+| `valueValidationAction` _[ProduceValueValidationAction](#configuration-konghq-com-v1alpha1-types-producevaluevalidationaction)_ | Defines a behavior when record value is not valid. * reject - rejects a batch for topic partition. Only available for produce. * mark - marks a record with kong/server header and client ID value to help to identify the clients violating schema. |
 
 _Appears in:_
 
@@ -14128,54 +14197,15 @@ produce schema validation policy when using JSON parsing without schema.
 
 | Field | Description |
 | --- | --- |
-| `failureMode` _[ProduceFailureMode](#configuration-konghq-com-v1alpha1-types-producefailuremode)_ | Describes how to handle a failure in a policy applied to produced records. * `reject` - rejects the record batch. * `passthrough` - passes the record silently to the backend cluster even though policy execution failed. * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
-| `keyValidationAction` _[ProduceKeyValidationAction](#configuration-konghq-com-v1alpha1-types-producekeyvalidationaction)_ | Defines a behavior when record key is not valid. * reject - rejects a batch for topic partition. Only available for produce. * mark - marks a record with kong/server header and client ID value<br /><br />to help to identify the clients violating schema. |
-| `schemaRegistry` _[EventGatewayProduceSchemaValidationPolicyJSONConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyjsonconfigschemaregistry)_ | A reference to a schema Registry. |
+| `failureMode` _[ProduceFailureMode](#configuration-konghq-com-v1alpha1-types-producefailuremode)_ | Describes how to handle a failure in a policy applied to produced records. * `reject` - rejects the record batch. * `passthrough` - passes the record silently to the backend cluster even though policy execution failed. * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters). The header is stored with the record in the backend cluster, so every consumer of the topic sees it, including systems that never pass through the Event Gateway. The failure reason can contain runtime-specific configuration details, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, or expression snippets, and a producer with access to the topic can trigger policy failures on purpose to expose it. If you don't want to share this information, remove the header with a Modify Headers produce policy, or use a different failure mode.<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `keyValidationAction` _[ProduceKeyValidationAction](#configuration-konghq-com-v1alpha1-types-producekeyvalidationaction)_ | Defines a behavior when record key is not valid. * reject - rejects a batch for topic partition. Only available for produce. * mark - marks a record with kong/server header and client ID value to help to identify the clients violating schema. |
 | `validateKey` _string_ | If true, validate the record key.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `validateValue` _string_ | If true, validate the record value.<br /><br />**Requires a minimum runtime version of `1.2`**. |
-| `valueValidationAction` _[ProduceValueValidationAction](#configuration-konghq-com-v1alpha1-types-producevaluevalidationaction)_ | Defines a behavior when record value is not valid. * reject - rejects a batch for topic partition. Only available for produce. * mark - marks a record with kong/server header and client ID value<br /><br />to help to identify the clients violating schema. |
+| `valueValidationAction` _[ProduceValueValidationAction](#configuration-konghq-com-v1alpha1-types-producevaluevalidationaction)_ | Defines a behavior when record value is not valid. * reject - rejects a batch for topic partition. Only available for produce. * mark - marks a record with kong/server header and client ID value to help to identify the clients violating schema. |
 
 _Appears in:_
 
 - [EventGatewayProduceSchemaValidationPolicyConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyconfig)
-
-#### EventGatewayProduceSchemaValidationPolicyJSONConfigSchemaRegistry
-
-
-EventGatewayProduceSchemaValidationPolicyJSONConfigSchemaRegistry represents a union type for schema_registry.
-Only one of the fields should be set based on the Type.
-
-
-
-| Field | Description |
-| --- | --- |
-| `type` _[EventGatewayProduceSchemaValidationPolicyJSONConfigSchemaRegistryType](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyjsonconfigschemaregistrytype)_ | Type designates the type of configuration. |
-| `id` _[SchemaRegistryReferenceByID](#configuration-konghq-com-v1alpha1-types-schemaregistryreferencebyid)_ | ID configuration. |
-| `name` _[SchemaRegistryReferenceByName](#configuration-konghq-com-v1alpha1-types-schemaregistryreferencebyname)_ | Name configuration. |
-
-_Appears in:_
-
-- [EventGatewayProduceSchemaValidationPolicyJSONConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyjsonconfig)
-
-#### EventGatewayProduceSchemaValidationPolicyJSONConfigSchemaRegistryType
-
-_Underlying type:_ `string`
-
-EventGatewayProduceSchemaValidationPolicyJSONConfigSchemaRegistryType represents the type of schema_registry.
-
-
-
-
-_Appears in:_
-
-- [EventGatewayProduceSchemaValidationPolicyJSONConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyjsonconfigschemaregistry)
-
-Allowed values:
-
-| Value | Description |
-| --- | --- |
-| `id` |  |
-| `name` |  |
 
 #### EventGatewayProduceSchemaValidationPolicySchemaRegistryConfig
 
@@ -14188,54 +14218,16 @@ registry.
 
 | Field | Description |
 | --- | --- |
-| `failureMode` _[ProduceFailureMode](#configuration-konghq-com-v1alpha1-types-producefailuremode)_ | Describes how to handle a failure in a policy applied to produced records. * `reject` - rejects the record batch. * `passthrough` - passes the record silently to the backend cluster even though policy execution failed. * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**. |
-| `keyValidationAction` _[ProduceKeyValidationAction](#configuration-konghq-com-v1alpha1-types-producekeyvalidationaction)_ | Defines a behavior when record key is not valid. * reject - rejects a batch for topic partition. Only available for produce. * mark - marks a record with kong/server header and client ID value<br /><br />to help to identify the clients violating schema. |
-| `schemaRegistry` _[EventGatewayProduceSchemaValidationPolicySchemaRegistryConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyschemaregistryconfigschemaregistry)_ | A reference to a schema Registry. |
+| `failureMode` _[ProduceFailureMode](#configuration-konghq-com-v1alpha1-types-producefailuremode)_ | Describes how to handle a failure in a policy applied to produced records. * `reject` - rejects the record batch. * `passthrough` - passes the record silently to the backend cluster even though policy execution failed. * `mark` - passes the record to the backend cluster but marks it with a `kong/policy-failure-<id>` header whose value is the reason for the policy failure (truncated to 512 characters). The header is stored with the record in the backend cluster, so every consumer of the topic sees it, including systems that never pass through the Event Gateway. The failure reason can contain runtime-specific configuration details, such as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error text, JWT issuer and audience data, or expression snippets, and a producer with access to the topic can trigger policy failures on purpose to expose it. If you don't want to share this information, remove the header with a Modify Headers produce policy, or use a different failure mode.<br /><br />**Requires a minimum runtime version of `1.2`**. |
+| `keyValidationAction` _[ProduceKeyValidationAction](#configuration-konghq-com-v1alpha1-types-producekeyvalidationaction)_ | Defines a behavior when record key is not valid. * reject - rejects a batch for topic partition. Only available for produce. * mark - marks a record with kong/server header and client ID value to help to identify the clients violating schema. |
+| `schemaRegistry` _[EventGatewaySchemaRegistryRef](#configuration-konghq-com-v1alpha1-types-eventgatewayschemaregistryref)_ | A reference to a schema Registry. |
 | `validateKey` _string_ | If true, validate the record key.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `validateValue` _string_ | If true, validate the record value.<br /><br />**Requires a minimum runtime version of `1.2`**. |
-| `valueValidationAction` _[ProduceValueValidationAction](#configuration-konghq-com-v1alpha1-types-producevaluevalidationaction)_ | Defines a behavior when record value is not valid. * reject - rejects a batch for topic partition. Only available for produce. * mark - marks a record with kong/server header and client ID value<br /><br />to help to identify the clients violating schema. |
+| `valueValidationAction` _[ProduceValueValidationAction](#configuration-konghq-com-v1alpha1-types-producevaluevalidationaction)_ | Defines a behavior when record value is not valid. * reject - rejects a batch for topic partition. Only available for produce. * mark - marks a record with kong/server header and client ID value to help to identify the clients violating schema. |
 
 _Appears in:_
 
 - [EventGatewayProduceSchemaValidationPolicyConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyconfig)
-
-#### EventGatewayProduceSchemaValidationPolicySchemaRegistryConfigSchemaRegistry
-
-
-EventGatewayProduceSchemaValidationPolicySchemaRegistryConfigSchemaRegistry represents a union type for schema_registry.
-Only one of the fields should be set based on the Type.
-
-
-
-| Field | Description |
-| --- | --- |
-| `type` _[EventGatewayProduceSchemaValidationPolicySchemaRegistryConfigSchemaRegistryType](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyschemaregistryconfigschemaregistrytype)_ | Type designates the type of configuration. |
-| `id` _[SchemaRegistryReferenceByID](#configuration-konghq-com-v1alpha1-types-schemaregistryreferencebyid)_ | ID configuration. |
-| `name` _[SchemaRegistryReferenceByName](#configuration-konghq-com-v1alpha1-types-schemaregistryreferencebyname)_ | Name configuration. |
-
-_Appears in:_
-
-- [EventGatewayProduceSchemaValidationPolicySchemaRegistryConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyschemaregistryconfig)
-
-#### EventGatewayProduceSchemaValidationPolicySchemaRegistryConfigSchemaRegistryType
-
-_Underlying type:_ `string`
-
-EventGatewayProduceSchemaValidationPolicySchemaRegistryConfigSchemaRegistryType represents the type of schema_registry.
-
-
-
-
-_Appears in:_
-
-- [EventGatewayProduceSchemaValidationPolicySchemaRegistryConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyschemaregistryconfigschemaregistry)
-
-Allowed values:
-
-| Value | Description |
-| --- | --- |
-| `id` |  |
-| `name` |  |
 
 #### EventGatewayRequestRuleAction
 
@@ -14428,12 +14420,13 @@ object's Konnect name is used where the Konnect API accepts it.
 | --- | --- |
 | `kind` _string_ | Kind is the kind of the referenced object. |
 | `name` _string_ | Name is the name of the referenced object. |
-| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
+| `namespace` _string_ | Namespace, if set to a namespace other than the referrer's, must be permitted by a KongReferenceGrant in that namespace. |
 
 _Appears in:_
 
-- [EventGatewayConsumeSchemaValidationPolicyJSONConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyjsonconfig)
 - [EventGatewayConsumeSchemaValidationPolicySchemaRegistryConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayconsumeschemavalidationpolicyschemaregistryconfig)
+- [EventGatewayParsedRecordTranscodeSchemaSourceReference](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereference)
+- [EventGatewayProduceSchemaValidationPolicySchemaRegistryConfig](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyschemaregistryconfig)
 
 #### EventGatewaySchemaRegistrySpec
 
@@ -14519,11 +14512,11 @@ object's Konnect id is used where the Konnect API accepts it.
 | --- | --- |
 | `kind` _string_ | Kind is the kind of the referenced object. |
 | `name` _string_ | Name is the name of the referenced object. |
-| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
+| `namespace` _string_ | Namespace, if set to a namespace other than the referrer's, must be permitted by a KongReferenceGrant in that namespace. |
 
 _Appears in:_
 
-- [EncryptionKeyStaticReference](#configuration-konghq-com-v1alpha1-types-encryptionkeystaticreference)
+- [EncryptionKeyStatic](#configuration-konghq-com-v1alpha1-types-encryptionkeystatic)
 
 #### EventGatewayStaticKeySource
 
@@ -14627,7 +14620,7 @@ handshake.<br /><br />**Requires a minimum runtime version of `1.1`**.
 | --- | --- |
 | `mode` _string_ | * required - Reject TLS connections without a valid client certificate. * requested - Request a client certificate during the TLS handshake, but allow connections without one (falls back to other configured authentication methods). If a certificate is presented but cannot be verified, the connection is closed. |
 | `principalMapping` _string_ | An expression that extracts a principal identifier from a verified client certificate. This expression must evaluate to a string.<br /><br />**Requires a minimum runtime version of `1.1`**. |
-| `tlsTrustBundles` _[][TLSTrustBundleReference](#configuration-konghq-com-v1alpha1-types-tlstrustbundlereference)_ | TLS trust bundles contain CA certificate bundles used to verify client certificates. All bundles are merged into a single trust store; a client certificate is accepted if it chains to any trusted CA across all bundles. |
+| `tlsTrustBundles` _[][EventGatewayTLSTrustBundleRef](#configuration-konghq-com-v1alpha1-types-eventgatewaytlstrustbundleref)_ | TLS trust bundles contain CA certificate bundles used to verify client certificates. All bundles are merged into a single trust store; a client certificate is accepted if it chains to any trusted CA across all bundles. |
 
 _Appears in:_
 
@@ -14663,11 +14656,11 @@ object's Konnect id is used where the Konnect API accepts it.
 | --- | --- |
 | `kind` _string_ | Kind is the kind of the referenced object. |
 | `name` _string_ | Name is the name of the referenced object. |
-| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
+| `namespace` _string_ | Namespace, if set to a namespace other than the referrer's, must be permitted by a KongReferenceGrant in that namespace. |
 
 _Appears in:_
 
-- [TLSTrustBundleReference](#configuration-konghq-com-v1alpha1-types-tlstrustbundlereference)
+- [EventGatewayTLSListenerPolicyConfigClientAuthentication](#configuration-konghq-com-v1alpha1-types-eventgatewaytlslistenerpolicyconfigclientauthentication)
 
 #### EventGatewayTLSTrustBundleSpec
 
@@ -14745,7 +14738,7 @@ EventGatewayVirtualClusterAPISpec defines the API spec fields for EventGatewayVi
 
 | Field | Description |
 | --- | --- |
-| `aclMode` _[VirtualClusterACLMode](#configuration-konghq-com-v1alpha1-types-virtualclusteraclmode)_ | Configures whether or not ACL policies are enforced on the gateway. - `enforce_on_gateway` means the gateway enforces its own ACL policies for this virtual cluster<br /><br />and does not forward ACL-related commands to the backend cluster. Note that if there are no ACL policies configured, all access is denied. - `passthrough` tells the gateway to forward all ACL-related commands. |
+| `aclMode` _[VirtualClusterACLMode](#configuration-konghq-com-v1alpha1-types-virtualclusteraclmode)_ | Configures whether or not ACL policies are enforced on the gateway. - `enforce_on_gateway` means the gateway enforces its own ACL policies for this virtual cluster and does not forward ACL-related commands to the backend cluster. Note that if there are no ACL policies configured, all access is denied. - `passthrough` tells the gateway to forward all ACL-related commands. |
 | `authentication` _[][VirtualClusterAuthenticationScheme](#configuration-konghq-com-v1alpha1-types-virtualclusterauthenticationscheme)_ | How to handle authentication from clients.<br /><br />It tries to authenticate with every rule sequentially one by one. It succeeds on the first match, and fails if no rule matches. |
 | `description` _string_ | A human-readable description of the virtual cluster. |
 | `dnsLabel` _[VirtualClusterDNSLabel](#configuration-konghq-com-v1alpha1-types-virtualclusterdnslabel)_ | The DNS label used in the bootstrap server URL to identify the virtual cluster when using SNI routing. The format follows the RFC1035: 1-63 chars, lowercase alphanumeric or '-', must start and end with an alphanumeric character. |
@@ -14767,11 +14760,60 @@ EventGatewayVirtualClusterConsumePolicyAPISpec defines the API spec fields for E
 
 | Field | Description |
 | --- | --- |
-| `parentPolicyRef` _[EventGatewayVirtualClusterConsumePolicyRef](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicyref)_ | ParentPolicyRef references a schemaValidation consume policy in the same namespace and virtual cluster. Required for decryptFields and optional for modifyHeaders and skipRecord. It is immutable once this policy exists in Konnect. Deleting a parent is blocked while child policy objects reference it. |
+| `parentPolicyRef` _[EventGatewayVirtualClusterConsumePolicyRef](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicyref)_ | ParentPolicyRef references a schemaValidation consume policy of the same virtual cluster. One in another namespace needs a KongReferenceGrant in its namespace. Required for decryptFields, maskFields and transcode, and optional for modifyHeaders and skipRecord. It is immutable once this policy exists in Konnect. Deleting a parent is blocked while child policy objects reference it. |
 
 _Appears in:_
 
 - [EventGatewayVirtualClusterConsumePolicySpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicyspec)
+
+#### EventGatewayVirtualClusterConsumePolicyChainAPISpec
+
+
+EventGatewayVirtualClusterConsumePolicyChainAPISpec defines the API spec fields for EventGatewayVirtualClusterConsumePolicyChain.
+
+
+
+| Field | Description |
+| --- | --- |
+| `policies` _[][EventGatewayVirtualClusterConsumePolicyRef](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicyref)_ | Policies lists distinct EventGatewayVirtualClusterConsumePolicy references in execution order. The same declared order applies on-prem: the operator rebuilds the ordered consume-policy list of the gw-admin configuration from it. The parent virtual cluster and every policy must be in the same namespace as this chain. An omitted or empty namespace defaults to this chain's namespace; an explicit namespace must be the same, regardless of KongReferenceGrant permissions. Each policy must belong to the referenced EventGatewayVirtualCluster. List every consume policy exactly once, including roots and nested children. A root schemaValidation parent must precede its immediately contiguous children. Root groups may move and sibling children may reorder within their group. Deeper nesting is not supported. Ordering never changes parentPolicyRef. Existing parent requirements remain: decryptFields, maskFields and transcode require a schemaValidation parent; modifyHeaders and skipRecord may reference one. No other consume policy type accepts parentPolicyRef. An explicit empty list is valid only when the parent has no consume policies; it does not clear an existing chain, on-prem included. Omitted and null lists are invalid. When a policy is created or deleted, update this list to match the complete remote set. |
+
+_Appears in:_
+
+- [EventGatewayVirtualClusterConsumePolicyChainSpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicychainspec)
+
+#### EventGatewayVirtualClusterConsumePolicyChainSpec
+
+
+EventGatewayVirtualClusterConsumePolicyChainSpec defines the desired state of EventGatewayVirtualClusterConsumePolicyChain.
+
+
+
+| Field | Description |
+| --- | --- |
+| `eventGatewayVirtualClusterRef` _[ObjectRef](#common-konghq-com-v1alpha1-types-objectref)_ | EventGatewayVirtualClusterRef is the reference to the parent EventGatewayVirtualCluster object. |
+| `apiSpec` _[EventGatewayVirtualClusterConsumePolicyChainAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicychainapispec)_ | APISpec defines the desired state of the resource's API spec fields. |
+
+_Appears in:_
+
+- [EventGatewayVirtualClusterConsumePolicyChain](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterconsumepolicychain)
+
+#### EventGatewayVirtualClusterConsumePolicyChainStatus
+
+
+EventGatewayVirtualClusterConsumePolicyChainStatus defines the observed state of EventGatewayVirtualClusterConsumePolicyChain.
+
+
+
+| Field | Description |
+| --- | --- |
+| `conditions` _[]k8s.io/apimachinery/pkg/apis/meta/v1.Condition_ | Conditions represent the current state of the resource. |
+| `gatewayID` _[KonnectEntityRef](#configuration-konghq-com-v1alpha1-types-konnectentityref)_ | GatewayID is the Konnect ID of the parent Gateway. |
+| `virtualClusterID` _[KonnectEntityRef](#configuration-konghq-com-v1alpha1-types-konnectentityref)_ | VirtualClusterID is the Konnect ID of the parent VirtualCluster. |
+| `observedGeneration` _int64_ | ObservedGeneration is the most recent generation observed |
+
+_Appears in:_
+
+- [EventGatewayVirtualClusterConsumePolicyChain](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterconsumepolicychain)
 
 #### EventGatewayVirtualClusterConsumePolicyConfig
 
@@ -14833,11 +14875,12 @@ object's Konnect id is used where the Konnect API accepts it.
 | --- | --- |
 | `kind` _string_ | Kind is the kind of the referenced object. |
 | `name` _string_ | Name is the name of the referenced object. |
-| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
+| `namespace` _string_ | Namespace, if set to a namespace other than the referrer's, must be permitted by a KongReferenceGrant in that namespace. |
 
 _Appears in:_
 
 - [EventGatewayVirtualClusterConsumePolicyAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicyapispec)
+- [EventGatewayVirtualClusterConsumePolicyChainAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicychainapispec)
 
 
 
@@ -14896,7 +14939,7 @@ EventGatewayVirtualClusterPolicyChainAPISpec defines the API spec fields for Eve
 
 | Field | Description |
 | --- | --- |
-| `policies` _[][EventGatewayVirtualClusterPolicyRef](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicyref)_ | Policies lists distinct EventGatewayVirtualClusterPolicy references in execution order. Each policy must belong to the referenced EventGatewayVirtualCluster and be in the same namespace as this chain. Namespace defaults to this chain's namespace and may be set explicitly to that same namespace; cross-namespace references are not supported. List every cluster-level policy exactly once. An explicit empty list is valid only when the remote chain has no policies; it does not clear an existing chain. When a policy is created or deleted, update this list to match the complete remote set. |
+| `policies` _[][EventGatewayVirtualClusterPolicyRef](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicyref)_ | Policies lists distinct EventGatewayVirtualClusterPolicy references in execution order. Each policy must belong to the referenced EventGatewayVirtualCluster. Namespace defaults to this chain's namespace; a policy in another namespace needs a KongReferenceGrant in its namespace. List every cluster-level policy exactly once. An explicit empty list is valid only when the remote chain has no policies; it does not clear an existing chain. When a policy is created or deleted, update this list to match the complete remote set. |
 
 _Appears in:_
 
@@ -14986,7 +15029,7 @@ object's Konnect id is used where the Konnect API accepts it.
 | --- | --- |
 | `kind` _string_ | Kind is the kind of the referenced object. |
 | `name` _string_ | Name is the name of the referenced object. |
-| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
+| `namespace` _string_ | Namespace, if set to a namespace other than the referrer's, must be permitted by a KongReferenceGrant in that namespace. |
 
 _Appears in:_
 
@@ -15037,11 +15080,60 @@ EventGatewayVirtualClusterProducePolicyAPISpec defines the API spec fields for E
 
 | Field | Description |
 | --- | --- |
-| `parentPolicyRef` _[EventGatewayVirtualClusterProducePolicyRef](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicyref)_ | ParentPolicyRef references a schemaValidation produce policy in the same namespace and virtual cluster. Required for encryptFields and optional for modifyHeaders. It is immutable once this policy exists in Konnect. Deleting a parent is blocked while child policy objects reference it. |
+| `parentPolicyRef` _[EventGatewayVirtualClusterProducePolicyRef](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicyref)_ | ParentPolicyRef references a schemaValidation produce policy of the same virtual cluster. One in another namespace needs a KongReferenceGrant in its namespace. Required for encryptFields, maskFields and transcode, and optional for modifyHeaders. It is immutable once this policy exists in Konnect. Deleting a parent is blocked while child policy objects reference it. |
 
 _Appears in:_
 
 - [EventGatewayVirtualClusterProducePolicySpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicyspec)
+
+#### EventGatewayVirtualClusterProducePolicyChainAPISpec
+
+
+EventGatewayVirtualClusterProducePolicyChainAPISpec defines the API spec fields for EventGatewayVirtualClusterProducePolicyChain.
+
+
+
+| Field | Description |
+| --- | --- |
+| `policies` _[][EventGatewayVirtualClusterProducePolicyRef](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicyref)_ | Policies lists distinct EventGatewayVirtualClusterProducePolicy references in execution order. The same declared order applies on-prem: the operator rebuilds the ordered produce-policy list of the gw-admin configuration from it. The parent virtual cluster and every policy must be in the same namespace as this chain. Namespace defaults to this chain's namespace and may be set explicitly to that same namespace; cross-namespace references are not supported. Each policy must belong to the referenced EventGatewayVirtualCluster. List every produce policy exactly once, including roots and nested children. A parent must precede its children, and each parent's group must remain contiguous. Root groups may move and sibling children may reorder within their group. Ordering does not change parentPolicyRef or move children between parents. An explicit empty list is valid only when the parent has no produce policies; it does not clear an existing chain, on-prem included. Omitted and null lists are invalid. When a policy is created or deleted, update this list to match the complete remote set. |
+
+_Appears in:_
+
+- [EventGatewayVirtualClusterProducePolicyChainSpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicychainspec)
+
+#### EventGatewayVirtualClusterProducePolicyChainSpec
+
+
+EventGatewayVirtualClusterProducePolicyChainSpec defines the desired state of EventGatewayVirtualClusterProducePolicyChain.
+
+
+
+| Field | Description |
+| --- | --- |
+| `eventGatewayVirtualClusterRef` _[ObjectRef](#common-konghq-com-v1alpha1-types-objectref)_ | EventGatewayVirtualClusterRef is the reference to the parent EventGatewayVirtualCluster object. |
+| `apiSpec` _[EventGatewayVirtualClusterProducePolicyChainAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicychainapispec)_ | APISpec defines the desired state of the resource's API spec fields. |
+
+_Appears in:_
+
+- [EventGatewayVirtualClusterProducePolicyChain](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterproducepolicychain)
+
+#### EventGatewayVirtualClusterProducePolicyChainStatus
+
+
+EventGatewayVirtualClusterProducePolicyChainStatus defines the observed state of EventGatewayVirtualClusterProducePolicyChain.
+
+
+
+| Field | Description |
+| --- | --- |
+| `conditions` _[]k8s.io/apimachinery/pkg/apis/meta/v1.Condition_ | Conditions represent the current state of the resource. |
+| `gatewayID` _[KonnectEntityRef](#configuration-konghq-com-v1alpha1-types-konnectentityref)_ | GatewayID is the Konnect ID of the parent Gateway. |
+| `virtualClusterID` _[KonnectEntityRef](#configuration-konghq-com-v1alpha1-types-konnectentityref)_ | VirtualClusterID is the Konnect ID of the parent VirtualCluster. |
+| `observedGeneration` _int64_ | ObservedGeneration is the most recent generation observed |
+
+_Appears in:_
+
+- [EventGatewayVirtualClusterProducePolicyChain](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterproducepolicychain)
 
 #### EventGatewayVirtualClusterProducePolicyConfig
 
@@ -15101,11 +15193,12 @@ object's Konnect id is used where the Konnect API accepts it.
 | --- | --- |
 | `kind` _string_ | Kind is the kind of the referenced object. |
 | `name` _string_ | Name is the name of the referenced object. |
-| `namespace` _string_ | Namespace defaults to the referrer's namespace. If set, it must be the same as the referrer's namespace; cross-namespace references are not supported. |
+| `namespace` _string_ | Namespace, if set to a namespace other than the referrer's, must be permitted by a KongReferenceGrant in that namespace. |
 
 _Appears in:_
 
 - [EventGatewayVirtualClusterProducePolicyAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicyapispec)
+- [EventGatewayVirtualClusterProducePolicyChainAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicychainapispec)
 
 
 
@@ -15142,6 +15235,24 @@ EventGatewayVirtualClusterProducePolicyStatus defines the observed state of Even
 _Appears in:_
 
 - [EventGatewayVirtualClusterProducePolicy](#configuration-konghq-com-v1alpha1-eventgatewayvirtualclusterproducepolicy)
+
+#### EventGatewayVirtualClusterRef
+
+
+EventGatewayVirtualClusterRef references an EventGatewayVirtualCluster in the cluster. The referenced
+object's Konnect id is used where the Konnect API accepts it.
+
+
+
+| Field | Description |
+| --- | --- |
+| `kind` _string_ | Kind is the kind of the referenced object. |
+| `name` _string_ | Name is the name of the referenced object. |
+| `namespace` _string_ | Namespace, if set to a namespace other than the referrer's, must be permitted by a KongReferenceGrant in that namespace. |
+
+_Appears in:_
+
+- [ForwardToClusterByPortMappingConfig](#configuration-konghq-com-v1alpha1-types-forwardtoclusterbyportmappingconfig)
 
 #### EventGatewayVirtualClusterSpec
 
@@ -15276,7 +15387,7 @@ gaps in broker ids.<br /><br />It is strongly discouraged to use port mapping in
 | --- | --- |
 | `advertisedHost` _string_ | Virtual brokers are advertised to clients using this host. Any kind of host supported by kafka can be used. If not defined, it's listen_address. If listen_address is `0.0.0.0` it's the destination IP of the TCP connection. |
 | `bootstrapPort` _string_ | If set to `at_start`, the first port will be used as a bootstrap port. It provides a stable endpoint to use as the bootstrap server for clients, regardless of broker IDs in the cluster.<br /><br />Additionally, it offsets all ports by one, so for example, if there are 3 brokers (id=1, id=2, id=3) then we will use 4 ports: 9092 (bootstrap), 9093 (id=1), 9094 (id=2), 9095 (id=3) With `none` we will use 3 ports: 9092 (id=1), 9093 (id=2), 9094 (id=3). |
-| `destination` _[VirtualClusterReference](#configuration-konghq-com-v1alpha1-types-virtualclusterreference)_ | A reference to a virtual cluster. |
+| `destination` _[EventGatewayVirtualClusterRef](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterref)_ | A reference to a virtual cluster. |
 | `minBrokerID` _int_ | The lowest broker node ID in the cluster. |
 
 _Appears in:_
@@ -16672,14 +16783,17 @@ _Appears in:_
 
 - [EventGatewayBackendClusterStatus](#configuration-konghq-com-v1alpha1-types-eventgatewaybackendclusterstatus)
 - [EventGatewayDataPlaneCertificateStatus](#configuration-konghq-com-v1alpha1-types-eventgatewaydataplanecertificatestatus)
+- [EventGatewayListenerPolicyChainStatus](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerpolicychainstatus)
 - [EventGatewayListenerPolicyStatus](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerpolicystatus)
 - [EventGatewayListenerStatus](#configuration-konghq-com-v1alpha1-types-eventgatewaylistenerstatus)
 - [EventGatewaySchemaRegistryStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayschemaregistrystatus)
 - [EventGatewayStaticKeyStatus](#configuration-konghq-com-v1alpha1-types-eventgatewaystatickeystatus)
 - [EventGatewayTLSTrustBundleStatus](#configuration-konghq-com-v1alpha1-types-eventgatewaytlstrustbundlestatus)
+- [EventGatewayVirtualClusterConsumePolicyChainStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicychainstatus)
 - [EventGatewayVirtualClusterConsumePolicyStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterconsumepolicystatus)
 - [EventGatewayVirtualClusterPolicyChainStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicychainstatus)
 - [EventGatewayVirtualClusterPolicyStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterpolicystatus)
+- [EventGatewayVirtualClusterProducePolicyChainStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicychainstatus)
 - [EventGatewayVirtualClusterProducePolicyStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterproducepolicystatus)
 - [EventGatewayVirtualClusterStatus](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterstatus)
 
@@ -16831,7 +16945,16 @@ produced records.
 though policy execution failed.
 * `mark` - passes the record to the backend cluster but marks it with a
 `kong/policy-failure-<id>` header whose value is the reason for the policy
-failure (truncated to 512 characters).<br /><br />**Requires a minimum runtime version of `1.2`**.
+failure (truncated to 512 characters).
+The header is stored with the record in the backend cluster, so every
+consumer of the topic sees it, including systems that never pass through the
+Event Gateway.
+The failure reason can contain runtime-specific configuration details, such
+as schema IDs, registry URLs, field paths, KMS ARNs and key IDs, KMS error
+text, JWT issuer and audience data, or expression snippets, and a producer
+with access to the topic can trigger policy failures on purpose to expose it.
+If you don't want to share this information, remove the header with a Modify
+Headers produce policy, or use a different failure mode.<br /><br />**Requires a minimum runtime version of `1.2`**.
 
 
 
@@ -16851,7 +16974,8 @@ _Underlying type:_ `string`
 
 ProduceKeyValidationAction Defines a behavior when record key is not valid.
 * reject - rejects a batch for topic partition. Only available for produce.
-* mark - marks a record with kong/server header and client ID value<br /><br />to help to identify the clients violating schema.
+* mark - marks a record with kong/server header and client ID value
+to help to identify the clients violating schema.
 
 
 
@@ -16869,7 +16993,8 @@ _Underlying type:_ `string`
 ProduceValueValidationAction Defines a behavior when record value is not
 valid.
 * reject - rejects a batch for topic partition. Only available for produce.
-* mark - marks a record with kong/server header and client ID value<br /><br />to help to identify the clients violating schema.
+* mark - marks a record with kong/server header and client ID value
+to help to identify the clients violating schema.
 
 
 
@@ -16982,7 +17107,7 @@ Registry](https://github.com/confluentinc/schema-registry)
 
 | Field | Description |
 | --- | --- |
-| `authentication` _[SchemaRegistryConfluentConfigAuthentication](#configuration-konghq-com-v1alpha1-types-schemaregistryconfluentconfigauthentication)_ | The authentication configuration for the schema registry. |
+| `authentication` _[SchemaRegistryConfluentConfigAuthentication](#configuration-konghq-com-v1alpha1-types-schemaregistryconfluentconfigauthentication)_ | The authentication configuration for the schema registry. The Event Gateway only requires read-only access to the schema registry to fetch schemas for validation, so we recommend using credentials with read-only scope. |
 | `endpoint` _string_ | The endpoint of the Confluent schema registry. |
 | `schemaType` _string_ | The format of the message.<br /><br />**`any` requires a minimum runtime version of `1.3`**. |
 | `timeoutSeconds` _int_ | Total time in seconds from establishing connection to receive a response from schema registry. |
@@ -17026,39 +17151,6 @@ Allowed values:
 | Value | Description |
 | --- | --- |
 | `basic` |  |
-
-
-
-#### SchemaRegistryReferenceByID
-
-
-SchemaRegistryReferenceByID is a type alias.
-
-
-
-
-_Appears in:_
-
-- [EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemaregistry)
-- [EventGatewayProduceSchemaValidationPolicyJSONConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyjsonconfigschemaregistry)
-- [EventGatewayProduceSchemaValidationPolicySchemaRegistryConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyschemaregistryconfigschemaregistry)
-
-#### SchemaRegistryReferenceByName
-
-
-SchemaRegistryReferenceByName Reference a schema registry by its unique name.
-
-
-
-| Field | Description |
-| --- | --- |
-| `name` _string_ | The unique name of the schema registry. |
-
-_Appears in:_
-
-- [EventGatewayParsedRecordTranscodeSchemaSourceReferenceSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayparsedrecordtranscodeschemasourcereferenceschemaregistry)
-- [EventGatewayProduceSchemaValidationPolicyJSONConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyjsonconfigschemaregistry)
-- [EventGatewayProduceSchemaValidationPolicySchemaRegistryConfigSchemaRegistry](#configuration-konghq-com-v1alpha1-types-eventgatewayproduceschemavalidationpolicyschemaregistryconfigschemaregistry)
 
 
 
@@ -17246,29 +17338,6 @@ TLSTrustBundleName The unique name of the TLS trust bundle.
 _Appears in:_
 
 - [EventGatewayTLSTrustBundleAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewaytlstrustbundleapispec)
-- [TLSTrustBundleReference](#configuration-konghq-com-v1alpha1-types-tlstrustbundlereference)
-- [TLSTrustBundleReferenceByName](#configuration-konghq-com-v1alpha1-types-tlstrustbundlereferencebyname)
-
-#### TLSTrustBundleReference
-
-
-TLSTrustBundleReference is a type alias.
-
-
-
-| Field | Description |
-| --- | --- |
-| `id` _*string_ |  |
-| `name` _[TLSTrustBundleName](#configuration-konghq-com-v1alpha1-types-tlstrustbundlename)_ |  |
-| `namespacedRef` _[EventGatewayTLSTrustBundleRef](#configuration-konghq-com-v1alpha1-types-eventgatewaytlstrustbundleref)_ | NamespacedRef references an in-cluster EventGatewayTLSTrustBundle object, resolved to its Konnect id. It is mutually exclusive with the other fields. |
-
-_Appears in:_
-
-- [EventGatewayTLSListenerPolicyConfigClientAuthentication](#configuration-konghq-com-v1alpha1-types-eventgatewaytlslistenerpolicyconfigclientauthentication)
-
-
-
-
 
 #### TLSVersionRange
 
@@ -17344,7 +17413,8 @@ _Underlying type:_ `string`
 VirtualClusterACLMode Configures whether or not ACL policies are enforced on
 the gateway.
 - `enforce_on_gateway` means the gateway enforces its own ACL policies for
-this virtual cluster<br /><br />and does not forward ACL-related commands to the backend cluster.
+this virtual cluster
+and does not forward ACL-related commands to the backend cluster.
 Note that if there are no ACL policies configured, all access is denied.
 - `passthrough` tells the gateway to forward all ACL-related commands.
 
@@ -17446,7 +17516,7 @@ for the virtual cluster.
 | `claimsMapping` _[VirtualClusterAuthenticationClaimsMapping](#configuration-konghq-com-v1alpha1-types-virtualclusterauthenticationclaimsmapping)_ | Maps JWT claims in the case when sub and scope are presented as different claims in your JWT token. |
 | `fetchKongIdentityPrincipal` _[FetchKongIdentityPrincipalOauthBearer](#configuration-konghq-com-v1alpha1-types-fetchkongidentityprincipaloauthbearer)_ | Fetches principal metadata from Kong Identity after successful OAUTHBEARER authentication. The principal is looked up by the iss and sub claims from the JWT token.<br /><br />**Requires a minimum runtime version of `1.2`**. |
 | `jwks` _[VirtualClusterAuthenticationJWKS](#configuration-konghq-com-v1alpha1-types-virtualclusterauthenticationjwks)_ | JSON Web Key Set configuration for verifying token signatures. |
-| `mediation` _string_ | Methods to mediate authentication: * passthrough - pass authentication from the client through proxy to the backend cluster without any kind of<br /><br />validation * validate_forward - pass authentication from the client through proxy to the backend cluster.<br /><br />Proxy does the validation before forwarding it to the client. * terminate - terminate authentication at the proxy level and originate authentication to the backend cluster<br /><br />using the configuration defined at BackendCluster's authentication. SASL auth is not originated if authentication on the backend_cluster is not configured. |
+| `mediation` _string_ | Methods to mediate authentication: * passthrough - pass authentication from the client through proxy to the backend cluster without any kind of validation * validate_forward - pass authentication from the client through proxy to the backend cluster. Proxy does the validation before forwarding it to the client. * terminate - terminate authentication at the proxy level and originate authentication to the backend cluster using the configuration defined at BackendCluster's authentication. SASL auth is not originated if authentication on the backend_cluster is not configured. |
 | `validate` _[VirtualClusterAuthenticationValidate](#configuration-konghq-com-v1alpha1-types-virtualclusterauthenticationvalidate)_ | Validation rules. |
 
 _Appears in:_
@@ -17593,8 +17663,6 @@ VirtualClusterName The name of the virtual cluster.
 _Appears in:_
 
 - [EventGatewayVirtualClusterAPISpec](#configuration-konghq-com-v1alpha1-types-eventgatewayvirtualclusterapispec)
-- [VirtualClusterReference](#configuration-konghq-com-v1alpha1-types-virtualclusterreference)
-- [VirtualClusterReferenceByName](#configuration-konghq-com-v1alpha1-types-virtualclusterreferencebyname)
 
 #### VirtualClusterNamespace
 
@@ -17609,7 +17677,7 @@ consumer group IDs, transaction IDs).
 | Field | Description |
 | --- | --- |
 | `additional` _[VirtualClusterNamespaceAdditionalProperties](#configuration-konghq-com-v1alpha1-types-virtualclusternamespaceadditionalproperties)_ |  |
-| `mode` _string_ | * hide_prefix - the configured prefix is hidden from clients for topics and IDs when reading.<br /><br />Created resources are written with the prefix on the backend cluster. * enforce_prefix - the configured prefix remains visible to clients.<br /><br />Created resources must include the prefix or the request will fail. |
+| `mode` _string_ | * hide_prefix - the configured prefix is hidden from clients for topics and IDs when reading. Created resources are written with the prefix on the backend cluster. * enforce_prefix - the configured prefix remains visible to clients. Created resources must include the prefix or the request will fail. |
 | `prefix` _string_ | The namespace is differentiated by this chosen prefix. The prefix is prepended to Kafka topic names, so it can only contain the characters Kafka allows in them: ASCII letters, digits, `.`, `_` and `-`. It must contain at least one character other than `.` and be at most 100 characters long to leave room for the rest of the topic name (Kafka limits topic names to 249 characters). For example, if the prefix is set to "analytics_" the topic named "analytics_user_clicks" is available to the clients of the virtual cluster. Topics without the prefix will be ignored unless added via `additional.topics`. |
 
 _Appears in:_
@@ -17736,26 +17804,6 @@ Allowed values:
 | --- | --- |
 | `exactList` |  |
 | `glob` |  |
-
-#### VirtualClusterReference
-
-
-VirtualClusterReference is a type alias.
-
-
-
-| Field | Description |
-| --- | --- |
-| `id` _*string_ |  |
-| `name` _[VirtualClusterName](#configuration-konghq-com-v1alpha1-types-virtualclustername)_ |  |
-
-_Appears in:_
-
-- [ForwardToClusterByPortMappingConfig](#configuration-konghq-com-v1alpha1-types-forwardtoclusterbyportmappingconfig)
-
-
-
-
 
 #### VirtualClusterTopicAlias
 
@@ -18214,8 +18262,8 @@ The Type field determines which sub-field is active.
 | Field | Description |
 | --- | --- |
 | `type` _[ControlPlaneRefType](#eventgateway-konghq-com-v1alpha1-types-controlplanereftype)_ | Type indicates the type of the control plane being referenced: a KonnectEventGateway (konnectNamespacedRef) or an OnPremEventGateway (onpremNamespacedRef). It can't be changed, and neither can an onpremNamespacedRef. |
-| `konnectNamespacedRef` _[KonnectNamespacedRef](#eventgateway-konghq-com-v1alpha1-types-konnectnamespacedref)_ | KonnectNamespacedRef references a KonnectEventGateway resource in the same namespace. Must be set when type is konnectNamespacedRef; validated by CEL rules on this struct. |
-| `onpremNamespacedRef` _[OnPremNamespacedRef](#eventgateway-konghq-com-v1alpha1-types-onpremnamespacedref)_ | OnPremNamespacedRef references an OnPremEventGateway resource in the same namespace. The data plane pulls its configuration from the gw-admin pods of the GWAdmin of that gateway, and authenticates with a client certificate trusted by the cp client CA of the GWAdmin. Must be set when type is onpremNamespacedRef; validated by CEL rules on this struct. |
+| `konnectNamespacedRef` _[KonnectNamespacedRef](#eventgateway-konghq-com-v1alpha1-types-konnectnamespacedref)_ | KonnectNamespacedRef references a KonnectEventGateway resource. Must be set when type is konnectNamespacedRef; validated by CEL rules on this struct. |
+| `onpremNamespacedRef` _[OnPremNamespacedRef](#eventgateway-konghq-com-v1alpha1-types-onpremnamespacedref)_ | OnPremNamespacedRef references an OnPremEventGateway resource. The data plane pulls its configuration from the gw-admin pods of the GWAdmin of that gateway, and authenticates with a client certificate trusted by the cp client CA of the GWAdmin. Must be set when type is onpremNamespacedRef; validated by CEL rules on this struct. |
 
 _Appears in:_
 
@@ -18238,8 +18286,8 @@ Allowed values:
 
 | Value | Description |
 | --- | --- |
-| `konnectNamespacedRef` | ControlPlaneRefTypeKonnectNamespacedRef references a KonnectEventGateway<br />resource in the same namespace as the DataPlane.<br /> |
-| `onpremNamespacedRef` | ControlPlaneRefTypeOnPremNamespacedRef references an OnPremEventGateway<br />resource in the same namespace as the DataPlane.<br /> |
+| `konnectNamespacedRef` | ControlPlaneRefTypeKonnectNamespacedRef references a KonnectEventGateway<br />resource.<br /> |
+| `onpremNamespacedRef` | ControlPlaneRefTypeOnPremNamespacedRef references an OnPremEventGateway<br />resource.<br /> |
 
 #### DebugEndpointsState
 
@@ -18309,8 +18357,8 @@ All fields map 1-to-1 to keg configuration variables.
 | Field | Description |
 | --- | --- |
 | `konnect` _[KonnectConfig](#eventgateway-konghq-com-v1alpha1-types-konnectconfig)_ | Konnect provides optional overrides for the keg to Konnect connection parameters. All other connection values (region, gateway_cluster_id, cert paths) are derived automatically and cannot be overridden here. To supply a user-owned mTLS certificate, use spec.certificateSecret. |
-| `configPollIntervalSeconds` _*int32_ | ConfigPollIntervalSeconds overrides how often keg polls Konnect for config changes, in seconds. Corresponds to config_poll_interval / KEG__CONFIG_POLL_INTERVAL. |
-| `enableDebugEndpoints` _[DebugEndpointsState](#eventgateway-konghq-com-v1alpha1-types-debugendpointsstate)_ | EnableDebugEndpoints enables the /debug/pprof/allocs endpoint. Corresponds to enable_debug_endpoints / KEG__ENABLE_DEBUG_ENDPOINTS. |
+| `configPollIntervalSeconds` _*int32_ | ConfigPollIntervalSeconds overrides how often keg polls Konnect for config changes, in seconds. Corresponds to config_poll_interval / KEG__CONFIG_POLL_INTERVAL.<br /><br />Deprecated: keg 1.3.0 removed this setting: it long-polls its configuration. It is passed only to a keg older than 1.3.0, read from the tag of its image, and ignored otherwise, with a Warning Event on the KegDataPlane. An image without a version tag, e.g. pinned by digest only or tagged main, counts as 1.3.0 or later; the tag of a custom image is read as the keg version. |
+| `enableDebugEndpoints` _[DebugEndpointsState](#eventgateway-konghq-com-v1alpha1-types-debugendpointsstate)_ | EnableDebugEndpoints enables the /debug/pprof/allocs endpoint. Corresponds to enable_debug_endpoints / KEG__ENABLE_DEBUG_ENDPOINTS.<br /><br />Deprecated: keg 1.3.0 removed this setting: it serves its debug endpoints on a listener of its own. It is passed only to a keg older than 1.3.0, read from the tag of its image, and ignored otherwise, with a Warning Event on the KegDataPlane. An image without a version tag, e.g. pinned by digest only or tagged main, counts as 1.3.0 or later; the tag of a custom image is read as the keg version. |
 | `observability` _[ObservabilityConfig](#eventgateway-konghq-com-v1alpha1-types-observabilityconfig)_ | Observability configures logging, metrics, and tracing. |
 | `runtime` _[RuntimeOptions](#eventgateway-konghq-com-v1alpha1-types-runtimeoptions)_ | Runtime configures graceful shutdown and health endpoint behaviour. |
 
@@ -18327,11 +18375,11 @@ KegDataPlaneSpec defines the desired state of KegDataPlane.
 
 | Field | Description |
 | --- | --- |
-| `controlPlaneRef` _[ControlPlaneRef](#eventgateway-konghq-com-v1alpha1-types-controlplaneref)_ | ControlPlaneRef references the control plane this KegDataPlane connects to. The type field identifies which kind of control plane is being referenced: konnectNamespacedRef references a KonnectEventGateway resource in the same namespace, onpremNamespacedRef an OnPremEventGateway resource in the same namespace. |
+| `controlPlaneRef` _[ControlPlaneRef](#eventgateway-konghq-com-v1alpha1-types-controlplaneref)_ | ControlPlaneRef references the control plane this KegDataPlane connects to. The type field identifies which kind of control plane is being referenced: konnectNamespacedRef references a KonnectEventGateway resource, onpremNamespacedRef an OnPremEventGateway resource. A gateway in another namespace needs a KongReferenceGrant in its namespace. |
 | `deployment` _[DeploymentOptions](#eventgateway-konghq-com-v1alpha1-types-deploymentoptions)_ | Deployment configures the keg Deployment: image, replicas, resources, extra env vars, volume mounts, etc. |
 | `network` _[NetworkOptions](#eventgateway-konghq-com-v1alpha1-types-networkoptions)_ | Network configures how the keg pod is exposed to Kafka clients. |
 | `config` _[KegDataPlaneConfiguration](#eventgateway-konghq-com-v1alpha1-types-kegdataplaneconfiguration)_ | Config provides optional overrides for keg runtime settings. When omitted, the keg built-in defaults are used. https://developer.konghq.com/event-gateway/configuration/#applying-configuration |
-| `certificateSecret` _[CertificateSecret](#eventgateway-konghq-com-v1alpha1-types-certificatesecret)_ | CertificateSecret configures how the mTLS client certificate Secret used by this KegDataPlane to connect to its control plane is provisioned: Konnect with a konnectNamespacedRef, the gw-admin of the OnPremEventGateway with an onpremNamespacedRef. If left unset, it defaults to Automatic (operator-managed).<br /><br />When Provisioning is Manual, SecretRef must point to an existing Secret holding tls.crt and tls.key (typically of type kubernetes.io/tls, but the type isn't enforced) that the operator will use as-is: it will never create, modify, rotate, or delete it. The Secret must live in this KegDataPlane's own namespace and must carry the operator's secret label selector (default "konghq.com/secret: \"true\"", configurable via --secret-label-selector on the operator), or the operator cannot see it at all. Switching Provisioning from Automatic to Manual deletes the previously operator-provisioned Secret once the Deployment has rolled onto the Manual one; switching back to Automatic later provisions a new one rather than reusing the deleted one.<br /><br />The referenced Secret must hold a matching certificate and key that are currently valid (a NotBefore up to 5 minutes in the future is tolerated for clock skew), and must not be an operator-provisioned Secret (one labeled "gateway.konghq.com/secret-provisioning: automatic"); otherwise CertificateProvisioned goes False with reason InvalidSecret or SecretRefOperatorManaged. Deleting the referenced Secret while it is in use leaves running Pods untouched but prevents new ones from starting until the Secret is recreated or the reference is changed.<br /><br />With an onpremNamespacedRef and Manual provisioning, the certificate must be issued by the cp client CA of the GWAdmin of the OnPremEventGateway, so that GWAdmin needs a Manual clientCA: an Automatic one keeps its key in the namespace of Kong Operator. During a rotation of that CA, a certificate from the previous one stays trusted until every data plane runs a certificate from the new one; reissue it from the new CA. |
+| `certificateSecret` _[CertificateSecret](#eventgateway-konghq-com-v1alpha1-types-certificatesecret)_ | CertificateSecret configures how the mTLS client certificate Secret used by this KegDataPlane to connect to its control plane is provisioned: Konnect with a konnectNamespacedRef, the gw-admin of the OnPremEventGateway with an onpremNamespacedRef. If left unset, it defaults to Automatic (operator-managed).<br /><br />When Provisioning is Manual, SecretRef must point to an existing Secret holding tls.crt and tls.key (typically of type kubernetes.io/tls, but the type isn't enforced) that the operator will use as-is: it will never create, modify, rotate, or delete it. The Secret must live in this KegDataPlane's own namespace and must carry the operator's secret label selector (default "konghq.com/secret: \"true\"", configurable via --secret-label-selector on the operator), or the operator cannot see it at all. Switching Provisioning from Automatic to Manual deletes the previously operator-provisioned Secret once the Deployment has rolled onto the Manual one; switching back to Automatic later provisions a new one rather than reusing the deleted one.<br /><br />The referenced Secret must hold a matching certificate and key that are currently valid (a NotBefore up to 5 minutes in the future is tolerated for clock skew), and must not be an operator-provisioned Secret (one labeled "gateway.konghq.com/secret-provisioning: automatic"); otherwise CertificateProvisioned goes False with reason InvalidSecret or SecretRefOperatorManaged. Deleting the referenced Secret while it is in use leaves running Pods untouched but prevents new ones from starting until the Secret is recreated or the reference is changed.<br /><br />With an onpremNamespacedRef and Manual provisioning, the certificate must be issued by the cp client CA of the GWAdmin of the OnPremEventGateway, so that GWAdmin needs a Manual clientCA: an Automatic one keeps its key in the namespace of Kong Operator. During a rotation of that CA, a certificate from the previous one stays trusted until every data plane runs a certificate from the new one; reissue it from the new CA. The certificate is used from a copy, with its key, that Kong Operator keeps in a Secret of this namespace: a new certificate in the referenced Secret reaches the Pods once it is checked and registered on gw-admin, the previous one staying trusted until they rolled out, and new Pods keep starting with the last one if the referenced Secret is deleted or holds an invalid one. |
 
 _Appears in:_
 
@@ -18376,13 +18424,14 @@ _Appears in:_
 #### KonnectNamespacedRef
 
 
-KonnectNamespacedRef is a reference to a KonnectEventGateway resource in the same namespace.
+KonnectNamespacedRef is a reference to a KonnectEventGateway resource.
 
 
 
 | Field | Description |
 | --- | --- |
 | `name` _string_ | Name is the name of the KonnectEventGateway resource. |
+| `namespace` _*string_ | Namespace is the namespace of the KonnectEventGateway resource, by default the namespace of the DataPlane. Another namespace needs a KongReferenceGrant in that namespace allowing the KegDataPlane, and one allowing its EventGatewayDataPlaneCertificate, to reference it. |
 
 _Appears in:_
 
@@ -18484,13 +18533,14 @@ _Appears in:_
 #### OnPremNamespacedRef
 
 
-OnPremNamespacedRef is a reference to an OnPremEventGateway resource in the same namespace.
+OnPremNamespacedRef is a reference to an OnPremEventGateway resource.
 
 
 
 | Field | Description |
 | --- | --- |
 | `name` _string_ | Name is the name of the OnPremEventGateway resource. |
+| `namespace` _*string_ | Namespace is the namespace of the OnPremEventGateway resource, by default the namespace of the DataPlane. Another namespace needs a KongReferenceGrant in that namespace allowing the KegDataPlane, and one allowing its EventGatewayDataPlaneCertificate, to reference it. |
 
 _Appears in:_
 
@@ -19114,6 +19164,59 @@ _Appears in:_
 
 - [GWAdminSpec](#gateway-operator-konghq-com-v1alpha1-types-gwadminspec)
 
+#### GWAdminLicense
+
+
+GWAdminLicense configures the license and entitlements of gw-admin.
+
+
+
+| Field | Description |
+| --- | --- |
+| `secretRef` _[GWAdminLicenseSecretRef](#gateway-operator-konghq-com-v1alpha1-types-gwadminlicensesecretref)_ | SecretRef references the Secret key holding the original enveloped license (a compact JWS), without additional encoding. The Secret must be in the namespace of the GWAdmin and carry the operator's secret label selector (default "konghq.com/secret: \"true\""). |
+| `entitlements` _[][GWAdminLicenseEntitlement](#gateway-operator-konghq-com-v1alpha1-types-gwadminlicenseentitlement)_ | Entitlements are the entitlements gw-admin requires the license to grant. Only event_gateway is currently supported. |
+
+_Appears in:_
+
+- [GWAdminSpec](#gateway-operator-konghq-com-v1alpha1-types-gwadminspec)
+
+#### GWAdminLicenseEntitlement
+
+_Underlying type:_ `string`
+
+GWAdminLicenseEntitlement is an entitlement gw-admin requires the license
+to grant.
+
+
+
+
+_Appears in:_
+
+- [GWAdminLicense](#gateway-operator-konghq-com-v1alpha1-types-gwadminlicense)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `event_gateway` | GWAdminLicenseEntitlementEventGateway licenses the on-prem Event Gateway.<br /> |
+
+#### GWAdminLicenseSecretRef
+
+
+GWAdminLicenseSecretRef references a license key in a Secret in the
+namespace of the GWAdmin.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Name is the name of the referenced Secret. |
+| `key` _string_ | Key is the key in the Secret holding the enveloped license. |
+
+_Appears in:_
+
+- [GWAdminLicense](#gateway-operator-konghq-com-v1alpha1-types-gwadminlicense)
+
 #### GWAdminNetworkOptions
 
 
@@ -19221,6 +19324,7 @@ GWAdminSpec defines the desired state of GWAdmin.
 
 | Field | Description |
 | --- | --- |
+| `license` _[GWAdminLicense](#gateway-operator-konghq-com-v1alpha1-types-gwadminlicense)_ | License configures the enveloped license required by gw-admin. gw-admin, not Kong Operator, validates the license.<br /><br />Kong Operator mounts the referenced Secret key in the gw-admin pods and points gw-admin at it: a pod template overlay can't replace the license volume, mount a volume at its path, or set its env vars. A change to the Secret does not restart the pods: the kubelet updates the mounted file, and gw-admin reads it again on each of its periodic license checks. gw-admin refuses to start, or stops, without a valid license. The LicenseProvisioned condition reports a missing Secret, or a missing or empty key. While a GWAdmin references the Secret, the gateway-operator.konghq.com/gwadmin-license-in-use finalizer delays its deletion until no GWAdmin references it: update a license in place rather than deleting and creating its Secret again. |
 | `deployment` _[GWAdminDeploymentOptions](#gateway-operator-konghq-com-v1alpha1-types-gwadmindeploymentoptions)_ | Deployment configures the gw-admin Deployment. |
 | `network` _[GWAdminNetworkOptions](#gateway-operator-konghq-com-v1alpha1-types-gwadminnetworkoptions)_ | Network configures the Services in front of gw-admin. |
 | `tls` _[GWAdminTLS](#gateway-operator-konghq-com-v1alpha1-types-gwadmintls)_ | TLS configures the certificates of gw-admin. By default Kong Operator creates a certificate authority for this GWAdmin and issues and rotates every certificate from it, so nothing has to be configured. |
@@ -22001,6 +22105,71 @@ Allowed values:
 | `Enabled` | AIGatewayRuntimeAutoUpgradeEnabled sets AIGatewayRuntimeAutoUpgrade as enabled.<br /> |
 | `Disabled` | AIGatewayRuntimeAutoUpgradeDisabled sets AIGatewayRuntimeAutoUpgrade as disabled.<br /> |
 
+#### AISettings
+
+
+AISettings is a type alias.
+
+
+
+| Field | Description |
+| --- | --- |
+| `enabled` _string_ | Is AI enabled? |
+| `features` _[AISettingsFeatures](#konnect-konghq-com-v1alpha1-types-aisettingsfeatures)_ | AI features configuration. When top-level `enabled` is false, every feature toggle here is automatically reset to false. |
+
+_Appears in:_
+
+- [PortalAPISpec](#konnect-konghq-com-v1alpha1-types-portalapispec)
+
+#### AISettingsFeatures
+
+
+AISettingsFeatures AI features configuration.
+When top-level `enabled` is false, every feature toggle here is automatically
+reset to false.
+
+
+
+| Field | Description |
+| --- | --- |
+| `aiSearch` _[AISettingsFeaturesAISearch](#konnect-konghq-com-v1alpha1-types-aisettingsfeaturesaisearch)_ | AI Search config |
+| `mcpServer` _[AISettingsFeaturesMcpServer](#konnect-konghq-com-v1alpha1-types-aisettingsfeaturesmcpserver)_ | AI Features config |
+
+_Appears in:_
+
+- [AISettings](#konnect-konghq-com-v1alpha1-types-aisettings)
+
+#### AISettingsFeaturesAISearch
+
+
+AISettingsFeaturesAISearch AI Search config
+
+
+
+| Field | Description |
+| --- | --- |
+| `enabled` _string_ | Whether AI Search is enabled or not |
+
+_Appears in:_
+
+- [AISettingsFeatures](#konnect-konghq-com-v1alpha1-types-aisettingsfeatures)
+
+#### AISettingsFeaturesMcpServer
+
+
+AISettingsFeaturesMcpServer AI Features config
+
+
+
+| Field | Description |
+| --- | --- |
+| `enabled` _string_ | Whether the MCP Server is enabled or not |
+| `writeOperationsEnabled` _string_ | Whether write operations are enabled or not for the Portal MCP Server enabled |
+
+_Appears in:_
+
+- [AISettingsFeatures](#konnect-konghq-com-v1alpha1-types-aisettingsfeatures)
+
 
 
 #### AWSTransitGateway
@@ -22106,6 +22275,24 @@ _Appears in:_
 - [Theme](#konnect-konghq-com-v1alpha1-types-theme)
 
 
+
+#### ConfigStoreControlPlaneRef
+
+
+ConfigStoreControlPlaneRef references the Konnect Control Plane that owns a
+KonnectConfigStore, using the same konnectNamespacedRef format as KongVault
+and KongCertificate.
+
+
+
+| Field | Description |
+| --- | --- |
+| `type` _string_ | Type must be konnectNamespacedRef. |
+| `konnectNamespacedRef` _[KonnectNamespacedRef](#common-konghq-com-v1alpha1-types-konnectnamespacedref)_ | KonnectNamespacedRef references a KonnectGatewayControlPlane by name. An omitted namespace defaults to the KonnectConfigStore's namespace. |
+
+_Appears in:_
+
+- [KonnectConfigStoreSpec](#konnect-konghq-com-v1alpha1-types-konnectconfigstorespec)
 
 #### ConfigurationDataPlaneGroupAutoscale
 
@@ -22343,7 +22530,7 @@ KonnectAIGatewayAPISpec defines the API spec fields for KonnectAIGateway.
 | `description` _string_ | The description of the AI Gateway. |
 | `displayName` _string_ | The display name for this AI Gateway. |
 | `labels` _[PublicLabels](#konnect-konghq-com-v1alpha1-types-publiclabels)_ | Public labels store information about an entity that can be used for filtering a list of objects.<br /><br />Public labels are intended to store **PUBLIC** metadata.<br /><br />Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_". |
-| `managedBy` _[ManagedBy](#konnect-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character. |
+| `managedBy` _[ManagedBy](#konnect-konghq-com-v1alpha1-types-managedby)_ | Stores information about what manages this entity, such as the tool or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric character, and may contain dashes (`-`), underscores (`_`), and dots (`.`). Values must be 1–127 characters long and must not be empty. Keys and values must not contain spaces or control characters. |
 | `minRuntimeVersion` _[AIGatewayMinRuntimeVersion](#konnect-konghq-com-v1alpha1-types-aigatewayminruntimeversion)_ | The minimum AI Gateway runtime version supported by this AI Gateway. This is the lowest data plane version that may receive configuration from it, and it controls which features the API accepts.<br /><br />Data planes older than this version still connect for topology visibility.<br /><br />When not specified, the latest generally available runtime version is used.<br /><br />When runtime_auto_upgrade is enabled (the default), this value is raised automatically to track the minimum runtime version reported across connected data planes, so any value set here may be superseded as the fleet upgrades. |
 | `name` _string_ | The name for this AI Gateway. This value is immutable after creation. |
 | `proxyUrls` _[][AIGatewayProxyURL](#konnect-konghq-com-v1alpha1-types-aigatewayproxyurl)_ | Array of proxy URLs associated with reaching the data-planes connected to a control-plane. |
@@ -22629,7 +22816,7 @@ KonnectConfigStoreSpec defines the desired state of KonnectConfigStore.
 
 | Field | Description |
 | --- | --- |
-| `controlPlaneRef` _[ObjectRef](#common-konghq-com-v1alpha1-types-objectref)_ | ControlPlaneRef is the reference to the parent ControlPlane object. |
+| `controlPlaneRef` _[ConfigStoreControlPlaneRef](#konnect-konghq-com-v1alpha1-types-configstorecontrolplaneref)_ | ControlPlaneRef is the reference to the parent KonnectGatewayControlPlane object. |
 | `apiSpec` _[KonnectConfigStoreAPISpec](#konnect-konghq-com-v1alpha1-types-konnectconfigstoreapispec)_ | APISpec defines the desired state of the resource's API spec fields. |
 
 _Appears in:_
@@ -22708,7 +22895,7 @@ entry written by the sync.
 | `storeKey` _string_ | StoreKey is the resolved key of the Config Store entry. |
 | `sourceFields` _[]string_ | SourceFields are the Secret data keys whose values produced this entry. |
 | `hash` _string_ | Hash is the SHA-256 hash ("sha256:<hex>") of the value written to the store. The value itself is never exposed: status, logs and events must never contain Secret plaintext. |
-| `valueBytes` _int64_ | ValueBytes is the size in bytes of the decoded value last written, measured against the 5120-byte entry value cap. |
+| `valueBytes` _int64_ | ValueBytes is the size in bytes of the decoded value last written. The value cap is 8192 Unicode characters, so this may exceed 8192 bytes. |
 | `keyBytes` _int64_ | KeyBytes is the size in bytes of the resolved store key, measured against the 512-byte key cap. |
 | `notAfter` _*k8s.io/apimachinery/pkg/apis/meta/v1.Time_ | NotAfter is the expiry time of the certificate last written. It is only set when the entry holds a certificate. |
 | `lastPushTime` _*k8s.io/apimachinery/pkg/apis/meta/v1.Time_ | LastPushTime is the time the entry was last pushed to the Config Store. |
@@ -23286,7 +23473,10 @@ _Appears in:_
 _Underlying type:_ `[map[string]ManagedByValue](#map[string]managedbyvalue)`
 
 ManagedBy Stores information about what manages this entity, such as the tool
-or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long and start with an alphanumeric character.
+or system responsible for its lifecycle (for example, `terraform`).<br /><br />Keys must be 1–63 characters long, start and end with an alphanumeric
+character, and may contain dashes (`-`), underscores (`_`), and dots (`.`).
+Values must be 1–127 characters long and must not be empty.
+Keys and values must not contain spaces or control characters.
 
 
 
@@ -23505,6 +23695,7 @@ PortalAPISpec defines the API spec fields for Portal.
 
 | Field | Description |
 | --- | --- |
+| `ai` _[AISettings](#konnect-konghq-com-v1alpha1-types-aisettings)_ |  |
 | `authenticationEnabled` _string_ | Whether the portal supports developer authentication. If disabled, developers cannot register for accounts or create applications. |
 | `autoApproveApplications` _string_ | Whether requests from applications to register for APIs will be automatically approved, or if they will be set to pending until approved by an admin. |
 | `autoApproveDevelopers` _string_ | Whether developer account registrations will be automatically approved, or if they will be set to pending until approved by an admin. |
@@ -23518,6 +23709,7 @@ PortalAPISpec defines the API spec fields for Portal.
 | `notificationsDeveloperPiiVisibilityEnabled` _string_ | When enabled, portal registration notifications include the registering developer's identifying information (such as name and email). |
 | `rbacEnabled` _string_ | Whether the portal resources are protected by Role Based Access Control (RBAC). If enabled, developers view or register for APIs until unless assigned to teams with access to view and consume specific APIs. Authentication must be enabled to use RBAC. |
 | `siprEnabled` _string_ | Whether ip allow list is enabled for the portal. |
+| `themeName` _string_ | Name of the theme to use for the default content created upon creation of this portal. Must match an available theme name; if omitted or unrecognized, the default theme is used. Only applies when `create_default_content` is true. |
 
 _Appears in:_
 
@@ -23782,8 +23974,8 @@ Only one of the fields should be set based on the Type.
 | Field | Description |
 | --- | --- |
 | `type` _[PortalIdentityProviderRequestConfigType](#konnect-konghq-com-v1alpha1-types-portalidentityproviderrequestconfigtype)_ | Type designates the type of configuration. |
-| `oIDC` _[PortalOIDCIdentityProviderConfig](#konnect-konghq-com-v1alpha1-types-portaloidcidentityproviderconfig)_ | OIDC configuration. |
-| `sAML` _[PortalSAMLIdentityProviderConfig](#konnect-konghq-com-v1alpha1-types-portalsamlidentityproviderconfig)_ | SAML configuration. |
+| `oidc` _[PortalOIDCIdentityProviderConfig](#konnect-konghq-com-v1alpha1-types-portaloidcidentityproviderconfig)_ | OIDC configuration. |
+| `saml` _[PortalSAMLIdentityProviderConfig](#konnect-konghq-com-v1alpha1-types-portalsamlidentityproviderconfig)_ | SAML configuration. |
 
 _Appears in:_
 
@@ -23806,8 +23998,8 @@ Allowed values:
 
 | Value | Description |
 | --- | --- |
-| `oIDC` |  |
-| `sAML` |  |
+| `oidc` |  |
+| `saml` |  |
 
 
 

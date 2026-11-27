@@ -1,8 +1,32 @@
 {
+  "3.15.0.9": [
+    {
+      "message": "Fixed an issue where the plugin returned the generic `\"Bad request\"` message instead of `\"Invalid JSON\"` for a request body that is not valid JSON. If you rely on the previous `Bad request` message in tests or client code, update them accordingly before upgrading to this version.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a data plane older than 3.14 rejected the whole configuration pushed by a 3.14 or newer control plane when the plugin used the default `allow_non_json_requests` value.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added support for `allow_non_json_requests` configuration to allow non-JSON requests to bypass all checks.\n",
       "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.19": [
+    {
+      "message": "Fixed an issue where the plugin returned the generic `\"Bad request\"` message instead of `\"Invalid JSON\"` for a request body that is not valid JSON. If you rely on the previous `Bad request` message in tests or client code, update them accordingly before upgrading to this version.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where a data plane older than 3.14 rejected the whole configuration pushed by a 3.14 or newer control plane when the plugin used the default `allow_non_json_requests` value.",
+      "type": "bugfix",
       "scope": "Plugin"
     }
   ],

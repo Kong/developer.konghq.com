@@ -3,7 +3,7 @@ title: Request authentication reference
 
 content_type: reference
 layout: reference
-description: Learn what request authentication is and how to authenticate requests in Insomnia.
+description: Learn what request authentication is and how to authenticate requests in {{ site.insomnia }}.
 
 related_resources:
   - text: Authentication and authorization
@@ -21,7 +21,7 @@ breadcrumbs:
   - /insomnia/authentication-authorization/
 
 faqs:
-  - q: What should I do if I see SSL certificate errors in Insomnia?
+  - q: What should I do if I see SSL certificate errors in {{ site.insomnia }}?
     a: |
       If you encounter errors like:
       ```
@@ -37,19 +37,32 @@ faqs:
 
 ---
 
-Some requests require authentication to ensure that the client requests access data securely. In Insomnia, you can configure different authentication types and parameters when you send a request so that it can authenticate. 
+Some requests require authentication to ensure that the client requests access data securely. In {{ site.insomnia }}, you can configure different authentication types and parameters when you send a request so that it can authenticate. 
 
-The Insomnia UI provides a simplified configuration for request authentication. It pre-populates the parameters when you select an auth type so you only have to fill in the values. 
+The {{ site.insomnia }} UI provides a simplified configuration for request authentication. It pre-populates the parameters when you select an auth type so you only have to fill in the values. 
 
-## How do I configure authentication in my requests in Insomnia? 
+## How do I configure authentication in my requests in {{ site.insomnia }}? 
 
 Navigate to a request in a collection, click the **Auth** tab below your request, and select an authentication type from the dropdown menu.
 
-![Image of all the available request auth types in Insomnia](/assets/images/insomnia/request-auth.png)
+![Image of all the available request auth types in {{ site.insomnia }}](/assets/images/insomnia/request-auth.png)
+
+## How do I share authentication across requests?
+
+Set settings (including authentication) once on a folder or, if you're using {{ site.insomnia }} 13.5 or later, set them on the API Collection using its **Auth** tab. Then set each request's authentication type to **Inherit from parent**.
+
+{{ site.insomnia }} applies settings first from the API Collection, then from each folder (outermost first), then from the request:
+
+* **Authentication:** The closest level that sets authentication wins. To inherit it, set the request's authentication type to **Inherit from parent**. A request's own type, including **None**, overrides inheritance. Requests that inherit OAuth 2.0 share the token stored on the level that owns the configuration.
+
+* **Headers:** {{ site.insomnia }} combines headers from every level. When several levels set the same header, it joins the values with a comma. The exception is single-value headers such as `Authorization`, `Content-Type`, and `Host`, where the closest level wins.
+
+* **Scripts:** Pre-request and after-response scripts run in the same order: API Collection, then folders, then request.
+
 
 ## Which authentication types are supported?
 
-The following authentication types are supported for request authentication in Insomnia:
+The following authentication types are supported for request authentication in {{ site.insomnia }}:
 * [Basic auth](https://datatracker.ietf.org/doc/html/rfc7617.html)
 * [Digest auth](https://datatracker.ietf.org/doc/html/rfc7616)
 * [OAuth 1.0](https://datatracker.ietf.org/doc/html/rfc5849)

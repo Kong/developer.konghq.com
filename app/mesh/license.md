@@ -16,14 +16,11 @@ related_resources:
   - text: Enterprise features
     url: /mesh/enterprise/
   - text: Install {{site.mesh_product_name}}
-    url: /mesh/#install-kong-mesh
+    url: /mesh/#get-started-with-kong-mesh
 ---
 
 
-{{site.mesh_product_name}} requires a valid license to start the global control plane process. If no license is set, a **pre-bundled license** is used:
-
-* Data plane proxy (DPP) limit: 10
-* Expiration: 30 days
+{{site.mesh_product_name}} requires a valid license to start the global control plane process. If no license is set, a pre-bundled trial license is used. The trial license expires after 30 days.
 
 To override the default, provide a new license file. You can request one from the [{{site.mesh_product_name}} team](https://konghq.com/request-demo-kong-mesh/).
 
@@ -111,37 +108,17 @@ In Universal mode, configure a valid license by using one of the following envir
 
 In a multi-zone deployment of {{site.mesh_product_name}}, only the global control plane should be configured with a valid license. The global control plane automatically synchronizes the license to any remote control plane that is part of the cluster.
 
-In a multi-zone deployment, the DPPs count includes the total aggregate of every data plane proxy in every zone. For example, with a limit of 10 DPPs and 2 zones, you can connect 6 DPPs in one zone and 4 in another, not 10 DPPs for each zone.
-
-
 ## Licensed metrics
 
-The license encourages a pay-as-you-go model that delivers the best benefits to you, the end user, since the derived value of {{site.mesh_product_name}} is directly associated to the positive benefits of real service mesh usage.
-Licenses are based on:
+{{site.mesh_product_name}} licenses are based on:
 
-* The total number of connected data plane proxies (DPPs), across all zones
+* The number of zones connected to your global control plane
 * The license expiration date
 
-
-
-In the context of the metric, a data plane proxy (DPP) is a standard data plane proxy that is deployed next to your Services, either as a sidecar container or in a virtual machine. Gateway data plane proxies, zone ingresses, and zone egresses are not counted.
-
-You can measure the number of data plane proxies needed in {{site.mesh_product_name}} by the 
-number of Services you want to include in your service meshes. Use the following formula:
-
-```
-Number of DPPs = Number of Pods + Number of VMs.
-```
-{:.no-copy-code}
-
+A zone is a zone control plane and the data plane proxies connected to it. A single-zone deployment counts as one zone. The number of data plane proxies in a zone does not change the license count.
 
 ## License behaviors
 
 With an expired license or invalid license, the control plane will fail to start.
 If the license expires while the control-plane is running it will keep running but a restart of the instance will fail. 
 The control plane will issue a warning in the logs and the GUI when the license expires in less than 30 days.
-
-With a valid issued license, a data plane proxy will always be able to join the service mesh, even if you go above the allowed limit to prevent service disruptions.
-If the number of DPPs does go above the limit, you will see a warning in the GUI and in the control plane logs. 
-
-With the pre-bundled license, if you go over the maximum allowed number of DPPs, the system will automatically refuse their connections.

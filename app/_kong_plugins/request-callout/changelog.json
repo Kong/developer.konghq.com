@@ -42,6 +42,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.9": [
+    {
+      "message": "Fixed an issue where an upstream failure could be misattributed\nto a `custom` template error. This happened when the plugin's `error_response_msg`\ntemplate also failed to render.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "The option `callouts.http_opts.ssl_verify`, which controls the verification\nof the certificate presented by the server, is now enabled by default.\n",
@@ -69,6 +76,13 @@
     },
     {
       "message": "Security: Fixed CVE-2026-92558 by fixing cache key generation, preventing cached responses from being served to the wrong request.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.19": [
+    {
+      "message": "Fixed an issue where an upstream failure could be misattributed\nto a `custom` template error. This happened when the plugin's `error_response_msg`\ntemplate also failed to render.",
       "type": "bugfix",
       "scope": "Plugin"
     }

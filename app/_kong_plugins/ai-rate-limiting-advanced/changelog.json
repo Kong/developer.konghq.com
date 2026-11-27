@@ -35,6 +35,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.9": [
+    {
+      "message": "Fixed a false mismatch error. The plugin logged the error when two plugins shared a `namespace` and had identical counter syncing settings. The plugin now also logs a mismatch when plugins in one `namespace` use different `decrease_by_fractions_in_redis` values. Such plugins write counters under different Redis keys, so they do not share one counter.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where rate limiting failed after a Redis password rotation until Kong Gateway restarted.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.14.0.0": [
     {
       "message": "Added a policy-based rate limiting mode with\nmulti-dimensional match conditions and request counting strategy.\n",
@@ -91,6 +103,18 @@
   "3.14.0.15": [
     {
       "message": "Fixed an issue where policies using a consumer `custom_id` match condition resolved to the consumer username instead.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.19": [
+    {
+      "message": "Fixed a false mismatch error. The plugin logged the error when two plugins shared a `namespace` and had identical counter syncing settings. The plugin now also logs a mismatch when plugins in one `namespace` use different `decrease_by_fractions_in_redis` values. Such plugins write counters under different Redis keys, so they do not share one counter.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where rate limiting failed after a Redis password rotation until Kong Gateway restarted.",
       "type": "bugfix",
       "scope": "Plugin"
     }

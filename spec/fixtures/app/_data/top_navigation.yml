@@ -1,0 +1,32 @@
+# Trimmed copy of app/_data/top_navigation.yml for the fixture site.
+# Names only the products that spec/fixtures/app/_data/products/ provides,
+# because header/item.html resolves each nav product's icon from that data.
+# A product added to both places must be added here too.
+platform:
+  konnect:
+    text: |
+      Kong's SaaS API management platform designed to simplify managing and securing APIs.
+    icon: '/assets/logos/Konnect-logo.svg'
+    link:
+      url: /konnect/
+      text: Learn more &rarr;
+
+  tools: []
+
+  sections:
+    - title: Manage APIs
+      links:
+        - text: API Gateway
+          url: /gateway/
+          product: gateway
+        - text: AI Gateway
+          url: /ai-gateway/
+          product: ai-gateway
+        - text: Event Gateway
+          url: /event-gateway/
+          product: event-gateway
+
+support:
+  - text: Knowledge Base
+    url: '/support/'
+    icon: '/assets/icons/document.svg'

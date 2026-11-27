@@ -6,6 +6,20 @@
       "scope": "Plugin"
     }
   ],
+  "3.15.0.9": [
+    {
+      "message": "Fixed an issue where rate limiting failed after a Redis password rotation until Kong Gateway restarted.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.14.0.19": [
+    {
+      "message": "Fixed an issue where rate limiting failed after a Redis password rotation until Kong Gateway restarted.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Enabled at-rest keyring encryption for sensitive fields in ACE plugin.",

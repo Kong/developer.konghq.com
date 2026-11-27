@@ -1,6 +1,4 @@
 import debug from "debug";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
 
 import {
   parseExportAssignments,
@@ -12,8 +10,12 @@ import { withTimeout } from "./instructions/command-timeout.js";
 
 const debugCmd = debug("debug:request");
 const debugLog = debug("debug:response");
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
+// The image is published by
+// .github/workflows/build-automated-tests-image.yaml as a public, multi-arch
+// image, so it is pulled rather than built. A pull failure is reported as-is:
+// the workflow that publishes the image is the only thing that builds it, so
+// quietly rebuilding here would hide a broken publish.
 export async function fetchImage(docker, imageName, log) {
   log(`Fetching the image '${imageName}'...`);
   try {
@@ -26,48 +28,45 @@ export async function fetchImage(docker, imageName, log) {
       log(`Unexpected error while fetching image: ${err.message}`);
       throw err;
     }
+  }
 
-    log(`Image '${imageName}' not found, building it...`);
+  log(`Image '${imageName}' not found locally, pulling it...`);
 
-    return new Promise((resolve, reject) => {
-      const dockerContext = join(__dirname, "docker");
+  return new Promise((resolve, reject) => {
+    docker.pull(imageName, (error, stream) => {
+      if (error) {
+        return reject(
+          new Error(`Failed to pull image '${imageName}': ${error.message}`),
+        );
+      }
 
-      docker.buildImage(
-        {
-          context: dockerContext,
-          src: ["Dockerfile"],
-        },
-        { t: imageName },
-        function (error, stream) {
-          if (error) {
-            return reject(error);
+      docker.modem.followProgress(
+        stream,
+        (err, res) => {
+          if (err) {
+            return reject(
+              new Error(`Failed to pull image '${imageName}': ${err.message}`),
+            );
           }
 
-          docker.modem.followProgress(
-            stream,
-            (err, res) => {
-              if (err) return reject(err);
+          const errorEvent = res.find((event) => event.error);
+          if (errorEvent) {
+            return reject(
+              new Error(
+                `Failed to pull image '${imageName}': ${errorEvent.error}`,
+              ),
+            );
+          }
 
-              const errorEvent = res.find((event) => event.error);
-              if (errorEvent) {
-                return reject(
-                  new Error(
-                    `Docker build failed for image '${imageName}': ${errorEvent.error}`,
-                  ),
-                );
-              }
-
-              resolve(res);
-            },
-            (event) =>
-              event.status
-                ? debugLog(event.status.trim())
-                : debugLog(event.stream?.trim()),
-          );
+          resolve(res);
         },
+        (event) =>
+          event.status
+            ? debugLog(event.status.trim())
+            : debugLog(event.stream?.trim()),
       );
     });
-  }
+  });
 }
 
 export async function executeCommand(container, cmd, displayCmd = cmd, timeoutMs) {

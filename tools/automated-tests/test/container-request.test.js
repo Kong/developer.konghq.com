@@ -191,6 +191,7 @@ test("isNetworkLevelError classifies every network-level cause code", () => {
     "EAI_AGAIN",
     "ENOTFOUND",
     "ECONNRESET",
+    "UND_ERR_SOCKET",
   ];
 
   for (const code of codes) {

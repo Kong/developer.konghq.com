@@ -15,9 +15,9 @@ module Jekyll
         module ClassMethods # rubocop:disable Style/Documentation
           def url(policy)
             if policy.unreleased?
-              "#{base_url}#{policy.slug}/#{policy.min_release}/"
+              "#{base_url(policy)}#{policy.slug}/#{policy.min_release}/"
             else
-              "#{base_url}#{policy.slug}/"
+              "#{base_url(policy)}#{policy.slug}/"
             end
           end
         end

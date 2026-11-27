@@ -266,3 +266,74 @@ body:
 
 You can also configure allowed IPs for your Dev Portals. For more information, see [Specify IP addresses that can connect to your Dev Portal](/dev-portal/security-settings/#specify-ip-addresses-that-can-connect-to-your-dev-portal).
 
+## Specify AWS VPC endpoints that can connect to {{site.konnect_short_name}}
+
+If you connect to {{site.konnect_short_name}} using [AWS PrivateLink](/gateway/aws-private-link/), the PrivateLink endpoints aren't bound to a specific organization. 
+For example, if you have separate endpoints for your development and production environments, the development endpoint can still reach your production organization.
+
+Org Admins can restrict which AWS VPC endpoints are allowed to connect to their organization by adding the endpoint IDs (`vpce-` followed by a hexadecimal string) to a VPCE ID allowlist. 
+When the allowlist is enabled, {{site.konnect_short_name}} rejects any request from an endpoint that isn't on the list with an HTTP `403` response.
+
+Unlike the [IP allowlist](#specify-ip-addresses-that-can-connect-to-konnect), which applies only to the `.api.` domain and doesn't apply to data planes, the VPCE ID allowlist applies to all connections to your organization through PrivateLink. 
+This includes the {{site.konnect_short_name}} APIs, communication between {{site.base_gateway}} control planes and data planes, and {{site.mesh_product_name}} zone sync traffic. Any data planes that are already connected to the control plane will remain connected. If the data plane tries to reconnect and is not using an allowed VPCE the connection will be denied.
+You cannot enable both IP and VPCE allowlists.
+
+Before you configure the allowlist, [create a PrivateLink endpoint](/gateway/aws-private-link/#aws-configuration-for-privatelink) and note its endpoint ID (for example, `vpce-0123456789abcdef0`).
+
+
+You can configure a VPCE ID allowlist for {{site.konnect_short_name}} using the API or the UI.
+
+{% navtabs "vpce-allowlist" %}
+{% navtab "API" %}
+Send a PUT request to the `/organizations/$ORG_ID/vpce-id-allow-list` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/organizations/$ORG_ID/vpce-id-allow-list
+status_code: 201
+region: global
+method: PUT
+body:
+    enabled: true
+    allowed_vpce_ids:
+    - vpce-0123456789abcdef0
+{% endkonnect_api_request %}
+<!--vale on-->
+
+A PUT request returns a `409` error if an allowlist already exists for your organization. 
+
+To change or disable an existing allowlist, send a PATCH request to the same endpoint. For example, to disable the allowlist:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/organizations/$ORG_ID/vpce-id-allow-list
+status_code: 200
+region: global
+method: PATCH
+body:
+    enabled: false
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+
+{% navtab "UI" %}
+To configure the allowlist in the {{site.konnect_short_name}} UI:
+
+1. In the {{site.konnect_short_name}} sidebar, click your org name.
+1. Click **Manage Organization**.
+1. Click the **Settings** tab.
+1. Click the **Security** tab.
+1. In **Network and data protection**, on the **AWS VPC endpoint allow list** card, click **Configure**.
+1. In the **VPC endpoint IDs** field, enter one endpoint ID per line, for example `vpce-0123456789abcdef0`.
+1. Click **Add**.
+
+The allowlist is enabled when you add the endpoint IDs. To change or disable the allowlist, send a PATCH request to the `/organizations/$ORG_ID/vpce-id-allow-list` endpoint. See the API tab for an example.
+{% endnavtab %}
+{% endnavtabs %}
+
+{:.warning}
+> **Important:**
+> * After you enable the VPCE ID allowlist, you can no longer use the {{site.konnect_short_name}} UI, because the allowlist applies to the {{site.konnect_short_name}} APIs that the UI uses.
+> * To change or disable the allowlist, you must send the request through an allowed endpoint, so you must include the VPCE ID of an endpoint for the Global geo in the list. See the [Global geo service name](/gateway/aws-private-link/#regional-privatelink-service-names) for your AWS region.
+> * You must add at least one endpoint ID to the list before you can enable it.
+

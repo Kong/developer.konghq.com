@@ -7,4 +7,5 @@ works_on:
 products:
   - ai-gateway
 content_type: plugin
+published: false
 ---

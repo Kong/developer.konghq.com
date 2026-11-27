@@ -4,4 +4,4 @@ Sandboxing imposes several limitations on how custom Lua code can be executed, f
 
 The limitations can be adjusted with the `untrusted_lua=off|strict|lax|sandbox|on` setting.
 
-See the [sandboxing reference](/gateway/sandboxing/) for more information.
+See the [sandboxing reference](/ai-gateway/sandboxing/) for more information.

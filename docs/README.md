@@ -5,3 +5,4 @@ This section contains docs that outline the processes and best practices that Ko
 * [Release checklists](./release-checklists.md)
 * [Automated tests](./automated-tests.md)
 * [Docs arcade (hidden easter egg)](./arcade.md)
+* [RSS feeds](./feeds.md)

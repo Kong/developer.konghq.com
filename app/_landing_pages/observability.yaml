@@ -137,6 +137,17 @@ rows:
               url: /konnect-platform/teams-and-roles/
   - header:
       type: h2
+      text: "Enterprise Portal and Vitals"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {% include_cached gateway/enterprise-portal-vitals-removed.md %}
+  - header:
+      type: h2
       text: "Frequently asked questions"
     columns:
       - blocks:

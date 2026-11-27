@@ -34,7 +34,15 @@ prereqs:
     controllers: [AIGATEWAYDATAPLANE]
     on_prem_controllers: [ONPREMAIGATEWAY]
   inline:
-    - title: "On-premises: Kubernetes cluster and {{ site.ee_product_name }} license"
+    - title: A running Kubernetes cluster
+      position: before
+      include_content: prereqs/kubernetes/cluster
+      icon_url: /assets/icons/kubernetes.svg
+    - title: Helm
+      position: before
+      include_content: prereqs/helm
+      icon_url: /assets/icons/kubernetes.svg
+    - title: "{{ site.ee_product_name }} license"
       topology: on-prem
       include_content: /md/operator/ai-gateway/prereqs/on-prem-cluster
       icon_url: /assets/icons/kubernetes.svg

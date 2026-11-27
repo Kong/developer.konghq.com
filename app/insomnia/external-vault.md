@@ -1,6 +1,6 @@
 ---
 title: External vault integration
-description: 'Learn how to configure external vault integrations in Insomnia using AWS, GCP, Azure, and HashiCorp vault providers.'
+description: 'Learn how to configure external vault integrations in {{ site.insomnia }} using AWS, GCP, Azure, and HashiCorp vault providers.'
 content_type: reference
 layout: reference
 tier: enterprise
@@ -16,7 +16,7 @@ search_aliases:
   - GCP
   - HCV
 related_resources:
-  - text: Local vault storage in Insomnia
+  - text: Local vault storage in {{ site.insomnia }}
     url: /insomnia/storage/#local-vault
   - text: Storage options
     url: /insomnia/storage/
@@ -24,25 +24,25 @@ related_resources:
     url: /insomnia/storage/#git-sync
 
 faqs:
-  - q: What happens if I clear cloud credentials when I sign out of Insomnia?
+  - q: What happens if I clear cloud credentials when I sign out of {{ site.insomnia }}?
     a: | 
-      When you sign out of Insomnia, you can choose to clear all of your stored cloud credentials. This removes any saved credentials used by External Vault providers from your local Insomnia configuration.
+      When you sign out of {{ site.insomnia }}, you can choose to clear all of your stored cloud credentials. This removes any saved credentials used by External Vault providers from your local {{ site.insomnia }} configuration.
 
-      Clearing cloud credentials doesn't break External Vault integrations. Insomnia supports External Vault providers even when credential fields are empty. This allows you to sign out securely without losing your vault setup.
+      Clearing cloud credentials doesn't break External Vault integrations. {{ site.insomnia }} supports External Vault providers even when credential fields are empty. This allows you to sign out securely without losing your vault setup.
 
       After signing back in, you might need to re-authenticate or provide credentials again, depending on how the cloud provider handles authentication.
   - q: Do empty credential configurations work across all External Vault cloud providers?
     a: | 
       Yes. External Vault supports empty credential configurations across all supported cloud providers.
 
-      This means that your external vault integrations continue to work even when credential fields are empty. Insomnia can operate without permanently storing cloud credentials in the configuration.
+      This means that your external vault integrations continue to work even when credential fields are empty. {{ site.insomnia }} can operate without permanently storing cloud credentials in the configuration.
 ---
 
-Insomnia supports integrating with external vault service providers to retrieve secret values automatically when sending requests.
+{{ site.insomnia }} supports integrating with external vault service providers to retrieve secret values automatically when sending requests.
 
-You can configure vault integration from the Insomnia UI, in **Preferences > Credentials**, and in [Inso CLI](/inso-cli/), using environment variables.
+You can configure vault integration from the {{ site.insomnia }} UI, in **Preferences > Credentials**, and in [Inso CLI](/inso-cli/), using environment variables.
 
-Insomnia supports the following vault services:
+{{ site.insomnia }} supports the following vault services:
 
 - [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/)
 - [GCP Secret Manager](https://cloud.google.com/security/products/secret-manager?hl=en)
@@ -92,14 +92,14 @@ There are three options to authenticate to your AWS vault from Inso CLI:
   ```
 
 {:.info}
-> The `INSOMNIA_AWS_CONFIGFILEPATH`, `INSOMNIA_AWS_FILEPATH`, and `INSOMNIA_AWS_ENABLECACHE` variables are optional. If they aren't provided, Insomnia will use the default AWS CLI values. 
+> The `INSOMNIA_AWS_CONFIGFILEPATH`, `INSOMNIA_AWS_FILEPATH`, and `INSOMNIA_AWS_ENABLECACHE` variables are optional. If they aren't provided, {{ site.insomnia }} will use the default AWS CLI values. 
 
 {% endnavtab %}
 
 {% endnavtabs %}
 
 {:.warning}
-> Insomnia doesn't support spaces in the [SSO session name](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html#cli-configure-sso-configure). If you select the **SSO Credential** type, make sure your SSO session name contains only supported characters:
+> {{ site.insomnia }} doesn't support spaces in the [SSO session name](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html#cli-configure-sso-configure). If you select the **SSO Credential** type, make sure your SSO session name contains only supported characters:
 * Letters
 * Numbers
 * Hyphens (`-`)
@@ -173,7 +173,7 @@ For HashiCorp, the environment variables to define for Inso CLI depend on the pl
 
 ## Azure Key Vault
 
-When you connect Insomnia to Azure Key Vault, Azure prompts for OAuth consent in a browser. The requested scopes define the permissions Insomnia uses to authenticate and access secrets.
+When you connect {{ site.insomnia }} to Azure Key Vault, Azure prompts for OAuth consent in a browser. The requested scopes define the permissions {{ site.insomnia }} uses to authenticate and access secrets.
 
 Use the following required scopes:
 - `openid`: Support sign-in with Microsoft Entra ID.
@@ -184,29 +184,31 @@ Use the following required scopes:
 Azure enforces these permissions during consent and applies Key Vault access control based on the user’s assigned roles. For more information about required scopes, go to [Scopes and permissions](https://learn.microsoft.com/en-us/entra/identity-platform/scopes-oidc).
 
 To choose Azure Key Vault:
-1. In the Insomnia app, from your account settings, click **Preferences**.
+1. In the {{ site.insomnia }} app, from your account settings, click **Preferences**.
 1. Click the **Cloud Credentials** tab.
 1. Click **Add Credentials**.
 1. Click **Azure**.
-1. You will be redirected to authorize Insomnia in your browser.
-1. After authorization, you'll return to Insomnia with your Azure account credential added.
+1. You will be redirected to authorize {{ site.insomnia }} in your browser.
+1. After authorization, you'll return to {{ site.insomnia }} with your Azure account credential added.
 
 {:.info}
-> Azure Key Vault access uses delegated permissions. The Azure account that you sign in with in Insomnia, the Azure app registration, and the Azure Key Vault must belong to the same Azure organization, unless cross-organization access is explicitly configured in Azure. If these are in different organizations, Azure can deny access even when the correct scopes are granted.
+> Azure Key Vault access uses delegated permissions. The Azure account that you sign in with in {{ site.insomnia }}, the Azure app registration, and the Azure Key Vault must belong to the same Azure organization, unless cross-organization access is explicitly configured in Azure. If these are in different organizations, Azure can deny access even when the correct scopes are granted.
 
 
 ## Using secrets
 
-External vault secrets can be referenced anywhere in Insomnia requests using [template tags](/insomnia/template-tags/). In the field of your choice:
+External vault secrets can be referenced anywhere in {{ site.insomnia }} requests using [template tags](/insomnia/template-tags/). In the field of your choice:
 1. Press `Control+Space`.
 1. Select the external vault to use.
 1. Fill in the details required to access the secret.
 
 {% new_in 13.4 %} {{ site.insomnia }} hides external vault values as `••••••` in previews and generated code, and sends the real value when you send a request. To change this, see [Confidential variables](/insomnia/environments/#confidential-variables).
 
+{% new_in 13.5 %} On Enterprise plans, an administrator can [enforce hiding confidential values](/insomnia/enterprise-account-management/#enforce-hiding-confidential-values) for the whole account. Users can remove the confidential marking from environment variables, but external vault values are always confidential, so in practice the enforcement guarantees that external vault values stay hidden.
+
 ## Vault secrets cache
 
-Vault secret caching works like the following in Insomnia:
+Vault secret caching works like the following in {{ site.insomnia }}:
 - Secrets retrieved from cloud vault services are cached in memory for 30 minutes by default.
-- If the cache expires or is missing, Insomnia re-fetches the secret automatically.
+- If the cache expires or is missing, {{ site.insomnia }} re-fetches the secret automatically.
 - You can configure cache duration and reset the cache in **Preferences > Credentials**.

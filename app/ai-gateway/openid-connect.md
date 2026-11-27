@@ -87,6 +87,10 @@ Once authenticated, a token can map to an [AI Consumer](/ai-gateway/entities/ai-
 See [Identity mapping](/ai-gateway/entities/ai-auth-strategy/#identity-mapping) on the AI Auth Strategy entity for how that mapping works.
 You can also read the validated token's claims directly in a CEL expression, without mapping the caller to anything. See [Use token claims in CEL](#use-token-claims-in-cel).
 
+You don't have to map Consumers to report on usage per user.
+The OpenTelemetry Policy can label token usage and cost metrics with the claim from the token instead, so you can charge usage back without creating an AI Consumer for every person who signs in.
+See [Identifying requests in metrics](/ai-gateway/policies/opentelemetry/#identifying-requests-in-metrics).
+
 {% include /ai-gateway/auth-strategy-default-termination.md %}
 
 The following diagram shows the three outcomes for a request against an AI Model, AI Agent, or AI MCP Server with an OpenID Connect AI Auth Strategy attached:
@@ -1160,9 +1164,6 @@ The [OAuth 2.0 Token Exchange](https://oauth.net/2/token-exchange/) (RFC 8693) i
 The RFC defines a protocol approach to support scenarios where a client can exchange a token for a new token by interacting with the authorization server.
 This is particularly useful in complex environments like microservices or cross-domain federations.
 
-{:.info}
-> **Note**: Only access tokens can be exchanged with the OIDC auth strategy. Token exchange isn't supported on AI MCP Servers that set `access.metadata`.
-
 #### Why use token exchange?
 
 Token exchange can be used in several critical use cases:
@@ -1261,6 +1262,54 @@ ai_gateway_auth_strategies:
           audience:
       cache_tokens_salt: token-exchange-auth-cache-salt
 {% endentity_examples %}
+
+#### Microsoft Entra ID On-Behalf-Of flow
+
+When an upstream MCP server or API is registered as its own Entra ID application, it only accepts tokens issued for its own audience. The token the caller presents to {{site.ai_gateway}} was issued for {{site.ai_gateway}}, so forwarding it unchanged returns a `401` from the upstream. Authenticating to the upstream with a shared service credential avoids the `401`, but it removes the end user's identity from the request, so the upstream can't apply per-user authorization.
+
+Entra ID's On-Behalf-Of flow exchanges the caller's token for one scoped to the upstream application, preserving the end user's identity. It uses the JWT Bearer grant ([RFC 7523](https://www.rfc-editor.org/rfc/rfc7523)), so set [`config.token_exchange.grant_type`](#schema-aigateway-auth-strategy-open-idconnect-config-config-token-exchange-grant-type) to `jwt_bearer` and [`config.token_exchange.provider`](#schema-aigateway-auth-strategy-open-idconnect-config-config-token-exchange-provider) to `microsoft`.
+{{site.ai_gateway}} then sends the caller's token as the assertion in the exchange request, along with `requested_token_use=on_behalf_of`.
+
+The following example exchanges a caller's Entra ID token for one scoped to an upstream MCP server registered as the Entra application `mcp-server-app-id`:
+
+{% entity_examples %}
+ai_gateway_auth_strategies:
+  - ref: entra-obo-auth
+    ai_gateway: !lookup {id: !env AI_GATEWAY_ID}
+    display_name: Entra OBO Auth
+    name: entra-obo-auth
+    type: openid-connect
+    config:
+      issuer: https://login.microsoftonline.com/your-tenant-id/v2.0
+      client_id:
+      - my-client-id
+      client_secret:
+      - !secret {source: !env 'CLIENT_SECRET'}
+      client_auth:
+      - client_secret_post
+      auth_methods:
+      - bearer
+      token_exchange:
+        grant_type: jwt_bearer
+        provider: microsoft
+        subject_token_issuers:
+        - issuer: https://login.microsoftonline.com/your-tenant-id/v2.0
+          conditions:
+            missing_scopes:
+            - api://mcp-server-app-id/.default
+        request:
+          scopes:
+          - api://mcp-server-app-id/.default
+      cache_tokens_salt: entra-obo-auth-cache-salt
+{% endentity_examples %}
+
+The exchange only runs when the caller's token matches an entry in [`config.token_exchange.subject_token_issuers`](#schema-aigateway-auth-strategy-open-idconnect-config-config-token-exchange-subject-token-issuers). When the token's issuer matches an entry but that entry's `conditions` don't match, {{site.ai_gateway}} doesn't exchange it and forwards the original token unchanged, which the upstream can reject with a `401`.
+A token from an issuer that doesn't match an entry and isn't the auth strategy's own `issuer` fails verification at {{site.ai_gateway}}, which returns the `401` itself.
+
+To map AI Consumers and AI Consumer Groups from the claims of the caller's original token instead of the exchanged token, set [`config.token_exchange.map_identities_from`](#schema-aigateway-auth-strategy-open-idconnect-config-config-token-exchange-map-identities-from) to `subject_token`.
+
+{:.info}
+> **Note**: As with the other token exchange flows, the On-Behalf-Of flow isn't supported on AI MCP Servers that set `access.metadata`, because those generate an [AI MCP OAuth2 Policy](/ai-gateway/policies/ai-mcp-oauth2/) configuration instead of a plain auth-strategy check.
 
 {% comment %}
 NOT SUPPORTED CURRENTLY

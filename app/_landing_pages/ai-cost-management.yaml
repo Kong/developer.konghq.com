@@ -26,7 +26,7 @@ rows:
                 - type: text
                   text: |
                     {{site.ai_cost_management}} gives you visibility into your organization's AI model spend.
-                    It records events for every request that passes through {{site.ai_gateway}}, attributes each event to a user, group, or team, prices it against the model catalog, and surfaces the data in real-time dashboards.
+                    It records the cost {{site.ai_gateway}} reports for every request, attributes each event to a user, group, or team, and surfaces the data in real-time dashboards.
 
                     You can set up budgets with notification thresholds to alert your team before spend reaches a ceiling.
                     Use attribution to break spend down by user, application, or any custom dimension that you want to define with tags.
@@ -44,25 +44,26 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Set up a budget with email alerts
+              title: Get started with {{site.ai_cost_management}}
               description: |
-                Configure a model price, create a budget with a spend ceiling, and receive an email notification when your organization approaches the limit.
-              icon: /assets/icons/email.svg
-              cta:
-                url: /ai-cost-management/set-up-a-budget-with-email-alerts/
-                text: Configure a budget
-                align: end
+                Set up {{site.ai_cost_management}} end-to-end: attribute usage to a principal, price a model, track spend with a budget, and capture custom tags.
+              icon: /assets/icons/rocket.svg
+              featured: true
+              ctas:
+                - text: Get started
+                  url: /ai-cost-management/getting-started/
       - blocks:
           - type: card
             config:
-              title: Set up a budget with Slack alerts
+              title: Set up a budget with alerts
               description: |
-                Configure a model price, create a budget with a spend ceiling, and send budget notifications to a Slack channel.
-              icon: /assets/icons/slack.svg
-              cta:
-                url: /ai-cost-management/set-up-a-budget-with-slack-alerts/
-                text: Configure a budget
-                align: end
+                Configure a model price, create a budget with a spend ceiling, and get notified when your organization approaches the limit.
+              icon: /assets/icons/money.svg
+              ctas:
+                - text: Email alerts
+                  url: /ai-cost-management/set-up-a-budget-with-email-alerts/
+                - text: Slack alerts
+                  url: /ai-cost-management/set-up-a-budget-with-slack-alerts/
 
   - header:
       type: h2
@@ -114,7 +115,7 @@ rows:
             config:
               title: Price catalog
               description: |
-                Configure model prices that {{site.ai_cost_management}} uses to calculate the cost of each request. Add organization-level overrides for negotiated rates.
+                Manage the model prices that {{site.ai_gateway}} uses to calculate the cost of each request. Add organization-level overrides for negotiated rates.
               icon: /assets/icons/money.svg
               ctas:
                 - text: Price catalog
@@ -140,7 +141,7 @@ rows:
             config:
               title: API reference
               description: |
-                Browse the full REST API for {{site.ai_cost_management}}: list and query usage events, manage exports, budgets, notification channels, and the price catalog.
+                Browse the full REST API for {{site.ai_cost_management}}: list and query usage events, and manage budgets, notification channels, exports, and attribution plugins.
               icon: /assets/icons/api.svg
               ctas:
                 - text: API reference
@@ -172,7 +173,8 @@ rows:
             - q: Why does a request show $0 cost?
               a: |
                 The model had no price configured when the request ran. An omitted cost and a reported zero cost are stored the same way.
-                To price future requests, add the model to the [price catalog](/ai-cost-management/price-catalog/) or set cost fields on the AI Model target in {{site.ai_gateway}}.
+                To price future requests, add a [custom rate override](/ai-cost-management/price-catalog/#custom-rate-overrides) for the model, or set cost fields on the AI Model target in {{site.ai_gateway}}.
+                Requests that already ran keep their recorded cost.
             - q: How fresh is the data in the dashboard?
               a: |
                 Events reach the views shortly after a request completes.

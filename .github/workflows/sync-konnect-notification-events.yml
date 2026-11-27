@@ -1,0 +1,58 @@
+name: Sync Konnect Notification Events
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 9 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-konnect-notification-events
+  cancel-in-progress: false
+
+jobs:
+  sync-notification-events:
+    name: Fetch organization notification events
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
+        with:
+          egress-policy: audit
+
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 26
+
+      - name: Fetch available organization events
+        env:
+          KONNECT_TOKEN: ${{ secrets.KONNECT_TOKEN }}
+        run: node tools/konnect-notification-events/fetch-events.js
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8
+        with:
+          title: Sync Konnect organization notification events
+          commit-message: Sync Konnect organization notification events
+          branch: auto/sync-konnect-notification-events
+          labels: skip-changelog,review:general
+          token: ${{ steps.app-token.outputs.token }}
+          add-paths: app/_data/konnect_notification_events.json

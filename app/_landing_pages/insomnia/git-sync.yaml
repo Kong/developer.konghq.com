@@ -1,7 +1,7 @@
 metadata:
   title: Git Sync
   content_type: landing_page
-  description: Connect Insomnia directly to your Git repository.
+  description: Connect {{ site.insomnia }} directly to your Git repository.
   products:
     - insomnia
   tags:
@@ -12,7 +12,7 @@ rows:
   - header:
       type: h1
       text: "Git Sync"
-      sub_text: Connect Insomnia directly to your Git repository.
+      sub_text: Connect {{ site.insomnia }} directly to your Git repository.
 
   - columns:
     - blocks:
@@ -23,7 +23,7 @@ rows:
                 text: |
                   **What is Git Sync?**
 
-                  Git Sync connects Insomnia directly to your Git repository. Your project data stays in your repository. Insomnia does not host or manage it.
+                  Git Sync connects {{ site.insomnia }} directly to your Git repository. Your project data stays in your repository. {{ site.insomnia }} does not host or manage it.
 
                   Changes move between your local environment and your Git provider through standard Git workflows.
 
@@ -40,8 +40,8 @@ rows:
             **How it works**
 
 
-            Insomnia acts as a Git client inside the application.
-            - Insomnia stores project resources as YAML files in your repository.
+            {{ site.insomnia }} acts as a Git client inside the application.
+            - "{{ site.insomnia }} stores project resources as YAML files in your repository."
             - Each collaborator clones the repository locally.
             - Commits, branches, merges, and pulls follow standard Git workflows.
             - Repository protections and access controls are enforced by your Git provider.
@@ -61,9 +61,9 @@ rows:
       - blocks:
           - type: text
             config: |
-              **Version control inside Insomnia**
+              **Version control inside {{ site.insomnia }}**
 
-              Git Sync brings standard Git workflows into the Insomnia interface.
+              Git Sync brings standard Git workflows into the {{ site.insomnia }} interface.
 
               From the version control panel, you can:
               - Create and switch branches.
@@ -72,15 +72,15 @@ rows:
               - Merge branches.
               - Resolve conflicts.
 
-              All operations follow your repository’s existing rules and protections. Git native commands are also available in your local project folder. [See how to use Git natively in your Insomnia project](/how-to/use-git-cli).
+              All operations follow your repository’s existing rules and protections. Git native commands are also available in your local project folder. [See how to use Git natively in your {{ site.insomnia }} project](/how-to/use-git-cli).
 
-              When both you and a collaborator change the same content, Insomnia opens a merge view so you can review and resolve conflicts without leaving the app. See [3-way merge](/insomnia/three-way-merge/) for details.
+              When both you and a collaborator change the same content, {{ site.insomnia }} opens a merge view so you can review and resolve conflicts without leaving the app. See [3-way merge](/insomnia/three-way-merge/) for details.
       - blocks:
           - type: text
             config: |
               **Repository rules and boundaries**
 
-              Branch protections configured in your Git provider are enforced. If a branch is protected, it cannot be pushed to from Insomnia.
+              Branch protections configured in your Git provider are enforced. If a branch is protected, it cannot be pushed to from {{ site.insomnia }}.
 
               Commit reverts are performed using your Git provider or local Git tooling.
 
@@ -93,7 +93,7 @@ rows:
             config: |
               **Authentication**
 
-              Git credentials can be configured through Git Sync project settings, Insomnia preferences, or your local Git configuration. For the full setup and security guidance, see [Git Sync credentials](/insomnia/storage/#git-sync).
+              Git credentials can be configured through Git Sync project settings, {{ site.insomnia }} preferences, or your local Git configuration. For the full setup and security guidance, see [Git Sync credentials](/insomnia/storage/#git-sync).
       - blocks:
           - type: text
             config: |
@@ -118,7 +118,7 @@ rows:
       - blocks:
           - type: text
             config: |
-              Git Sync stores project data directly in your repository. To support certain application features, Insomnia also writes additional metadata alongside that data.
+              Git Sync stores project data directly in your repository. To support certain application features, {{ site.insomnia }} also writes additional metadata alongside that data.
 
               As a result, you may occasionally see metadata updates in your repository even when no request content has changed. These updates:
 
@@ -136,13 +136,13 @@ rows:
           - type: faqs
             config:
               - q: Does Git Sync respect branch protections?
-                a: Yes. Repository branch protections are enforced by your Git provider and cannot be bypassed from Insomnia.
+                a: Yes. Repository branch protections are enforced by your Git provider and cannot be bypassed from {{ site.insomnia }}.
               - q: Can I revert commits from the Git Sync UI?
                 a: No. Reverts must be performed using your Git provider or local Git tooling.
               - q: Can administrators restrict available storage types?
                 a: |
-                  Yes. Enterprise administrators can control which storage types are available to users through **Enterprise Controls** > **Storage**.
+                  Yes. Enterprise administrators can control which storage types are available to users through **Policies** > [**Project Storage**](https://app.insomnia.rest/app/enterprise/policies/storage).
               - q: Can I change the project structure (for example, create folders or move files)?
                 a: |
-                  Yes, but only through your Git provider or local Git tooling. Insomnia doesn't provide a way to change the project structure from its UI.
-                  If you modify the project structure externally, Insomnia will still present the files as expected.
+                  Yes, but only through your Git provider or local Git tooling. {{ site.insomnia }} doesn't provide a way to change the project structure from its UI.
+                  If you modify the project structure externally, {{ site.insomnia }} will still present the files as expected.

@@ -10,6 +10,9 @@ sections:
   - title: Installation and Upgrade
     items:
       - path: /event-gateway/#install-event-gateway
+      - title: "Install {{site.event_gateway}} on Kubernetes with {{site.operator_product_name}}"
+        description: Install {{site.event_gateway}} on Kubernetes with {{site.operator_product_name}}, with a {{site.konnect_short_name}} control plane or an on-prem control plane.
+        url: /operator/get-started/event-gateway/install/
       - path: /event-gateway/upgrade/
       - path: /event-gateway/breaking-changes/
     auto_exclude: true
@@ -49,6 +52,7 @@ sections:
       - path: /event-gateway/kong-identity-jwt-metadata-integration/
       - path: /event-gateway/verify-image-signatures-and-attestations/
       - path: /event-gateway/configure-topic-aliases/
+      - path: /event-gateway/fail-over-kafka-clusters/
       - path: /event-gateway/encrypt-kafka-message-fields-with-event-gateway/
       - path: /event-gateway/encrypt-kafka-message-fields-dynamic/
       - path: /event-gateway/encrypt-kafka-message-fields-from-schema/

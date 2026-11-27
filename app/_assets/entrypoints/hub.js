@@ -171,6 +171,7 @@ class Hub {
   toggleCategoriesIfEmpty() {
     this.categories.forEach((cat) => {
       const category = document.getElementById(cat.value);
+      if (!category) return;
       const showCategory = category.querySelectorAll(
         '[data-card="plugin"]:not(.hidden)'
       ).length;

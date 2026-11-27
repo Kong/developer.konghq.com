@@ -1,0 +1,50 @@
+name: kafka_cluster
+
+networks:
+  kafka:
+    name: kafka_event_gateway
+
+services:
+  primary-kafka:
+    image: apache/kafka:4.4.0
+    networks:
+      - kafka
+    container_name: primary-kafka
+    ports:
+      - "9094:9094"
+    environment:
+      KAFKA_NODE_ID: 0
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: INTERNAL://primary-kafka:9092,CONTROLLER://primary-kafka:9093,EXTERNAL://0.0.0.0:9094
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://primary-kafka:9092,EXTERNAL://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 0@primary-kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_CLUSTER_ID: 'primaryclusterid000001'
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+
+  secondary-kafka:
+    image: apache/kafka:4.4.0
+    networks:
+      - kafka
+    container_name: secondary-kafka
+    ports:
+      - "9095:9095"
+    environment:
+      KAFKA_NODE_ID: 0
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: INTERNAL://secondary-kafka:9092,CONTROLLER://secondary-kafka:9093,EXTERNAL://0.0.0.0:9095
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://secondary-kafka:9092,EXTERNAL://localhost:9095
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 0@secondary-kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_CLUSTER_ID: 'secondaryclusterid0001'
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs

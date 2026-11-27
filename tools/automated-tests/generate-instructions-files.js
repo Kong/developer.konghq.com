@@ -21,6 +21,7 @@ import { resolveDevServerTarget } from "./dev-server-target.js";
         imageTag: process.env.KONG_IMAGE_TAG,
         eventGatewayMinVersion:
           process.env.KONNECT_EVENT_GATEWAY_MIN_VERSION,
+        aiGatewayMinVersion: process.env.KONNECT_AI_GATEWAY_MIN_VERSION,
       },
     );
 
