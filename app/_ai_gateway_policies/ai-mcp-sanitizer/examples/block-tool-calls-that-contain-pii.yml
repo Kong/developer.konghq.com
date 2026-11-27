@@ -1,0 +1,42 @@
+description: |
+  Configure the AI MCP Sanitizer Policy to reject a tool call, or replace a tool result with an error, when the PII service detects Social Security numbers or email addresses, instead of redacting them.
+
+title: Block tool calls that contain PII
+
+weight: 870
+
+scopes:
+  - ai-mcp-server
+  - global
+
+requirements:
+  - An existing [AI MCP Server](/ai-gateway/entities/ai-mcp-server/).
+  - An [AI PII Anonymizer service image](/ai-gateway/policies/ai-mcp-sanitizer/#ai-pii-anonymizer-service), pulled and running.
+
+variables:
+  host:
+    description: The sanitizer service's host
+    value: $SANITIZER_SERVICE_HOST
+
+name: block-tool-calls-that-contain-pii
+display_name: Block tool calls that contain PII
+type: ai-mcp-sanitizer
+
+config:
+  anonymize:
+    - ssn
+    - email
+  sanitize_targets:
+    - tool_arguments
+    - tool_results
+  port: 8080
+  host: ${host}
+  recover_redacted: false
+  block_if_detected: true
+  rejection_mode: none
+  stop_on_error: true
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

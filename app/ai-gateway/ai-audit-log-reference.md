@@ -771,6 +771,46 @@ If you use the [AI MCP Sanitizer Policy](/ai-gateway/policies/ai-mcp-sanitizer/)
 
 {% include md/ai-gateway/v2/mcp-sanitizer-logs.md %}
 
+The following example shows an `ai.mcp` log entry for a `tools/call` request in which the Policy sanitized an email address and a name in the tool arguments.
+By default, `original_text` keeps only its first and last character:
+
+```json
+{
+  "ai": {
+    "mcp": {
+      "rpc": [
+        {
+          "method": "tools/call",
+          "latency": 96,
+          "id": "31",
+          "tool_name": "create-user",
+          "sanitizer": {
+            "identified": 2,
+            "sanitized": 2,
+            "duration": 29,
+            "sanitized_items": [
+              {
+                "entity_type": "EMAIL_ADDRESS",
+                "original_text": "j******************m",
+                "redact_text": "PLACEHOLDER1",
+                "count": 1
+              },
+              {
+                "entity_type": "PERSON",
+                "original_text": "J**e",
+                "redact_text": "PLACEHOLDER2",
+                "count": 1
+              }
+            ]
+          },
+          "response_body_size": 279
+        }
+      ]
+    }
+  }
+}
+```
+
 ### AI A2A Proxy logs 
 
 If you create an [AI Agent](/ai-gateway/entities/ai-agent/), {{site.ai_gateway}} logs include additional fields under the `ai.a2a` object when `log_statistics` is enabled. These fields provide observability into Agent-to-Agent (A2A) protocol traffic, including operation names, task lifecycle state, latency, streaming metrics, and optional request/response payloads.

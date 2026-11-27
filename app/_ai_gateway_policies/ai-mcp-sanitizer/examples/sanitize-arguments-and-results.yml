@@ -1,0 +1,41 @@
+description: |
+  Configure the AI MCP Sanitizer Policy to redact PII in both the arguments sent to a tool and the result the tool returns. You must set `recover_redacted` to `false` when you target tool results.
+
+title: Sanitize tool call arguments and results
+
+weight: 880
+
+scopes:
+  - ai-mcp-server
+  - global
+
+requirements:
+  - An existing [AI MCP Server](/ai-gateway/entities/ai-mcp-server/).
+  - An [AI PII Anonymizer service image](/ai-gateway/policies/ai-mcp-sanitizer/#ai-pii-anonymizer-service), pulled and running.
+
+variables:
+  host:
+    description: The sanitizer service's host
+    value: $SANITIZER_SERVICE_HOST
+
+name: sanitize-arguments-and-results
+display_name: Sanitize tool call arguments and results
+type: ai-mcp-sanitizer
+
+config:
+  anonymize:
+    - ssn
+    - email
+    - phone
+  sanitize_targets:
+    - tool_arguments
+    - tool_results
+  port: 8080
+  host: ${host}
+  recover_redacted: false
+  stop_on_error: true
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

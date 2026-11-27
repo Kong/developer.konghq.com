@@ -1,0 +1,41 @@
+description: |
+  Configure the AI MCP Sanitizer Policy to redact PII in tool call arguments and keep the sanitized items out of your logs. Use this when the logs themselves must not hold sensitive data.
+
+title: Hide sanitized items from logs
+
+weight: 840
+
+scopes:
+  - ai-mcp-server
+  - global
+
+requirements:
+  - An existing [AI MCP Server](/ai-gateway/entities/ai-mcp-server/).
+  - An [AI PII Anonymizer service image](/ai-gateway/policies/ai-mcp-sanitizer/#ai-pii-anonymizer-service), pulled and running.
+
+variables:
+  host:
+    description: The sanitizer service's host
+    value: $SANITIZER_SERVICE_HOST
+
+name: hide-sanitized-items-from-logs
+display_name: Hide sanitized items from logs
+type: ai-mcp-sanitizer
+
+config:
+  anonymize:
+    - ssn
+    - email
+    - phone
+  sanitize_targets:
+    - tool_arguments
+  port: 8080
+  host: ${host}
+  recover_redacted: false
+  skip_logging_sanitized_items: true
+  stop_on_error: true
+
+tools:
+  - konnect-api
+  - terraform
+  - kongctl

@@ -100,6 +100,7 @@ The default is `tool_arguments`.
 
 * **Sanitized:** string values in the tool call arguments, the user data in `params.inputResponses` (the answers a client sends back when a tool server asks for more input during a multi round-trip call), `text` entries in `result.content[]`, and string values in `result.structuredContent`.
   The `tool_arguments` target covers the arguments and `params.inputResponses`. The `tool_results` target covers the result.
+  When a `text` entry holds a JSON document, {{site.ai_gateway}} sanitizes the string values in the document and leaves the field names and numbers unchanged.
 * **Not sanitized:** the tool name, JSON-RPC envelope fields such as `jsonrpc` and `id`, the keys and `requestState` of `params.inputResponses`, `result.isError`, `result._meta`, and `result.content[]` entries of type `image`, `audio`, or `resource`.
 
 Rewriting tool names and protocol fields would break tool dispatch, access control, and protocol negotiation.
@@ -110,13 +111,15 @@ Skipping binary content avoids sending large payloads to the PII service for no 
 Choose targets based on which direction of the tool call includes PII and whether you need streaming:
 
 * **Sanitize only `tool_arguments`** if your agents send user data to a third-party tool and you need to keep streaming.
-  With `recover_redacted` set to `false`, this target doesn't hold responses or change how [`conversion-listener`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-type) servers run, so the [streaming and single-pass changes](#streaming-and-performance-trade-offs) don't apply.
-  You must set `recover_redacted` to `false` explicitly, because it defaults to `true` and enabling it also holds the result. The default configuration (`tool_arguments` with `recover_redacted: true`) therefore triggers the streaming and single-pass changes.
+  With `recover_redacted` set to `false`, this target doesn't hold responses, so the [streaming changes](#streaming-and-performance-trade-offs) don't apply.
+  You must set `recover_redacted` to `false` explicitly, because it defaults to `true` and enabling it also holds the result.
+  The default configuration (`tool_arguments` with `recover_redacted: true`) therefore triggers the streaming changes.
 * **Sanitize only `tool_results`** if your tools return records from a system of record, such as a CRM or a medical database, and you want to keep that data out of the LLM context.
   {{site.ai_gateway}} forwards the arguments to the tool server unchanged.
-  Set `recover_redacted` to `false`, because you can't use recovery when `tool_results` is a target.
+  Set [`recover_redacted`](#recover-redacted-values) to `false`.
 * **Sanitize both** if user data goes to the tool and the tool returns PII too.
-  The streaming and single-pass changes apply because `tool_results` is targeted.
+  Set [`recover_redacted`](#recover-redacted-values) to `false`.
+  The streaming changes apply because `tool_results` is targeted.
 
 ## How it works
 
@@ -162,29 +165,17 @@ It handles both JSON and SSE-framed responses, and re-frames sanitized SSE respo
 
 Sanitizing a tool result requires the complete result before {{site.ai_gateway}} sends any of it to the agent.
 The PII service scores text as a whole, and a placeholder can't replace bytes that {{site.ai_gateway}} has already sent.
-For that reason, targeting `tool_results` changes how some server types proxy traffic:
+For that reason, targeting `tool_results` changes how a [`passthrough-listener`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-type) server proxies traffic.
+{{site.ai_gateway}} buffers a streamed `tools/call` response and sends it as one body.
+For an upstream that streams a response incrementally, time to first byte becomes time to last byte.
+An SSE response that contains one complete message isn't affected.
 
-{% table %}
-columns:
-  - title: Server type
-    key: type
-  - title: What changes
-    key: change
-  - title: Effect
-    key: effect
-rows:
-  - type: "[`passthrough-listener`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-type)"
-    change: "{{site.ai_gateway}} buffers a streamed `tools/call` response and sends it as one body."
-    effect: "For an upstream that streams a response incrementally, time to first byte becomes time to last byte. An SSE response that contains one complete message isn't affected."
-  - type: "[`conversion-listener`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-type)"
-    change: "{{site.ai_gateway}} disables single-pass conversion for converter tools that the AI MCP Server owns, and sends the call to the upstream as a separate request."
-    effect: "Each call opens one additional outbound connection. That connection doesn't use the load balancer, retries, upstream TLS or mTLS settings, the keepalive pool, or the configured timeouts."
-{% endtable %}
+A [`conversion-listener`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-type) server calls its upstream API the same way with or without result sanitization.
 
-Enabling `recover_redacted` also requires {{site.ai_gateway}} to hold the result, so the same changes apply.
+Enabling `recover_redacted` also requires {{site.ai_gateway}} to hold the result, so the same buffering applies.
 
 Removing `tool_results` from `sanitize_targets` and disabling `recover_redacted` restores the previous behavior.
-A configuration that targets only `tool_arguments` without recovery doesn't change streaming or single-pass behavior.
+A configuration that targets only `tool_arguments` without recovery doesn't change streaming behavior.
 {{site.ai_gateway}} never buffers long-lived streams, such as `subscriptions/listen` and GET-initiated SSE.
 
 {:.warning}
@@ -228,17 +219,27 @@ When [`recover_redacted`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schem
 If the tool returns a placeholder in its result, {{site.ai_gateway}} restores the original value before it sends the result to the agent.
 The `recover_redacted` setting is `true` by default.
 
+Recovery applies to values that the Policy redacted in `tool_arguments`.
+{{site.ai_gateway}} rejects a configuration that enables `recover_redacted` when `sanitize_targets` includes `tool_results`, because recovery would put the original values back into the sanitized result.
+With `recover_redacted` set to `false`, the agent receives the placeholders that the tool returns.
+
 ## Error handling
 
 The AI MCP Sanitizer Policy uses [`stop_on_error`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-stop-on-error) to decide what happens when the PII service is unreachable, returns a non-200 response, or returns a malformed response.
-When `stop_on_error` is `true`, {{site.ai_gateway}} fails the call with a JSON-RPC error (code `1007`, HTTP status `500`). When it's `false`, the call continues without sanitization.
+When `stop_on_error` is `true`, {{site.ai_gateway}} fails the call with a JSON-RPC error with code `1007` and the message `Blocked: sanitization could not be completed`.
+The error uses the format and HTTP status that match the client's [MCP protocol revision](/ai-gateway/mcp-version-support/).
+For current protocol revisions, the HTTP status is `500`.
+For earlier revisions, the JSON-RPC error is returned in a `200` response.
+When `stop_on_error` is `false`, the call continues without sanitization.
 A PII service answer that has fewer entries than {{site.ai_gateway}} sent is discarded as a whole and handled the same way, so {{site.ai_gateway}} never applies a partly sanitized result.
 
 `stop_on_error` covers only the call to the PII service. {{site.ai_gateway}} always handles the following cases the same way, whatever `stop_on_error` is set to:
 
-* A tool response that {{site.ai_gateway}} can't read or parse is refused with code `1006` and HTTP status `502`.
-* A tool response that contains interim results (more than one result frame) is refused with code `1005` and HTTP status `502`.
+* A tool response that isn't JSON-RPC, such as plain text, is sanitized as text.
+  A tool response that isn't text is relayed unchanged.
+* {{site.ai_gateway}} sanitizes each result in a tool response that contains more than one result.
 * An error that the MCP server itself returns is relayed to the caller unchanged.
+  {{site.ai_gateway}} doesn't sanitize the error message.
 
 ## Differences from the AI PII Sanitizer Policy
 
@@ -265,6 +266,11 @@ rows:
 {:.info}
 > `INPUT`, `OUTPUT`, and `BOTH` are ambiguous on MCP traffic, because an AI MCP Server is both a server to the agent and a client of the tool server. `sanitize_targets` names the protocol location instead.
 
+## Scopes
+
+Attach the AI MCP Sanitizer Policy to an [AI MCP Server](/ai-gateway/entities/ai-mcp-server/) by adding the Policy name to the server's [`policies`](/ai-gateway/entities/ai-mcp-server/#schema-aigateway-mcpserver-policies) field.
+For details about how scopes work, see [AI Policy scopes](/ai-gateway/entities/ai-policy/#ai-policy-scopes).
+
 ## AI PII Anonymizer service
 
 {% include /md/ai-gateway/v2/policies/pii-service.md policy_name="AI MCP Sanitizer" %}
@@ -284,3 +290,4 @@ The AI MCP Sanitizer Policy adds sanitization details to the MCP logs.
   The optional `score` is a number between 0 and 1 and defaults to 0.5.
 * [`sanitize_targets`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-sanitize-targets) must contain at least one target.
   The default is `tool_arguments`.
+* [`recover_redacted`](/ai-gateway/policies/ai-mcp-sanitizer/reference/#schema--config-recover-redacted) must be `false` when `sanitize_targets` includes `tool_results`.
