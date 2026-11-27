@@ -112,7 +112,7 @@ rows:
             icon: /assets/icons/key.svg
             cta:
               text: Learn about virtual keys
-              url: /ai-access-management/concepts/#virtual-keys
+              url: /ai-access-management/virtual-keys/
               align: end
 
   - header:
@@ -145,7 +145,7 @@ rows:
             icon: /assets/icons/lock.svg
             ctas:
               - text: Virtual keys
-                url: /ai-access-management/concepts/#virtual-keys
+                url: /ai-access-management/virtual-keys/
               - text: Token Vault
                 url: /identity/token-vault/
               - text: Roles and permissions

@@ -33,6 +33,8 @@ related_resources:
     url: /ai-gateway/entities/ai-auth-strategy/
   - text: "Token Vault"
     url: /identity/token-vault/
+  - text: "Virtual keys"
+    url: /ai-access-management/virtual-keys/
   - text: "Org chart in {{site.ai_cost_management}}"
     url: /ai-cost-management/org-chart/
   - text: "{{site.konnect_short_name}} teams and roles"
@@ -235,30 +237,7 @@ To learn more, see [Token Vault](/identity/token-vault/).
 ## Virtual keys
 
 A virtual key is an API key that lets a caller use {{site.ai_gateway}}.
-For example, an organization with one Anthropic API key can generate a virtual key for each Claude Code user instead of sharing the real key. The user holds the virtual key, while the provider API keys stay in [Token Vault](#token-vault) instead of in your apps.
+A [user](#users), an [agent](#agents), or a [group](#groups) holds each key, and requests made with the key are attributed to that holder. The provider API keys stay in [Token Vault](#token-vault) instead of in your apps.
 
-Use virtual keys to:
-
-* **Reinforce API key security:** Virtual keys can be generated and deleted.
-* **Attribute and control costs:** Requests made with a virtual key are attributed to its holder, a user, an [agent](#agents), or a [group](#groups). The spend limits set on a user apply to that user's traffic.
-
-The gateway treats whoever holds the key as the caller.
-
-Virtual keys require {{site.identity}} and [principals](/identity/principals/). To use a virtual key with an [AI Model](/ai-gateway/entities/ai-model/), [AI MCP Server](/ai-gateway/entities/ai-mcp-server/), or [AI Agent](/ai-gateway/entities/ai-agent/), do the following:
-
-1. Assign the entity a Key Auth [AI Auth Strategy](/ai-gateway/entities/ai-auth-strategy/) that authenticates against {{site.identity}} (`config.principals.enabled: true`). See [Principal mapping](/ai-gateway/entities/ai-auth-strategy/#principal-mapping).
-1. Create the user, agent, or group that will hold the key.
-1. Create the virtual key.
-1. Send the virtual key in requests to the entity, in the header or query parameter that the AI Auth Strategy defines.
-
-You can create a key in one of the following ways:
-
-* Have {{site.ai_gateway}} generate the key. The key is shown once, after you create it.
-* Set your own key value.
-
-In both cases, you choose an expiry of 30 days, 90 days, 1 year, or never.
-
-You can search the key list by name, filter it by type, and delete keys one at a time. 
-
-Rotating a key isn't supported. To rotate a key, create a new one and delete the old one.
+See [Virtual keys](/ai-access-management/virtual-keys/).
 
