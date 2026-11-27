@@ -135,6 +135,7 @@ The following [geographic regions](/konnect-platform/geos/) and their hostname r
 * EU (Europe): `eu`
 * IN (India): `in`
 * SG (Singapore) (beta): `sg`
+* UK (United Kingdom): `uk`
 * US (United States): `us`
 
 {:.warning}

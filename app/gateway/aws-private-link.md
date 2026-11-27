@@ -584,6 +584,9 @@ rows:
   - geo: SG
     service: com.amazonaws.vpce.mx-central-1.vpce-svc-0a5091ecb518b78d0
     dns: sg.svc.konghq.com
+  - geo: UK
+    service: com.amazonaws.vpce.mx-central-1.vpce-svc-0a7b7bb1791b6d2cf
+    dns: uk.svc.konghq.com
   - geo: US
     service: com.amazonaws.vpce.mx-central-1.vpce-svc-0a61ee0a8bc4c96c1
     dns: us.svc.konghq.com

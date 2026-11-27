@@ -27,6 +27,9 @@ rows:
   - geo: "SG (Singapore) (beta)"
     aws: |
         * ap-southeast-1
+  - geo: "UK (United Kingdom)"
+    aws: |
+        * eu-west-2
 
 {% endtable %}
 <!--vale on-->
