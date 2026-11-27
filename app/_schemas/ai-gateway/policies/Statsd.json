@@ -29,16 +29,101 @@
     "config": {
       "type": "object",
       "properties": {
+        "host": {
+          "type": "string",
+          "description": "The IP address or hostname of StatsD server to send data to.",
+          "default": "localhost"
+        },
+        "port": {
+          "type": "integer",
+          "maximum": 65535,
+          "minimum": 0,
+          "description": "The port of StatsD server to send data to.",
+          "default": 8125
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "enum": [
+                  "cache_datastore_hits_total",
+                  "cache_datastore_misses_total",
+                  "kong_latency",
+                  "latency",
+                  "request_count",
+                  "request_per_user",
+                  "request_size",
+                  "response_size",
+                  "shdict_usage",
+                  "status_count",
+                  "status_count_per_user",
+                  "status_count_per_user_per_route",
+                  "status_count_per_workspace",
+                  "unique_users",
+                  "upstream_latency"
+                ],
+                "description": "StatsD metric’s name."
+              },
+              "stat_type": {
+                "type": "string",
+                "enum": [
+                  "counter",
+                  "gauge",
+                  "histogram",
+                  "meter",
+                  "set",
+                  "timer"
+                ],
+                "description": "Determines what sort of event a metric represents."
+              },
+              "sample_rate": {
+                "type": "number",
+                "description": "Sampling rate"
+              },
+              "consumer_identifier": {
+                "type": "string",
+                "enum": [
+                  "consumer_id",
+                  "custom_id",
+                  "username"
+                ],
+                "description": "Authenticated user detail."
+              },
+              "service_identifier": {
+                "type": "string",
+                "enum": [
+                  "service_host",
+                  "service_id",
+                  "service_name",
+                  "service_name_or_host"
+                ],
+                "description": "Service detail."
+              },
+              "workspace_identifier": {
+                "type": "string",
+                "enum": [
+                  "workspace_id",
+                  "workspace_name"
+                ],
+                "description": "Workspace detail."
+              }
+            },
+            "required": [
+              "name",
+              "stat_type"
+            ]
+          },
+          "description": "List of metrics to be logged."
+        },
         "allow_status_codes": {
           "type": "array",
           "items": {
             "type": "string"
           },
           "description": "List of status code ranges that are allowed to be logged in metrics."
-        },
-        "use_tcp": {
-          "type": "boolean",
-          "default": false
         },
         "queue": {
           "type": "object",
@@ -98,6 +183,18 @@
             }
           }
         },
+        "use_tcp": {
+          "type": "boolean",
+          "default": false
+        },
+        "workspace_identifier_default": {
+          "type": "string",
+          "enum": [
+            "workspace_id",
+            "workspace_name"
+          ],
+          "default": "workspace_id"
+        },
         "prefix": {
           "type": "string",
           "description": "String to prefix to each metric's name.",
@@ -116,93 +213,6 @@
         "retry_count": {
           "type": "integer"
         },
-        "queue_size": {
-          "type": "integer"
-        },
-        "port": {
-          "type": "integer",
-          "maximum": 65535,
-          "minimum": 0,
-          "description": "The port of StatsD server to send data to.",
-          "default": 8125
-        },
-        "metrics": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "service_identifier": {
-                "type": "string",
-                "enum": [
-                  "service_host",
-                  "service_id",
-                  "service_name",
-                  "service_name_or_host"
-                ],
-                "description": "Service detail."
-              },
-              "workspace_identifier": {
-                "type": "string",
-                "enum": [
-                  "workspace_id",
-                  "workspace_name"
-                ],
-                "description": "Workspace detail."
-              },
-              "name": {
-                "type": "string",
-                "enum": [
-                  "cache_datastore_hits_total",
-                  "cache_datastore_misses_total",
-                  "kong_latency",
-                  "latency",
-                  "request_count",
-                  "request_per_user",
-                  "request_size",
-                  "response_size",
-                  "shdict_usage",
-                  "status_count",
-                  "status_count_per_user",
-                  "status_count_per_user_per_route",
-                  "status_count_per_workspace",
-                  "unique_users",
-                  "upstream_latency"
-                ],
-                "description": "StatsD metric’s name."
-              },
-              "stat_type": {
-                "type": "string",
-                "enum": [
-                  "counter",
-                  "gauge",
-                  "histogram",
-                  "meter",
-                  "set",
-                  "timer"
-                ],
-                "description": "Determines what sort of event a metric represents."
-              },
-              "sample_rate": {
-                "type": "number",
-                "description": "Sampling rate"
-              },
-              "consumer_identifier": {
-                "type": "string",
-                "enum": [
-                  "consumer_id",
-                  "custom_id",
-                  "username"
-                ],
-                "description": "Authenticated user detail."
-              }
-            },
-            "required": [
-              "name",
-              "stat_type"
-            ]
-          },
-          "description": "List of metrics to be logged."
-        },
         "udp_packet_size": {
           "type": "number",
           "maximum": 65507,
@@ -213,23 +223,6 @@
           "type": "boolean",
           "default": false
         },
-        "workspace_identifier_default": {
-          "type": "string",
-          "enum": [
-            "workspace_id",
-            "workspace_name"
-          ],
-          "default": "workspace_id"
-        },
-        "tag_style": {
-          "type": "string",
-          "enum": [
-            "dogstatsd",
-            "influxdb",
-            "librato",
-            "signalfx"
-          ]
-        },
         "consumer_identifier_default": {
           "type": "string",
           "enum": [
@@ -239,15 +232,32 @@
           ],
           "default": "custom_id"
         },
+        "queue_size": {
+          "type": "integer"
+        },
         "flush_timeout": {
           "type": "number"
         },
-        "host": {
+        "tag_style": {
           "type": "string",
-          "description": "The IP address or hostname of StatsD server to send data to.",
-          "default": "localhost"
+          "enum": [
+            "dogstatsd",
+            "influxdb",
+            "librato",
+            "signalfx"
+          ]
         }
       }
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     },
     "route": {
       "type": "object",
@@ -268,16 +278,6 @@
       },
       "additionalProperties": false,
       "description": "If set, the policy will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the policy to activate regardless of the Service being matched."
-    },
-    "consumer": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the policy will activate only for requests where the specified has been authenticated. (Note that some policies can not be restricted to consumers this way.). Leave unset for the policy to activate regardless of the authenticated Consumer."
     }
   }
 }

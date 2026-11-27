@@ -1,51 +1,14 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "tcp",
-          "tls",
-          "tls_passthrough",
-          "udp",
-          "ws",
-          "wss"
-        ],
-        "description": "A string representing a protocol, such as HTTP or HTTPS."
-      },
-      "description": "A set of strings representing protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
       "type": "object",
       "properties": {
-        "server_errors_severity": {
-          "type": "string",
-          "enum": [
-            "alert",
-            "crit",
-            "debug",
-            "emerg",
-            "err",
-            "info",
-            "notice",
-            "warning"
-          ],
-          "default": "info"
-        },
-        "timeout": {
-          "type": "number",
-          "default": 10000
+        "custom_fields_by_lua": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Lua code as a key-value map"
         },
         "log_sanitization": {
           "type": "object",
@@ -79,7 +42,20 @@
               "description": "Header names to redact in addition to the built-in defaults, which already cover Authorization, API keys, and consumer identifiers. Case-insensitive.",
               "default": []
             }
-          }
+          },
+          "x-min-runtime-version": "2.3"
+        },
+        "host": {
+          "type": "string",
+          "description": "A string representing a host name, such as example.com.",
+          "default": "logs-01.loggly.com"
+        },
+        "port": {
+          "type": "integer",
+          "maximum": 65535,
+          "minimum": 0,
+          "description": "An integer representing a port number between 0 and 65535, inclusive.",
+          "default": 514
         },
         "tags": {
           "type": "array",
@@ -89,6 +65,25 @@
           "default": [
             "kong"
           ]
+        },
+        "client_errors_severity": {
+          "type": "string",
+          "enum": [
+            "alert",
+            "crit",
+            "debug",
+            "emerg",
+            "err",
+            "info",
+            "notice",
+            "warning"
+          ],
+          "default": "info"
+        },
+        "key": {
+          "type": "string",
+          "x-referenceable": true,
+          "x-encrypted": true
         },
         "log_level": {
           "type": "string",
@@ -104,30 +99,6 @@
           ],
           "default": "info"
         },
-        "custom_fields_by_lua": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Lua code as a key-value map"
-        },
-        "host": {
-          "type": "string",
-          "description": "A string representing a host name, such as example.com.",
-          "default": "logs-01.loggly.com"
-        },
-        "port": {
-          "type": "integer",
-          "maximum": 65535,
-          "minimum": 0,
-          "description": "An integer representing a port number between 0 and 65535, inclusive.",
-          "default": 514
-        },
-        "key": {
-          "type": "string",
-          "x-referenceable": true,
-          "x-encrypted": true
-        },
         "successful_severity": {
           "type": "string",
           "enum": [
@@ -142,7 +113,7 @@
           ],
           "default": "info"
         },
-        "client_errors_severity": {
+        "server_errors_severity": {
           "type": "string",
           "enum": [
             "alert",
@@ -155,10 +126,40 @@
             "warning"
           ],
           "default": "info"
+        },
+        "timeout": {
+          "type": "number",
+          "default": 10000
         }
       },
       "required": [
         "key"
+      ]
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "description": "A string representing a protocol, such as HTTP or HTTPS."
+      },
+      "description": "A set of strings representing protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
       ]
     },
     "consumer": {
