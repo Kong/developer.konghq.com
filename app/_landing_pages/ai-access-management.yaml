@@ -68,7 +68,7 @@ rows:
             icon: /assets/icons/ai.svg
             cta:
               text: Learn about agents
-              url: /ai-access-management/concepts/#agents
+              url: /ai-access-management/agents/
               align: end
       - blocks:
         - type: card
@@ -131,7 +131,7 @@ rows:
               - text: Users
                 url: /ai-access-management/concepts/#users
               - text: Agents
-                url: /ai-access-management/concepts/#agents
+                url: /ai-access-management/agents/
               - text: Groups
                 url: /ai-access-management/concepts/#groups
               - text: Identity providers

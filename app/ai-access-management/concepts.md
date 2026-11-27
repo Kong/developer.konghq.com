@@ -33,6 +33,8 @@ related_resources:
     url: /ai-gateway/entities/ai-auth-strategy/
   - text: "Token Vault"
     url: /identity/token-vault/
+  - text: "Agents"
+    url: /ai-access-management/agents/
   - text: "Org chart in {{site.ai_cost_management}}"
     url: /ai-cost-management/org-chart/
   - text: "{{site.konnect_short_name}} teams and roles"
@@ -107,62 +109,10 @@ See [Org chart in {{site.ai_cost_management}}](/ai-cost-management/org-chart/) f
 
 ## Agents
 
-An agent is a software system that calls your {{site.ai_gateway}} resources, either on its own behalf or on behalf of a user. For example, an agent deployed to AWS AgentCore that calls a model and an MCP server is an agent.
+An agent is a software system that uses AI to act on its own or on behalf of a user.
+An agent identity lets an agent call your {{site.ai_gateway}} models and MCP servers with its own credentials, access rules, and spend limit, separate from the users who manage it.
 
-An agent has its own identity, separate from the users who manage it:
-
-* **Own access rules:** The rules that apply to an agent are independent from the rules that apply to the users who manage it.
-* **Own credentials:** An agent authenticates with its own credentials like [virtual keys](#virtual-keys) to call models, or with an OAuth client from your identity provider to call MCP servers.
-* **Own attribution:** {{site.ai_gateway}} attributes requests to the agent that makes them, not to the users who manage it.
-
-When an agent acts on behalf of a user (for example, when it authenticates to an MCP server for that user), {{site.ai_gateway}} identifies the agent and the user separately. An access decision can depend on the user, the agent, or both.
-
-Admins create agents manually. An agent has a name, a description, labels, and metadata. After you create an agent, you can:
-
-* Edit its details.
-* Add it to one or more [groups](#groups).
-* Issue it a [virtual key](#virtual-keys) by choosing the agent as the key holder.
-* See its virtual keys, groups, and OAuth credentials in the agent's details.
-* Deactivate it to stop it from authenticating, and reactivate it later without creating new credentials.
-* Delete it.
-
-In the {{site.identity}} API, an agent is a [principal](/identity/principals/) with `type` set to `agent`.
-
-### Users vs agents
-
-Users and agents are both callers, but they represent different things and are managed differently:
-
-{% table %}
-columns:
-  - title: Aspect
-    key: aspect
-  - title: User
-    key: user
-  - title: Agent
-    key: agent
-rows:
-  - aspect: "**Represents**"
-    user: "A person."
-    agent: "A software system that acts on its own behalf or on behalf of a user."
-  - aspect: "**Creation**"
-    user: "Created manually by an admin, [imported from an org structure](#import-an-org-structure), or [provisioned automatically](#identity-providers) on first sign-in."
-    agent: "Created manually by an admin."
-  - aspect: "**Authentication**"
-    user: "Signs in through an [identity provider](#identity-providers), or uses a [virtual key](#virtual-keys)."
-    agent: "Uses a [virtual key](#virtual-keys), or an OAuth client from an identity provider."
-  - aspect: "**Groups**"
-    user: "Can belong to one or more [groups](#groups)."
-    agent: "Can belong to one or more [groups](#groups)."
-  - aspect: "**Teams**"
-    user: "Can belong to a [team](#teams) through an org structure import."
-    agent: "Can't belong to a team."
-  - aspect: "**Access rules**"
-    user: "Apply to the user."
-    agent: "Apply to the agent, independently from the users who manage it."
-  - aspect: "**Deactivation**"
-    user: "Deactivate to stop the user from signing in while keeping their history."
-    agent: "Deactivate to stop the agent from authenticating. Reactivate to restore access with its existing credentials."
-{% endtable %}
+See [Agents](/ai-access-management/agents/).
 
 ## Groups
 
