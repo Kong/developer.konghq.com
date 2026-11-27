@@ -40,10 +40,6 @@ related_resources:
     url: https://docs.fireworks.ai/
 ---
 
-<!--
-TODO(AI-164 OQ1): the runtime capability matrix isn't confirmed. Verify Rerank support before GA.
--->
-
 {% include md/ai-gateway/v2/providers.md providers=site.data.ai-gateway.v2.providers provider_name="Fireworks AI" %}
 
 ## Configure a {{ provider.name }} provider
@@ -75,17 +71,24 @@ variables:
 
 ## Configure a {{ provider.name }} model
 
-{{ provider.name }} supports chat completions, completions, the Responses API, embeddings, rerank, and decisions through the OpenAI format, and the Messages API through the Anthropic format.
+{{ provider.name }} supports the following APIs:
 
-By default, {{site.ai_gateway}} sends requests to `https://api.fireworks.ai/inference/v1`.
-Set the target `name` to the full {{ provider.name }} model ID, for example `accounts/fireworks/models/llama-v3p1-70b-instruct`.
+* Chat completions through the OpenAI format, with the `generate` capability.
+* The Responses API through the OpenAI format, with the `agentic` capability.
+* The Messages API through the Anthropic format, with the `anthropic` format.
+* The SystemOne API through the TypeSafe format, with the `decisions` capability and the `typesafe` format. See [TypeSafe AI](/ai-gateway/ai-providers/typesafe/) for the request and response shape.
+
+All of these APIs support streaming except SystemOne.
+
+By default, {{site.ai_gateway}} sends requests to `https://api.fireworks.ai`.
+Set the target `name` to the full {{ provider.name }} model ID, for example `accounts/fireworks/models/kimi-k3`.
 {{site.ai_gateway}} sends the name to {{ provider.name }} unchanged.
 
 {% entity_example %}
 type: model
 data:
-  display_name: Llama 3.1 70B on Fireworks AI
-  name: llama-3-1-70b
+  display_name: Kimi K3 on Fireworks AI
+  name: kimi-k3
   type: model
   capabilities:
     - generate
@@ -94,7 +97,7 @@ data:
       paths:
         - /fireworks
   targets:
-    - name: accounts/fireworks/models/llama-v3p1-70b-instruct
+    - name: accounts/fireworks/models/kimi-k3
       provider: my-fireworks-account
       config:
         type: fireworks
@@ -102,13 +105,14 @@ data:
 
 ## US-only region
 
-To keep {{ provider.name }} requests in the US, set the target `upstream_url` to the {{ provider.name }} US endpoint:
+To keep {{ provider.name }} requests in the US, set the target `upstream_base_url` to the {{ provider.name }} US host.
+{{site.ai_gateway}} appends the API path for each capability, so don't include `/inference/v1`:
 
 ```yaml
 targets:
-  - name: accounts/fireworks/models/llama-v3p1-70b-instruct
+  - name: accounts/fireworks/models/kimi-k3
     provider: my-fireworks-account
     config:
       type: fireworks
-      upstream_url: https://us.api.fireworks.ai/inference/v1
+      upstream_base_url: https://us.api.fireworks.ai
 ```

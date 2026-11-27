@@ -2059,17 +2059,19 @@ providers:
 
   - name: Meta
     url_patterns:
-      - 'https://api.meta.ai/v1/{capability_path}'
+      - 'https://api.meta.ai/{capability_path}'
     min_version: '2.4'
     capabilities:
       generate:
         supported: true
         streaming: true
+        paths:
+          - '/chat/completions'
         upstream_path: '`/v1/chat/completions`'
         model_example: 'muse-spark-1.3'
         min_version: '2.4'
         note:
-          content: "Also supports the OpenAI Responses API and the Anthropic Messages API."
+          content: "Also supports the Anthropic Messages API. Set `formats: [{type: anthropic}]` on the AI Model to expose `/v1/messages`."
       completions:
         supported: false
         streaming: false
@@ -2096,32 +2098,33 @@ providers:
         model_example: ''
         min_version: ''
       agentic:
-        supported: false
-        streaming: false
-        model_example: ''
-        min_version: ''
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/responses`'
+        model_example: 'muse-spark-1.3'
+        min_version: '2.4'
+        note:
+          content: "Serves the OpenAI Responses API at `/responses`."
       audio_speech:
         supported: false
         streaming: false
         model_example: ''
         min_version: ''
       audio_transcription:
-        supported: true
+        supported: false
         streaming: false
-        upstream_path: '`/v1/audio/transcriptions`'
-        model_example: 'muse-spark-1.3'
-        min_version: '2.4'
+        model_example: ''
+        min_version: ''
       audio_translation:
         supported: false
         streaming: false
         model_example: ''
         min_version: ''
       image:
-        supported: true
+        supported: false
         streaming: false
-        upstream_path: '`/v1/images/generations` and `/v1/images/edits`'
-        model_example: 'muse-spark-1.3'
-        min_version: '2.4'
+        model_example: ''
+        min_version: ''
       video:
         supported: false
         streaming: false
@@ -2145,34 +2148,35 @@ providers:
     limitations:
       general:
         - "The Meta provider targets Meta's hosted Model API. It doesn't proxy self-hosted Llama deployments. Use the Llama2 provider for those."
+        - "Meta supports only `auto` for the `tool_choice` request parameter."
       provider_specific: []
       statistics_logging: []
 
   - name: Fireworks AI
     url_patterns:
-      - 'https://api.fireworks.ai/inference/v1/{capability_path}'
+      - 'https://api.fireworks.ai/{capability_path}'
     min_version: '2.4'
     capabilities:
       generate:
         supported: true
         streaming: true
+        paths:
+          - '/chat/completions'
         upstream_path: '`/inference/v1/chat/completions`'
-        model_example: 'accounts/fireworks/models/llama-v3p1-70b-instruct'
+        model_example: 'accounts/fireworks/models/kimi-k3'
         min_version: '2.4'
         note:
-          content: "Also supports the OpenAI Responses API and the Anthropic Messages API."
+          content: "Also supports the Anthropic Messages API. Set `formats: [{type: anthropic}]` on the AI Model to expose `/v1/messages`."
       completions:
-        supported: true
-        streaming: true
-        upstream_path: '`/inference/v1/completions`'
-        model_example: 'accounts/fireworks/models/llama-v3p1-70b-instruct'
-        min_version: '2.4'
-      embeddings:
-        supported: true
+        supported: false
         streaming: false
-        upstream_path: '`/inference/v1/embeddings`'
-        model_example: 'accounts/fireworks/models/qwen3-embedding-8b'
-        min_version: '2.4'
+        model_example: ''
+        min_version: ''
+      embeddings:
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
       files:
         supported: false
         streaming: false
@@ -2189,10 +2193,13 @@ providers:
         model_example: ''
         min_version: ''
       agentic:
-        supported: false
-        streaming: false
-        model_example: ''
-        min_version: ''
+        supported: true
+        streaming: true
+        upstream_path: '`/inference/v1/responses`'
+        model_example: 'accounts/fireworks/models/kimi-k3'
+        min_version: '2.4'
+        note:
+          content: "Serves the OpenAI Responses API at `/responses`."
       audio_speech:
         supported: false
         streaming: false
@@ -2224,17 +2231,18 @@ providers:
         model_example: ''
         min_version: ''
       rerank:
-        supported: true
+        supported: false
         streaming: false
-        upstream_path: '`/inference/v1/rerank`'
-        model_example: 'accounts/fireworks/models/qwen3-reranker-8b'
-        min_version: '2.4'
+        model_example: ''
+        min_version: ''
       decisions:
         supported: true
         streaming: false
-        upstream_path: '`/inference/v1/decisions`, `/inference/v1/systemone`'
+        upstream_path: '`/inference/v1/systemone`'
         model_example: 'accounts/fireworks/models/rune'
         min_version: '2.4'
+        note:
+          content: "Requires `capabilities: [decisions]` and `formats: [{type: typesafe}]` on the AI Model. The AI Model serves the SystemOne API at `/v1/systemone`. See the [TypeSafe AI provider page](/ai-gateway/ai-providers/typesafe/) for the request and response shape."
     limitations:
       general:
         - "Fireworks AI returns upstream errors unchanged, including errors caused by `max_tokens` truncation."
@@ -2243,21 +2251,24 @@ providers:
 
   - name: Together AI
     url_patterns:
-      - 'https://api.together.xyz/v1/{capability_path}'
+      - 'https://api.together.ai/{capability_path}'
     min_version: '2.4'
     capabilities:
       generate:
         supported: true
         streaming: true
+        paths:
+          - '/chat/completions'
         upstream_path: '`/v1/chat/completions`'
-        model_example: 'meta-llama/Llama-3.3-70B-Instruct-Turbo'
+        model_example: 'deepseek-ai/DeepSeek-V4.1-Flash'
         min_version: '2.4'
+        note:
+          content: "Also supports the Anthropic Messages API. Set `formats: [{type: anthropic}]` on the AI Model to expose `/v1/messages`."
       completions:
-        supported: true
-        streaming: true
-        upstream_path: '`/v1/completions`'
-        model_example: 'meta-llama/Llama-3.3-70B-Instruct-Turbo'
-        min_version: '2.4'
+        supported: false
+        streaming: false
+        model_example: ''
+        min_version: ''
       embeddings:
         supported: false
         streaming: false
@@ -2279,10 +2290,13 @@ providers:
         model_example: ''
         min_version: ''
       agentic:
-        supported: false
-        streaming: false
-        model_example: ''
-        min_version: ''
+        supported: true
+        streaming: true
+        upstream_path: '`/v1/responses`'
+        model_example: 'deepseek-ai/DeepSeek-V4.1-Flash'
+        min_version: '2.4'
+        note:
+          content: "Serves the OpenAI Responses API at `/responses`."
       audio_speech:
         supported: false
         streaming: false
