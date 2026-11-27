@@ -77,6 +77,8 @@ Virtual keys require {{site.identity}} and [principals](/identity/principals/). 
 1. Create the user, agent, or group that will hold the key.
 1. [Create the virtual key](#create-a-virtual-key).
 1. Send the virtual key in requests to the entity, in the header or query parameter that the AI Auth Strategy defines. By default, this is an `apikey` header or an `apikey` query parameter.
+   Prefer the header: a query parameter is part of the request URL, so the key can end up in plain text in access logs.
+   With the default key names, a key sent in an `Authorization: Bearer` header is rejected.
 
 ## Key holders
 
@@ -146,10 +148,10 @@ columns:
   - title: Description
     key: description
 rows:
-  - setting: "**Name**"
+  - setting: "**Key name**"
     description: "Optional. How you recognize the key in lists. Names don't need to be unique and can be up to 255 characters."
   - setting: "**Who holds it**"
-    description: "The user, agent, or group that the key belongs to. If the holder doesn't exist yet, you can create a user or an agent from the holder selector."
+    description: "The user, agent, or group that the key belongs to. Choose **A user or agent** or **A group or project**, then select the holder. If the user or agent doesn't exist yet, select **New user or agent** in the holder selector to create it."
   - setting: "**Key value**"
     description: |
       * **Kong generates the key:** {{site.konnect_short_name}} creates a random key.
@@ -170,6 +172,100 @@ A custom key value must meet the following requirements:
 
 Like generated keys, a custom key value can't be viewed after you create it.
 
+### Use the {{site.identity}} API
+
+Virtual keys are API keys in the [{{site.identity}} API](/api/konnect/kong-identity-principals/v2/).
+Org Admins can use the following endpoints to manage them:
+
+{% table %}
+columns:
+  - title: Holder
+    key: holder
+  - title: Endpoint
+    key: endpoint
+rows:
+  - holder: "User or agent"
+    endpoint: "`/v2/directories/{directoryId}/principals/{principalId}/api-keys`"
+  - holder: "Group"
+    endpoint: "`/v2/directories/{directoryId}/groups/{groupId}/api-keys`"
+{% endtable %}
+
+Set `type` to choose how the key is created:
+
+* `v1`: {{site.konnect_short_name}} generates the key.
+* `imported`: You provide the key in `secret`.
+
+The following examples generate a key that expires on a set date, for each type of holder.
+Users and agents are both principals, so their keys use the same endpoint with a different principal ID:
+
+{% navtabs "virtual-key-holder" %}
+{% navtab "Agent" %}
+
+Create a key for an agent, using the ID of the agent's principal as `$AGENT_ID`:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/principals/$AGENT_ID/api-keys
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  type: v1
+  name: booking-agent-key
+  expires_at: '2027-01-01T00:00:00Z'
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% navtab "User" %}
+
+Create a key for a user, using the ID of the user's principal as `$USER_ID`:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/principals/$USER_ID/api-keys
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  type: v1
+  name: local-development
+  expires_at: '2027-01-01T00:00:00Z'
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% navtab "Group" %}
+
+Create a key for a group, using the group's ID as `$GROUP_ID`:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/directories/$DIRECTORY_ID/groups/$GROUP_ID/api-keys
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  type: v1
+  name: ci-pipeline
+  expires_at: '2027-01-01T00:00:00Z'
+{% endkonnect_api_request %}
+<!--vale on-->
+
+{% endnavtab %}
+{% endnavtabs %}
+
+The response includes the key in `secret`. This is the only response that includes it.
+
+The holders you can create a key for depend on your [role](/ai-management/roles-and-permissions/):
+
+* **Org Admins** can create keys for any user, agent, or group, in {{site.konnect_short_name}} or with the API.
+* **Individual Users** can only create keys for themselves, in {{site.konnect_short_name}}: in the sidebar, click **Access Management**, then **Virtual Keys**, then **New Key**.
+
+
 ## Manage virtual keys
 
 The **Virtual keys** list in **Access Management** shows the virtual keys held by users, agents, and groups. Each user, agent, and group also lists its own keys in its details.
@@ -178,7 +274,7 @@ In the **Virtual keys** list, you can:
 
 * Search keys by name.
 * Filter keys by holder type.
-* Sort keys by name, holder, or creation date.
+* Sort keys by name, holder, expiry date, or creation date.
 * Delete keys one at a time.
 
 ### Edit a key
@@ -224,67 +320,20 @@ Because of this cache, a change to a key can take effect on a gateway after a de
 
 ## Authentication errors
 
-When a request fails authentication, {{site.ai_gateway}} returns one of the following responses:
+When a request fails authentication with a virtual key, {{site.ai_gateway}} returns `401` with the same body in every case:
 
-{% table %}
-columns:
-  - title: Cause
-    key: cause
-  - title: Status
-    key: status
-  - title: Message
-    key: message
-rows:
-  - cause: "The request doesn't include a key."
-    status: "`401`"
-    message: "`No API key found in request`"
-  - cause: "The request includes the key more than once."
-    status: "`401`"
-    message: "`Duplicate API key found`"
-  - cause: "The key doesn't exist, was deleted, has expired, or belongs to a deactivated holder."
-    status: "`401`"
-    message: "`Unauthorized`"
-  - cause: "The gateway can't reach {{site.identity}}."
-    status: "`500`"
-    message: "`An unexpected error occurred`"
-{% endtable %}
+```json
+{"message": "Unauthorized"}
+```
+{:.no-copy-code}
 
-## Use the {{site.identity}} API
+The response doesn't say which check failed, so check each of the following causes:
 
-Virtual keys are API keys in the [{{site.identity}} API](/api/konnect/kong-identity-principals/v2/). Use the following endpoints to manage them:
+* The request doesn't include a key, or sends it in a header or query parameter that the AI Auth Strategy doesn't check, like `Authorization: Bearer`.
+* The key doesn't exist, was deleted, or has expired.
+* The key's holder is deactivated.
+* The request sends the `apikey` header more than once.
 
-{% table %}
-columns:
-  - title: Holder
-    key: holder
-  - title: Endpoint
-    key: endpoint
-rows:
-  - holder: "User or agent"
-    endpoint: "`/v2/directories/{directoryId}/principals/{principalId}/api-keys`"
-  - holder: "Group"
-    endpoint: "`/v2/directories/{directoryId}/groups/{groupId}/api-keys`"
-{% endtable %}
+A request that sends the key in both the `apikey` header and the `apikey` query parameter is accepted.
 
-Set `type` to choose how the key is created:
-
-* `v1`: {{site.konnect_short_name}} generates the key.
-* `imported`: You provide the key in `secret`.
-
-For example, to generate a key for a user or agent that expires on a set date:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v2/directories/$DIRECTORY_ID/principals/$PRINCIPAL_ID/api-keys
-status_code: 201
-method: POST
-headers:
-  - 'Content-Type: application/json'
-body:
-  type: v1
-  name: ci-pipeline
-  expires_at: '2027-01-01T00:00:00Z'
-{% endkonnect_api_request %}
-<!--vale on-->
-
-The response includes the key in `secret`. This is the only response that includes it.
+If the gateway can't reach {{site.identity}}, it returns `500` with the message `An unexpected error occurred`.
