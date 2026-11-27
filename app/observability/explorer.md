@@ -83,6 +83,8 @@ related_resources:
     url: /observability/
   - text: Dev Portal analytics
     url: /dev-portal/analytics/
+  - text: Conversation capture in {{site.konnect_short_name}}
+    url: /observability/conversation-capture/
 ---
 
 The Explorer interface displays API, LLM, platform, and managed cache usage data gathered by {{site.konnect_short_name}} Analytics. You can use this tool to:

@@ -41,6 +41,8 @@ related_resources:
     url: /ai-cost-management/price-catalog/
   - text: Exports in {{site.ai_cost_management}}
     url: /ai-cost-management/exports/
+  - text: Conversation capture in {{site.konnect_short_name}}
+    url: /observability/conversation-capture/
 
 faqs:
   - q: Why is the cost of my request $0?
@@ -211,6 +213,9 @@ When you open it without a time range, it shows the last 24 hours.
 You can narrow the list with filters. See [Filters and dimensions](#filters-and-dimensions).
 
 You can select a row to open the **Usage event** panel, which shows the full event details.
+
+A usage event records cost, token counts, and identity, but not the prompt or the response.
+To read the conversation behind an event, such as why a request used so many tokens, turn on [conversation capture](/observability/conversation-capture/).
 
 Here's what a sample event might look like. 
 For the full schema, see the [`/v1/ai-cost-management/events` API reference](/api/konnect/ai-cost-management/v1/#/operations/list-cost-usage-events).

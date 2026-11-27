@@ -29,6 +29,8 @@ related_resources:
     url: /ai-gateway/
   - text: AI Model entity
     url: /ai-gateway/entities/ai-model/
+  - text: Conversation capture in {{site.konnect_short_name}}
+    url: /observability/conversation-capture/
   - text: AI Rate Limiting Advanced policy
     url: /ai-gateway/policies/ai-rate-limiting-advanced/
   - text: Price catalog and overrides
@@ -256,3 +258,9 @@ rows:
 <!--vale on-->
 
 This split means changing a model's pricing (for example, updating `input_cost` after a provider rate change) never requires touching the AI Rate Limiting Advanced configuration, and changing a rate limit never requires touching the AI Model. The cost figure produced by the calculation in this page is reported by {{site.ai_gateway}} regardless of whether any rate-limiting policy is attached.
+
+## Investigate cost drivers
+
+The cost figure shows how much a model, consumer, or request cost.
+When spend rises unexpectedly, and your data planes connect to {{site.konnect_short_name}}, turn on [conversation capture](/observability/conversation-capture/) for the affected traffic.
+Captured prompts and responses show what is behind the cost, such as unusually long prompts or repeated retries.

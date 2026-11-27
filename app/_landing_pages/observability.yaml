@@ -83,6 +83,16 @@ rows:
               cta:
                 text: Set up LLM reporting
                 url: /observability/explorer/
+      - blocks:
+          - type: card
+            config:
+              title: Conversation capture
+              description: |
+                Capture the prompts and responses behind LLM cost and behavior problems.
+              icon: /assets/icons/logs.svg
+              cta:
+                text: Capture conversations
+                url: /observability/conversation-capture/
   
   - columns:
       - blocks:
